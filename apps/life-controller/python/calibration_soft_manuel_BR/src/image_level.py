@@ -1,4 +1,4 @@
-from PIL import Image, ImageFilter 
+from PIL import Image, ImageFilter
 import colorsys
 import numpy
 
@@ -10,10 +10,10 @@ class image_level():
 
 	def __init__(self,un_window):
 		# define parameters for the level_mesure function. To know their role, go and check the comments of that function.
-		self.k = 1
-		self.diff = 5
-		self.gaussian_radius = 2
-		self.nb_pixel_level_line = 5
+		self.k = 3
+		self.diff = 30
+		self.gaussian_radius = 10
+		self.nb_pixel_level_line = 3
 
 		"""for pao method"""
 		self.method_pao = True
@@ -58,6 +58,7 @@ class image_level():
 			data_quant.append(0)
 		image.putdata(data_quant)
 		image = image.rotate(-90)
+		image.show()
 		return image
 
 	# Get the data of an image and put it in a list of lists, each list representing a line of the image
@@ -97,7 +98,7 @@ class image_level():
 			im = im.rotate(90)
 			data = self.data_to_image(im)
 			for j in range(width) :
-				for i in range(height - 5*self.nb_pixel_level_line) :
+				for i in range(height - self.nb_pixel_level_line) :
 					if sum(data[j][i:i+self.nb_pixel_level_line]) == 0 :
 					   level.append(i+int(self.nb_pixel_level_line/2))
 

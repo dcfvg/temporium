@@ -1,40 +1,34 @@
 '''
 Created on Apr 28, 2014
- 
+
 @author: Cactus
 '''
 import socket
-import time
+import time 
 import threading
-from image_spectro import *
 
 
- 
-class client_spectro(threading.Thread):
- 
-    def __init__(self, adress, port):
+class client_level(threading.Thread):
+
+    def __init__(self, an_adress, a_port, f_analyse_image):
         threading.Thread.__init__(self)
-         
-        self.name = "client_concentration"
-         
+        
+        self.name = "client_level"
+        
+        self.fake_analyse_image = f_analyse_image
+        
+        """adress and port to ask connection"""
+        self.adress = an_adress
+        self.port = a_port
+        
         self.connected = False
         self.terminated = False
         
-        self.adress = adress
-        self.port = port
-
-        """Creation of the object image_spectro"""
-         
-
-        self.image_level = image_spectro(self)
-
-        
-
-        
-        
+        """start if used with life_controller"""
         self.start()
-
-    
+     
+      
+        
     def run(self): 
         """start to listen"""
         print(self.name +" start")
@@ -45,7 +39,6 @@ class client_spectro(threading.Thread):
             while not self.connected and not self.terminated :
                 self.ask_connection(self.adress, self.port)
                 time.sleep(5)
-            
             
             try:
                 
@@ -62,20 +55,20 @@ class client_spectro(threading.Thread):
                         data = data.split("\n")
                     
                         for item in data :
-                            #print(self.name + " received" + item)
+                            print(self.name + " received" + item)
                             try : 
-                                if item.strip() == "concentration_start" :
-                                    print("Ask for starting image analysis")
-                                    self.image_level.start_concentration()
+                                if item.strip() == "level_start" :
+                                    self.fake_analyse_image.set_information_asked(True)
+                                    print("level_start")
                                 
-                                elif item.strip() == "concentration_stop" :
-                                    print("Ask for stoping image analysis")
-                                    self.image_level.stop_concentration()
+                                elif item.strip() == "level_stop" :
+                                    self.fake_analyse_image.set_information_asked(False)
+                                    print("level_stop")
                                 
                                 else : 
     
                                     """Print something is wrong"""
-                                    #print(self.name + " Message unknown " + item)
+                                    print(self.name + " Message unknown " + item)
                                     pass
                             except Exception:
                                 """Sprint what is wrong"""
@@ -119,7 +112,6 @@ class client_spectro(threading.Thread):
             
        
     
-       
     def _send(self, msg):
         """verify that the connection is available"""
         if self.connected : 
@@ -132,24 +124,30 @@ class client_spectro(threading.Thread):
         
     def _recv(self):
         return self.client_socket.recv(1024).decode()
-     
+    
     def _close(self) :
         #self.client_socket.shutdown(2)
         self.client_socket.close()
-     
+    
     def stop_until(self) :
-        
+     
         self.connected = False
-        self.image_level.stop_concentration()
+        self.fake_analyse_image.set_information_asked(False)
         print (self.name + "connection lost")
-        
+    
     def stop(self) :
-        
         self.terminated = True
         self._close()
         self.connected = False
-        self.image_level.stop_concentration()
-        print (self.name + "finish")
- 
- 
+        self.fake_analyse_image.set_information_asked(False)
+        print(self.name + "finish") 
+
+   
+
+
+    
+    
+    
+    
+    
 

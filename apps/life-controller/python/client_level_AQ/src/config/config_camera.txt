@@ -1,0 +1,4 @@
+Temporium
+CONFIGURATION_CAMERA  : AQ
+comments : use "imagesnap -l" to have the list of all the connected webcam
+AQ : HD Pro Webcam C920

@@ -6,16 +6,16 @@ Created on Apr 28, 2014
 import socket
 import time
 import threading
-from image_spectro import *
+from image_level import *
 
 
  
-class client_spectro(threading.Thread):
+class client_level(threading.Thread):
  
     def __init__(self, adress, port):
         threading.Thread.__init__(self)
          
-        self.name = "client_concentration"
+        self.name = "client_level"
          
         self.connected = False
         self.terminated = False
@@ -26,7 +26,7 @@ class client_spectro(threading.Thread):
         """Creation of the object image_spectro"""
          
 
-        self.image_level = image_spectro(self)
+        self.image_level = image_level(self)
 
         
 
@@ -64,13 +64,13 @@ class client_spectro(threading.Thread):
                         for item in data :
                             #print(self.name + " received" + item)
                             try : 
-                                if item.strip() == "concentration_start" :
+                                if item.strip() == "level_start" :
                                     print("Ask for starting image analysis")
-                                    self.image_level.start_concentration()
+                                    self.image_level.start_level()
                                 
-                                elif item.strip() == "concentration_stop" :
+                                elif item.strip() == "level_stop" :
                                     print("Ask for stoping image analysis")
-                                    self.image_level.stop_concentration()
+                                    self.image_level.stop_level()
                                 
                                 else : 
     
@@ -136,19 +136,17 @@ class client_spectro(threading.Thread):
     def _close(self) :
         #self.client_socket.shutdown(2)
         self.client_socket.close()
-     
+ 
     def stop_until(self) :
-        
+        self.image_level.stop_level()
         self.connected = False
-        self.image_level.stop_concentration()
-        print (self.name + "connection lost")
-        
+        print (self.name + "finish") 
+           
     def stop(self) :
-        
         self.terminated = True
         self._close()
         self.connected = False
-        self.image_level.stop_concentration()
+        self.image_level.stop_level()
         print (self.name + "finish")
  
  
