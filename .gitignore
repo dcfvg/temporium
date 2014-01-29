@@ -26,3 +26,7 @@
 
 *assets*
 .DS_Store
+
+/apps/exposure-controller/.DS_Store
+
+/apps/.DS_Store
