@@ -1,0 +1,3 @@
+[submodule "apps/exposure-controller/exposerFlasher"]
+	path = apps/exposure-controller/exposerFlasher
+	url = /Users/benoit/Scripts/custom/tdv/exposerFlasher
