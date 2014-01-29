@@ -25,3 +25,4 @@
 *.tmproj
 
 *assets*
+.DS_Store
