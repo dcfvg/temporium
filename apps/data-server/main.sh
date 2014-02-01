@@ -14,7 +14,13 @@ function runPDE {
       echo 'runPDE [sketch] [run|present]'
       exit 0
   fi
-  patch=$(pwd)/$1
+  
+  path="`dirname \"$0\"`"              # relative
+  path="`( cd \"$path\" && pwd )`"
+  
+  patch=$path/$1
+  echo "load $patch"
+  
   processing-java --sketch="$patch" --output=/tmp/processing_output --force --$2
 }
 function runSikuli {
