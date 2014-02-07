@@ -24,5 +24,5 @@
 *.tmproj
 
 *assets*
-.DS_Store
 *DS_Store
+*data*
