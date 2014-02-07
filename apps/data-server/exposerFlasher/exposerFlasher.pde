@@ -77,11 +77,7 @@ void keyPressed(){
     flash = false;
     if(getlastimage) refreshlastcapture();
   }
-
-  if( key == 'h') {                       // flash on 
-    flash = true;
-  } 
-
+  if( key == 'h') flash = true;           // flash on 
   if( key == 't') info = !info;           // show information on projection
   if( key == 'y') console = !console;     // write feedback in console
   if( key == 'p') ispause = !ispause;     // pause experience
