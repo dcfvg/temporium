@@ -7,8 +7,7 @@ archive="$assets/archive/"
 EF="exposerFlasher"
 EFdata="$EF/data/"
 
-
-# mkdir -v $waitingList $archive $EFdata
+mkdir -v $waitingList $archive $EFdata
 
 function runPDE {
   # run a processing sketch 
@@ -49,8 +48,9 @@ nega=$EFdata"last.png"
 negaProcess
 
 # Run projection and automation
+open -a EOS\ Utility.app $scan &
 runPDE $EF present &
 runSikuli $EF/stagiaire.sikuli
 
-# mv -v $waitingList$negaName $archive$negaName
+mv -v $waitingList$negaName $archive$negaName
 echo "files in list : "$(ls $waitingList)
