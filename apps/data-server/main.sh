@@ -4,8 +4,11 @@
 assets="../../assets/"
 waitingList="$assets/waitinglist/"
 archive="$assets/archive/"
+EF="exposer-flasher"
+EFdata="$EF/data/"
 
-mkdir -v $waitingList $archive
+
+# mkdir -v $waitingList $archive $EFdata
 
 function runPDE {
   # run a processing sketch 
@@ -28,6 +31,25 @@ function runSikuli {
   sikuliIDE="/Applications/SikuliX-IDE.app/Contents/runIDE"
   $sikuliIDE -r $1
 }
+function negaProcess {
+  convert $waitingList$negaName \
+  -resize 1920x1920^ -gravity Center -crop 1920x1080+0+0 \
+  -modulate 100,0,100 \
+  -auto-level \
+  -negate \
+  $nega
+  
+  # open $nega # for testing
+}
 
-runPDE Bezier run &
-ls /
+negaSource=$(find $waitingList -maxdepth 1 -iname '*.jpg' | head -1)
+negaName=$(basename $negaSource)
+nega=$EFdata"last.png"
+
+negaProcess
+
+#runPDE Bezier run &
+#ls /
+
+# mv -v $waitingList$negaName $archive$negaName
+echo "files in list : "$(ls $waitingList)
