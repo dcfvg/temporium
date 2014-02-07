@@ -46,8 +46,8 @@
          h2 {
             display: inline;
             font-weight: normal;
-         }  
-         
+         }
+
          .info {
             border-bottom: 1px solid #ddd;
             padding-bottom: 5px;
@@ -70,10 +70,10 @@
 <h2>stagiaire.sikuli</h2> <a href="stagiaire.zip">(Download this script)</a>
 </div>
 <pre class="sikuli-code">
-<span class="cmt">#Settings.ActionLogs=True
-</span><span class="cmt">#Settings.InfoLogs=True
-</span><span class="cmt">#Settings.DebugLogs=True
-</span>
+Settings.ActionLogs=True
+Settings.InfoLogs=True
+Settings.DebugLogs=True
+
 Settings.MoveMouseDelay = <span class="dig">0</span>
 Settings.DelayAfterDrag = <span class="dig">0</span>
 Settings.DelayBeforeDrop = <span class="dig">0</span>
@@ -86,24 +86,28 @@ Settings.MoveMouseDelay = <span class="dig">0</span>
         <span class="skw">click</span>(us)
     <span class="kw">pass</span>
 
-<span class="kw">def</span> shootandwait():
-    <span class="skw">click</span>(Location(<span class="dig">1650</span>,<span class="dig">100</span>))<span class="cmt"># SCREEN 2 to processing</span>
-    <span class="skw">type</span>(<span class="str">"h"</span>)                 <span class="cmt"># flash</span>
+<span class="kw">def</span> focusprocessing():
+    <span class="skw">click</span>(Location(<span class="dig">1650</span>,<span class="dig">100</span>))
+    <span class="kw">pass</span>
 
-    <span class="skw">click</span>(<img src="9.png" />)          <span class="cmt"># SCREEN 1 with canon app </span>
+<span class="kw">def</span> shootandwait():
+    <span class="skw">click</span>(Location(<span class="dig">1650</span>,<span class="dig">100</span>)) <span class="cmt"># SCREEN 2 to processing</span>
+    <span class="skw">type</span>(<span class="str">"h"</span>)                 <span class="cmt"># flash </span>
+    <span class="skw">click</span>(<img src="9.png" />)           <span class="cmt"># SCREEN 1 with canon app </span>
     <span class="skw">wait</span>(<span class="dig">.2</span>)                  <span class="cmt"># waiting for camera</span>
 
-    <span class="skw">click</span>(Location(<span class="dig">1650</span>,<span class="dig">100</span>)) <span class="cmt"># SCREEN 2 to processing</span>
+    focusprocessing()         <span class="cmt"># SCREEN 2 to processing</span>
     <span class="skw">type</span>(<span class="str">"g"</span>)                 <span class="cmt"># image</span>
 
     <span class="skw">wait</span>(<span class="dig">2</span>)                   <span class="cmt"># time between 2 pictures</span>
-    <span class="cmt">#shootandwait()            # and back to watch
-</span>    <span class="kw">pass</span>
+
+    <span class="kw">pass</span>
 
 setLanguage()
-
-<span class="kw">while</span> <span class="dig">1</span>:
-    shootandwait()
+<span class="kw">for</span> i <span class="kw">in</span> range(<span class="dig">1</span>,<span class="dig">10</span>) :
+        shootandwait()
+        focusprocessing()     <span class="cmt"># SCREEN 2 to processing</span>
+        <span class="skw">type</span>(<span class="str">"k"</span>)
 </pre>
 </body>
 </html>

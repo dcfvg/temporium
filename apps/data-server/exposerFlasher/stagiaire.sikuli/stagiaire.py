@@ -1,6 +1,6 @@
-#Settings.ActionLogs=True
-#Settings.InfoLogs=True
-#Settings.DebugLogs=True
+Settings.ActionLogs=True
+Settings.InfoLogs=g
+Settings.DebugLogs=True
 
 Settings.MoveMouseDelay = 0 
 Settings.DelayAfterDrag = 0
@@ -14,21 +14,26 @@ def setLanguage():           # switch to english keyboard
         click(us)
     pass
 
+def focusprocessing():
+    click(Location(1650,100))
+    pass
+
 def shootandwait():
-    click(Location(1650,100))# SCREEN 2 to processing
-    type("h")                 # flash
-    
-    click("9.png")          # SCREEN 1 with canon app 
+    click(Location(1650,100)) # SCREEN 2 to processing
+    type("h")                 # flash 
+    # click("9.png")            # SCREEN 1 with canon app 
     wait(.2)                  # waiting for camera
     
-    click(Location(1650,100)) # SCREEN 2 to processing
+    focusprocessing()         # SCREEN 2 to processing
     type("g")                 # image
     
     wait(2)                   # time between 2 pictures
-    #shootandwait()            # and back to watch
-    pass
     
-setLanguage()
+    pass
 
-while 1:
-    shootandwait()
+setLanguage()
+for i in range(1,10) :
+        shootandwait()
+
+focusprocessing()     # SCREEN 2 to processing
+type("k")
