@@ -93,6 +93,9 @@ void keyPressed(){
   if( key == 'z') posy --;                //      z
   if( key == 'd') posx ++;                //    q s d
   if( key == 'q') posx --;                //      -
+
+  // kill
+  if( key == 'k') exit();   
 }
 void refreshlastcapture(){
   // scanning imageSet folder with specific paterns
