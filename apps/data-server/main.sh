@@ -4,7 +4,7 @@
 assets="../../assets/"
 waitingList="$assets/waitinglist/"
 archive="$assets/archive/"
-EF="exposer-flasher"
+EF="exposerFlasher"
 EFdata="$EF/data/"
 
 
@@ -48,8 +48,9 @@ nega=$EFdata"last.png"
 
 negaProcess
 
-#runPDE Bezier run &
-#ls /
+# Run projection and automation
+runPDE $EF present &
+runSikuli $EF/stagiaire.sikuli
 
 # mv -v $waitingList$negaName $archive$negaName
 echo "files in list : "$(ls $waitingList)
