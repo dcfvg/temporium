@@ -81,7 +81,7 @@ function newcapation {
 }
 function timelaps {
   killall -9 "VLC"
-  bash "exptomov.sh" &
+  bash $path"/exptomov.sh" &
   sleep 60
   $vlc --noaudio --video-x=255 --video-y=0 --width=1025 --height=810 --loop /Users/etudiant/Desktop/temporium/assets/captation/exp/live.mp4 &
 }
