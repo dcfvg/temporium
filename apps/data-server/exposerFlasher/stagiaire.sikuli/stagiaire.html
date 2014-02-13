@@ -70,14 +70,16 @@
 <h2>stagiaire.sikuli</h2> <a href="stagiaire.zip">(Download this script)</a>
 </div>
 <pre class="sikuli-code">
-Settings.ActionLogs=True
-Settings.InfoLogs=True
-Settings.DebugLogs=True
+Settings.ActionLogs=False
+Settings.InfoLogs=False
+Settings.DebugLogs=False
 
 Settings.MoveMouseDelay = <span class="dig">0</span>
 Settings.DelayAfterDrag = <span class="dig">0</span>
 Settings.DelayBeforeDrop = <span class="dig">0</span>
 Settings.MoveMouseDelay = <span class="dig">0</span>
+
+EOS=Region(<span class="dig">83</span>,<span class="dig">25</span>,<span class="dig">267</span>,<span class="dig">122</span>)
 
 <span class="kw">def</span> setLanguage():           <span class="cmt"># switch to english keyboard</span>
     fr = <img src="finder-drapeaufr.png" />; us = Pattern(<img src="1348612073658.png" />).targetOffset(<span class="dig">200</span>,<span class="dig">0</span>)
@@ -87,27 +89,43 @@ Settings.MoveMouseDelay = <span class="dig">0</span>
     <span class="kw">pass</span>
 
 <span class="kw">def</span> focusprocessing():
-    <span class="skw">click</span>(Location(<span class="dig">1650</span>,<span class="dig">100</span>))
+    <span class="cmt">#type(Key.TAB,Key.CMD)
+</span>    <span class="cmt">#type(Key.TAB,Key.CMD)
+</span>    <span class="cmt">#
+</span>    Region(<span class="dig">476</span>,<span class="dig">943</span>,<span class="dig">315</span>,<span class="dig">80</span>).<span class="skw">click</span>(Pattern(<img src="1392221269693.png" />).targetOffset(<span class="dig">17</span>,<span class="dig">2</span>))
+    <span class="skw">wait</span>(<span class="dig">.4</span>)
+<span class="kw">pass</span>
+<span class="kw">def</span> focuseos():
+    switchApp(<span class="str">"EOS Utility"</span>)
     <span class="kw">pass</span>
 
 <span class="kw">def</span> shootandwait():
-    <span class="skw">click</span>(Location(<span class="dig">1650</span>,<span class="dig">100</span>)) <span class="cmt"># SCREEN 2 to processing</span>
-    <span class="skw">type</span>(<span class="str">"h"</span>)                 <span class="cmt"># flash </span>
-    <span class="skw">click</span>(<img src="9.png" />)           <span class="cmt"># SCREEN 1 with canon app </span>
-    <span class="skw">wait</span>(<span class="dig">.2</span>)                  <span class="cmt"># waiting for camera</span>
+
+    focusprocessing()         <span class="cmt"># SCREEN 2 to processing</span>
+
+    <span class="skw">type</span>(<span class="str">"h"</span>)                 <span class="cmt"># flash</span>
+    focuseos()
+
+    <span class="skw">click</span>(<img src="9.png" />)            <span class="cmt"># SCREEN 1 with canon app </span>
+    <span class="skw">wait</span>(<span class="dig">.5</span>)                  <span class="cmt"># waiting for camera</span>
 
     focusprocessing()         <span class="cmt"># SCREEN 2 to processing</span>
     <span class="skw">type</span>(<span class="str">"g"</span>)                 <span class="cmt"># image</span>
 
-    <span class="skw">wait</span>(<span class="dig">2</span>)                   <span class="cmt"># time between 2 pictures</span>
-
+    <span class="skw">wait</span>(<span class="dig">3</span>)                   <span class="cmt"># time between 2 pictures</span>
+    focuseos()
     <span class="kw">pass</span>
 
 setLanguage()
-<span class="kw">for</span> i <span class="kw">in</span> range(<span class="dig">1</span>,<span class="dig">10</span>) :
-        shootandwait()
-        focusprocessing()     <span class="cmt"># SCREEN 2 to processing</span>
-        <span class="skw">type</span>(<span class="str">"k"</span>)
+
+switchApp(<span class="str">"VLC"</span>)
+focuseos()
+
+<span class="kw">for</span> i <span class="kw">in</span> range(<span class="dig">1</span>,<span class="dig">2500</span>) :
+    shootandwait()
+
+focusprocessing()           <span class="cmt"># SCREEN 2 to processing</span>
+<span class="skw">type</span>(<span class="str">"k"</span>)
 </pre>
 </body>
 </html>

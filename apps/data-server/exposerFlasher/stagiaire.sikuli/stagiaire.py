@@ -1,11 +1,13 @@
-Settings.ActionLogs=True
-Settings.InfoLogs=g
-Settings.DebugLogs=True
+Settings.ActionLogs=False
+Settings.InfoLogs=False
+Settings.DebugLogs=False
 
 Settings.MoveMouseDelay = 0 
 Settings.DelayAfterDrag = 0
 Settings.DelayBeforeDrop = 0
 Settings.MoveMouseDelay = 0
+
+EOS=Region(83,25,267,122)
 
 def setLanguage():           # switch to english keyboard
     fr = "finder-drapeaufr.png"; us = Pattern("1348612073658.png").targetOffset(200,0)
@@ -15,25 +17,40 @@ def setLanguage():           # switch to english keyboard
     pass
 
 def focusprocessing():
-    click(Location(1650,100))
+    #type(Key.TAB,Key.CMD)
+    #type(Key.TAB,Key.CMD)
+    #
+    focuseos()
+    wait(.1)
+    Region(476,943,315,80).click(Pattern("1392221269693.png").targetOffset(17,2))
+    wait(.3)
+pass
+def focuseos():
+    switchApp("EOS Utility")
     pass
 
 def shootandwait():
-    click(Location(1650,100)) # SCREEN 2 to processing
-    type("h")                 # flash 
-    # click("9.png")            # SCREEN 1 with canon app 
-    wait(.2)                  # waiting for camera
+    
+    focusprocessing()         # SCREEN 2 to processing
+    
+    type("h")                 # flash
+    
+    click("9.png")            # SCREEN 1 with canon app 
+    wait(.4)                  # waiting for camera
     
     focusprocessing()         # SCREEN 2 to processing
     type("g")                 # image
     
-    wait(2)                   # time between 2 pictures
-    
+    wait(3)                   # time between 2 pictures
     pass
 
 setLanguage()
-for i in range(1,10) :
-        shootandwait()
 
-focusprocessing()     # SCREEN 2 to processing
+switchApp("VLC")
+focuseos()
+
+for i in range(1,800) :
+    shootandwait()
+
+focusprocessing()           # SCREEN 2 to processing
 type("k")
