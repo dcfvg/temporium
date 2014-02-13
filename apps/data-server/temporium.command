@@ -12,7 +12,7 @@ archive="$assets/archive/"
 
 captation=$assets"/captation/"
 exp="$captation/exp"
-live="$captation/exp/live.mp4"
+live="$exp/live.mp4"
 
 EF=$path"/exposerFlasher"
 EFdata="$EF/data/"
@@ -82,6 +82,7 @@ function newcapation {
 function timelaps {
   killall -9 "VLC"
   bash "exptomov.sh" &
+  sleep 60
   $vlc --noaudio --video-x=255 --video-y=0 --width=1025 --height=810 --loop /Users/etudiant/Desktop/temporium/assets/captation/exp/live.mp4 &
 }
 
