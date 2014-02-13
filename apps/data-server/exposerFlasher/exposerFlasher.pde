@@ -33,7 +33,7 @@ void setup(){
 
   // images
   inega  = loadImage("last.png");
-  iflash = loadImage("aquarium-flash-carre.png");
+  iflash = loadImage("aquarium-flash.png");
   if(getlastimage) iflash = loadImage("aquarium-flash-fullHD.png");
   inoir  = loadImage("noir.png");
   
