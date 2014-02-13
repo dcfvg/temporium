@@ -11,7 +11,7 @@ int posx = 0, posy = 0, w = 1920, h = 1080, nbImages = 4;
 String feedback = "~", imageSet = "exp", lastcapture = "";
 // objets
 
-boolean info = true, console = false, fullscreen = true, ispause = false, flash = true, getlastimage = false;
+boolean info = true, console = false, fullscreen = false, ispause = false, flash = true, getlastimage = false;
 
 PImage iflash, inega, inoir, img;
 boolean sketchFullScreen() {return fullscreen;}
