@@ -1,6 +1,5 @@
-*data*
-*assets*
-
+*data
+*assets
 *.pdf
 *.indd
 *.ai
@@ -9,18 +8,14 @@
 *.jpeg
 *.gif
 *.psd
-
 *.mp4
 *.m4a
 *.mov
-
 *.mp3
 *.wav
-
 *.zip
 *.dmg
 
 *.crdownload
 *btsync*
-
 *.tmproj
