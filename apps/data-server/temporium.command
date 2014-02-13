@@ -86,7 +86,8 @@ function timelaps {
 }
 
 # launch animation play/processing
-# timelaps
+newcapation
+timelaps
 
 while true
 do
@@ -113,10 +114,10 @@ do
   say "starting exposure !"
 
   # Run projection and automation
-  #open -a EOS\ Utility.app $scan &
-  #runPDE $EF present &
+  open -a EOS\ Utility.app $scan &
+  runPDE $EF present &
   sleep 5
-  #runSikuli $EF/stagiaire.sikuli
+  runSikuli $EF/stagiaire.sikuli
 
   # remove file from list
   mv -v $waitingList$negaName $archive$negaName
