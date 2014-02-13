@@ -3,7 +3,7 @@
 # auto compile to video the JPG of the current folder
 
 freq=30 # fréquence de compilation
-path="$(dirname $0)../../assets/captation/exp"
+path="$(dirname $0)/../../assets/captation/exp"
 
 echo $path
 
