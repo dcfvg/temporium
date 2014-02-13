@@ -9,8 +9,11 @@ path="`( cd \"$path\" && pwd )`"
 assets=$path"/../../assets/"
 waitingList="$assets/waitinglist/"
 archive="$assets/archive/"
-captation="/Users/etudiant/Desktop/temporium/assets/captation/"
+
+captation=$assets"/captation/"
+exp="$captation/exp"
 live="$captation/exp/live.mp4"
+
 EF=$path"/exposerFlasher"
 EFdata="$EF/data/"
 
@@ -63,15 +66,33 @@ function webcamimage {
   now=$(date +"%y.%m.%d-%H.%M.%S")
   imagesnap "$waitingList/$now.jpg"
 }
+function newcapation {
+  now=$(date +"%y.%m.%d_%H.%M.%S")
+  
+  mv $exp "$captation/exp-$now"
+  mkdir $exp
+  
+  label="$(date +"%y.%m.%d-%H:%M:%S")"
+  convert -pointsize 36 -size 1920x1080 -gravity center -background black -fill white label:$label "$exp/0000000000.jpg"
+  
+  for (( i=10; i>0; i--)); do
+    cp "$exp/0000000000.jpg" "$exp/000000000$i.jpg"
+	done
+}
+function timelaps {
+  killall -9 "VLC"
+  bash "exptomov.sh" &
+  $vlc --noaudio --video-x=255 --video-y=0 --width=1025 --height=810 --loop /Users/etudiant/Desktop/temporium/assets/captation/exp/live.mp4 &
+}
 
 # launch animation play/processing
-killall -9 "VLC"
-bash "$captation/exptomov.sh" &
-$vlc --noaudio --video-x=255 --video-y=0 --width=1025 --height=810 --loop /Users/etudiant/Desktop/temporium/assets/captation/exp/live.mp4 &
+# timelaps
 
 while true
 do
-
+  
+  newcapation
+  
   # Take snapshot if no picture
   waitingfiles=$(find $waitingList -type f ! -iname "*sync*" -exec printf '.' \; | wc -c  | tr -d ' ')
  
@@ -92,10 +113,10 @@ do
   say "starting exposure !"
 
   # Run projection and automation
-  open -a EOS\ Utility.app $scan &
-  runPDE $EF present &
+  #open -a EOS\ Utility.app $scan &
+  #runPDE $EF present &
   sleep 5
-  runSikuli $EF/stagiaire.sikuli
+  #runSikuli $EF/stagiaire.sikuli
 
   # remove file from list
   mv -v $waitingList$negaName $archive$negaName
@@ -103,6 +124,8 @@ do
 
   # wait for wash
   say "exposure finished !"
-  sleep 300
-
+  sleep 120
+  say "next exposure in 1 minute"
+  sleep 60
+  
 done
