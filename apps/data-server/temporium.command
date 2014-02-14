@@ -73,10 +73,10 @@ function newcapation {
   mkdir $exp
   
   label="$(date +"%y.%m.%d-%H:%M:%S")"
-  convert -pointsize 36 -size 1920x1080 -gravity center -background black -fill white label:$label "$exp/0000000000.jpg"
+  convert -pointsize 36 -size 1920x1080 -gravity center -background black -fill white label:$label "$exp/_000.JPG"
   
-  for (( i=10; i>0; i--)); do
-    cp "$exp/0000000000.jpg" "$exp/000000000$i.jpg"
+  for (( i=50; i>0; i--)); do
+    cp "$exp/_000.JPG" "$exp/_00$i.JPG"
 	done
 }
 function timelaps {
