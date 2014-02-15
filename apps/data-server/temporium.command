@@ -38,6 +38,9 @@ function runSikuli {
   $sikuliIDE -r $1
 }
 function negaProcess {
+  
+  say "processing picture."
+  
   convert $waitingList$negaName \
   -resize 1920x1920^ -gravity Center -crop 1920x1080+0+0 \
   -modulate 100,0,100 \
@@ -50,14 +53,14 @@ function negaProcess {
 function webcamimage {
   # capture countdown
   for (( i=1; i>0; i--)); do
-  say "next picture $i minutes" 
-  sleep 60
+    say "next picture $i minutes" 
+    sleep 60
   done
 
   say "next picture 10 seconds"
   for (( i=10; i>0; i--)); do
-  sleep 1
-  say "$i"
+    sleep 1
+    say "$i"
   done
   
   say "0"
@@ -84,8 +87,8 @@ function newcapation {
 function timelaps {
   killall -9 "VLC"
   bash $path"/exptomov.sh" &
-  sleep 60
-  $vlc --noaudio --video-x=255 --video-y=0 --width=1025 --height=810 --loop /Users/etudiant/Desktop/temporium/assets/captation/exp/live.mp4 &
+  sleep 30
+  $vlc --noaudio --video-x=255 --video-y=0 --width=1025 --height=810 --loop $captation/exp/live.mp4 &
 }
 
 # launch animation play/processing
