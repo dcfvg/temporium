@@ -39,8 +39,6 @@ function runSikuli {
 }
 function negaProcess {
   
-  say "processing picture."
-  
   convert $waitingList$negaName \
   -resize 1920x1920^ -gravity Center -crop 1920x1080+0+0 \
   -modulate 100,0,100 \
@@ -52,20 +50,17 @@ function negaProcess {
 }
 function webcamimage {
   # capture countdown
-  for (( i=1; i>0; i--)); do
-    say "next picture $i minutes" 
-    sleep 60
-  done
+  say "next picture $i minutes" 
+  sleep 60
 
   say "next picture 10 seconds"
+  
   for (( i=10; i>0; i--)); do
     sleep 1
     say "$i"
   done
   
-  say "0"
-
-  # capture countdown
+  say "0 !" &
   now=$(date +"%y.%m.%d-%H.%M.%S")
   imagesnap "$waitingList/$now.jpg"
 }
@@ -84,9 +79,8 @@ function newcapation {
 	done
 }
 function timelaps {
-  echo "timelaps start"
   bash $path"/exptomov.sh" &
-  sleep 30
+  sleep 10
 }
 function lanchvideo {
   killall -9 "VLC"
@@ -94,15 +88,13 @@ function lanchvideo {
 }
 
 # launch animation play/processing
-
-#git --git-dir=~/temporium/.git pull
-
+say "set interface"
 newcapation
-timelaps
+timelaps &
+lanchvideo
 
 while true
 do
-  lanchvideo
   
   # Take snapshot if no picture
   waitingfiles=$(find $waitingList -type f ! -iname "*sync*" ! -iname "*.DS_Store" -exec printf '.' \; | wc -c  | tr -d ' ')
@@ -116,11 +108,14 @@ do
 
   # get source
   negaSource=$(find $waitingList -maxdepth 1 -iname '*.jpg' | head -1)
-  negaName=$(basename $negaSource)x
+  negaName=$(basename $negaSource)
   nega=$EFdata"last.png"
 
   # image processing
+  
+  say "processing picture."
   negaProcess
+  
   say "starting exposure !"
 
   # Run projection and automation
