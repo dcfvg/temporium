@@ -96,7 +96,7 @@ do
   newcapation
   
   # Take snapshot if no picture
-  waitingfiles=$(find $waitingList -type f ! -iname "*sync*" -exec printf '.' \; | wc -c  | tr -d ' ')
+  waitingfiles=$(find $waitingList -type f ! -iname "*sync*" ! -iname "*.DS_Store" -exec printf '.' \; | wc -c  | tr -d ' ')
  
   if [[ $waitingfiles > 0 ]];then
     echo "say $waitingfiles pictures waiting !"
