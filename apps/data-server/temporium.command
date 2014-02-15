@@ -73,7 +73,8 @@ function newcapation {
   mkdir $exp
   
   label="$(date +"%y.%m.%d-%H:%M:%S")"
-  convert -pointsize 36 -size 1920x1080 -gravity center -background black -fill white label:$label "$exp/_000.JPG"
+  # convert -pointsize 36 -size 1920x1080 -gravity center -background black -fill white label:$label "$exp/_000.JPG"
+  convert -size 1920x1080 -background black "$exp/_000.JPG"
   
   for (( i=50; i>0; i--)); do
     cp "$exp/_000.JPG" "$exp/_00$i.JPG"
