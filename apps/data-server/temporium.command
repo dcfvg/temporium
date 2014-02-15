@@ -92,6 +92,9 @@ function timelaps {
 }
 
 # launch animation play/processing
+
+git --git-dir=../../.git pull
+
 newcapation
 timelaps
 
