@@ -18,22 +18,19 @@ void loop(){
   else digitalWrite(motorPinA, LOW);
 
   // OUT / random 
-  if(millis() % 1000 == 1 && sec){  // every seconds
 
-    if(timer == 0) {
-      timer = random(1 , 12) * 10; // random time
-      pause = !pause;       // pause or pumping mode 
-    }else{ 
-      timer --;
-    }
-
-    if (timer > 0 && ! pause) digitalWrite(motorPinB, HIGH);
-    else digitalWrite(motorPinB, LOW);
-    sec = false;
-  }else{
-    sec = true;
+  if(timer == 0) {
+    timer = random(1 , 12) * 10; // random time
+    pause = !pause;       // pause or pumping mode 
+  }else{ 
+    timer --;
   }
-  delay(900);
+
+  if (timer > 0 && ! pause) digitalWrite(motorPinB, HIGH);
+  else digitalWrite(motorPinB, LOW);
+
+  delay(1000);
 }
+
 
 
