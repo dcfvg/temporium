@@ -93,7 +93,7 @@ function timelaps {
 
 # launch animation play/processing
 
-git --git-dir=../../.git pull
+git --git-dir=~/temporium/ pull
 
 newcapation
 timelaps
