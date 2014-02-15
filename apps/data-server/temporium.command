@@ -88,6 +88,9 @@ function timelaps {
   killall -9 "VLC"
   bash $path"/exptomov.sh" &
   sleep 30
+}
+function lanchvideo {
+  killall -9 "VLC"
   $vlc --noaudio --video-x=255 --video-y=0 --width=1025 --height=810 --loop ~/temporium/assets/captation/exp/live.mp4 &
 }
 
@@ -95,13 +98,12 @@ function timelaps {
 
 git --git-dir=~/temporium/.git pull
 
-newcapation
 timelaps
 
 while true
 do
-  
   newcapation
+  lanchvideo
   
   # Take snapshot if no picture
   waitingfiles=$(find $waitingList -type f ! -iname "*sync*" ! -iname "*.DS_Store" -exec printf '.' \; | wc -c  | tr -d ' ')
@@ -115,7 +117,7 @@ do
 
   # get source
   negaSource=$(find $waitingList -maxdepth 1 -iname '*.jpg' | head -1)
-  negaName=$(basename $negaSource)
+  negaName=$(basename $negaSource)x
   nega=$EFdata"last.png"
 
   # image processing
