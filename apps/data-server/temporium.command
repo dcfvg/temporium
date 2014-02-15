@@ -81,11 +81,10 @@ function newcapation {
   for (( i=50; i>0; i--)); do
     #cp "$exp/_000.JPG" "$exp/_00$i.JPG"
     cp "$captation/_000.JPG" "$exp/_00$i.JPG"
-    
 	done
 }
 function timelaps {
-  killall -9 "VLC"
+  echo "timelaps start"
   bash $path"/exptomov.sh" &
   sleep 30
 }
@@ -96,13 +95,13 @@ function lanchvideo {
 
 # launch animation play/processing
 
-git --git-dir=~/temporium/.git pull
+#git --git-dir=~/temporium/.git pull
 
+newcapation
 timelaps
 
 while true
 do
-  newcapation
   lanchvideo
   
   # Take snapshot if no picture
@@ -140,4 +139,6 @@ do
   say "next exposure in 1 minute"
   sleep 60
   
+  # set new captation 
+  newcapation
 done
