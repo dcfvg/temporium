@@ -1,5 +1,5 @@
 #!/bin/bash
-# set -x
+set -x
 
 vlc='/Applications/VLC.app/Contents/MacOS/VLC'
 
@@ -84,14 +84,14 @@ function timelaps {
 }
 function lanchvideo {
   killall -9 "VLC"
-  $vlc --noaudio --video-x=255 --video-y=0 --width=1025 --height=810 --loop ~/temporium/assets/captation/exp/live.mp4 &
+  $vlc --noaudio --video-x=255 --video-y=0 --width=1025 --height=810 --loop ~/temporium/assets/captation/exp/live.mp4 2> /dev/null &
 }
 
 # launch animation play/processing
 say "set interface"
 newcapation
 timelaps &
-lanchvideo
+lanchvideo &
 
 while true
 do
