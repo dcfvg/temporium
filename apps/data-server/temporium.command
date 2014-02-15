@@ -70,6 +70,7 @@ function newcapation {
   mkdir "$captation/exp-$now/"
   
   mv $exp/*.JPG "$captation/exp-$now/"
+  cp $exp/live.mp4 "$captation/exp-$now/$now.mp4"
   mkdir $exp
   
   label="$(date +"%y.%m.%d-%H:%M:%S")"
