@@ -88,12 +88,12 @@ function timelaps {
   killall -9 "VLC"
   bash $path"/exptomov.sh" &
   sleep 30
-  $vlc --noaudio --video-x=255 --video-y=0 --width=1025 --height=810 --loop ~/temporium/captation/exp/live.mp4 &
+  $vlc --noaudio --video-x=255 --video-y=0 --width=1025 --height=810 --loop ~/temporium/assets/captation/exp/live.mp4 &
 }
 
 # launch animation play/processing
 
-git --git-dir=~/temporium/ pull
+git --git-dir=~/temporium/.git pull
 
 newcapation
 timelaps
