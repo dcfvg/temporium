@@ -28,15 +28,16 @@ void loop(){
   // GET / random
   
   if(timer == 0) {
-    timer = random(1 , 12) * 10; // random time
-    pause = !pause;              // pause or pumping mode 
+    timer = random(1 , 12 ) * 10; // random time
+    pause = !pause;               // pause or pumping mode 
   }else{ 
-    timer --;                    // count time
+    timer --;                     // count time
   }
   
   if (timer > 0 && ! pause) digitalWrite(motorPinB, HIGH); // pumping only if timer is not finished and not in pause
   else digitalWrite(motorPinB, LOW); 
 
+  delay(500);                    // skectch resolution = 1s
   digitalWrite(led, HIGH);       // run monitor 
-  delay(1000);                   // skectch resolution = 1s
+  delay(500);                    // skectch resolution = 1s
 }
