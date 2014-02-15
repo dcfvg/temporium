@@ -67,7 +67,9 @@ function webcamimage {
 function newcapation {
   now=$(date +"%y.%m.%d_%H.%M.%S")
   
-  mv $exp "$captation/exp-$now"
+  mkdir "$captation/exp-$now/"
+  
+  mv $exp/* "$captation/exp-$now/"
   mkdir $exp
   
   label="$(date +"%y.%m.%d-%H:%M:%S")"
