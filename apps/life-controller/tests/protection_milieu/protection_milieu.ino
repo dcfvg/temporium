@@ -29,13 +29,11 @@ const int led = 13;
 // SENSORS
 const int bioreact_levelSensorPin = A3;    // bioreactor level sensor
 boolean   bioreact_protectElectrod = false;
-int       bioreact_protectElectrodPumps[] = { cultureToAqua_pin , motorPinAqToTrash};
 boolean   bioreact_Full = false;
 boolean   bioreact_FullPrev = false;
 
 const int aqua_levelSensorPin = A2;        // aquarium level sensor
 boolean   aqua_protectElectrod = false;
-int       aqua_protectElectrodPumps[] = {motorPinAqToTrash};
 boolean   aqua_Full = false;
 boolean   aqua_FullPrev = false;
 
@@ -91,6 +89,7 @@ void loop(){
   // add alguae to the aquarium
   
   if(is_full(aqua_levelSensorPin)) cultureToAqua = false; // check if aqurium is not full
+  
   activePump(cultureToAqua_pin , cultureToAqua);          // add culture to aquarium
   activePump(mediumToAqua_pin , mediumToAqua);            // add growing medium to aquarium
   activePump(aquaToTrash_pin , aquaToTrash);              // put aquarium to trash
@@ -118,8 +117,8 @@ void loop(){
   if(debug) Serial.println("\n");
 }
 boolean is_full(int sensorPin){
-
-  // poll electrod 
+  // poll electrod
+  
   double V_mes = (analogRead(sensorPin)/1024.0)*5.0; //tension mesurée aux bornes de l'électrode
   double R_mes = (R*V_mes)/(V-V_mes); //mesure de la résistance de l'électrode
  
@@ -138,6 +137,19 @@ boolean is_full(int sensorPin){
     return false;
   }
 }
+void activePump(int pin, boolean state){
+  // start/stop pump depending on state(true/false)
+  
+  if(state){
+    digitalWrite(pin, HIGH);
+    visual_feedback(pin, 1); 
+  }else{
+    digitalWrite(pin, LOW);
+    visual_feedback(pin, 0);
+  }
+}
+
+// dev tools and feedback tools
 void monitor(int speed){
   // led blinking
   digitalWrite(led, LOW);        
@@ -148,16 +160,5 @@ void visual_feedback(int pin, int state){
   // send serial feedback to visual_feedback.pde
   if(vFeedback){
     Serial.write((pin*10) + state);
-  }
-}
-void activePump(int pin, boolean state){
-  
-  // start/stop pump depending on state(true/false)
-  if(state){
-    digitalWrite(pin, HIGH);
-    visual_feedback(pin, 1); 
-  }else{
-    digitalWrite(pin, LOW);
-    visual_feedback(pin, 0);
   }
 }
