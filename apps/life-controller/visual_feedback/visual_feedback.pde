@@ -137,7 +137,7 @@ import processing.serial.*;
     frameRate(frequence);//rafraichissement une image toute les 40ms
     temps = (float) 1/frequence; 
     //Debit pompe : 
-    debit_pompe = (float) 2;//en L/min
+    debit_pompe = (float) 0.05;//en L/min
     le_milieu1.set_volume((float) (1));
     le_milieu2.set_volume((float) (1));
 
@@ -184,10 +184,10 @@ import processing.serial.*;
 
     //Cont 
     numero_cont = new String[6];
-    numero_cont[0] = "le_bioreacteur1";
+    numero_cont[0] = "";
     numero_cont[1] = "";
     numero_cont[2] = "l_aquarium";
-    numero_cont[3] = "";
+    numero_cont[3] = "le_bioreacteur1";
     numero_cont[4] = "";
     numero_cont[5] = "";
 
@@ -210,7 +210,7 @@ import processing.serial.*;
     {  
     inByte = myPort.read();  // read it and store it in val
     } 
-   //println(inByte);
+   println(inByte);
    action_A(inByte);
      
     int current_time = millis();
@@ -239,7 +239,7 @@ import processing.serial.*;
      
       break;
       case 3: 
-       get_cont(numero_Dizaine-1).volume_occ = 1;
+        get_cont(numero_Dizaine).volume_occ = 1;
 
       
       break;

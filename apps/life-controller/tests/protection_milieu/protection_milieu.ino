@@ -8,15 +8,17 @@ const int motorPinAqToTrash = 3;  // aquarium to trash      ( empty aquarium )
 const int led = 13;
  
 // electrodes
-const int bioreact_levelSensorPin = A0;    // bioreactor level sensor
+const int bioreact_levelSensorPin = A3;    // bioreactor level sensor
 boolean   bioreact_protectElectrod = false;
 int       bioreact_protectElectrodPumps[] = { motorPinBioToAq , motorPinAqToTrash};
 boolean   bioreact_Full = false;
- 
+boolean   bioreact_FullPrev = false;
+
 const int aqua_levelSensorPin = A2;        // aquarium level sensor
 boolean   aqua_protectElectrod = false;
 int       aqua_protectElectrodPumps[] = {motorPinAqToTrash};
 boolean   aqua_Full = false;
+boolean   aqua_FullPrev = false;
  
 // actions
 boolean   addAlguae = false;
@@ -60,22 +62,21 @@ void loop(){
   addAlguae_ButtonState = digitalRead(addAlguae_ButtonPin);
   if(addAlguae_ButtonState && !addAlguae_prevButtonState){ // check previous button state and user action
     addAlguae = !addAlguae;  // toogle state
-    Serial.print("[press]addAlguae:" + String(addAlguae) + "\t");
+    if(debug) Serial.print("[press]addAlguae:" + String(addAlguae) + "\t");
   }
  
   // empty aquarium         : start/stop
   emptyAqua_ButtonState = digitalRead(emptyAqua_ButtonPin);
   if (emptyAqua_ButtonState && !emptyAqua_prevButtonState){ // check previous button state and user action
     emptyAqua = !emptyAqua;  // toogle state
-    Serial.print("[press]emptyAqua:" + String(emptyAqua) + "\t"); 
+    if(debug) Serial.print("[press]emptyAqua:" + String(emptyAqua) + "\t"); 
   }
  
   // ACTION ///////////////
   //
   // add alguae to the aquarium
    
-  visual_feedback(0,is_full(bioreact_levelSensorPin) + 2);
-  visual_feedback(2,is_full(aqua_levelSensorPin) + 2);
+
   
   if(is_full(aqua_levelSensorPin)) addAlguae = false;
   
@@ -119,11 +120,19 @@ void loop(){
     visual_feedback(motorPinFoodToBio, 0);
   }
   
+  // send sensor visual feedback 
+  if(bioreact_FullPrev != is_full(bioreact_levelSensorPin)) visual_feedback(3,is_full(bioreact_levelSensorPin) + 2);
+  if(aqua_FullPrev != is_full(aqua_levelSensorPin)) visual_feedback(2,is_full(aqua_levelSensorPin) + 2);
+  
   // keep previous state
   addAlguae_prevButtonState = addAlguae_ButtonState;
   emptyAqua_prevButtonState = emptyAqua_ButtonState;
- 
-  if(debug)Serial.print("\n");
+
+  bioreact_FullPrev = is_full(bioreact_levelSensorPin);
+  aqua_FullPrev = is_full(aqua_levelSensorPin);
+  
+  
+  if(debug) Serial.println("\n");
 }
 boolean is_full(int sensorPin){
   double V_mes = (analogRead(sensorPin)/1024.0)*5.0; //tension mesurée aux bornes de l'électrode
@@ -149,6 +158,6 @@ void monitor(int speed){
 }
 void visual_feedback(int pin, int state){
   if(vFeedback){
-    Serial.write((pin*10)+state);
+    Serial.write((pin*10) + state);
   }
 }
