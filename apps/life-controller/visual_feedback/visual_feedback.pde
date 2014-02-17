@@ -184,12 +184,12 @@ import processing.serial.*;
 
     //Cont 
     numero_cont = new String[6];
-    numero_cont[0] = "le_milieu1";
-    numero_cont[1] = "le_milieu2";
-    numero_cont[2] = "le_bioreacteur1";
-    numero_cont[3] = "le_bioreacteur2";
-    numero_cont[4] = "l_aquarium";
-    numero_cont[5] = "le_stockage";
+    numero_cont[0] = "le_bioreacteur1";
+    numero_cont[1] = "";
+    numero_cont[2] = "l_aquarium";
+    numero_cont[3] = "";
+    numero_cont[4] = "";
+    numero_cont[5] = "";
 
   }
 
@@ -236,8 +236,12 @@ import processing.serial.*;
       action_Arduino(S);
       break;
     case 2:
-      get_cont(numero_Dizaine-1).volume_occ = 1;
+     
+      break;
+      case 3: 
+       get_cont(numero_Dizaine-1).volume_occ = 1;
 
+      
       break;
 
     }
