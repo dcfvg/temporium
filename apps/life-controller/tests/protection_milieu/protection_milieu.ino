@@ -10,7 +10,7 @@ const int led = 13;
 // electrodes
 const int bioreact_levelSensorPin = A0;    // bioreactor level sensor
 boolean   bioreact_protectElectrod = false;
-int       bioreact_protectElectrodMotors[] = {motorPinBioToAq , motorPinAqToTrash};
+int       bioreact_protectElectrodPumps[] = {motorPinBioToAq , motorPinAqToTrash};
 boolean   bioreact_Full = false;
 
 const int aqua_levelSensorPin = A1;        // aquarium level sensor
