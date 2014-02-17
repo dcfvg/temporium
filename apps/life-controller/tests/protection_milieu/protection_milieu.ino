@@ -2,7 +2,7 @@ const int R = 10030;              // Résistance utilisée pour le montage pont 
 const int V = 5;                  // Valeur de l'alimentation de l'Arduino, peu précis mais pas important pour le niveau de travail (en volts)
 
 // pumps 
-const int motorPinBioToAq = 6;    // bioreactor to aquarium ( fill with new alguae)
+const int motorPinBioToAq   = 6;    // bioreactor to aquarium ( fill with new alguae)
 const int motorPinFoodToBio = 9;  // food to the bioreactor ( fill with new growing medium)
 const int motorPinAqToTrash = 3;  // aquarium to trash      ( empty aquarium )
 const int led = 13;
@@ -75,19 +75,25 @@ void loop(){
   // add alguae to the aquarium
   if(addAlguae && bioreact_Full && !is_full(aqua_levelSensorPin)){
     digitalWrite(motorPinBioToAq, HIGH); 
+    visual_feedback(motorPinBioToAq, 1);
+    
     if(debug) Serial.println("bio -> aqua \t");
     bioreact_Full = true;
   }else{
     digitalWrite(motorPinBioToAq, LOW);
+    visual_feedback(motorPinBioToAq, 0);
     if (addAlguae_ButtonState && !addAlguae_prevButtonState) bioreact_Full = false;
   }
   
   // empty aquarium
   if(emptyAqua){
     digitalWrite(motorPinAqToTrash, HIGH);
+    visual_feedback(motorPinAqToTrash, 1);
+    
     if(debug) Serial.println("aqua -> trash \t");
   }else{
     digitalWrite(motorPinAqToTrash, LOW);
+    visual_feedback(motorPinAqToTrash, 0);
   }
   
   // fill BioReactor 
@@ -117,7 +123,9 @@ void electroProtection(int motors[],int protectElectrod){
   
   for (int i = 0; i<sizeof(motors); i++){
     digitalWrite(motors[i], HIGH);
-     if(debug)Serial.print("protect :: " + String(motors[i]));
+    visual_feedback(motors[i], 1);
+    
+    if(debug)Serial.print("protect :: " + String(motors[i]));
   }
 
   double V_mes = (analogRead(bioreact_levelSensorPin)/1024.0)*5.0; //tension mesurée aux bornes de l'électrode
@@ -126,6 +134,8 @@ void electroProtection(int motors[],int protectElectrod){
     protectElectrod = false;
     for (int i = 0; i<sizeof(motors); i++){
       digitalWrite(motors[i], LOW);
+      visual_feedback(motors[i], 0);
+      
       if(debug)Serial.print("Stop-protect :: " + String(motors[i]) + " \t");
     }
   }
@@ -136,15 +146,24 @@ void electroProtection(int motors[],int protectElectrod){
 void fillBioReactor(){
   if (!is_full(bioreact_levelSensorPin)){
     digitalWrite(motorPinFoodToBio, HIGH);
+    visual_feedback(motorPinFoodToBio, 1);
+    
     if(debug)Serial.println("medium -> bioreact \t");
   }else{
     digitalWrite(motorPinFoodToBio, LOW);
+    visual_feedback(motorPinFoodToBio, 0);
+    
     bioreact_Full = true;
     bioreact_protectElectrod = true;
   }
 }
-void monitor(int speed){
+void monitor(int speed){  
   digitalWrite(led, LOW);        
   delay(speed);
   digitalWrite(led, HIGH);
+}
+void visual_feedback(int motor, int state){
+  if(vFeedback){
+    Serial.write((motor*10)+state);
+  }
 }
