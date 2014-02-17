@@ -80,7 +80,8 @@ void loop(){
   
   if(is_full(aqua_levelSensorPin)) addAlguae = false;
   
-  visual_feedback(aqua_levelSensorPin, is_full(aqua_levelSensorPin));
+  visual_feedback(0, is_full(bioreact_levelSensorPin) + 2);
+  visual_feedback(2, is_full(aqua_levelSensorPin) + 2);
   
   if(addAlguae){ //  && is_full(bioreact_levelSensorPin) && !is_full(aqua_levelSensorPin)
     digitalWrite(motorPinBioToAq, HIGH);
