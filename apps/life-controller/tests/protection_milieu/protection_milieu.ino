@@ -113,8 +113,6 @@ void loop(){
   bioreact_FullPrev             = is_full(bioreact_levelSensorPin);
   aqua_FullPrev                 = is_full(aqua_levelSensorPin);
   
-  
-  if(debug) Serial.println("\n");
 }
 boolean is_full(int sensorPin){
   // poll electrod
