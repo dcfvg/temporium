@@ -53,9 +53,15 @@ import processing.serial.*;
     size(800,700);
     background(150);
     
+<<<<<<< HEAD
       String portName = Serial.list()[2]; //change the 0 to a 1 or 2 etc. to match your port
   myPort = new Serial(this, portName, 9600); 
      
+=======
+    String portName = Serial.list()[2]; //change the 0 to a 1 or 2 etc. to match your port
+    myPort = new Serial(this, portName, 9600); 
+
+>>>>>>> 0bd1edddab5abd3a2fa8a40c81557a04d78e0e5d
     //On initilise les positions (de 0 à 1, en pourcentage de la taille de la fenetre): 
 
     position_milieu1 = new float[2];
