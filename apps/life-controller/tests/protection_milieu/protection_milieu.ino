@@ -93,7 +93,7 @@ void loop(){
   activePump(cultureToAqua_pin , cultureToAqua);          // add culture to aquarium
   activePump(mediumToAqua_pin , mediumToAqua);            // add growing medium to aquarium
   activePump(aquaToTrash_pin , aquaToTrash);              // put aquarium to trash
-  activePump(aquaToTrash_pin , (!is_full(bioreact_levelSensorPin) && !cultureToAqua)); // fill BioReactor
+  activePump(aquaToTrash_pin , !is_full(bioreact_levelSensorPin) && !cultureToAqua); // fill BioReactor
   
   // send sensor visual feedback 
   if(bioreact_FullPrev != is_full(bioreact_levelSensorPin)) visual_feedback(3,is_full(bioreact_levelSensorPin) + 2);
@@ -104,7 +104,6 @@ void loop(){
   aquaToTrash_prevButtonState   = aquaToTrash_ButtonState;
   bioreact_FullPrev             = is_full(bioreact_levelSensorPin);
   aqua_FullPrev                 = is_full(aqua_levelSensorPin);
-  
 }
 boolean is_full(int sensorPin){
   // poll electrod
@@ -127,10 +126,10 @@ boolean is_full(int sensorPin){
     return false;
   }
 }
-void activePump(int pin, boolean state){
+void activePump(int pin, boolean condition){
   // start/stop pump depending on state(true/false)
   
-  if(state){
+  if(condition){
     digitalWrite(pin, HIGH);
     visual_feedback(pin, 1); 
   }else{
