@@ -1,8 +1,6 @@
-
 import processing.serial.*;
-Serial myPort;  // Create object from Serial class
 
-int inByte;
+
   int oldtime;
   int i ;
 
@@ -15,6 +13,9 @@ int inByte;
 
   container les_container[];
   int test ; 
+  
+  Serial myPort;  // Create object from Serial class
+  int inByte;
 
   //Position des elements 
   float[] position_bioreacteur1 ;
@@ -39,6 +40,8 @@ int inByte;
   //Pompes
   pompe[] les_pompes;
   float debit_pompe;
+  
+  String[] digit_pompe; //Nom des pompes dans l'ordre des pin digital
 
   float temps; //temps entre deux rafraichissement;
 
@@ -129,10 +132,10 @@ myPort = new Serial(this, portName, 9600);
 
     //frequence de rafrichissement : 
     float frequence = 25;
-    frameRate(frequence);//rafraichissement une image toute les 40ms
+    //frameRate(frequence);//rafraichissement une image toute les 40ms
     temps = (float) 1/frequence; 
     //Debit pompe : 
-    debit_pompe = (float) 0.5;//en L/min
+    debit_pompe = (float) 2;//en L/min
     le_milieu1.set_volume((float) (1));
     le_milieu2.set_volume((float) (1));
 
@@ -159,6 +162,23 @@ myPort = new Serial(this, portName, 9600);
       System.out.println(les_pompes[i].name);
     }
     oldtime = 0;
+    
+    //Pompes branchees sur les Gigital pins , avec syntaxe PB1M1 pour pompe B1 -> M1
+    digit_pompe = new String[14];
+    digit_pompe[0] = "";
+    digit_pompe[1] = "PM2B1";
+    digit_pompe[2] = "PB1A";
+    digit_pompe[3] = "";
+    digit_pompe[4] = "";
+    digit_pompe[5] = "";
+    digit_pompe[6] = "";
+    digit_pompe[7] = "";
+    digit_pompe[8] = "";
+    digit_pompe[9] = "";
+    digit_pompe[10] ="";
+    digit_pompe[11] ="";
+    digit_pompe[12] ="PAS";
+    digit_pompe[13] ="";
 
   }
 
@@ -175,75 +195,30 @@ myPort = new Serial(this, portName, 9600);
       }
     }
     
-    
-   /* int currenttime = millis();
-
-    //if(currenttime - oldtime > 200){
-      println(currenttime - oldtime);
-    //}
-    oldtime = currenttime;*/
     if ( myPort.available() > 0) 
-  {  // If data is available,
-  
+  {  
   inByte = myPort.read();  // read it and store it in val
   } 
-  
+ println(inByte);
  action_A(inByte);
- 
-    
-        
-
+  
     dessiner();
     
   }
   public void action_A(int N){
+    int numero_digit_Pump = N/10; //Donne le numero du digital pin de la pompe
+    int Pump_state = N % 10;
     String S = new String();
-    S = "";
-    switch(N) {
-    case 10: 
-      S = "PM2B1_OFF";
+    S = digit_pompe[numero_digit_Pump];
+    switch(Pump_state) {
+    case 0: 
+      S = S +"_OFF";
       break;
-    case 11:
-      S = "PM2B1_ON";
+    case 1:
+      S = S +"_ON";
       break;
-    case 20: 
-      S = "PB1A_OFF";
-      break;
-    case 21:
-      S = "PB1A_ON";
-      break;
-    case 30: 
-      S = "PM2B2_OFF";
-      break;
-    case 31:
-      S = "PM2B2_ON";
-      break;
-    case 40: 
-      S = "PB2A_OFF";
-      break;
-    case 41:
-      S = "PB2A_ON";
-      break;
-    case 50: 
-      S = "PM1A_OFF";
-      break;
-    case 51:
-      S = "PM1A_ON";
-      break;
-    case 60: 
-      S = "PAS_OFF";
-      break;
-    case 61:
-      S = "PAS_ON";
-      break;
-    case 70: 
-      S = "PAA_OFF";
-      break;
-    case 71:
-      S = "PAA_ON";
-      break;  
-      
     }
+    println(S);
     action_Arduino(S);
   }
   public void action_Arduino(String uneString){
@@ -257,21 +232,20 @@ myPort = new Serial(this, portName, 9600);
         }
         if (S[1].equals("OFF")){
           les_pompes[j].set_state(false);
+       
         }
         
       }
     }
   }
-/*    
-      public void mousePressed(){
+  /*public void mousePressed(){
     for (int i = 0 ; i<les_pompes.length; i++){
       les_pompes[i].set_state(false);
     }  
     les_pompes[test].set_state(true);
     System.out.println(les_pompes[test].name);
     test = (test +1)%7;
-  }
-  */
+  }*/
   void dessiner(){
     le_milieu1.dessiner();
     le_milieu2.dessiner();
