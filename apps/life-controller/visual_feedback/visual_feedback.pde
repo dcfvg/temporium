@@ -14,9 +14,9 @@ import processing.serial.*;
   container les_container[];
   int test ; 
   
-  Serial myPort;  // Create object from Serial class
-  int inByte;
-
+    Serial myPort;  // Create object from Serial class
+    int inByte;
+   
   //Position des elements 
   float[] position_bioreacteur1 ;
   float[] position_bioreacteur2;
@@ -40,8 +40,10 @@ import processing.serial.*;
   //Pompes
   pompe[] les_pompes;
   float debit_pompe;
-  
+
   String[] digit_pompe; //Nom des pompes dans l'ordre des pin digital
+  String[] numero_cont;//numero des cont 
+
 
   float temps; //temps entre deux rafraichissement;
 
@@ -51,9 +53,9 @@ import processing.serial.*;
     size(800,700);
     background(150);
     
-    String portName = Serial.list()[2]; //change the 0 to a 1 or 2 etc. to match your port
-myPort = new Serial(this, portName, 9600); 
-
+      String portName = Serial.list()[2]; //change the 0 to a 1 or 2 etc. to match your port
+  myPort = new Serial(this, portName, 9600); 
+     
     //On initilise les positions (de 0 à 1, en pourcentage de la taille de la fenetre): 
 
     position_milieu1 = new float[2];
@@ -116,7 +118,7 @@ myPort = new Serial(this, portName, 9600);
     le_milieu1 = new container(position_milieu1,1,1,"le_milieu1");
     les_container[0] = le_milieu1;
     le_milieu2 = new container(position_milieu2,2,1,"le_milieu2");
-    les_container[1] = le_milieu1;
+    les_container[1] = le_milieu2;
 
     le_bioreacteur1 = new container(position_bioreacteur1,1,2,"le_bioreacteur1");
     les_container[2] = le_bioreacteur1;
@@ -131,11 +133,11 @@ myPort = new Serial(this, portName, 9600);
     i = 0;
 
     //frequence de rafrichissement : 
-    float frequence = 25;
-    //frameRate(frequence);//rafraichissement une image toute les 40ms
+    float frequence = 60;
+    frameRate(frequence);//rafraichissement une image toute les 40ms
     temps = (float) 1/frequence; 
     //Debit pompe : 
-    debit_pompe = (float) 2;//en L/min
+    debit_pompe = (float) 0.05;//en L/min
     le_milieu1.set_volume((float) (1));
     le_milieu2.set_volume((float) (1));
 
@@ -162,7 +164,7 @@ myPort = new Serial(this, portName, 9600);
       System.out.println(les_pompes[i].name);
     }
     oldtime = 0;
-    
+
     //Pompes branchees sur les Gigital pins , avec syntaxe PB1M1 pour pompe B1 -> M1
     digit_pompe = new String[14];
     digit_pompe[0] = "";
@@ -180,6 +182,15 @@ myPort = new Serial(this, portName, 9600);
     digit_pompe[12] ="";
     digit_pompe[13] ="";
 
+    //Cont 
+    numero_cont = new String[6];
+    numero_cont[0] = "le_milieu1";
+    numero_cont[1] = "le_milieu2";
+    numero_cont[2] = "le_bioreacteur1";
+    numero_cont[3] = "le_bioreacteur2";
+    numero_cont[4] = "l_aquarium";
+    numero_cont[5] = "le_stockage";
+
   }
 
   public void draw(){
@@ -195,34 +206,56 @@ myPort = new Serial(this, portName, 9600);
       }
     }
     
-    if ( myPort.available() > 0) 
-  {  
-  inByte = myPort.read();  // read it and store it in val
-  } 
- println(inByte);
- action_A(inByte);
-  
+      if ( myPort.available() > 0) 
+    {  
+    inByte = myPort.read();  // read it and store it in val
+    } 
+   //println(inByte);
+   action_A(inByte);
+     
+    int current_time = millis();
+    println(current_time - oldtime);
+    oldtime = current_time;
     dessiner();
-    
+
   }
   public void action_A(int N){
-    int numero_digit_Pump = N/10; //Donne le numero du digital pin de la pompe
+    int numero_Dizaine = N/10; //Donne le numero du digital pin de la pompe
     int Pump_state = N % 10;
     String S = new String();
-    S = digit_pompe[numero_digit_Pump];
+    S = digit_pompe[numero_Dizaine];
     switch(Pump_state) {
     case 0: 
       S = S +"_OFF";
+      println(S);
+      action_Arduino(S);
       break;
     case 1:
       S = S +"_ON";
+      println(S);
+      action_Arduino(S);
       break;
+    case 2:
+      get_cont(numero_Dizaine).volume_occ = 1;
+
+      break;
+
     }
-    println(S);
-    action_Arduino(S);
+    
+  }
+  public container get_cont(int N){
+    String S = numero_cont[N];
+    container C = null;
+    for (int i = 0 ; i<les_container.length; i++){
+      if (les_container[i].name.equals(S)){
+        C = les_container[i];
+      }
+    }
+    return C;
+    
   }
   public void action_Arduino(String uneString){
-    
+
     String[] S = split(uneString,"_");
 
     for (int j =0; j <7; j++ ){
@@ -232,20 +265,20 @@ myPort = new Serial(this, portName, 9600);
         }
         if (S[1].equals("OFF")){
           les_pompes[j].set_state(false);
-       
+
         }
-        
+
       }
     }
   }
   /*public void mousePressed(){
-    for (int i = 0 ; i<les_pompes.length; i++){
-      les_pompes[i].set_state(false);
-    }  
-    les_pompes[test].set_state(true);
-    System.out.println(les_pompes[test].name);
-    test = (test +1)%7;
-  }*/
+      for (int i = 0 ; i<les_pompes.length; i++){
+        les_pompes[i].set_state(false);
+      }  
+      les_pompes[test].set_state(true);
+      System.out.println(les_pompes[test].name);
+      test = (test +1)%7;
+    }*/
   void dessiner(){
     le_milieu1.dessiner();
     le_milieu2.dessiner();
