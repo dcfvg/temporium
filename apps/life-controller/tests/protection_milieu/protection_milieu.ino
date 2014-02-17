@@ -1,16 +1,35 @@
-const int R = 10030;              // Résistance utilisée pour le montage pont diviseur de tension (en ohms)
-const int V = 5;                  // Valeur de l'alimentation de l'Arduino, peu précis mais pas important pour le niveau de travail (en volts)
- 
-// pumps 
-const int motorPinBioToAq   = 6;  // bioreactor to aquarium ( fill with new alguae)
-const int motorPinFoodToBio = 9;  // food to the bioreactor ( fill with new growing medium)
-const int motorPinAqToTrash = 3;  // aquarium to trash      ( empty aquarium )
+// ACTIONS
+
+// culture to aquarium 
+boolean   cultureToAqua = false;
+const int cultureToAqua_ButtonPin = 2;
+boolean   cultureToAqua_prevButtonState = false;
+int       cultureToAqua_ButtonState = 0;
+const int cultureToAqua_pin   = 6; 
+
+// aquarium to trash
+boolean   aquaToTrash = false;      
+const int aquaToTrash_ButtonPin = 4;
+boolean   aquaToTrash_prevButtonState = false;
+int       aquaToTrash_ButtonState = 0;
+const int aquaToTrash_pin = 3;
+
+// growing medium to aquarium
+boolean   mediumToAqua = false;
+const int mediumToAqua_ButtonPin = 7;
+boolean   mediumToAqua_prevButtonState = false;
+int       mediumToAqua_ButtonState = 0;
+const int mediumToAqua_pin = 4;
+
+// medium to the bioreactor ( fill with new growing medium)
+const int mediumToBioreact = 9;  
+
 const int led = 13;
- 
-// electrodes
+
+// SENSORS
 const int bioreact_levelSensorPin = A3;    // bioreactor level sensor
 boolean   bioreact_protectElectrod = false;
-int       bioreact_protectElectrodPumps[] = { motorPinBioToAq , motorPinAqToTrash};
+int       bioreact_protectElectrodPumps[] = { cultureToAqua_pin , motorPinAqToTrash};
 boolean   bioreact_Full = false;
 boolean   bioreact_FullPrev = false;
 
@@ -19,37 +38,33 @@ boolean   aqua_protectElectrod = false;
 int       aqua_protectElectrodPumps[] = {motorPinAqToTrash};
 boolean   aqua_Full = false;
 boolean   aqua_FullPrev = false;
- 
-// actions
-boolean   addAlguae = false;
-const int addAlguae_ButtonPin = 2;
-boolean   addAlguae_prevButtonState = false;
-int       addAlguae_ButtonState = 0;
- 
-boolean   emptyAqua = false;
-const int emptyAqua_ButtonPin = 4;
-boolean   emptyAqua_prevButtonState = false;
-int       emptyAqua_ButtonState = 0;
- 
-// states
- 
+
+// PARAM
+const int R = 10030;              // Résistance utilisée pour le montage pont diviseur de tension (en ohms)
+const int V = 5;                  // Valeur de l'alimentation de l'Arduino, peu précis mais pas important pour le niveau de travail (en volts)
 boolean debug = false;
 boolean vFeedback = !debug; // [motorID 0-9][state 0-1]
  
 void setup(){
  
-  pinMode(bioreact_levelSensorPin, INPUT);
-  pinMode(aqua_levelSensorPin, INPUT);
+  // electrod 
+  pinMode(bioreact_levelSensorPin , INPUT);
+  pinMode(aqua_levelSensorPin , INPUT);
  
-  pinMode(addAlguae_ButtonPin, INPUT);
-  pinMode(emptyAqua_ButtonPin, INPUT);
+  // buttons
+  pinMode(cultureToAqua_ButtonPin , INPUT);
+  pinMode(aquaToTrash_ButtonPin , INPUT);
+  pinMode(mediumToAqua_pin, INPUT);
  
-  pinMode(motorPinBioToAq,OUTPUT);
-  pinMode(motorPinFoodToBio,OUTPUT);
-  pinMode(motorPinAqToTrash,OUTPUT);
+  // pumps
+  pinMode(cultureToAqua_pin,OUTPUT);
+  pinMode(mediumToBioreact,OUTPUT);
+  pinMode(aquaToTrash_pin,OUTPUT);
+  
+  // feedback
   pinMode(led, OUTPUT);
- 
   Serial.begin(9600);
+  
 }
 void loop(){
  
@@ -59,90 +74,62 @@ void loop(){
   // ORDERS ///////////////
   //
   // alguae to aquarium     : start/stop
-  addAlguae_ButtonState = digitalRead(addAlguae_ButtonPin);
-  if(addAlguae_ButtonState && !addAlguae_prevButtonState){ // check previous button state and user action
-    addAlguae = !addAlguae;  // toogle state
-    if(debug) Serial.print("[press]addAlguae:" + String(addAlguae) + "\t");
-  }
- 
+  cultureToAqua_ButtonState = digitalRead(cultureToAqua_ButtonPin);
+  if(cultureToAqua_ButtonState && !cultureToAqua_prevButtonState) cultureToAqua = !cultureToAqua;  // toogle state
+  
+  // medium to aquarium     : start/stop
+  mediumToAqua_ButtonState = digitalRead(mediumToAqua_ButtonPin);
+  if(mediumToAqua_ButtonState && !mediumToAqua_prevButtonState) mediumToAqua = !mediumToAqua;  // toogle state
+  
   // empty aquarium         : start/stop
-  emptyAqua_ButtonState = digitalRead(emptyAqua_ButtonPin);
-  if (emptyAqua_ButtonState && !emptyAqua_prevButtonState){ // check previous button state and user action
-    emptyAqua = !emptyAqua;  // toogle state
-    if(debug) Serial.print("[press]emptyAqua:" + String(emptyAqua) + "\t"); 
-  }
+  aquaToTrash_ButtonState = digitalRead(aquaToTrash_ButtonPin);
+  if (aquaToTrash_ButtonState && !aquaToTrash_prevButtonState) aquaToTrash = !aquaToTrash;  // toogle state
+
  
   // ACTION ///////////////
   //
   // add alguae to the aquarium
-   
-
   
-  if(is_full(aqua_levelSensorPin)) addAlguae = false;
+  if(is_full(aqua_levelSensorPin)) cultureToAqua = false; // check if aqurium is not full
+  activePump(cultureToAqua_pin , cultureToAqua);          // add culture to aquarium
+  activePump(mediumToAqua_pin , mediumToAqua);            // add growing medium to aquarium
+  activePump(aquaToTrash_pin , aquaToTrash);              // put aquarium to trash
   
-  if(addAlguae){ //  && is_full(bioreact_levelSensorPin) && !is_full(aqua_levelSensorPin)
- 
-    digitalWrite(motorPinBioToAq, HIGH);
-    visual_feedback(motorPinBioToAq, 1);
- 
-    if(debug) Serial.println("bio -> aqua \t");
-    bioreact_Full = true;
- 
-  }
-  else{
-    digitalWrite(motorPinBioToAq, LOW);
-    visual_feedback(motorPinBioToAq, 0);
-  }
- 
-  // empty aquarium
-  if(emptyAqua){
-    digitalWrite(motorPinAqToTrash, HIGH);
-    visual_feedback(motorPinAqToTrash, 1);
- 
-    if(debug) Serial.println("aqua -> trash \t");
-  }
-  else{
-    digitalWrite(motorPinAqToTrash, LOW);
-    visual_feedback(motorPinAqToTrash, 0);
-    if(debug) Serial.println("STOP aqua -> trash \t");
-  }
- 
-  // fill BioReactor 
- 
-  if (!is_full(bioreact_levelSensorPin) && !addAlguae){
-    digitalWrite(motorPinFoodToBio, HIGH);
-    visual_feedback(motorPinFoodToBio, 1);
- 
-    if(debug)Serial.println("medium -> bioreact \t");
-  }
-  else{
-    digitalWrite(motorPinFoodToBio, LOW);
-    visual_feedback(motorPinFoodToBio, 0);
+  // fill BioReactor   
+  if (!is_full(bioreact_levelSensorPin) && !cultureToAqua){
+    digitalWrite(mediumToBioreact, HIGH);
+    visual_feedback(mediumToBioreact, 1);
+  }else{
+    digitalWrite(mediumToBioreact, LOW);
+    visual_feedback(mediumToBioreact, 0);
   }
   
   // send sensor visual feedback 
   if(bioreact_FullPrev != is_full(bioreact_levelSensorPin)) visual_feedback(3,is_full(bioreact_levelSensorPin) + 2);
-  if(aqua_FullPrev != is_full(aqua_levelSensorPin)) visual_feedback(2,is_full(aqua_levelSensorPin) + 2);
+  if(aqua_FullPrev != is_full(aqua_levelSensorPin))         visual_feedback(2,is_full(aqua_levelSensorPin) + 2);
   
   // keep previous state
-  addAlguae_prevButtonState = addAlguae_ButtonState;
-  emptyAqua_prevButtonState = emptyAqua_ButtonState;
-
-  bioreact_FullPrev = is_full(bioreact_levelSensorPin);
-  aqua_FullPrev = is_full(aqua_levelSensorPin);
+  cultureToAqua_prevButtonState = cultureToAqua_ButtonState;
+  aquaToTrash_prevButtonState   = aquaToTrash_ButtonState;
+  bioreact_FullPrev             = is_full(bioreact_levelSensorPin);
+  aqua_FullPrev                 = is_full(aqua_levelSensorPin);
   
   
   if(debug) Serial.println("\n");
 }
 boolean is_full(int sensorPin){
+
+  // poll electrod 
   double V_mes = (analogRead(sensorPin)/1024.0)*5.0; //tension mesurée aux bornes de l'électrode
   double R_mes = (R*V_mes)/(V-V_mes); //mesure de la résistance de l'électrode
  
-  // Serial.print(String(sensorPin) + "V_mes = " );
-  // Serial.print(V_mes);
-  // Serial.print("R_mes = ");
-  // Serial.print(R_mes);
-  // Serial.print("\n"); 
+  if(debug){
+    Serial.print(String(sensorPin) + "V_mes = " );
+    Serial.print(V_mes);
+    Serial.print("R_mes = ");
+    Serial.print(R_mes);
+    Serial.print("\n"); 
+  }
  
   if (R_mes > 2000) { 
     return true;
@@ -151,13 +138,26 @@ boolean is_full(int sensorPin){
     return false;
   }
 }
-void monitor(int speed){  
+void monitor(int speed){
+  // led blinking
   digitalWrite(led, LOW);        
   delay(speed);
   digitalWrite(led, HIGH);
 }
 void visual_feedback(int pin, int state){
+  // send serial feedback to visual_feedback.pde
   if(vFeedback){
     Serial.write((pin*10) + state);
+  }
+}
+void activePump(int pin, boolean state){
+  
+  // start/stop pump depending on state(true/false)
+  if(state){
+    digitalWrite(pin, HIGH);
+    visual_feedback(pin, 1); 
+  }else{
+    digitalWrite(pin, LOW);
+    visual_feedback(pin, 0);
   }
 }
