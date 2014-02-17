@@ -262,7 +262,8 @@ myPort = new Serial(this, portName, 9600);
       }
     }
   }
-  public void mousePressed(){
+/*    
+      public void mousePressed(){
     for (int i = 0 ; i<les_pompes.length; i++){
       les_pompes[i].set_state(false);
     }  
@@ -270,6 +271,7 @@ myPort = new Serial(this, portName, 9600);
     System.out.println(les_pompes[test].name);
     test = (test +1)%7;
   }
+  */
   void dessiner(){
     le_milieu1.dessiner();
     le_milieu2.dessiner();
