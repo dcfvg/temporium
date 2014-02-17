@@ -93,15 +93,7 @@ void loop(){
   activePump(cultureToAqua_pin , cultureToAqua);          // add culture to aquarium
   activePump(mediumToAqua_pin , mediumToAqua);            // add growing medium to aquarium
   activePump(aquaToTrash_pin , aquaToTrash);              // put aquarium to trash
-  
-  // fill BioReactor   
-  if (!is_full(bioreact_levelSensorPin) && !cultureToAqua){
-    digitalWrite(mediumToBioreact, HIGH);
-    visual_feedback(mediumToBioreact, 1);
-  }else{
-    digitalWrite(mediumToBioreact, LOW);
-    visual_feedback(mediumToBioreact, 0);
-  }
+  activePump(aquaToTrash_pin , (!is_full(bioreact_levelSensorPin) && !cultureToAqua)); // fill BioReactor
   
   // send sensor visual feedback 
   if(bioreact_FullPrev != is_full(bioreact_levelSensorPin)) visual_feedback(3,is_full(bioreact_levelSensorPin) + 2);
