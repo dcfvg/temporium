@@ -166,18 +166,18 @@ myPort = new Serial(this, portName, 9600);
     //Pompes branchees sur les Gigital pins , avec syntaxe PB1M1 pour pompe B1 -> M1
     digit_pompe = new String[14];
     digit_pompe[0] = "";
-    digit_pompe[1] = "PM2B1";
-    digit_pompe[2] = "PB1A";
-    digit_pompe[3] = "";
+    digit_pompe[1] = "";
+    digit_pompe[2] = "";
+    digit_pompe[3] = "PAS";
     digit_pompe[4] = "";
     digit_pompe[5] = "";
-    digit_pompe[6] = "";
+    digit_pompe[6] = "PB1A";
     digit_pompe[7] = "";
     digit_pompe[8] = "";
-    digit_pompe[9] = "";
+    digit_pompe[9] = "PM2B1";
     digit_pompe[10] ="";
     digit_pompe[11] ="";
-    digit_pompe[12] ="PAS";
+    digit_pompe[12] ="";
     digit_pompe[13] ="";
 
   }
