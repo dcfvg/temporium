@@ -94,14 +94,13 @@ void loop(){
   if(!bioreact_Full) fillBioReactor();
   
   // lower level to protect solution from electrod
-  if (bioreact_protectElectrod) electroProtection(bioreact_protectElectrodPumps);
-  if (aqua_protectElectrod) electroProtection(aqua_protectElectrodPumps);
+  if (bioreact_protectElectrod) electroProtection(bioreact_protectElectrodPumps, bioreact_protectElectrod);
+  if (aqua_protectElectrod || is_full(aqua_levelSensorPin)) electroProtection(aqua_protectElectrodPumps, aqua_protectElectrod);
   
   // keep previous state
   addAlguae_prevButtonState = addAlguae_ButtonState;
   emptyAqua_prevButtonState = emptyAqua_ButtonState;
   
-  if(is_full(aqua_levelSensorPin)) electroProtection(aqua_protectElectrodPumps);
 }
 boolean is_full(int sensorPin){
   double V_mes = (analogRead(sensorPin)/1024.0)*5.0; //tension mesurée aux bornes de l'électrode
@@ -113,7 +112,7 @@ boolean is_full(int sensorPin){
     return false;
   }
 }
-void electroProtection(int motors[]){
+void electroProtection(int motors[],int protectElectrod){
   
   for (int i = 0; i<sizeof(motors); i++){
     digitalWrite(motors[i], HIGH);
