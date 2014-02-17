@@ -49,9 +49,9 @@ boolean   aqua_FullPrev = false;
 // PARAM
 const int R = 10030;              // Résistance utilisée pour le montage pont diviseur de tension (en ohms)
 const int V = 5;                  // Valeur de l'alimentation de l'Arduino, peu précis mais pas important pour le niveau de travail (en volts)
-boolean debug = false;
-boolean vFeedback = !debug; // [motorID 0-9][state 0-1]
- 
+boolean debug = false;            // active serial log
+boolean vFeedback = !debug;       // [motorID 0-9][state 0-1]
+
 void setup(){
  
   // electrod 
@@ -128,12 +128,9 @@ boolean is_full(int sensorPin){
     Serial.print("\n"); 
   }
  
-  if (R_mes > 2000) { 
-    return true;
-  } 
-  else { 
-    return false;
-  }
+  if (R_mes > 2000) return true;
+  else return false;
+  
 }
 void activePump(int pin, boolean condition){
   // start/stop pump depending on state(true/false)
@@ -156,7 +153,5 @@ void monitor(int speed){
 }
 void visual_feedback(int pin, int state){
   // send serial feedback to visual_feedback.pde
-  if(vFeedback){
-    Serial.write((pin*10) + state);
-  }
+  if(vFeedback) Serial.write((pin*10) + state);
 }
