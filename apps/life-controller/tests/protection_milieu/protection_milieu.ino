@@ -50,7 +50,7 @@ boolean   aqua_FullPrev = false;
 const int R = 10030;              // Résistance utilisée pour le montage pont diviseur de tension (en ohms)
 const int V = 5;                  // Valeur de l'alimentation de l'Arduino, peu précis mais pas important pour le niveau de travail (en volts)
 boolean debug = false;            // active serial log
-boolean vFeedback = !debug;       // [motorID 0-9][state 0-1]
+boolean vFeedback = !debug;       // send data to visual_feedback
 
 void setup(){
  
