@@ -137,7 +137,7 @@ import processing.serial.*;
     frameRate(frequence);//rafraichissement une image toute les 40ms
     temps = (float) 1/frequence; 
     //Debit pompe : 
-    debit_pompe = (float) 0.05;//en L/min
+    debit_pompe = (float) 2;//en L/min
     le_milieu1.set_volume((float) (1));
     le_milieu2.set_volume((float) (1));
 
@@ -236,7 +236,7 @@ import processing.serial.*;
       action_Arduino(S);
       break;
     case 2:
-      get_cont(numero_Dizaine).volume_occ = 1;
+      get_cont(numero_Dizaine-1).volume_occ = 1;
 
       break;
 
