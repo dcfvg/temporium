@@ -1,39 +1,48 @@
 // ACTIONS
 
 // culture to aquarium 
-boolean   cultureToAqua = false;
+const int cultureToAqua_pin   = 6; 
 const int cultureToAqua_ButtonPin = 2;
+
+boolean   cultureToAqua = false;
 boolean   cultureToAqua_prevButtonState = false;
 int       cultureToAqua_ButtonState = 0;
-const int cultureToAqua_pin   = 6; 
+
 
 // aquarium to trash
-boolean   aquaToTrash = false;      
+const int aquaToTrash_pin = 3;
 const int aquaToTrash_ButtonPin = 4;
+
+boolean   aquaToTrash = false;      
 boolean   aquaToTrash_prevButtonState = false;
 int       aquaToTrash_ButtonState = 0;
-const int aquaToTrash_pin = 3;
+
 
 // growing medium to aquarium
-boolean   mediumToAqua = false;
+const int mediumToAqua_pin = 11;
 const int mediumToAqua_ButtonPin = 7;
+
+boolean   mediumToAqua = false;
 boolean   mediumToAqua_prevButtonState = false;
 int       mediumToAqua_ButtonState = 0;
-const int mediumToAqua_pin = 4;
+
 
 // medium to the bioreactor ( fill with new growing medium)
-const int mediumToBioreact = 9;  
+const int mediumToBioreact_pin_pin = 9;  
 
 const int led = 13;
 
 // SENSORS
-const int bioreact_levelSensorPin = A3;    // bioreactor level sensor
-boolean   bioreact_protectElectrod = false;
+
+// bioreactor level sensor
+const int bioreact_levelSensorPin = A3;   
+
 boolean   bioreact_Full = false;
 boolean   bioreact_FullPrev = false;
 
-const int aqua_levelSensorPin = A2;        // aquarium level sensor
-boolean   aqua_protectElectrod = false;
+// aquarium level sensor
+const int aqua_levelSensorPin = A2;        
+
 boolean   aqua_Full = false;
 boolean   aqua_FullPrev = false;
 
@@ -56,7 +65,7 @@ void setup(){
  
   // pumps
   pinMode(cultureToAqua_pin,OUTPUT);
-  pinMode(mediumToBioreact,OUTPUT);
+  pinMode(mediumToBioreact_pin,OUTPUT);
   pinMode(aquaToTrash_pin,OUTPUT);
   
   // feedback
@@ -93,7 +102,7 @@ void loop(){
   activePump(cultureToAqua_pin , cultureToAqua);          // add culture to aquarium
   activePump(mediumToAqua_pin , mediumToAqua);            // add growing medium to aquarium
   activePump(aquaToTrash_pin , aquaToTrash);              // put aquarium to trash
-  activePump(aquaToTrash_pin , !is_full(bioreact_levelSensorPin) && !cultureToAqua); // fill BioReactor
+  activePump(mediumToBioreact_pin , !is_full(bioreact_levelSensorPin) && !cultureToAqua); // fill BioReactor
   
   // send sensor visual feedback 
   if(bioreact_FullPrev != is_full(bioreact_levelSensorPin)) visual_feedback(3,is_full(bioreact_levelSensorPin) + 2);
