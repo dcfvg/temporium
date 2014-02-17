@@ -6,6 +6,13 @@
 ## installation
 - les médias sont déposés dans un dossier `assets` (ignoré) à créer à la racine du répertoire.
 
+````
+assets
+  - archive ( images exposés ) 
+  - captation ( image de l'exposition ) 
+  - waitinglist ( images en attente )
+````
+
 ## dépendances
 
 - processing-java
