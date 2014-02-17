@@ -7,9 +7,16 @@ const int motorPinFoodToBio = 9;  // food to the bioreactor ( fill with new grow
 const int motorPinAqToTrash = 3;  // aquarium to trash      ( empty aquarium )
 const int led = 13;
 
-// sensors
+// electrodes
 const int bioreact_levelSensorPin = A0;    // bioreactor level sensor
+boolean   bioreact_protectElectrod = false;
+int       bioreact_protectElectrodMotors[] = {motorPinBioToAq , motorPinAqToTrash};
+boolean   bioreact_Full = false;
+
 const int aqua_levelSensorPin = A1;        // aquarium level sensor
+boolean   aqua_protectElectrod = false;
+int       aqua_protectElectrodPumps[] = {motorPinAqToTrash};
+boolean   aqua_Full = false;
 
 // actions
 boolean   addAlguae = false;
@@ -23,11 +30,7 @@ boolean   emptyAqua_prevButtonState = false;
 int       emptyAqua_ButtonState = 0;
 
 // states
-boolean bioReactorFull = false;
-boolean protectElectrod = false;
-
-int protectElectrod_bioreactor[] = {motorPinBioToAq , motorPinAqToTrash};
-int protectElectrod_aqua[] = {motorPinAqToTrash};
+boolean bioreact_Full = false;
 
 void setup(){
   
@@ -40,20 +43,17 @@ void setup(){
   pinMode(motorPinFoodToBio,OUTPUT);
   pinMode(motorPinAqToTrash,OUTPUT);
   pinMode(led, OUTPUT);
-  
 
-  
   Serial.begin(9600);
 }
-
 void loop(){
 
   // debug
-  Serial.print("bioReactorFull:" + String(bioReactorFull) + " \t " + "addAlguae:" + String(addAlguae)  + " \t " + "protectElectrod:" + String(protectElectrod) +"\n");
-  monitor(100);
+  Serial.print("bioreact_Full:" + String(bioreact_Full) + " \t " + "addAlguae:" + String(addAlguae)  + " \t " + "aqua_Full:" + String(aqua_Full) +"\n");
+  monitor(500);
   
   // ORDERS ///////////////
-  
+  //
   // alguae to aquarium     : start/stop
   addAlguae_ButtonState = digitalRead(addAlguae_ButtonPin);
   if (addAlguae_ButtonState && !addAlguae_prevButtonState){ // check previous button state and user action
@@ -69,39 +69,43 @@ void loop(){
   }
 
   // ACTION ///////////////
-  
+  //
   // add alguae to the aquarium
-  if(addAlguae && bioReactorFull && !aquaFull()){
+  if(addAlguae && bioreact_Full && !is_full(aqua_levelSensorPin)){
     digitalWrite(motorPinBioToAq, HIGH); 
-    // Serial.println("La pompe PB2 fonctionne")
-    bioReactorFull = true;
+    Serial.println("bio -> aqua");
+    bioreact_Full = true;
   }else{
     digitalWrite(motorPinBioToAq, LOW);
-    if (addAlguae_ButtonState && !addAlguae_prevButtonState) bioReactorFull = false;
+    if (addAlguae_ButtonState && !addAlguae_prevButtonState) bioreact_Full = false;
   }
+  
+  // empty aquarium
   if(emptyAqua){
     digitalWrite(motorPinAqToTrash, HIGH);
+    Serial.println("aqua -> trash");
   }else{
     digitalWrite(motorPinAqToTrash, LOW);
   }
   
-  // add food 
-  if(!bioReactorFull) fillBioReactor();
+  // fill BioReactor 
+  if(!bioreact_Full) fillBioReactor();
   
   // lower level to protect solution from electrod
-  if (protectElectrod) electroProtection(protectElectrod_bioreactor);
+  if (bioreact_protectElectrod) electroProtection(bioreact_protectElectrodPumps);
+  if (aqua_protectElectrod) electroProtection(aqua_protectElectrodPumps);
   
   // keep previous state
   addAlguae_prevButtonState = addAlguae_ButtonState;
   emptyAqua_prevButtonState = emptyAqua_ButtonState;
   
-  if(aquaFull) electroProtection(protectElectrod_aqua);
+  if(is_full(aqua_levelSensorPin)) electroProtection(aqua_protectElectrodPumps);
 }
-boolean aquaFull(){
-  double V_mes = (analogRead(aqua_levelSensorPin)/1024.0)*5.0; //tension mesurée aux bornes de l'électrode
+boolean is_full(int sensorPin){
+  double V_mes = (analogRead(sensorPin)/1024.0)*5.0; //tension mesurée aux bornes de l'électrode
   double R_mes = (R*V_mes)/(V-V_mes); //mesure de la résistance de l'électrode
   
-  if (R_mes > 200) { 
+  if (R_mes > 2000) { 
     return true;
   } else { 
     return false;
@@ -111,39 +115,30 @@ void electroProtection(int motors[]){
   
   for (int i = 0; i<sizeof(motors); i++){
     digitalWrite(motors[i], HIGH);
+     Serial.print("protect :: " + String(motors[i]));
   }
 
-  Serial.print("On protège!!" + String(protectElectrod));
-  
-  //delay(5000);
-  
   double V_mes = (analogRead(bioreact_levelSensorPin)/1024.0)*5.0; //tension mesurée aux bornes de l'électrode
   double R_mes = (R*V_mes)/(V-V_mes); //mesure de la résistance de l'électrode
   if (R_mes < 10){
     protectElectrod = false;
     for (int i = 0; i<sizeof(motors); i++){
       digitalWrite(motors[i], LOW);
+      Serial.print("Stop-protect :: " + String(motors[i]));
     }
   }
     
-  bioReactorFull = true;
+  bioreact_Full = true;
   addAlguae = false;
 }
 void fillBioReactor(){
-  double V_mes = (analogRead(bioreact_levelSensorPin)/1024.0)*5.0; //tension mesurée aux bornes de l'électrode
-  double R_mes = (R*V_mes)/(V-V_mes); //mesure de la résistance de l'électrode
-
-  Serial.print("V_mes = ");
-  Serial.print(V_mes);
-  Serial.print("\n R_mes = ");
-  Serial.print(R_mes);
-
-  if (R_mes < 2000){
+  if (!is_full(bioreact_levelSensorPin)){
     digitalWrite(motorPinFoodToBio, HIGH);
+    Serial.println("medium -> bioreact");
   }else{
     digitalWrite(motorPinFoodToBio, LOW);
-    bioReactorFull = true;
-    protectElectrod = true;
+    bioreact_Full = true;
+    bioreact_protectElectrod = true;
   }
 }
 void monitor(int speed){
