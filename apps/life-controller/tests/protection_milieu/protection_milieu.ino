@@ -60,7 +60,6 @@ void loop(){
   addAlguae_ButtonState = digitalRead(addAlguae_ButtonPin);
   if (addAlguae_ButtonState && !addAlguae_prevButtonState){ // check previous button state and user action
     addAlguae = !addAlguae;  // toogle state
-    if(debug) Serial.print("addAlguae:" + String(addAlguae));
   }
   
   // empty aquarium         : start/stop
