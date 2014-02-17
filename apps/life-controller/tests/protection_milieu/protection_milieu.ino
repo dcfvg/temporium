@@ -30,7 +30,9 @@ boolean   emptyAqua_prevButtonState = false;
 int       emptyAqua_ButtonState = 0;
 
 // states
-boolean bioreact_Full = false;
+
+boolean debug = true;
+boolean visualFeedback = !debug; // [motorID 0-9][state 0-1]
 
 void setup(){
   
@@ -49,7 +51,7 @@ void setup(){
 void loop(){
 
   // debug
-  Serial.print("bioreact_Full:" + String(bioreact_Full) + " \t " + "addAlguae:" + String(addAlguae)  + " \t " + "aqua_Full:" + String(aqua_Full) +"\n");
+  if(debug)Serial.print("bioreact_Full:" + String(bioreact_Full) + " \t " + "addAlguae:" + String(addAlguae)  + " \t " + "aqua_Full:" + String(aqua_Full) +"\n");
   monitor(500);
   
   // ORDERS ///////////////
@@ -73,7 +75,7 @@ void loop(){
   // add alguae to the aquarium
   if(addAlguae && bioreact_Full && !is_full(aqua_levelSensorPin)){
     digitalWrite(motorPinBioToAq, HIGH); 
-    Serial.println("bio -> aqua");
+    if(debug) Serial.println("bio -> aqua");
     bioreact_Full = true;
   }else{
     digitalWrite(motorPinBioToAq, LOW);
@@ -83,7 +85,7 @@ void loop(){
   // empty aquarium
   if(emptyAqua){
     digitalWrite(motorPinAqToTrash, HIGH);
-    Serial.println("aqua -> trash");
+    if(debug) Serial.println("aqua -> trash");
   }else{
     digitalWrite(motorPinAqToTrash, LOW);
   }
@@ -134,7 +136,7 @@ void electroProtection(int motors[]){
 void fillBioReactor(){
   if (!is_full(bioreact_levelSensorPin)){
     digitalWrite(motorPinFoodToBio, HIGH);
-    Serial.println("medium -> bioreact");
+    if(debug)Serial.println("medium -> bioreact");
   }else{
     digitalWrite(motorPinFoodToBio, LOW);
     bioreact_Full = true;
