@@ -32,7 +32,7 @@ int       emptyAqua_ButtonState = 0;
 // states
 
 boolean debug = true;
-boolean visualFeedback = !debug; // [motorID 0-9][state 0-1]
+boolean vFeedback = !debug; // [motorID 0-9][state 0-1]
 
 void setup(){
   
@@ -117,7 +117,7 @@ void electroProtection(int motors[],int protectElectrod){
   
   for (int i = 0; i<sizeof(motors); i++){
     digitalWrite(motors[i], HIGH);
-     Serial.print("protect :: " + String(motors[i]));
+     if(debug)Serial.print("protect :: " + String(motors[i]));
   }
 
   double V_mes = (analogRead(bioreact_levelSensorPin)/1024.0)*5.0; //tension mesurée aux bornes de l'électrode
@@ -126,7 +126,7 @@ void electroProtection(int motors[],int protectElectrod){
     protectElectrod = false;
     for (int i = 0; i<sizeof(motors); i++){
       digitalWrite(motors[i], LOW);
-      Serial.print("Stop-protect :: " + String(motors[i]) + " \t");
+      if(debug)Serial.print("Stop-protect :: " + String(motors[i]) + " \t");
     }
   }
     
