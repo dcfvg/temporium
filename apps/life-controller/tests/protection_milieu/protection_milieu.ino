@@ -28,7 +28,7 @@ int       mediumToAqua_ButtonState = 0;
 
 
 // medium to the bioreactor ( fill with new growing medium)
-const int mediumToBioreact_pin_pin = 9;  
+const int mediumToBioreact_pin = 9;  
 
 const int led = 13;
 
