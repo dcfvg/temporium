@@ -32,8 +32,8 @@ int       emptyAqua_ButtonState = 0;
 
 // states
 
-boolean debug = true;
-boolean vFeedback = false; // [motorID 0-9][state 0-1]
+boolean debug = false;
+boolean vFeedback = true; // [motorID 0-9][state 0-1]
 
 void setup(){
 
@@ -64,14 +64,14 @@ void loop(){
   addAlguae_ButtonState = digitalRead(addAlguae_ButtonPin);
   if(addAlguae_ButtonState && !addAlguae_prevButtonState){ // check previous button state and user action
     addAlguae = !addAlguae;  // toogle state
-    Serial.print("[press]addAlguae:" + String(addAlguae) + "\t");
+    if(debug)Serial.print("[press]addAlguae:" + String(addAlguae) + "\t");
   }
 
   // empty aquarium         : start/stop
   emptyAqua_ButtonState = digitalRead(emptyAqua_ButtonPin);
   if (emptyAqua_ButtonState && !emptyAqua_prevButtonState){ // check previous button state and user action
     emptyAqua = !emptyAqua;  // toogle state
-    Serial.print("[press]emptyAqua:" + String(emptyAqua) + "\t"); 
+    if(debug)Serial.print("[press]emptyAqua:" + String(emptyAqua) + "\t"); 
   }
 
   // ACTION ///////////////
@@ -79,8 +79,10 @@ void loop(){
   // add alguae to the aquarium
   
   if(is_full(aqua_levelSensorPin)) addAlguae = false;
+  
+  visual_feedback(aqua_levelSensorPin, is_full(aqua_levelSensorPin));
+  
   if(addAlguae){ //  && is_full(bioreact_levelSensorPin) && !is_full(aqua_levelSensorPin)
-
     digitalWrite(motorPinBioToAq, HIGH);
     visual_feedback(motorPinBioToAq, 1);
 
@@ -130,11 +132,13 @@ boolean is_full(int sensorPin){
   double V_mes = (analogRead(sensorPin)/1024.0)*5.0; //tension mesurée aux bornes de l'électrode
   double R_mes = (R*V_mes)/(V-V_mes); //mesure de la résistance de l'électrode
 
+  if(debug){
   Serial.print(String(sensorPin) + "V_mes = " );
   Serial.print(V_mes);
   Serial.print("R_mes = ");
   Serial.print(R_mes);
   Serial.print("\n"); 
+  }
 
   if (R_mes > 2000) { 
     return true;
@@ -148,9 +152,9 @@ void monitor(int speed){
   delay(speed);
   digitalWrite(led, HIGH);
 }
-void visual_feedback(int motor, int state){
+void visual_feedback(int pin, int state){
   if(vFeedback){
-    Serial.write((motor*10)+state);
+    Serial.write((pin*10)+state);
   }
 }
 

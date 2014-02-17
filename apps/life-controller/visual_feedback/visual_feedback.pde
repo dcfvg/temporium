@@ -52,7 +52,7 @@ import processing.serial.*;
     background(150);
     
     String portName = Serial.list()[2]; //change the 0 to a 1 or 2 etc. to match your port
-myPort = new Serial(this, portName, 9600); 
+    myPort = new Serial(this, portName, 9600); 
 
     //On initilise les positions (de 0 à 1, en pourcentage de la taille de la fenetre): 
 
