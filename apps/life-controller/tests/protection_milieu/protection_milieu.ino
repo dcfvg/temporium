@@ -111,6 +111,8 @@ void loop(){
   // keep previous state
   cultureToAqua_prevButtonState = cultureToAqua_ButtonState;
   aquaToTrash_prevButtonState   = aquaToTrash_ButtonState;
+  mediumToAqua_prevButtonState  = mediumToAqua_ButtonState;
+  
   bioreact_FullPrev             = is_full(bioreact_levelSensorPin);
   aqua_FullPrev                 = is_full(aqua_levelSensorPin);
 }
