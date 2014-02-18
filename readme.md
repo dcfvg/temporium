@@ -53,6 +53,7 @@ ___
 | ajuster la concentration          | critique | |
 | maintenir le niveau               | critique | | 
 | filtrer les impuretés             | critique | |
+| nettoyer la vitre                 | critique | | 
 
 **recyclage**
 
@@ -73,6 +74,8 @@ ___
 | détecter la formation de l'image  | haute    | |
 | récolter des données              | faible   | |
 | controller à distance             | haute    | |
+| vidéosurveiller à distance        | faible   | |
+| détecter une contamination        | moyenne  | | 
 
 **montage dynamique & conduite**
 
