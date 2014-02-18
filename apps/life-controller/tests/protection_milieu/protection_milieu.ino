@@ -10,7 +10,7 @@ int       cultureToAqua_ButtonState = 0;
 
 
 // aquarium to trash
-const int aquaToTrash_pin = 3;
+const int aquaToTrash_pin = 8;
 const int aquaToTrash_ButtonPin = 4;
 
 boolean   aquaToTrash = false;      
