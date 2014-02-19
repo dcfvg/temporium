@@ -32,35 +32,35 @@ ___
 
 | fonction                          | priorité | solution envisagée                                            |
 | --------------------------------- | -------- |-------------------------------------------------------------- |
-| connaitre le niveau               | moyenne| |
+| connaitre le niveau               | moyenne  | electrode ( juste max ) — flotteur — imagerie                 |
 
 **bio-réacteurs**
 
 | fonction                          | priorité | solution envisagée                                            |
 | --------------------------------- | -------- |-------------------------------------------------------------- |
-| agitater la culture               | critique | |
-| aérer la culture                  | critique | |
-| remettre à niveau avec du milieu  | critique | |
-| connaitre la concentration        | moyenne  | |
-| détecter une contamination        | faible   | |
+| agitter la culture                | critique | bareau magnétique, microbulles ( par dessous )                |
+| aérer la culture                  | critique | pompe à air                                                   |
+| maintenir le niveau (+ milieu)    | critique | pompe + electrode — flotteur — imagerie                       |
+| connaitre la concentration        | moyenne  | webcam                                                        |
+| détecter une contamination        | faible   | webcam, microsopie                                            |
 
 **aquarium**
 
 | fonction                          | priorité | solution envisagée                                            |
 | --------------------------------- | -------- |-------------------------------------------------------------- |
-| vider l'aquarium                  | critique | | 
-| remplique l'aquarium              | critique | |
-| ajuster la concentration          | critique | |
-| maintenir le niveau               | critique | | 
-| filtrer les impuretés             | critique | |
-| nettoyer la vitre                 | critique | | 
+| vider l'aquarium                  | critique | pompe                                                         |
+| remplir l'aquarium                | critique | pompe                                                         |
+| ajuster la concentration          | critique | pompe + webcam + analyse d'image                              |
+| maintenir le niveau               | critique | pompe + electrode — flotteur — imagerie                       | 
+| filtrer les impuretés             | critique | pompe/filtre ( trop puissante pour l'instant )                |
+| nettoyer la vitre                 | critique | magnet + rails — bras en croix                                | 
 
 **recyclage**
 
 | fonction                          | priorité | solution envisagée                                            |
 | --------------------------------- | -------- |-------------------------------------------------------------- |
-| stocker les cultures usagées      | critique | | 
-| lyophiliser les cultures usagées  | faible   | | 
+| stocker les cultures usagées      | critique | bidon                                                         |
+| lyophiliser les cultures usagées  | faible   | bac à galçons + lyophilisateur                                |
 
 
 **imagerie & données**
