@@ -69,7 +69,7 @@ ___
 | --------------------------------- | -------- |-------------------------------------------------------------- |
 | lancer l'exposition               | critique | [canon-remote](http://pythonhosted.org/canon-remote/index.html)|
 | capturer la formation (macro)     | critique | boitier canon + pilotage
-| compiler le timelaps              | critique | [ffmpeg)(http://www.ffmpeg.org)
+| compiler le timelaps              | critique | [ffmpeg](http://www.ffmpeg.org)
 | live de la formation (micro)      | critique | ?? |
 | détecter la formation de l'image  | haute    | webcam + |
 | récolter des données              | faible   | ?? |
