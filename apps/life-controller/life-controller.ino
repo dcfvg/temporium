@@ -61,11 +61,12 @@ void setup(){
   // buttons
   pinMode(cultureToAqua_ButtonPin , INPUT);
   pinMode(aquaToTrash_ButtonPin , INPUT);
-  pinMode(mediumToAqua_pin, INPUT);
+  pinMode(mediumToAqua_ButtonPin, INPUT);
  
   // pumps
   pinMode(cultureToAqua_pin,OUTPUT);
   pinMode(mediumToBioreact_pin,OUTPUT);
+  pinMode(mediumToAqua_pin,OUTPUT);
   pinMode(aquaToTrash_pin,OUTPUT);
   
   // feedback
