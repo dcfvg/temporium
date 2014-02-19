@@ -67,15 +67,14 @@ ___
 
 | fonction                          | priorité | solution envisagée                                            |
 | --------------------------------- | -------- |-------------------------------------------------------------- |
-| lancer l'exposition               | critique | |
-| capturer la formation (macro)     | critique | |
-| compiler le timelaps              | critique | |
-| live de la formation (micro)      | critique | |
-| détecter la formation de l'image  | haute    | |
-| récolter des données              | faible   | |
-| controller à distance             | haute    | |
-| vidéosurveiller à distance        | faible   | |
-| détecter une contamination        | moyenne  | | 
+| lancer l'exposition               | critique | [canon-remote](http://pythonhosted.org/canon-remote/index.html)|
+| capturer la formation (macro)     | critique | boitier canon + pilotage
+| compiler le timelaps              | critique | [ffmpeg)(http://www.ffmpeg.org)
+| live de la formation (micro)      | critique | ?? |
+| détecter la formation de l'image  | haute    | webcam + |
+| récolter des données              | faible   | ?? |
+| controller à distance             | haute    | [heimcontrol.js](http://ni-c.github.io/heimcontrol.js)|
+| vidéosurveiller à distance        | faible   | webcam |
 
 **montage dynamique & conduite**
 
