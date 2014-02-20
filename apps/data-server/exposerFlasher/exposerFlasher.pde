@@ -1,7 +1,12 @@
+import oscP5.*;
+import netP5.*;
+
+OscP5 oscP5;
+NetAddress myBroadcastLocation; 
+
 // timer
 
 int fps    = 10, frame = 0;
-int phase1 = 60*60*3;
 
 // postion, echelle
 
@@ -9,16 +14,20 @@ float ratiox = 1, ratioy = 1;
 int posx = 0, posy = 0, w = 1920, h = 1080, nbImages = 4;
 
 String feedback = "~", imageSet = "exp", lastcapture = "";
+
 // objets
+boolean fullscreen = false, flash = true;
 
-boolean info = true, console = false, fullscreen = false, ispause = false, flash = true, getlastimage = false;
-
-PImage iflash, inega, inoir, img;
+PImage nega_img, flash_img, img;
 boolean sketchFullScreen() {return fullscreen;}
 
 void setup(){
   
   println("<pre>");
+  
+  // OSC
+  oscP5 = new OscP5(this,12000);
+  myBroadcastLocation = new NetAddress("127.0.0.1",4242);
   
   // ui
   size(w,h); 
@@ -32,40 +41,21 @@ void setup(){
   textAlign(LEFT);
 
   // images
-  inega  = loadImage("last.png");
-  iflash = loadImage("aquarium-flash.png");
-  if(getlastimage) iflash = loadImage("aquarium-flash-fullHD.png");
-  inoir  = loadImage("noir.png");
+  img_reload();
   
-  // load first image
-  if(getlastimage) refreshlastcapture();
 }
 void draw(){
-  
   background(0);
-  // chose image
+  image(img, posx, posy);
+  printTimer(); 
+}
+void oscEvent(OscMessage theOscMessage) {
   
-  if ((frame/fps) > phase1 )img = inoir;
-  else if (flash)           img = iflash;
-  else                      img = inega;
-  
-  image(img, posx, posy, width/ratiox, height/ratioy);
-
-  if(info) {
-    feedback = nf(((frame/fps)/60/60),2)+":"+nf(((frame/fps)/60)%60,2) + ":" +nf((frame/fps)%60,2);    
-    text(feedback, 100, 50);
-  }
-  if(console){
-    // contrôle
-    println("fps:"+ fps + " fla:" + flash + "    " +(frame%fps) + "/" + (fps) + "   " + frameRate +"fps" );
-
-    // calibrage
-    println("x:"+ posx + " y:"+ posy + " rx:"+ ratiox + " ry:"+ ratioy);
-    
-    // frame
-    println("f:"+frame);
-  }
-  if(!ispause) frame++;  
+  if (flash) img = iflash;
+  else img = inega;
+  /* get and print the address pattern and the typetag of the received OscMessage */
+  println("### received an osc message with addrpattern "+theOscMessage.addrPattern()+" and typetag "+theOscMessage.typetag());
+  theOscMessage.print();
 }
 void keyPressed(){
   
@@ -97,30 +87,11 @@ void keyPressed(){
   // kill
   if( key == 'k') exit();   
 }
-void refreshlastcapture(){
-  // scanning imageSet folder with specific paterns
-  java.io.File folder = new java.io.File(dataPath(imageSet));
-  java.io.FilenameFilter imgExtFilter = new java.io.FilenameFilter() {
-    public boolean accept(File dir, String name) {
-      return name.toLowerCase().endsWith(".jpg") | name.toLowerCase().endsWith(".jpeg") | name.toLowerCase().endsWith(".png") ;
-    }
-  };
-
-  String[] filenames = folder.list(imgExtFilter);
-  nbImages = filenames.length;
-  lastcapture = filenames[nbImages-1];
-
-  inega  = loadImage(imageSet+"/"+lastcapture);
-  inega.resize(w, 0);
-  inega = inega.get(0, 0, w, h);
-  
-  inega.filter(GRAY);
-  inega.filter(INVERT);
-  //inega.filter(DILATE);
-  //inega.filter(ERODE);
- 
-  if(console) { 
-    println(nbImages + " layers in " + imageSet);
-    println("last : " + lastcapture);
-  }
+void img_reload(){
+  nega_img  = loadImage("last.png");
+  flash_img = loadImage("flash.png");
+}
+void printTimer(){
+  feedback = nf(((frame/fps)/60/60),2)+":"+nf(((frame/fps)/60)%60,2) + ":" +nf((frame/fps)%60,2);    
+  text(feedback, 100, 50);
 }
