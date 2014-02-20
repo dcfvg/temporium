@@ -67,7 +67,7 @@ ___
 
 | fonction                          | priorité | solution envisagée                                            |
 | --------------------------------- | -------- |-------------------------------------------------------------- |
-| lancer l'exposition               | critique | [canon-remote](http://pythonhosted.org/canon-remote/index.html)|
+| lancer l'exposition               | critique | [gphoto](http://www.gphoto.org/)[canon-remote](http://pythonhosted.org/canon-remote/index.html)|
 | capturer la formation (macro)     | critique | boitier canon + pilotage
 | compiler le timelaps              | critique | [ffmpeg](http://www.ffmpeg.org)
 | live de la formation (micro)      | critique | ?? |
