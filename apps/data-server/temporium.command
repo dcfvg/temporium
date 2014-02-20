@@ -19,6 +19,7 @@ EFdata="$EF/data/"
 
 mkdir -v $waitingList $archive $EFdata
 
+
 function runPDE {
   # run a processing sketch 
   if [[ $# -eq 0 ]] ; then
@@ -89,7 +90,9 @@ function lanchvideo {
   killall -9 "VLC"
   $vlc --noaudio --video-x=255 --video-y=0 --width=1025 --height=810 --loop ~/temporium/assets/captation/exp/live.mp4 2> /dev/null &
 }
-
+function tellPDE {
+  python osc/sender.py sender.py 127.0.0.1 4242 $1
+}
 # launch animation play/processing
 say "set interface"
 newcapation
@@ -126,7 +129,6 @@ do
   runPDE $EF present &
   sleep 5
   runSikuli $EF/stagiaire.sikuli
-
   # remove file from list
   mv -v $waitingList$negaName $archive$negaName
   echo "files in list : "$(ls $waitingList)
