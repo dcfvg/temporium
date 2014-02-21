@@ -1,5 +1,5 @@
 #!/bin/bash
-set -x
+#set -x
 
 vlc='/Applications/VLC.app/Contents/MacOS/VLC'
 
@@ -7,7 +7,7 @@ path="`dirname \"$0\"`"              # relative
 path="`( cd \"$path\" && pwd )`"
 
 assets=$path"/../../assets/"
-waitingList="$assets/waitinglist/"
+nega_listPath="$assets/waitinglist/"
 archive="$assets/archive/"
 
 captation=$assets"/captation/"
@@ -17,10 +17,49 @@ live="$exp/live.mp4"
 EF=$path"/exposerFlasher"
 EFdata="$EF/data/"
 
-mkdir -v $waitingList $archive $EFdata
+mkdir -v $nega_listPath $archive $EFdata
 
+function nega_process {
+  
+  convert $nega_listPath$nega_name \
+  -resize 1920x1920^ -gravity Center -crop 1920x1080+0+0 \
+  -modulate 100,0,100 \
+  -auto-level \
+  -negate \
+  $nega_path
 
-function runPDE {
+  # open $nega # for testing
+}
+function nega_getWebcam {
+  # capture countdown
+  say "next picture $i minutes" &
+  sleep 60
+
+  say "next picture 10 seconds" &
+  
+  for (( i=10; i>0; i--)); do
+    sleep 1
+    say "$i"
+  done
+  
+  say "0 !" &
+  now=$(date +"%y.%m.%d-%H.%M.%S")
+  imagesnap "$nega_listPath/$now.jpg"
+}
+
+function timelaps_render {
+  bash $path"/exptomov.sh" &
+  sleep 15
+}
+function timelaps_display {
+  killall -9 "VLC"
+  $vlc --noaudio --fullscreen --loop ~/temporium/assets/captation/exp/live.mp4 2> /dev/null &
+}
+
+function PDE_tell {
+  python osc/sender.py sender.py 127.0.0.1 4242 $1
+}
+function PDE_run {
   # run a processing sketch 
   if [[ $# -eq 0 ]] ; then
     echo 'warning ! no sketch'
@@ -33,39 +72,17 @@ function runPDE {
 
   processing-java --sketch="$patch" --output=/tmp/processing_output --force --$2
 }
-function runSikuli {
-  # run a sikuli automation 
-  sikuliIDE="/Applications/SikuliX-IDE.app/Contents/runIDE"
-  $sikuliIDE -r $1
-}
-function negaProcess {
-  
-  convert $waitingList$negaName \
-  -resize 1920x1920^ -gravity Center -crop 1920x1080+0+0 \
-  -modulate 100,0,100 \
-  -auto-level \
-  -negate \
-  $nega
 
-  # open $nega # for testing
-}
-function webcamimage {
-  # capture countdown
-  say "next picture $i minutes" 
-  sleep 60
+function camera_init {
+  
+  # make sure the camera is available.
+  killall PTPCamera 
 
-  say "next picture 10 seconds"
-  
-  for (( i=10; i>0; i--)); do
-    sleep 1
-    say "$i"
-  done
-  
-  say "0 !" &
-  now=$(date +"%y.%m.%d-%H.%M.%S")
-  imagesnap "$waitingList/$now.jpg"
+  # launch detection
+  gphoto2 --auto-detect
+  gphoto2 --summary
 }
-function newcapation {
+function capation_init {
   now=$(date +"%y.%m.%d_%H.%M.%S")
   
   mkdir "$captation/exp-$now/"
@@ -82,63 +99,63 @@ function newcapation {
     cp "$captation/_000.JPG" "$exp/_00$i.JPG"
 	done
 }
-function timelaps {
-  bash $path"/exptomov.sh" &
-  sleep 10
-}
-function lanchvideo {
-  killall -9 "VLC"
-  $vlc --noaudio --video-x=255 --video-y=0 --width=1025 --height=810 --loop ~/temporium/assets/captation/exp/live.mp4 2> /dev/null &
-}
-function tellPDE {
-  python osc/sender.py sender.py 127.0.0.1 4242 $1
-}
-# launch animation play/processing
-say "set interface"
-newcapation
-timelaps &
-lanchvideo &
+
+camera_interval=3
+camera_framePerCaptation=3
+
+PDE_run $EF run &
+timelaps_render
 
 while true
 do
   
+  # init
+  capation_init
+  timelaps_display
+  camera_init
+  
   # Take snapshot if no picture
-  waitingfiles=$(find $waitingList -type f ! -iname "*sync*" ! -iname "*.DS_Store" -exec printf '.' \; | wc -c  | tr -d ' ')
+  detox -rv $nega_listPath
+  nega_list=$(find $nega_listPath -type f ! -iname "*sync*" ! -iname "*.DS_Store" -exec printf '.' \; | wc -c  | tr -d ' ')
  
-  if [[ $waitingfiles > 0 ]];then
-    echo "say $waitingfiles pictures waiting !"
+  if [[ $nega_list > 0 ]];then
+    echo "say $nega_list pictures waiting !"
     else
-    webcamimage
+    nega_getWebcam
     sleep 1
   fi
 
   # get source
-  negaSource=$(find $waitingList -maxdepth 1 -iname '*.jpg' | head -1)
-  negaName=$(basename $negaSource)
-  nega=$EFdata"last.png"
+  nega_raw=$(find $nega_listPath -maxdepth 1 -iname '*.jpg' | head -1)
+  nega_name=$(basename $nega_raw)
+  nega_path=$EFdata"last.png"
 
   # image processing
-  
   say "processing picture."
-  negaProcess
-  
-  say "starting exposure !"
+  nega_process
 
   # Run projection and automation
-  open -a EOS\ Utility.app $scan &
-  runPDE $EF present &
-  sleep 5
-  runSikuli $EF/stagiaire.sikuli
+  say "starting exposure !"
+  PDE_tell img_reload
+  PDE_tell reset_time
+  
+  for (( i=$camera_framePerCaptation; i>0; i--)); do
+    sleep $camera_interval &
+    
+    # --interval $camera_interval --frames $camera_framePerCaptation \
+    gphoto2 \
+    --capture-image-and-download \
+    --hook-script $path/hook.sh \
+    --filename ../../assets/exp/-%y.%m.%d_%H.%M.%S.%C
+  done
+  
   # remove file from list
-  mv -v $waitingList$negaName $archive$negaName
-  echo "files in list : "$(ls $waitingList)
+  mv -v $nega_listPath$nega_name $archive$nega_name
 
   # wait for wash
   say "exposure finished !"
-  sleep 120
+  sleep 60
   say "next exposure in 1 minute"
   sleep 60
   
-  # set new captation 
-  newcapation
 done

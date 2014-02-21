@@ -36,7 +36,7 @@ void setup(){
 }
 void draw(){
   background(0);
-  image(img, posx, posy);
+  image(img, 0, 0);
   printTimer();
   frame++;
 }
