@@ -1,6 +1,6 @@
 # exposer <> flasher
 
-## usage
+## process
 
 1. launch *EOS utility* (screen 1) and set pictures output folder
 2. launch *processing* (screen 2)
@@ -11,7 +11,7 @@
 
 ## dependencies
 
-- Sikuli
-- Canon EOS utility
 - processing
-- ffmpeg 
+- ffmpeg
+- detox
+- gphoto2
