@@ -57,7 +57,7 @@ function timelaps_display {
 }
 
 function PDE_tell {
-  python osc/sender.py sender.py 127.0.0.1 4242 $1
+  python $path/osc/sender.py sender.py 127.0.0.1 4242 $1
 }
 function PDE_run {
   # run a processing sketch 
@@ -104,7 +104,7 @@ camera_interval=3
 camera_framePerCaptation=3
 
 PDE_run $EF run &
-timelaps_render
+# timelaps_render
 
 while true
 do
