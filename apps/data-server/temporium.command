@@ -100,8 +100,8 @@ function capation_init {
 	done
 }
 
-camera_interval=3
-camera_framePerCaptation=3
+camera_interval=0
+camera_framePerCaptation=1000
 
 PDE_run $EF run &
 # timelaps_render
@@ -111,7 +111,6 @@ do
   
   # init
   capation_init
-  timelaps_display
   camera_init
   
   # Take snapshot if no picture
@@ -136,6 +135,9 @@ do
 
   # Run projection and automation
   say "starting exposure !"
+  
+  timelaps_display
+  
   PDE_tell img_reload
   PDE_tell reset_time
   
