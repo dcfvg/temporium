@@ -20,7 +20,6 @@ EFdata="$EF/data/"
 mkdir -v $nega_listPath $archive $EFdata
 
 function nega_process {
-  
   convert $nega_listPath$nega_name \
   -resize 1920x1920^ -gravity Center -crop 1920x1080+0+0 \
   -modulate 100,0,100 \
@@ -96,7 +95,7 @@ function capation_init {
   
   for (( i=50; i>0; i--)); do
     #cp "$exp/_000.JPG" "$exp/_00$i.JPG"
-    cp "$captation/_000.JPG" "$exp/_00$i.JPG"
+    cp "$captation/_000.JPG" "$exp/_00$i.jpg"
 	done
 }
 
