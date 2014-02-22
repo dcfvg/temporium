@@ -1,30 +1,6 @@
 # temporium
 
-## about
 **Le Temporium** est une structure en verre mêlant des systèmes biologiques, mécaniques et  informatiques. Il se compose de **trois "étages-organes"** qui s'activent successivement et participent à l'écriture narrative du flm.
-
-## installation
-- les médias sont déposés dans un dossier `assets` (ignoré) à créer à la racine du répertoire.
-
-````
-assets
-  - archive ( images exposés ) 
-  - captation ( image de l'exposition ) 
-  - waitinglist ( images en attente )
-````
-
-## dépendances
-
-- processing-java
-- sikuli
-- ffmpeg
-- detox
-- imagesnap
-- vlc
-- EOS Utility
-- imagemagick
-
-___
 
 ### tâches
 
