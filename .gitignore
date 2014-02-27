@@ -19,3 +19,6 @@
 *.crdownload
 *btsync*
 *.tmproj
+*pyc
+
+/apps/data-server/osc/OSC.pyc
