@@ -8,6 +8,12 @@
 
 ### tâches
 
+**structure**
+
+| fonction                          | priorité | solution envisagée                                            |
+| --------------------------------- | -------- |-------------------------------------------------------------- |
+| maintenir la température          | critique | chauffage d'appoint + circulation d'air                       |
+
 **milieux**
 
 | fonction                          | priorité | solution envisagée                                            |
