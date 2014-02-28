@@ -53,9 +53,11 @@ import processing.serial.*;
     size(800,700);
     background(150);
 
+    
+
     String portName = Serial.list()[2]; //change the 0 to a 1 or 2 etc. to match your port
     myPort = new Serial(this, portName, 9600); 
-     
+
     //On initilise les positions (de 0 à 1, en pourcentage de la taille de la fenetre): 
 
     position_milieu1 = new float[2];
@@ -170,19 +172,19 @@ import processing.serial.*;
     digit_pompe[0] = "";
     digit_pompe[1] = "";
     digit_pompe[2] = "";
-    digit_pompe[3] = "PAS";
+    digit_pompe[3] = "";
     digit_pompe[4] = "";
     digit_pompe[5] = "";
     digit_pompe[6] = "PB1A";
     digit_pompe[7] = "";
-    digit_pompe[8] = "";
+    digit_pompe[8] = "PAS";
     digit_pompe[9] = "PM2B1";
     digit_pompe[10] ="";
-    digit_pompe[11] ="";
+    digit_pompe[11] ="PM1A";
     digit_pompe[12] ="";
     digit_pompe[13] ="";
 
-    //Cont 
+    //Sensors : 
     numero_cont = new String[6];
     numero_cont[0] = "";
     numero_cont[1] = "";
@@ -213,9 +215,10 @@ import processing.serial.*;
    println(inByte);
    action_A(inByte);
      
-    int current_time = millis();
+   /* int current_time = millis();
     println(current_time - oldtime);
     oldtime = current_time;
+    */
     dessiner();
 
   }
@@ -239,7 +242,9 @@ import processing.serial.*;
      
       break;
       case 3: 
+
         get_cont(numero_Dizaine).volume_occ = 1;
+
 
       
       break;
