@@ -54,7 +54,7 @@ function timelaps_display {
   $vlc --noaudio --fullscreen --loop ~/temporium/assets/captation/exp/live.mp4 2> /dev/null &
 }
 function PDE_tell {
-  python $path/osc/sender.py sender.py 127.0.0.1 4242 $1
+  python $path/osc/sender.py 127.0.0.1 4242 $1
 }
 function PDE_run {
   # run a processing sketch 
