@@ -86,7 +86,7 @@ function capation_init {
   
   mkdir "$captation/exp-$now/"
   
-  mv $exp/*.JPG "$captation/exp-$now/"
+  mv $exp/*.jpg  "$captation/exp-$now/"
   cp $exp/live.mp4 "$captation/exp-$now/$now.mp4"
   mkdir $exp
   
