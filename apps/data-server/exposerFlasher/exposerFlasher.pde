@@ -1,3 +1,17 @@
+/**
+ *  Exposer Flash
+ *  Alterne l'exposition d'un négatif ( nega ) avec un flash
+ *  L'application répond à des ordres OSC
+ *  
+ *  l'image à projeter ( néga ) 
+ *  est prise dans le dossier data ( nega.png ) 
+ *  
+ *  ou filmée en temps réel ( liveMode )
+ *
+ *  @author Benoît VERJAT
+ *  @since  01.04.2013
+ */
+
 // OSC listener 
 
 import oscP5.*;
@@ -10,16 +24,17 @@ NetAddress myBroadcastLocation;
 import processing.video.*;
 Capture video;
 
-int fps = 10, frame = 0, w = 1920, h = 1080;
+// timer text
 String timer = "~";
-boolean fullscreen = false, flash = true, liveMode = true;
-PImage nega_img, flash_img, img;
 
-boolean sketchFullScreen() {return fullscreen;}
+// images ( nega: the picture to expose, flash: the flash , img the actual state of projection )
+PImage nega_img, flash_img, img; 
+
+// param
+boolean fullscreen = false, flash = true, liveMode = true;
+int fps = 10, frame = 0, w = 1920, h = 1080;
 
 void setup(){
-  
-  println("<pre>");
   
   // OSC
   oscP5 = new OscP5(this,4242);
@@ -46,17 +61,34 @@ void setup(){
     video.start();
   }
 }
+boolean sketchFullScreen() {return fullscreen;}
 void draw(){
+  
+  // reset image
   background(0);
+  
+  // if live mode enable nega_img is the webcam image
   if(liveMode){
     video.loadPixels();
     nega_img = video;
   }
+  
+  // print image
   image(img, 0, 0);
+  
+  // add timer
   printTimer();
+  
+  // frame count for timer
   frame++;
 }
 void oscEvent(OscMessage theOscMessage) {
+  
+  /**
+   * wait for OSC events
+   *
+   */
+
   if(theOscMessage.checkAddrPattern("/exposeFlashCommander")==true) {
     
       String o = theOscMessage.get(0).stringValue();
@@ -73,13 +105,26 @@ void oscEvent(OscMessage theOscMessage) {
   }
 }
 void img_reload(){
+  /**
+   * refresh image from 'data' folder
+   *
+   */
+  
   nega_img  = loadImage("last.png");
   flash_img = loadImage("flash.png");
 }
 void printTimer(){
+  /**
+   * calculate experience time and display it
+   *
+   */
   timer = nf(((frame/fps)/60/60),2)+":"+nf(((frame/fps)/60)%60,2) + ":" +nf((frame/fps)%60,2);    
   text(timer, 100, 50);
 }
 void captureEvent(Capture c) {
+  /**
+   * on live mode, read webcam image
+   */
+   
   if(liveMode) c.read();
 }

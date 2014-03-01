@@ -1,5 +1,9 @@
 #!/bin/bash
 #set -x
+# 
+# @author Benoît VERJAT
+# @since  01.02.2014
+#
 
 # make sure the camera is available.
 killall PTPCamera 

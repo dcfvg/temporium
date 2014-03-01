@@ -1,4 +1,10 @@
 #!/bin/bash
+#
+# waits the camera actions and send OSC orders depending on state
+# 
+# @author Benoît VERJAT
+# @since  01.02.2014
+# 
 
 self=`basename $0`
 

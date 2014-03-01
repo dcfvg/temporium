@@ -6,9 +6,6 @@
 - capatation microscopique
 - projection vidéo du film ( http://www.matrox.com/graphics/fr/products/gxm/th2go/displayport/ ) 
 
-# todo
-- timing management
-
 ## installation
 - les médias sont déposés dans un dossier `assets` (ignoré) à créer à la racine du répertoire.
 
@@ -22,7 +19,6 @@ assets
 ## dépendances
 
 - processing-java
-- sikuli
 - ffmpeg
 - detox
 - imagesnap
