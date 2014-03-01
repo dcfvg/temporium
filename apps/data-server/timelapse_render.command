@@ -7,10 +7,7 @@ path="$(dirname $0)/../../assets/captation/exp"
 cd $path
 
 while true; do
-  imagescount=$(find $path -type f -iname "*.JPG" -exec printf '.' \; | wc -c  | tr -d ' ')
-  
-  say "$imagescount images"
-  
+  imagescount=$(find $path -type f -iname "*.JPG" -exec printf '.' \; | wc -c  | tr -d ' ')  
   echo "Refresh live movie ($imagescount)"
   
 	ffmpeg -loglevel panic -f image2 -pattern_type glob -i '*.jpg' -r 25 -vcodec mpeg4 -b 30000k -vf scale=1920:-1 -y tmp.mp4

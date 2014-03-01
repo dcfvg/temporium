@@ -45,7 +45,6 @@ function nega_getWebcam {
   now=$(date +"%y.%m.%d-%H.%M.%S")
   imagesnap "$nega_listPath/$now.jpg"
 }
-
 function timelaps_render {
   bash $path"/exptomov.sh" &
   sleep 15
@@ -54,7 +53,6 @@ function timelaps_display {
   killall -9 "VLC"
   $vlc --noaudio --fullscreen --loop ~/temporium/assets/captation/exp/live.mp4 2> /dev/null &
 }
-
 function PDE_tell {
   python $path/osc/sender.py sender.py 127.0.0.1 4242 $1
 }
@@ -71,7 +69,6 @@ function PDE_run {
 
   processing-java --sketch="$patch" --output=/tmp/processing_output --force --$2
 }
-
 function camera_init {
   
   # make sure the camera is available.
@@ -103,7 +100,6 @@ camera_interval=0
 camera_framePerCaptation=1000
 
 PDE_run $EF run &
-# timelaps_render
 
 while true
 do
@@ -158,5 +154,4 @@ do
   sleep 60
   say "next exposure in 1 minute"
   sleep 60
-  
 done
