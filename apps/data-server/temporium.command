@@ -143,7 +143,7 @@ do
     gphoto2 \
     --capture-image-and-download \
     --hook-script $path/hook.sh \
-    --filename ~/temporium/assets/exp/%y.%m.%d_%H.%M.%S.%C
+    --filename ~/temporium/assets/captation/exp/%y.%m.%d_%H.%M.%S.%C
   done
   
   # remove file from list
