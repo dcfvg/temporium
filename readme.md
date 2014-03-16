@@ -13,6 +13,7 @@
 | fonction                          | priorité | solution envisagée                                            |
 | --------------------------------- | -------- |-------------------------------------------------------------- |
 | maintenir la température          | critique | chauffage d'appoint + circulation d'air                       |
+| piloter la lumière                | haute    | [fibaro](http://www.fibaro.com/fr/syst%C3%A8me-fibaro/rgbw-controller)|
 
 **milieux**
 
