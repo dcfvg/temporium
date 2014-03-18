@@ -1,8 +1,8 @@
 digraph {
-  label="\n\nINTERFAÇAGE\n—\n 18/03/14"
+  label="\n\nINTERFAÇAGE\n—\n 18/03/14 (bv)"
   
   rankdir="TB"
-  nodesep = .8
+  nodesep = .5
   
   fontsize=14
   fontname="myriadpro"
@@ -16,7 +16,7 @@ digraph {
     style="filled"
     color=mediumspringgreen
 		style="filled,rounded"
-		fontcolor=white
+		fontcolor=darkgreen
 
     node[style="filled", color=white]
 
@@ -36,31 +36,33 @@ digraph {
   }
 	
   {montage_dynamique,seance_decompte} -> projection [label=" flux video"]
+  detecter_formation -> conduite [label=" taux en %"] 
 
-  
 	conduite -> life_manager 							[label=" event OSC"]
   conduite -> seance_end 								[label=" "]
 	conduite -> {capta_macro,capta_micro} [label=" usb"]
 	conduite -> expo_vp 									[label=" flux video"]
-
-
-  detecter_formation -> conduite [label=" taux en %"] 
   
   seance_end -> seance_decompte [label=" attendre"]
   seance_start -> conduite  -> montage_dynamique [label=" event OSC"]
   seance_decompte -> seance_start
     
-  capta_micro -> montage_dynamique   [label=" mpeg"]
-  capta_macro -> capta_macro_compil [label=" jpeg"]
-  capta_macro_compil -> montage_dynamique [label=" jpg to mpeg"]
+  capta_micro -> montage_dynamique   			[label=" mp4"]
+  capta_macro -> capta_macro_compil 			[label=" mp4"]
+  capta_macro_compil -> montage_dynamique [label=" jpg to mp4"]
   capta_macro -> detecter_formation
   
+	node[color=grey,fontcolor=black]
+	edge[color=black]
+	rush -> montage_dynamique	[label=" mp4"]
   
 	// ranking
 	{
 		rank="same"
 		seance_end
 		seance_decompte
+		projection
+		
 	}
 	
 	// labels
@@ -79,12 +81,13 @@ digraph {
 
 			detecter_formation[label="detecter l'avancement\nde la formation de l'image"]
 
-			life_manager			[label="gesionnaire du vivant\n(rpi+arduino)", shape=egg]
-			projection				[shape=invtrapezium]
+			life_manager			[label="gesionnaire du vivant\n(RPi+arduino)", shape=egg]
+			projection				[label="projection\nsalle",shape=invtrapezium]
 			expo_vp						[label="exposition image\n(vp)"]
 			conduite					[label="gestionnaire\nde séance"shape=circle]
 			
-			montage_dynamique [label="monteur dynamique"]
+			montage_dynamique [label="montage dynamique"]
+			rush							[label="séquences", shape=folder]
 	}
 
 }
