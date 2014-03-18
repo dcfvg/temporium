@@ -15,25 +15,26 @@ digraph {
   subgraph cluster_tempo {
     
     label="temporium"
+    style="filled"
     
+    node[style="filled", color=white]
     tempo_eclairage
     tempo_nettoyage
     tempo_devoiler
     capta_micro
     capta_macro
-    
   }
   
   seance_end      [label="fin séance"]
   seance_decompte [label="décompte\npré-séance"]
   seance_start    [label="début séance"]
   
-  capta_micro[label="captation micro"]
-  capta_macro[label="captation macro"]
+  capta_micro[label="captation\nmicro"]
+  capta_macro[label="captation\nmacro"]
   
-  tempo_eclairage [label="éclairage on"]
-  tempo_nettoyage [label="nettoyer vitre"]
-  tempo_devoiler  [label="lever le\nfiltre rouge"]
+  tempo_eclairage [label="éclairer"]
+  tempo_nettoyage [label="nettoyer\nla vitre"]
+  tempo_devoiler  [label="révéler\nl'image"]
   
   
   conduite -> {tempo_eclairage, tempo_nettoyage, tempo_devoiler}  [label=" switch"]
