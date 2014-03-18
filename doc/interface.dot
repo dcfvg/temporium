@@ -1,63 +1,90 @@
 digraph {
-  label="—\ninterface"
+  label="\n\nINTERFAÇAGE\n—\n 18/03/14"
   
-  rankdir="LR"
+  rankdir="TB"
   nodesep = .8
   
   fontsize=14
-  fontname="monaco"
+  fontname="myriadpro"
   
-  node[fontsize=12, fontname="monaco", shape=box]
-  edge[fontsize=10, fontname="monaco", arrowhead=empty, arrowsize=1.3]
-  
-
+  node[fontsize=14, fontname="myriadpro", fontcolor=blue, color=blue, shape=box]
+  edge[fontsize=10, fontname="monaco", color=blue]
   
   subgraph cluster_tempo {
     
-    label="temporium"
+    label="\nTEMPORIUM\n\n"
     style="filled"
-    
+    color=mediumspringgreen
+		style="filled,rounded"
+		fontcolor=white
+
     node[style="filled", color=white]
-    tempo_eclairage
-    tempo_nettoyage
-    tempo_devoiler
+
+
     capta_micro
     capta_macro
+		expo_vp
+
+		node[style="filled", fontcolor=darkgreen, shape=invhouse]
+    edge[color=darkgreen]
+		tempo_eclairage
+    tempo_nettoyage
+    tempo_devoiler
+		life_manager
+		life_manager -> {tempo_eclairage, tempo_nettoyage, tempo_devoiler}  [label=" pin-IO", style="dashed"]
+	  
   }
+	
+  {montage_dynamique,seance_decompte} -> projection [label=" flux video"]
+
   
-  seance_end      [label="fin séance"]
-  seance_decompte [label="décompte\npré-séance"]
-  seance_start    [label="début séance"]
-  
-  capta_micro[label="captation\nmicro"]
-  capta_macro[label="captation\nmacro"]
-  
-  tempo_eclairage [label="éclairer"]
-  tempo_nettoyage [label="nettoyer\nla vitre"]
-  tempo_devoiler  [label="révéler\nl'image"]
-  
-  
-  conduite -> {tempo_eclairage, tempo_nettoyage, tempo_devoiler}  [label=" switch"]
-  conduite -> seance_end
-  conduite -> {capta_macro, capta_micro} [label=" init"]
-  detecter_formation -> montage_dynamique [label=" n %"] 
+	conduite -> life_manager 							[label=" event OSC"]
+  conduite -> seance_end 								[label=" "]
+	conduite -> {capta_macro,capta_micro} [label=" usb"]
+	conduite -> expo_vp 									[label=" flux video"]
+
+
+  detecter_formation -> conduite [label=" taux en %"] 
   
   seance_end -> seance_decompte [label=" attendre"]
-  seance_start -> conduite  -> montage_dynamique [label=" event"]
+  seance_start -> conduite  -> montage_dynamique [label=" event OSC"]
   seance_decompte -> seance_start
-  
-  
+    
   capta_micro -> montage_dynamique   [label=" mpeg"]
   capta_macro -> capta_macro_compil [label=" jpeg"]
   capta_macro_compil -> montage_dynamique [label=" jpg to mpeg"]
   capta_macro -> detecter_formation
   
-  {montage_dynamique,seance_decompte} -> projection [label="flux video"]
   
-  {
-    rank="same"
-    montage_dynamique
-    projection
-  }
-  
+	// ranking
+	{
+		rank="same"
+		seance_end
+		seance_decompte
+	}
+	
+	// labels
+	{
+      seance_end      	[label="fin séance"]
+      seance_decompte 	[label="décompte\npré-séance"]
+      seance_start    	[label="début séance", shape=oval]
+ 
+      capta_micro	  		[label="captation\nmicroscope"]
+      capta_macro	  		[label="captation animation\n(EOS 600D)"]
+ 			capta_macro_compil[label="compilation\nanimation"]
+
+      tempo_eclairage 	[label="éclairer"]
+      tempo_nettoyage 	[label="nettoyer la vitre"]
+      tempo_devoiler  	[label="lever de rideau"]
+
+			detecter_formation[label="detecter l'avancement\nde la formation de l'image"]
+
+			life_manager			[label="gesionnaire du vivant\n(rpi+arduino)", shape=egg]
+			projection				[shape=invtrapezium]
+			expo_vp						[label="exposition image\n(vp)"]
+			conduite					[label="gestionnaire\nde séance"shape=circle]
+			
+			montage_dynamique [label="monteur dynamique"]
+	}
+
 }
