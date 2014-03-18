@@ -1,0 +1,50 @@
+digraph {
+  label="interface"
+  
+  rankdir="LR"
+  nodesep = .8
+  
+  fontsize=14
+  fontname="monaco"
+  
+  node[fontsize=12, fontname="monaco", shape=box]
+  edge[fontsize=10, fontname="monaco", arrowhead=empty, arrowsize=1.5]
+  
+
+  
+  subgraph cluster_tempo {
+    
+    label="temporium"
+    
+    tempo_eclairage
+    tempo_nettoyage
+    tempo_devoiler
+    capta_micro
+    capta_macro
+    
+  }
+  
+  conduite -> {tempo_eclairage, tempo_nettoyage, tempo_devoiler}  [label=" switch"]
+  conduite -> seance_end
+  conduite -> {capta_macro, capta_micro} [label=" init"]
+  detecter_formation -> montage_dynamique [label=" n %"] 
+  
+  seance_end -> seance_decompte [label=" attendre"]
+  seance_start -> conduite  -> montage_dynamique [label=" event"]
+  seance_decompte -> seance_start
+  
+  
+  capta_micro -> montage_dynamique   [label=" mpeg"]
+  capta_macro -> capta_macro_compil [label=" jpeg"]
+  capta_macro_compil -> montage_dynamique [label=" jpg to mpeg"]
+  capta_macro -> detecter_formation
+  
+  {montage_dynamique,seance_decompte} -> projection [label="flux video"]
+  
+  {
+    rank="same"
+    montage_dynamique
+    projection
+  }
+  
+}
