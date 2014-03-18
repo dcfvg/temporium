@@ -48,7 +48,7 @@ digraph {
   seance_decompte -> seance_start
     
   capta_micro -> montage_dynamique   			[label=" mp4"]
-  capta_macro -> capta_macro_compil 			[label=" mp4"]
+  capta_macro -> capta_macro_compil 			[label=" jpg"]
   capta_macro_compil -> montage_dynamique [label=" jpg to mp4"]
   capta_macro -> detecter_formation
   
