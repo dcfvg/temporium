@@ -1,5 +1,5 @@
 digraph {
-  label="interface"
+  label="—\ninterface"
   
   rankdir="LR"
   nodesep = .8
@@ -8,7 +8,7 @@ digraph {
   fontname="monaco"
   
   node[fontsize=12, fontname="monaco", shape=box]
-  edge[fontsize=10, fontname="monaco", arrowhead=empty, arrowsize=1.5]
+  edge[fontsize=10, fontname="monaco", arrowhead=empty, arrowsize=1.3]
   
 
   
@@ -23,6 +23,18 @@ digraph {
     capta_macro
     
   }
+  
+  seance_end      [label="fin séance"]
+  seance_decompte [label="décompte\npré-séance"]
+  seance_start    [label="début séance"]
+  
+  capta_micro[label="captation micro"]
+  capta_macro[label="captation macro"]
+  
+  tempo_eclairage [label="éclairage on"]
+  tempo_nettoyage [label="nettoyer vitre"]
+  tempo_devoiler  [label="lever le\nfiltre rouge"]
+  
   
   conduite -> {tempo_eclairage, tempo_nettoyage, tempo_devoiler}  [label=" switch"]
   conduite -> seance_end
