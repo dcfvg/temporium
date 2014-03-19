@@ -1,0 +1,97 @@
+digraph {
+  label="\n\nTEMPORIUM\n—\n18/03/14 (bv)"
+  
+  //rankdir="LR"
+  //nodesep = .5
+  
+  layout=dot
+  
+  fontsize=14
+  fontname="myriadpro"
+  
+  node[fontsize=14, fontname="myriadpro", fontcolor=blue, color=blue, shape=house]
+  edge[fontsize=10, fontname="monaco", color=blue]
+  
+  subgraph tempo {
+   
+    subgraph organs {
+      
+      node[shape=hexagon]
+    
+      subgraph cluster_bioreact {
+        label="cultures"
+        bioreact
+        pompe_air
+        buffer
+        milieu_A
+        milieu_B
+        
+      }
+
+      
+      subgraph cluster_aquarium {
+      
+        label="aquarium"
+        
+        vitre
+        volet
+        liquide
+        filtration
+      }
+      buffer
+      vidange
+    }
+    
+    // RELATIONS
+    
+    pompe_air -> bioreact
+    bioreact -> buffer -> liquide
+    
+    milieu_A -> bioreact
+    milieu_B -> buffer
+    
+    liquide -> vidange
+    filtration -> liquide -> filtration
+    
+    
+  /*  subgraph cluster_bioreact {
+      label ="bioreacteurs"
+      
+      milieuToBioreact
+		  cultureToBuffer
+		  get_densite
+		  get_temperature
+		  get_level 
+		  
+    }
+    
+		tempo_eclairage
+    tempo_nettoyage
+    tempo_devoiler
+     
+		life_manager -> arduino 
+		arduino -> {
+		
+		  milieuToAqua 
+		  milieuToBioreact
+		  tempo_devoiler
+		  tempo_nettoyage
+		  tempo_eclairage
+		  
+		  cultureToBuffer
+		  
+		}  [label=" pin io"]
+		
+    cultureToBuffer -> bufferToAqu
+    tempo_eclairage -> get_temperature
+		
+  }
+	// labels
+	{
+      tempo_eclairage 	[label="éclairer"]
+      tempo_nettoyage 	[label="nettoyer la vitre"]
+      tempo_devoiler  	[label="lever de rideau"]
+*/
+	}
+
+}
