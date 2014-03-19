@@ -41,6 +41,7 @@
 | maintenir le niveau               | critique | pompe + electrode — flotteur — imagerie                       | 
 | filtrer les impuretés             | critique | pompe/filtre ( trop puissante pour l'instant )                |
 | nettoyer la vitre                 | critique | magnet + rails — bras en croix                                | 
+| calculer l'oxigene dissoute       | faible   | [sonde](http://www.cebtechservices.com/probe&sensorA.htm)     |
 
 **recyclage**
 
