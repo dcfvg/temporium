@@ -1,10 +1,10 @@
 digraph {
-  label="\n\nTEMPORIUM\n—\n18/03/14 (bv)"
+  label="\n\nTEMPORIUM\n—\n18/03/14 (bv) / EL = electrode, P = pompe, V = Vanne, M = Moteur"
   
   rankdir="LR"
-  //nodesep = .9
-  
-  layout=dot
+  nodesep = .4
+ 
+	layout=dot
   
   fontsize=14
   fontname="myriadpro"
@@ -13,7 +13,8 @@ digraph {
   edge[fontsize=10, fontname="monaco", color=blue]
   
   subgraph tempo {
-   
+   	color=mediumspringgreen
+  	fontcolor=darkgreen
     subgraph device {
       
       node[shape=circle, fontsize=10, style="filled", color=blue, fontcolor=white]
@@ -23,25 +24,25 @@ digraph {
       arduino
       RPi
       nettoyeur
-      conduite
+      conduite [color=grey, shape=diamond, label="gestionnaire\nde séance"]
       eclairage
-      
-      
+
       subgraph sensor{
         node[shape=invhouse]
 
         EL1 
         EL2
-        TEMP
+				EL3
+        temp
       }
     }
     subgraph organs {
       
-      node[shape=hexagon]
-    
+      node[shape=box, color=mediumspringgreen, fontcolor=darkgreen, penwidth=3]
+			
       subgraph cluster_bioreact {
-        label="cultures"
-        webcam
+        label="CULTURES"
+
         bioreact
         buffer
         milieu_A
@@ -50,11 +51,9 @@ digraph {
         pompe_air
         eclairage
       }
-
-      
       subgraph cluster_aquarium {
       
-        label="aquarium"
+        label="AQUARIUM"
         
         vitre
         volet
@@ -71,7 +70,7 @@ digraph {
     // RELATIONS
     
     subgraph orders {
-      edge[color=red, fontcolor=blue]
+      edge[color=blue, fontcolor=blue]
       
       conduite -> RPi [label=" event OSC"]
       RPi -> arduino [label=" serial"]
@@ -81,32 +80,34 @@ digraph {
       EL1 -> arduino      [label=" !ARU"]
       EL2 -> arduino      [label=" !ARU"]
       EL3 -> arduino      [label=" !ARU"]
-      
+      temp -> arduino			[label="°c"]
+
     }
     subgraph contact {
-      
-      edge[style=tapered, arrowtail=none, arrowhead=none, penwidth=10, color=grey]
+      edge[arrowhead = ediamond, penwidth=3, color=grey]
       EL1 -> milieu_A
       EL2 -> milieu_B
-      EL3 -> liquide 
+      EL3 -> liquide
+	    nettoyeur -> vitre
+			M1 -> volet
     }
     subgraph fluid {
+      edge[penwidth=3, color=mediumspringgreen]
       
-      edge[penwidth=5]
-      bioreact -> V1 -> buffer ->  P1 -> liquide
+			bioreact -> V1 -> buffer ->  P1 -> liquide
       milieu_A -> P2 -> bioreact
       milieu_B -> P3 -> buffer
       liquide -> vidange
       pompe_air -> bioreact
       filtration -> liquide -> filtration
-      webcam -> { bioreact }
       milieu_B -> P4 -> liquide
     }
     
-    nettoyeur -> vitre
-    M1 -> volet
-    RPi -> monitoring 
-    
 	}
-
+	
+	temp 		 [label="sonde\ntempérature"]
+	milieu_B [label="milieu culture B"]
+	milieu_A [label="milieu culture A"]
+	bioreact [label="bioréacteur"]
+	pompe_air[label="pompe à air"]
 }
