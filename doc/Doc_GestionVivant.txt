@@ -1,0 +1,119 @@
+Documentation gestion du vivant : 
+
+Description : 
+
+- Schéma biologique  
+- Système Indépendant 
+- Architecture communication info Arduino/Raspberry/Ordinateur: 
+- Architecture soft : 
+-Description Bloc Action Arduino
+
+
+Schéma biologique : 
+	- Milieux
+	- Electrodes 
+	- Pompes (14 pins digital)  
+	- Electrodes hautes : 7 Pin - analog 
+	- Electrode basses : 9 Pin - digital 
+	- 3 pompes à air (bioreacteurs) : 3 Pin  - digital
+	- Webcam (nombres/endroit? ) -> Captation bioreacteur + buffer 
+		- Niveau par detection d’image 
+		- Concentration 
+	- Appareil photo -> captation Appareil photo: 
+		- Concentration (Rq : difficile car éclairement de l’aquarium variable) 
+		- Vitesse de formation (mais n’intervient pas dans la gestion du vivant) 
+		
+	Rq : concentration dans les buffers gérée de manière à avoir concentration optimale.		
+
+Systeme Indépendant : 	
+		- Colonnes Led : Claude (sur quel Arduino ? Nombre de Pins ? ) 
+		- Temperature (système indépendant Arduino + Système de régulation)
+
+
+- Architecture communication info: 
+
+	Raspberry/Arduino : 
+	
+		Raspberry -> Arduino :
+			- Commande de Bloc Action (quel niveau d’indépendance d’un bloc d’action): 
+				ex : Nettoyage/Vidange/Remplissage  
+			- Commande Etat Led
+			- Info :
+				- Concentration des milieux
+ 
+		Arduino -> Raspberry : 
+			- Info : 
+				- Etat Electrode (a voir plus tard)
+				- Etat Pompe (a voir plus tard)
+			- Fin de Bloc d’Action 
+
+	Ordinateur/Raspberry : 
+		Film : 
+			Ordinateur->Raspberry :
+				- Debut du film 
+				- Fin du film 
+			Raspberry -> Ordinateur : 
+				- Fin d’action sur le vivant 
+		Concentration : 
+			Ordinateur->Raspberry :
+				- Concentration
+			Raspberry -> Ordinateur : 
+				- Debut calcul de concentration 
+				- Fin calcul de concentration
+		Calcul niveaux : 
+			Ordinateur->Raspberry :
+				- Niveaux
+			Raspberry -> Ordinateur : 
+				- Debut calcul de niveaux
+				- Fin calcul de niveaux 
+
+
+Architecture soft : 
+	Serial : 
+		Arduino : 
+			- Reçoit commande de d’action 
+			- Emet info de fin d’état 
+			- Emet info sur Etat Electrode/pompes
+
+	Ethernet : 
+		Serveur gestion du vivant (sur Raspberry) : 
+			-Coordination des taches à executer pour gestion du vivant
+
+		Client concentration (connecté sur Serveur Gestion du vivant) : 
+			-Analyse d’image colorimétrie
+	
+		Client niveaux (connecté sur Serveur Gestion du vivant): 
+			-Analyse detection de flotteur
+
+	 
+
+	
+Bloc Action Arduino : 
+	- Nettoyage : 
+		- Commande de lancement 
+		- Feedback de fin 
+	- Vidange : 
+		-Commande de vidange avec choix :
+			-Vidange partiel (calcul sur debit/Electrode de milieu intermédiaire)
+			-Vidange total electrode de bas
+		- Feedback Fin de vidange 
+	- Remplissage : 
+		- Commande de remplissage 
+		- Choix du buffer (concentration + bioréacteur condamné) 
+		- Remplissage buffer-> aquarium 
+		- Feed back fin de remplissage 
+	- Remise niveaux Buffer : 
+		- Remplissage avec Bioreacteur 
+		-Remplissage avec Milieu_Culture_B
+	- Remise niveaux Bioreacteur
+		- Automatique des qu’on vide un bioreacteur : remise a niveaux avec Milieu_Culture_A 
+
+	Rq/Questions : Mise a niveau des buffer/bioreacteur ? quelle rythme/ 3 jours dans le buffer au minimum avant d’aller dans l’aquarium/ evolution de la concentration en algue dans buffer ? 
+
+
+
+
+ 
+ 
+
+
