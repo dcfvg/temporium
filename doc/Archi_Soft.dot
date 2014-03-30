@@ -1,4 +1,69 @@
 	digraph {
-	 label="\n\nGESTION DU VIVANT / SYSTEME PHYSIQUE\n— \n23/03/14  / P = pompe, PIPE = échangeur, EL = Electrode"
+	 label="\n\nGESTION DU VIVANT / SOFTWARE \n— \n30/03/14  / VERT = ethernet, NOIR = serie, GRIS = OSC  "
+	 rankdir="TP"
+	 nodesep = .4
+	
+	layout=dot
 	 
-	 }
+	 fontsize=14
+	 fontname="myriadpro"
+	 
+	 node[fontsize=14, fontname="myriadpro", fontcolor=blue, color=blue, shape=house]
+	 edge[fontsize=10, fontname="monaco", color=green]
+
+
+subgraph organs {
+	     
+	//	node[height = 2, width = 1, shape=box, color=mediumspringgreen, fontcolor=darkgreen, penwidth=3]
+		 node[fontsize=14, fontname="myriadpro", fontcolor=blue, color=blue, shape=box, margin = 0.5]
+			
+	    arduino_pump
+	    arduino_clean
+	    
+	 	life_controller
+	       
+	  	
+	 	film_controller
+	 	
+	    det_level
+	    det_conc
+		
+		
+		subgraph cluster_culture {
+	 		label="ANALYSE IMAGE"
+	 		det_level
+	    det_conc
+	 	}
+	 	
+	 	subgraph cluster_aquarium {
+	 		label="ACTIONNEURS"
+	 		node[height = 2, width = 1]
+	 		
+	 		arduino_pump
+	 		arduino_clean
+	 	}
+	}
+	
+	//RELATION 
+	subgraph fluid {
+		edge[penwidth=3, color=mediumspringgrey, dir = both,label=""]
+		
+	arduino_pump -> life_controller
+	arduino_clean -> life_controller
+	
+	edge[penwidth=3, color=mediumspringgreen, dir = both, label=""] 
+	
+	det_level -> life_controller
+	det_conc -> life_controller
+	
+	edge[penwidth=3, color=grey, dir = both, label = ""] 
+	
+	life_controller -> film_controller
+	
+	
+
+		
+	}
+	
+	
+}
