@@ -52,8 +52,9 @@ Système Indépendant :
 			Ordinateur->Raspberry :
 				- Debut du film 
 				- Fin du film 
-			Raspberry -> Ordinateur : 
-				- Fin d’action sur le vivant 
+			Raspberry -> Ordinateur :
+				- Debut Action sur le Vivant 
+				- Fin Action sur le vivant 
 		Concentration : 
 			Ordinateur->Raspberry :
 				- Concentration
