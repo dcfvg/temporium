@@ -1,35 +1,3 @@
-Documentation gestion du vivant : 
-
-Description : 
-
-- Schéma biologique  
-- Système Indépendant 
-- Architecture communication info Arduino/Raspberry/Ordinateur: 
-- Architecture soft : 
--Description Bloc Action Arduino
-
-
-Schéma biologique : 
-	- Milieux
-	- Electrodes 
-	- Pompes (14 pins digital)  
-	- Electrodes hautes : 7 Pin - analog 
-	- Electrode basses : 9 Pin - digital 
-	- 3 pompes à air (bioreacteurs) : 3 Pin  - digital
-	- Webcam (nombres/endroit? ) -> Captation bioreacteur + buffer 
-		- Niveau par detection d’image 
-		- Concentration 
-	- Appareil photo -> captation Appareil photo: 
-		- Concentration (Rq : difficile car éclairement de l’aquarium variable) 
-		- Vitesse de formation (mais n’intervient pas dans la gestion du vivant) 
-		
-	Rq : concentration dans les buffers gérée de manière à avoir concentration optimale.		
-
-Système Indépendant : 	
-		- Colonnes Led : Claude (sur quel Arduino ? Nombre de Pins ? ) 
-		- Temperature (système indépendant Arduino + Système de régulation)
-
-
 Architecture soft : 
 	
 	Arduino Uno : 
@@ -117,14 +85,4 @@ Architecture communication info:
 	Client Aquarium/Gestion_du_Film :
 		Client Aquarium -> Gestion_du_Film
 			- Etat Vitesse Aquarium
-
-
-	Rq/Questions : Mise a niveau des buffer/bioreacteur ? quelle rythme/ 3 jours dans le buffer au minimum avant d’aller dans l’aquarium/ evolution de la concentration en algue dans buffer ? 
-
-
-
-
- 
- 
-
 
