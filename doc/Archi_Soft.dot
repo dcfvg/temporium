@@ -17,16 +17,17 @@ subgraph organs {
 	//	node[height = 2, width = 1, shape=box, color=mediumspringgreen, fontcolor=darkgreen, penwidth=3]
 		 node[fontsize=14, fontname="myriadpro", fontcolor=blue, color=blue, shape=box, margin = 0.5]
 			
-	    arduino_pump
-	    arduino_clean
+	    arduino_pump [label ="Arduino Mega\n - \n Pompes // Electrodes // Leds Bioreacteurs "]
+	    arduino_clean [label ="Arduino Uno\n - \n Nettoyage Aquarium "]
 	    
-	 	life_controller
-	       
+	 	life_controller [label ="Gestion du Vivant \n - \n SERVEUR"]
+	    
+	    det_level [label ="Analyse d'Image - Niveaux \n - \n CLIENT"]
+	    det_conc [label ="Analyse d'Image - Concentration \n - \n CLIENT"]
 	  	
-	 	film_controller
+	 	film_controller [label ="Gestion du Vivant \n - \n SERVEUR"]
 	 	
-	    det_level
-	    det_conc
+	    
 		
 		
 		subgraph cluster_culture {

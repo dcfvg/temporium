@@ -25,7 +25,7 @@ Schéma biologique :
 		
 	Rq : concentration dans les buffers gérée de manière à avoir concentration optimale.		
 
-Systeme Indépendant : 	
+Système Indépendant : 	
 		- Colonnes Led : Claude (sur quel Arduino ? Nombre de Pins ? ) 
 		- Temperature (système indépendant Arduino + Système de régulation)
 
