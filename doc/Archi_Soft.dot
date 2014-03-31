@@ -25,7 +25,7 @@ subgraph organs {
 	    det_conc [label ="Analyse d'Image - Bioreacteur//Buffer\n - \n[ Concentration ] \n - \n CLIENT 2"]
 	    det_aquarium [label = "Analyse d'Image - Aquarium \n - \n[ Concentration - Vitesse ]\n - \n CLIENT 3"]
 	  	
-	 	film_controller [label="Gestionnaire de séance"]
+	 	film_controller [label="Gestionnaire de Séance"]
 	 	
 	    
 		
@@ -68,15 +68,15 @@ subgraph organs {
 	subgraph Serie {
 		edge[penwidth=3, color=mediumspringgrey, dir = both,label=""]
 		
-	arduino_pump -> life_controller [label = "GdV -> Arduino Mega : \l - Commande bloc Action \l\lArduino Mega -> GdV :\l - Etat Pompes \l - Etat Leds\l - Etat Electrodes \l - Info Début Action\l - Info Fin Action\l "]
-	arduino_clean -> life_controller [label = "GdV -> Arduino Uno : \l - Commande bloc Action \l\lArduino Mega -> GdV :\l - Etat Moteurs \l - Info Début Action \l - Info Fin Action\l"]
+	arduino_pump -> life_controller [label = "GdV -> Arduino Mega : \l - Commande Bloc Action \l - Commande Leds \l - Etat Concentrations\l - Etat Niveaux   \l\lArduino Mega -> GdV :\l - Etat Pompes \l - Etat Leds\l - Etat Electrodes \l - Info Début Action\l - Info Fin Action\l "]
+	arduino_clean -> life_controller [label = "GdV -> Arduino Uno : \l - Commande bloc Action \l - Etat Concentrations\l\lArduino Uno -> GdV :\l - Etat Moteurs \l - Info Début Action \l - Info Fin Action\l"]
 	}
 	subgraph Ethernet {
 	edge[penwidth=3, color=mediumspringgreen, label=""] 
 	
 	det_level -> life_controller [label = "Client 1 -> GdV : \l - Etat des concentrations "]
-	det_conc -> life_controller [label = "Client 1 -> GdV : \l - Etat des niveaux "]
-	det_aquarium -> life_controller [label = "Client 1 -> GdV : \l - Etat Concentration\l - Etat Vitesse\l "]
+	det_conc -> life_controller [label = "Client 2 -> GdV : \l - Etat des niveaux "]
+	det_aquarium -> life_controller [label = "Client 3 -> GdV : \l - Etat Concentration\l - Etat Vitesse\l "]
 	}
 	
 	subgraph OSC {
@@ -86,7 +86,7 @@ subgraph organs {
 	life_controller -> film_controller [label = "GdF -> GdV : \l - Debut Film \l - Fin Film \l\lGdV-> GdF :\l - Debut Action sur le Vivant \l - Fin Action sur le Vivant\l"]
 	
 	edge[penwidth=3, color=grey, dir = forward, label = ""] 
-	det_aquarium -> film_controller[label = "Client 1 -> GdF : \l - Etat Vitesse\l "]
+	det_aquarium -> film_controller[label = "Client 3 -> GdF : \l - Etat Vitesse\l "]
 	
 	
 
