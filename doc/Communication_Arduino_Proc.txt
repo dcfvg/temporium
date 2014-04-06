@@ -1,11 +1,46 @@
 Communication Arduino-Serveur : 
 
 	Demande electrode : 
-		- Arduino -> Serveur  : EL_BR1_0 // EL_"nameContainer"_"numberElectrode"  
+		- Arduino -> Serveur  : 
+								3 Electrodes par BR : 0 bas ; 1 milieu ; 2 haut  
+								EL_BR1_0 // EL_"nameContainer"_"numberElectrode"  
+								EL_BR1_1
+								EL_BR1_2
+								EL_BR2_0
+								EL_BR2_1
+								EL_BR2_2
+								EL_BR3_0
+								EL_BR3_1
+								EL_BR3_2
+								
+								3 Electrodes par BU : 0 bas ; 1 milieu ; 2 haut  
+								EL_BU1_0 // EL_"nameContainer"_"numberElectrode"  
+								EL_BU1_1
+								EL_BU1_2
+								EL_BU2_0
+								EL_BU2_1
+								EL_BU2_2
+								EL_BU3_0
+								EL_BU3_1
+								EL_BU3_2
+								
+								1 Electrodes par Milieu : 0 bas 
+								EL_M1_0
+								EL_M2_0
+								
+								3 Electrodes par Aquarium  : 0 bas ; 1 milieu ; 2 haut  
+								EL_AQ_0 // EL_"nameContainer"_"numberElectrode"  
+								EL_AQ_1
+								EL_AQ_2
+								
+								1 Electrode par Stockage : 
+								EL_S_0	
+							
 		- Serveur -> Arduino  : EL_BR1_0_ON // EL_"nameContainer"_"numberElectrode"_"state:ON/OFF"
 	
 	Info pompe : 
-		- Arduino -> Serveur  : P_M1-BR1_ON //"namePompe"_"state:ON/OFF"  
+		- Arduino -> Serveur  : P_M1-BR1_ON //"namePompe"_"state:ON/OFF" 
+		 
 		- Serveur -> Arduino  : OK //Bien recu 
 		
 	Info debut tache : 
