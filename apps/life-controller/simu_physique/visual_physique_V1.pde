@@ -393,10 +393,10 @@ import processing.serial.*;
 
     String[] S = split(uneString,"_");
    
-   //Info sur etat d'une pompe : du type "P_M1-BR1_ON" 
+   //Info sur etat d'une pompe : du type "P_M1_BR1_ON" 
     if (S[0].equals("P")){
 		//On met les pompes dans l'etat indiqué
-    	get_pompe(S[0]+"_"+S[1]).set_state(S[2].equals("ON"));
+    	get_pompe(S[0]+"_"+S[1]+"_"+S[2]).set_state(S[3].equals("ON"));
 		
 		//Envoyer OK pour continuer 
 		myPort.write("OK" + "\n");
@@ -849,7 +849,7 @@ import processing.serial.*;
 	  container_pomp = cont_pomp;//de pompage
       container_refoul = cont_refoul;//de refoulement
 
-      name = "P_"+container_pomp.name +"-"+container_refoul.name;
+      name = "P_"+container_pomp.name +"_"+container_refoul.name;
       point_attache_pomp = new float[2] ;
       point_attache_pomp[0] = cont_pomp.Position[0];
       point_attache_pomp[1] = cont_pomp.Position[1]+ 0.16;
@@ -870,7 +870,7 @@ import processing.serial.*;
       container_pomp = cont_pomp;//de pompage
       container_refoul = cont_refoul;//de refoulement
 
-      name = "P"+container_pomp.name +"-"+container_refoul.name;
+      name = "P"+container_pomp.name +"_"+container_refoul.name;
       
       
 
