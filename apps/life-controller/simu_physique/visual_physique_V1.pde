@@ -101,6 +101,9 @@ import processing.serial.*;
   float[] EL_BU;
   float[] EL_AQ;
   float[] EL_S;
+  
+  //Buffer used :
+  String BU_USED; 
 
   public void setup(){
     size(900,800);
@@ -321,6 +324,9 @@ import processing.serial.*;
    
     currenttime = millis();
     oldtime = millis();;
+	
+	//Buffer USED
+	BU_USED = "BU1";
 
   }
 
@@ -378,7 +384,7 @@ import processing.serial.*;
      	   if (msg.equals("A")) {
      		  myPort.clear();
      		  firstContact = true;
-     		  myPort.write("ZOB");//ce qui est renvoyé pas important du moment que l'on renvoie qqchose
+     		  myPort.write("OK");//ce qui est renvoyé pas important du moment que l'on renvoie qqchose
      		  println("contact established");
      	   }
     	 }
@@ -389,9 +395,16 @@ import processing.serial.*;
 		 }	 
 	 }
   }
-  public void msg_received(String uneString){
+  public void msg_received(String msg_r){
 
-    String[] S = split(uneString,"_");
+    String[] S = split(msg_r,"_");
+   
+    String msg_send = "";
+    
+	if (S[0].equals("A")){
+		//On renvoie "OK"
+		msg_send = "OK";
+	}
    
    //Info sur etat d'une pompe : du type "P_M1_BR1_ON" 
     if (S[0].equals("P")){
@@ -399,7 +412,7 @@ import processing.serial.*;
     	get_pompe(S[0]+"_"+S[1]+"_"+S[2]).set_state(S[3].equals("ON"));
 		
 		//Envoyer OK pour continuer 
-		myPort.write("OK" + "\n");
+		msg_send = "OK";
     }
     
     //Demande d'info sur une electrode : du type "EL_BR1_1" 
@@ -408,10 +421,10 @@ import processing.serial.*;
 		boolean B = get_container(S[1]).EL_state[Integer.parseInt(S[2])];
 		//On envoie le resultat sous la forme : "EL_BR1_1_ON"/ "EL_BR1_1_OFF"
 		if(B){
-			myPort.write(S +"_ON" + "\n");
+			msg_send = S +"_ON";
 		}
 		else {
-			myPort.write(S +"_OFF" + "\n");
+			msg_send = S +"_OFF";
 		}
 		
     }
@@ -427,7 +440,7 @@ import processing.serial.*;
 			}
 			
     		//On envoie la tache demandée
-    		myPort.write(task_asked + "\n");
+    		msg_send = task_asked;
     		//Tache demandée à NULL
 			task_asked = "NULL";
    		}
@@ -436,8 +449,9 @@ import processing.serial.*;
    		//Demande de continuer /!\ Pour l'instant, on dit toujours de continuer
     	if(S[1].equals("K")){
     		//Envoyer OK pour continuer 
-    		myPort.write("OK" + "\n");
+    		msg_send=  "OK";
     	}
+		
     }
 	
 	
@@ -450,15 +464,26 @@ import processing.serial.*;
     		//Tache en cours 
     		task_executed = S[0]+"_"+S[1]+"_"+S[2];
     		//Revoyer OK
-    		myPort.write("OK" + "\n"); 
+    		msg_send = "OK"; 
    		}
    		//tache finie
    		if(S[1].equals("E")){
     		task_executed = "NULL";
     		//Revoyer OK
-    		myPort.write("OK" + "\n"); 
+    		msg_send= "OK"; 
    		}	
     }
+    else if (S[0].equals("BU")){
+    	
+		//Tache debutée
+    	if(S[1].equals("PLEASE")){
+    		
+    		//Revoyer le buffer à utiliser : 
+    		msg_send = BU_USED; 
+   		}
+   		
+    }
+  myPort.write(msg_send + "\n");
   }
   
   //Action déclanchée losrque la touche est frappée
@@ -497,27 +522,17 @@ import processing.serial.*;
 	        break;
 	        
 	      case 7: 
-	        task_asked ="T_FILLING_AQ-BU1";	
+	        task_asked ="T_FILLING_AQ";	
 	        break;
 	      
-	      case 8: 
-	        task_asked ="T_FILLING_AQ-BU2";	
-	        break;  
-	      case 9: 
 	      
-	        task_asked ="T_FILLING_AQ-BU3";	
-	        break;
-	         
-	      case 0: 
-	        task_asked ="T_EMPTYING-AQ"	;
-	        break;     
 	
 	      }
 		 
 	  }
 
   	}	
-	println(task_asked);
+	println("Tache demandée " + task_asked);
   }
   
   public void Print_visual(String S){
@@ -587,7 +602,7 @@ import processing.serial.*;
   */
   
   
-  public void mousePressed(){
+  /*public void mousePressed(){
       for (int i = 0 ; i<les_pompes.length; i++){
        // les_pompes[i].set_state(false);
         msg_received(les_pompes[i].name+"_OFF");
@@ -597,7 +612,7 @@ import processing.serial.*;
       msg_received(les_pompes[test].name+"_ON");
       test = (test +1)%14;
     }
-    
+    */
     
  //Dessine tous les containers, les tuyaux et les pompes.    
   void dessiner(){
