@@ -1,0 +1,88 @@
+Architecture soft : 
+	
+	Arduino Uno : 
+		- Gère le déroulement d’un cycle de nettoyage de l’aquarium
+		- Retourne des informations sur : 
+			- Etat de sa tache (Debut // Fin) 
+			- Etat des capteurs  
+			- Etat des actionneurs
+	
+	Arduino Mega : 
+		- Gère le déroulement d’un “Bloc Action” (ex : Vidange aquarium // remplissage …)
+		- Retourne des informations sur : 
+			- Etat de sa tache (Debut // Fin) 
+			- Etat des capteurs  
+			- Etat des actionneurs
+	
+	Serveur Gestion du Vivant : 
+		- Coordination des taches à executer à partir des données reçue. 
+		- Retourne des information sur l’état du système de GdV au GdF et programme de visualisation//interaction. 
+		- Serveur sur lequel se connectent les clients (analyse d’image…) 
+		- Communique avec GdF en event OSC
+
+	
+	Client Concentration (connecté sur Serveur Gestion du Vivant) : 
+		- Analyse d’image issue des webcams - colorimétrie
+		- Connecté au Serveur GdV
+
+	Client Niveaux (connecté sur Serveur Gestion du Vivant): 
+		- Analyse d’image issue des webcams - detection de flotteur
+		- Connecté au Serveur GdV
+	
+	Client Aquarium (connecté sur Serveur Gestion du Vivant): 
+		- Analyse d’image issue de l’appareil photo :
+			- detection de concentration
+			- detection du taux de formation -> vitesse 
+		- Connecté au Serveur GdV
+
+	Gestion du Film : 
+		- Montage du film temps réel
+		- Projection du film
+		- Projection de l’image sur l’aquarium
+		- … 
+		- Communique avec GdV en event OSC
+
+	
+Architecture communication info: 
+
+	Gestion_du_Vivant/Arduino - Serie : 
+	
+		GdV -> Arduino Mega :
+			- Commande bloc Action
+			- Commande Leds 			- Etat Concentrations			- Etat Niveaux
+					Arduino Mega -> GdV :			- Etat Pompes			- Etat Leds			- Etat Electrodes			- Info Début Action			- Info Fin Action
+	
+		GdV -> Arduino Uno :			- Commande bloc Action			- Etat Concentrations
+		Arduino Uno -> GdV :			- Etat Moteurs			- Info Début Action			- Info Fin Action
+
+
+	Gestion_du_Film/Gestion_du_Vivant - OSC: 
+
+		GdV -> GdF :
+			- Debut Action sur le Vivant
+			- Fin Action sur le Vivant
+ 
+		GdF -> GdV : 
+			- Debut Film
+			- Fin Film
+
+	Client Concentration/Gestion_du_Vivant :
+
+		Client Concentration -> Gestion_du_Vivant
+			- Etat Concentrations
+
+	Client Niveaux/Gestion_du_Vivant :
+
+		Client Niveaux -> Gestion_du_Vivant
+			- Etat Niveaux
+
+	Client Aquarium/Gestion_du_Vivant :
+
+		Client Aquarium -> Gestion_du_Vivant
+			- Etat Concentration Aquarium
+			- Etat Vitesse Aquarium
+
+	Client Aquarium/Gestion_du_Film :
+		Client Aquarium -> Gestion_du_Film
+			- Etat Vitesse Aquarium
+

@@ -1,0 +1,19 @@
+ Bloc Action Arduino : 
+	- Nettoyage : 
+		- Commande de lancement 
+		- Feedback de fin 
+	- Vidange : 
+		-Commande de vidange avec choix :
+			-Vidange partiel (calcul sur debit/Electrode de milieu intermédiaire)
+			-Vidange total electrode de bas
+		- Feedback Fin de vidange 
+	- Remplissage : 
+		- Commande de remplissage 
+		- Choix du buffer (concentration + bioréacteur condamné) 
+		- Remplissage buffer-> aquarium 
+		- Feed back fin de remplissage 
+	- Remise niveaux Buffer : 
+		- Remplissage avec Bioreacteur 
+		-Remplissage avec Milieu_Culture_B
+	- Remise niveaux Bioreacteur
+		- Automatique des qu'on vide un bioreacteur : remise a niveaux avec Milieu_Culture_A

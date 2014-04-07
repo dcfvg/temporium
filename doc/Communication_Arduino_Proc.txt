@@ -1,0 +1,98 @@
+Communication Arduino-Serveur : 
+
+	Demande electrode : 
+		- Arduino -> Serveur  : 
+								3 Electrodes par BR : 0 bas ; 1 milieu ; 2 haut  
+								EL_BR1_0 // EL_"nameContainer"_"numberElectrode"  
+								EL_BR1_1
+								EL_BR1_2
+								EL_BR2_0
+								EL_BR2_1
+								EL_BR2_2
+								EL_BR3_0
+								EL_BR3_1
+								EL_BR3_2
+								
+								3 Electrodes par BU : 0 bas ; 1 milieu ; 2 haut  
+								EL_BU1_0 // EL_"nameContainer"_"numberElectrode"  
+								EL_BU1_1
+								EL_BU1_2
+								EL_BU2_0
+								EL_BU2_1
+								EL_BU2_2
+								EL_BU3_0
+								EL_BU3_1
+								EL_BU3_2
+								
+								1 Electrodes par Milieu : 0 bas 
+								EL_M1_0
+								EL_M2_0
+								
+								3 Electrodes par Aquarium  : 0 bas ; 1 milieu ; 2 haut  
+								EL_AQ_0 // EL_"nameContainer"_"numberElectrode"  
+								EL_AQ_1
+								EL_AQ_2
+								
+								1 Electrode par Stockage : 
+								EL_S_0	
+							
+		- Serveur -> Arduino  : EL_BR1_0_ON // EL_"nameContainer"_"numberElectrode"_"state:ON/OFF"
+	
+	Info pompe : 
+		- Arduino -> Serveur  : P_M1-BR1_ON //"namePompe"_"state:ON/OFF" 
+		 
+		- Serveur -> Arduino  : OK //Bien recu 
+		
+	Info debut tache : 
+		- Arduino -> Serveur  : T_FILLING_BR1_B // remplissage Bioreacteur 
+							 T_FILLING_BR2_B
+							 T_FILLING_BR3_B
+							 T_FILLING_BU1_B //Remplissage Buffer (avec BR associé + M2)
+							 T_FILLING_BU2_B
+							 T_FILLING_BU3_B
+							 T_FILLING_AQBU1_B //Remplissage AQ (avec BU numero)
+							 T_FILLING_AQBU2_B 
+							 T_FILLING_AQBU3_B
+							 T_EMPTYING_AQ_B //Vidange AQ  
+							 
+		- Serveur -> Arduino  : OK //Bien recu
+		
+	Info fin tache : 
+		- Arduino -> Serveur  : T_FILLING_BR1_E // Fin remplissage Bioreacteur 
+							 T_FILLING_BR2_E
+							 T_FILLING_BR3_E
+							 T_FILLING_BU1_E //Fin Remplissage Buffer (avec BR associé + M2)
+							 T_FILLING_BU2_E
+							 T_FILLING_BU3_E
+							 T_FILLING_AQBU1_E // Fin Remplissage AQ (avec BU numero)
+							 T_FILLING_AQBU2_E 
+							 T_FILLING_AQBU3_E
+							 T_EMPTYING_AQ_E //Fin Vidange AQ  
+							 
+		- Serveur -> Arduino  : OK //Bien recu
+	
+		
+	Demande de tache :
+		- Arduino -> Serveur  : ASK_T // demande de tache  
+		- Serveur -> Arduino  : T_FILLING_BR1 // remplissage Bioreacteur 
+							 T_FILLING_BR2
+							 T_FILLING_BR3
+							 T_FILLING_BU1 //Remplissage Buffer (avec BR associé + M2)
+							 T_FILLING_BU2
+							 T_FILLING_BU3
+							 T_FILLING_AQBU1 //Remplissage AQ (avec BU numero)
+							 T_FILLING_AQBU2 
+							 T_FILLING_AQBU3
+							 T_EMPTYING_AQ //Vidange AQ
+							 NULL // Pas de tache demandée 
+							 	
+	Demande de continuer :
+		- Arduino -> Serveur  : ASK_K // demande de continuer  
+		- Serveur -> Arduino  : OK // Autorisation de continuer la tache en cours
+		
+							
+							 
+							 
+		  
+	
+	
