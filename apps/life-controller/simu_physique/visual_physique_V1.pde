@@ -115,8 +115,10 @@ import processing.serial.*;
 
 	//Communcation
 	firstContact = false;
-    myPort = new Serial(this, Serial.list()[0], 9600);
+    myPort = new Serial(this, Serial.list()[2], 9600);
+	//println(Serial.list());
     myPort.bufferUntil('\n'); 
+	myPort.clear();
 	
 	//Electrodes : Nombre et place des electrodes dans chaque type de container 
 
@@ -135,7 +137,7 @@ import processing.serial.*;
 	
 	EL_AQ = new float[3];
 	EL_AQ[0] = 0.01 ; //1%
-	EL_AQ[1] = 0.6875 ; //68,75% car, aq 8L , donc vidage de 2,5L a chaque fois.  
+	EL_AQ[1] = 0.9 ; //0.6875 ; //68,75% car, aq 8L , donc vidage de 2,5L a chaque fois.  
 	EL_AQ[2] = 1 ; //100%
 	
 	EL_S = new float[1];
@@ -310,23 +312,29 @@ import processing.serial.*;
     frameRate(frequence);//rafraichissement une image toute les 1/25 = 40ms 
     temps = (float) 1/frequence; // en s ! 
     //Debit pompe : 
-    debit_pompe = (float) 10;//en L/min
+    debit_pompe = (float) 1;//en L/min
    
    
     //On met les differents container à 0 en volume. 
     for (int i = 0; i< les_container.length; i++){
       les_container[i].set_volume((float) 0);
-
     }
+	//On met certain container avec un volume initial
     M1.set_volume((float) (1));
     M2.set_volume((float) (1));
-   
+	
+	AQ.set_volume((float) (1));
+    BR1.set_volume((float) (1));
+    BR2.set_volume((float) (1));
+    BR3.set_volume((float) (1));
+	
+	BU1.set_volume((float) (1));
    
     currenttime = millis();
     oldtime = millis();;
 	
 	//Buffer USED
-	BU_USED = "BU1";
+	BU_USED = "BU1" ;
 
   }
 
@@ -374,6 +382,10 @@ import processing.serial.*;
   	 //the '\n' is our end delimiter indicating the end of a complete packet
    	 msg = myPort.readStringUntil('\n');
 	 
+	 msg = trim(msg);
+	 
+	 println("Message recu : " + msg); 
+	 
 	 
     //make sure our data isn't empty before continuing
 	 if (msg != null) {
@@ -384,7 +396,7 @@ import processing.serial.*;
      	   if (msg.equals("A")) {
      		  myPort.clear();
      		  firstContact = true;
-     		  myPort.write("OK");//ce qui est renvoyé pas important du moment que l'on renvoie qqchose
+     		  myPort.write("OK" + "\n");//ce qui est renvoyé pas important du moment que l'on renvoie qqchose
      		  println("contact established");
      	   }
     	 }
@@ -399,7 +411,7 @@ import processing.serial.*;
 
     String[] S = split(msg_r,"_");
    
-    String msg_send = "";
+    String msg_send = "OK";
     
 	if (S[0].equals("A")){
 		//On renvoie "OK"
@@ -421,10 +433,10 @@ import processing.serial.*;
 		boolean B = get_container(S[1]).EL_state[Integer.parseInt(S[2])];
 		//On envoie le resultat sous la forme : "EL_BR1_1_ON"/ "EL_BR1_1_OFF"
 		if(B){
-			msg_send = S +"_ON";
+			msg_send = msg_r +"_ON";
 		}
 		else {
-			msg_send = S +"_OFF";
+			msg_send = msg_r +"_OFF";
 		}
 		
     }
@@ -467,10 +479,10 @@ import processing.serial.*;
     		msg_send = "OK"; 
    		}
    		//tache finie
-   		if(S[1].equals("E")){
+   		if(S[3].equals("E")){
     		task_executed = "NULL";
     		//Revoyer OK
-    		msg_send= "OK"; 
+    		msg_send = "OK"; 
    		}	
     }
     else if (S[0].equals("BU")){
@@ -479,10 +491,11 @@ import processing.serial.*;
     	if(S[1].equals("PLEASE")){
     		
     		//Revoyer le buffer à utiliser : 
-    		msg_send = BU_USED; 
+    		msg_send = "BU1"; 
    		}
    		
     }
+	println("Messeage envoyé : " + msg_send);
   myPort.write(msg_send + "\n");
   }
   
@@ -525,7 +538,9 @@ import processing.serial.*;
 	        task_asked ="T_FILLING_AQ";	
 	        break;
 	      
-	      
+		  case 0:
+		    task_asked ="T_EMPTYING_AQ";
+			break; 
 	
 	      }
 		 
