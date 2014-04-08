@@ -378,7 +378,7 @@ import processing.serial.*;
  	 //put the incoming data into a String - 
   	 //the '\n' is our end delimiter indicating the end of a complete packet
    	 msg = myPort.readStringUntil('\n');
-	 
+	 myPort.clear();
 	  
 	 
 	 
@@ -391,7 +391,7 @@ import processing.serial.*;
 	     //if it's there, clear the buffer, and send a request for data
 	 	if ( !firstContact ) {
      	   if (msg.equals("A")) {
-     		  myPort.clear();
+     		  
      		  firstContact = true;
      		  myPort.write("OK");//ce qui est renvoyé pas important du moment que l'on renvoie qqchose
      		  println("contact established");
