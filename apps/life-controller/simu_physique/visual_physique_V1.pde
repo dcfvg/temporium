@@ -118,7 +118,6 @@ import processing.serial.*;
     myPort = new Serial(this, Serial.list()[2], 9600);
 	//println(Serial.list());
     myPort.bufferUntil('\n'); 
-	myPort.clear();
 	
 	//Electrodes : Nombre et place des electrodes dans chaque type de container 
 
@@ -373,8 +372,6 @@ import processing.serial.*;
 	 
     dessiner();
 	
-	
-
   }
   //Appelé lorsqu'un donnée est disponible sur le port serie : 
   public void serialEvent( Serial myPort) {
@@ -382,21 +379,21 @@ import processing.serial.*;
   	 //the '\n' is our end delimiter indicating the end of a complete packet
    	 msg = myPort.readStringUntil('\n');
 	 
-	 msg = trim(msg);
-	 
-	 println("Message recu : " + msg); 
+	  
 	 
 	 
     //make sure our data isn't empty before continuing
 	 if (msg != null) {
-		 
+	 msg = trim(msg);
+	 println("Message recu : " + msg);
+
 		 //look for our 'A' string to start the handshake
 	     //if it's there, clear the buffer, and send a request for data
 	 	if ( !firstContact ) {
      	   if (msg.equals("A")) {
      		  myPort.clear();
      		  firstContact = true;
-     		  myPort.write("OK" + "\n");//ce qui est renvoyé pas important du moment que l'on renvoie qqchose
+     		  myPort.write("OK");//ce qui est renvoyé pas important du moment que l'on renvoie qqchose
      		  println("contact established");
      	   }
     	 }
@@ -496,7 +493,7 @@ import processing.serial.*;
    		
     }
 	println("Messeage envoyé : " + msg_send);
-  myPort.write(msg_send + "\n");
+  myPort.write(msg_send +'\n');
   }
   
   //Action déclanchée losrque la touche est frappée
