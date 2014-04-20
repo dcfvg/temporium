@@ -1,3 +1,5 @@
+//Simulateur physique arduino-processign : 
+//Arduino : demande tache , demande les EL , et informe sur l'etat de la tache en cours, et l'etat des pompes. 
 import processing.serial.*;
 
   float share_visual_x;
