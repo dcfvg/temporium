@@ -18,8 +18,8 @@ digraph {
 	     
       node[fontsize=14, fontname="myriadpro", fontcolor=blue, color=blue, shape=box, margin = 0.5]
 			
-      arduino_pump [label ="Arduino Mega\n - \n Pompes // Electrodes // Leds Bioreacteurs "]
-      arduino_clean [label ="Arduino Uno\n - \n Nettoyage Aquarium "]
+      arduino_mega [label ="Arduino Mega\n - \n Pompes // Electrodes // Leds Bioreacteurs "]
+      arduino_uno [label ="Arduino Uno\n - \n Nettoyage Aquarium "]
 
       life_controller [label ="Gestion du Vivant \n - \n SERVEUR"]
 
@@ -41,8 +41,8 @@ digraph {
   	 		label="ACTIONNEURS"
   	 		
   	 		node[height = 2, width = 1]
-  	 		arduino_pump
-  	 		arduino_clean
+  	 		arduino_mega
+  	 		arduino_uno
   	 	}
   	}
   	
@@ -67,16 +67,14 @@ digraph {
   	subgraph Serie {
   		edge[penwidth=3, color=mediumspringgrey, dir = both,label=""]
   		
-  	  arduino_pump -> life_controller [label = "GdV -> Arduino Mega : \l - Commande Bloc Action \l - Commande Leds \l - Etat Concentrations\l - Etat Niveaux   \l\lArduino Mega -> GdV :\l - Etat Pompes \l - Etat Leds\l - Etat Electrodes \l - Info Début Action\l - Info Fin Action\l "]
-  	  arduino_clean -> life_controller [label = "GdV -> Arduino Uno : \l - Commande bloc Action \l - Etat Concentrations\l\lArduino Uno -> GdV :\l - Etat Moteurs \l - Info Début Action \l - Info Fin Action\l"]
+  	  arduino_mega -> life_controller [label = "GdV -> arduino_mega : \l - Commande de pin (HIGH/LOW)\l - Demande de pin (analog/digital)\l\larduino_mega -> GdV :\l - Demande de tache \l - Valeur de pin (analog/digital)\l "]
+  	  arduino_uno -> life_controller [label = "GdV -> arduino_uno : \l - Commande bloc Action \l - Etat Concentrations\l\larduino_uno -> GdV :\l - Etat Moteurs \l - Info Début Action \l - Info Fin Action\l"]
   	}
   	
   	subgraph Ethernet {
     	edge[penwidth=3, color=mediumspringgreen, label=""] 
 	
-    	det_level -> life_controller [label = "Client 1 -> GdV : \l - Etat des concentrations "]
-    	det_conc -> life_controller [label = "Client 2 -> GdV : \l - Etat des niveaux "]
-    	det_aquarium -> life_controller [label = "Client 3 -> GdV : \l - Etat Concentration\l - Etat Vitesse\l "]
+    	
   	}
   	
   	subgraph OSC {
@@ -86,13 +84,17 @@ digraph {
 	
     	edge[penwidth=3, color=grey, dir = forward, label = ""] 
     	det_aquarium -> film_controller[label = "Client 3 -> GdF : \l - Etat Vitesse\l "]
+
+      det_level -> life_controller [label = "Client 1 -> GdV : \l - Etat des concentrations "]
+      det_conc -> life_controller [label = "Client 2 -> GdV : \l - Etat des niveaux "]
+      det_aquarium -> life_controller [label = "Client 3 -> GdV : \l - Etat Concentration\l - Etat Vitesse\l "]
 		
   	}
   	
   	subgraph Elec {
   		edge[penwidth=3, color=blue, dir = forward, label = ""]
-  		pumps, leds, electrodes, filtration_system, air_system -> arduino_pump
-  		moteur -> arduino_clean
+  		pumps, leds, electrodes, filtration_system, air_system -> arduino_mega
+  		moteur -> arduino_uno
 		
   	}
   	
