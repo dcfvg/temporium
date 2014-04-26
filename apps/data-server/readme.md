@@ -25,3 +25,16 @@ assets
 - vlc
 - EOS Utility
 - imagemagick
+- 
+
+**montage dynamique & conduite**
+
+| fonction                           | priorité | solution envisagée                                            |
+| ---------------------------------- | -------- |-------------------------------------------------------------- |
+| actionner le mode entretien        | critique | |
+| lancer une séance automatiquement  | critique | | 
+| afficher les prochainnes séances   | haute    | |
+| insérer de plans dans le film      | critique | |
+| varier la durée de plans           | haute    | |
+| produire le son en direct          | faible   | |
+| enregistrer la séance              | haute    | |
