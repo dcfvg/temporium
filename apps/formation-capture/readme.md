@@ -1,4 +1,4 @@
-# capture
+# formation-capture	
 
 - piloter l'appareil photo 
 - projeter un négatif
