@@ -25,7 +25,6 @@ assets
 - vlc
 - EOS Utility
 - imagemagick
-- 
 
 **montage dynamique & conduite**
 
