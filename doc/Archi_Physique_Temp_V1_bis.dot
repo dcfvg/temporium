@@ -1,0 +1,280 @@
+digraph {
+	label="\n\nGESTION DU VIVANT / SYSTEME PHYSIQUE\n— UNITÉS BIOREACTEURS -\n23/03/14  / P = pompe, PIPE = échangeur, EL = Electrode"
+	 
+	rankdir="TP"
+	nodesep = .4
+	
+	layout=dot
+	 
+	fontsize=14
+	fontname="myriadpro"
+	 
+	node[fontsize=14, fontname="myriadpro", fontcolor=blue, color=blue, shape=house]
+	edge[fontsize=10, fontname="monaco", color=green]
+	
+	subgraph organs {
+	     
+		node[height = 2, width = 1, shape=box, color=mediumspringgreen, fontcolor=darkgreen, penwidth=3]
+		
+		//Chaque Bioreacteur à : Son milieu_A et son milieu_B
+		MABR1 [label="Milieu culture A - BR1"]
+		MABR2 [label="Milieu culture A - BR2"]
+		MABR3 [label="Milieu culture A - BR3"]
+		MBBR1 [label="Milieu culture B - BR1"]
+		MBBR2 [label="Milieu culture B - BR2"]
+		MBBR3 [label="Milieu culture B - BR3"]
+		MBAQ  [label="Malieu culture B - AQ"]
+		
+		
+	 	
+	       
+	  	BR1 [label="Bioreacteur_1"]
+	 	BR2 [label="Bioreacteur_2"]
+	  	BR3 [label="Bioreacteur_3"]
+	       
+		BU1 [label="Buffer_1"]
+		BU2 [label="Buffer_2"]
+		BU3 [label="Buffer_3"]
+		
+		
+		
+		S [label="Stockage"]
+		
+		FI [label="Filtrage"]
+		
+		node[height = 2, width = 6, shape=box, color=mediumspringgreen, fontcolor=darkgreen, penwidth=3]
+		
+		AQ [label="Aquarium"] 
+		
+		subgraph cluster_culture {
+	 		label="MILIEUX DE CULTURES"
+	 		
+	 		
+	 	}
+		
+	
+	 	
+	}
+	
+	subgraph pipe {
+	     
+		node[width = 4, shape=box, color=mediumspringyellow, fontcolor=darkgreen, penwidth=3]
+			
+	     
+	 	label="CULTURES"
+	
+	 	pipe_aquarium
+	 	
+	}
+	subgraph sensor{
+        node[shape=invhouse, fontsize=10, style="filled", color=blue, fontcolor=white]
+       
+        EL_BR1 [label="3 Electrodes :\l - 1 bas \l - 1 milieu \l - 1 haut\l  "]
+        EL_BR2 [label="3 Electrodes :\l - 1 bas \l - 1 milieu \l - 1 haut\l  "]
+		EL_BR3 [label="3 Electrodes :\l - 1 bas \l - 1 milieu \l - 1 haut\l  "]
+		
+ 		EL_MABR1 [label="1 Electrodes :\l - 1 bas\l"]
+    	EL_MABR2 [label="1 Electrodes :\l - 1 bas\l"]
+		EL_MABR3 [label="1 Electrodes :\l - 1 bas\l"]
+		EL_MBBR1 [label="1 Electrodes :\l - 1 bas\l"]
+		EL_MBBR2 [label="1 Electrodes :\l - 1 bas\l"]
+		EL_MBBR3 [label="1 Electrodes :\l - 1 bas\l"]
+		EL_MBAQ [label="1 Electrodes :\l - 1 bas\l"]
+        
+        EL_BU1 [label="3 Electrodes :\l - 1 bas \l - 1 milieu \l - 1 haut\l  "]
+        EL_BU2 [label="3 Electrodes :\l - 1 bas \l - 1 milieu \l - 1 haut\l  "]
+        EL_BU3 [label="3 Electrodes :\l - 1 bas \l - 1 milieu \l - 1 haut\l  "]
+        
+        EL_AQ [label="3 Electrodes :\l - 1 bas \l - 1 niveau vidange \l - 1 haut\l  "]
+	
+	}
+    
+	subgraph device {
+	     
+		node[shape=circle, fontsize=5, style="filled", color=blue, fontcolor=white]
+	    
+		
+	    P_MABR1_BR1
+	    P_MABR2_BR2 
+		P_MABR3_BR3 
+
+		P_MBBR1_BU1 
+		P_MBBR2_BU2 
+		P_MBBR3_BU3
+
+		P_MBAQ_AQ
+
+		P_BR1_BU1 
+		P_BR2_BU2  
+		P_BR3_BU3 
+
+		P_BU1_AQ 
+		P_BU2_AQ
+		P_BU3_AQ
+
+		P_FI
+
+		P_AQ_S
+	     
+	    
+	 	
+		}
+		//CLUSTERS : 
+		
+	 	subgraph cluster_aquarium {
+	 		label="AQUARIUM"
+	 		node[height = 2, width = 1]
+	 		
+	 		AQ
+			EL_AQ
+			pipe_aquarium
+			P_BU1_AQ 
+			P_BU2_AQ
+			P_BU3_AQ
+			P_MBAQ_AQ
+	 	}
+	 	subgraph cluster_milieu_aquarium {
+	 		label="MILIEU_AQUARIUM"
+	 		node[height = 2, width = 1]
+	 		
+	 		MBAQ
+			EL_MBAQ
+	 	}
+	 	subgraph cluster_bioreacteur1 {
+	 		label="Bioreacteur 1 - BR1"
+	 		node[height = 2, width = 1]
+			
+	 		MABR1
+			MBBR1
+			
+			BR1
+			BU1
+			
+			EL_BR1
+			EL_BU1
+			
+			EL_MABR1
+			EL_MBBR1
+			
+			P_BR1_BU1
+			P_MABR1_BR1
+			P_MBBR1_BU1 
+			
+	 	}
+	 	subgraph cluster_bioreacteur2 {
+	 		label="Bioreacteur 2 - BR2"
+	 		node[height = 2, width = 1]
+			
+	 		MABR2
+			MBBR2
+			
+			BR2
+			BU2
+			
+			EL_BR2
+			EL_BU2
+			
+			EL_MABR2
+			EL_MBBR2
+			
+			P_BR2_BU2
+			P_MABR2_BR2
+			P_MBBR2_BU2 
+			
+	 	}
+	 	subgraph cluster_bioreacteur3 {
+	 		label="Bioreacteur 3 - BR3"
+	 		node[height = 2, width = 1]
+			
+	 		MABR3
+			MBBR3
+			
+			BR3
+			BU3
+			
+			EL_BR3
+			EL_BU3
+			
+			EL_MABR3
+			EL_MBBR3
+			
+			P_BR3_BU3
+			P_MABR3_BR3
+			P_MBBR3_BU3 
+			
+	 	}
+		
+	   
+	   // RELATIONS
+	   
+	  
+	subgraph fluid {
+	
+		edge[penwidth=3, color=mediumspringgreen]
+		
+    	MABR1 -> P_MABR1_BR1
+		MABR2 -> P_MABR2_BR2
+		MABR3 -> P_MABR3_BR3
+		
+		P_MABR1_BR1 -> BR1
+     	P_MABR2_BR2 -> BR2
+     	P_MABR3_BR3 -> BR3
+		
+	    BR1 -> P_BR1_BU1 
+	 	BR2 -> P_BR2_BU2
+	  	BR3 -> P_BR3_BU3 
+	  
+	  	P_BR1_BU1 -> BU1
+	  	P_BR2_BU2 -> BU2
+	  	P_BR3_BU3 -> BU3
+	  	
+    	MBBR1 -> P_MBBR1_BU1
+		MBBR2 -> P_MBBR2_BU2
+		MBBR3 -> P_MBBR3_BU3
+		MBAQ -> P_MBAQ_AQ  
+	  	
+	  	P_MBBR1_BU1 -> BU1
+	  	P_MBBR2_BU2 -> BU2
+		P_MBBR3_BU3 -> BU3
+		
+		BU1 -> P_BU1_AQ
+		BU2 -> P_BU2_AQ
+		BU3 -> P_BU3_AQ
+		
+		P_BU1_AQ -> pipe_aquarium
+	  	P_BU2_AQ -> pipe_aquarium
+		P_BU3_AQ -> pipe_aquarium
+		P_MBAQ_AQ -> pipe_aquarium
+		
+		AQ -> P_FI -> FI -> AQ
+		
+	   	pipe_aquarium -> AQ
+	   	
+	   	AQ -> P_AQ_S -> S
+	}
+	   
+	subgraph elec {
+		edge[penwidth=3, color=mediumspringgrey]
+		
+		EL_BR1 -> BR1
+		EL_BR2 -> BR2
+		EL_BR3 -> BR3
+		
+ 		EL_MABR1 -> MABR1
+    	EL_MABR2 -> MABR2
+		EL_MABR3 -> MABR3
+		EL_MBBR1 -> MBBR1
+		EL_MBBR2 -> MBBR2
+		EL_MBBR3 -> MBBR3
+		EL_MBAQ  -> MBAQ
+		
+		EL_BU1 -> BU1
+       	EL_BU2 -> BU2 
+        EL_BU3 -> BU3
+        
+        EL_AQ -> AQ
+		
+	}
+	
+	
+}

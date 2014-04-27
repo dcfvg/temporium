@@ -1,0 +1,19 @@
+cycle C1 (0-72 = wait / 72-144 = use / 144-216 = empty) : 15.92041
+cycle C2 (0-72 = wait / 72-144 = use / 144-216 = empty) : 72.0
+cycle C3 (0-72 = wait / 72-144 = use / 144-216 = empty) : 144.0
+volume M1 occ (pourcentage): 1.0
+volume M2 occ (pourcentage): 1.0
+volume BR1 occ (pourcentage): 1.0
+volume BR2 occ (pourcentage): 0.0
+volume BR3 occ (pourcentage): 0.0
+volume BU1 occ (pourcentage): 1.0
+volume BU2 occ (pourcentage): 0.0
+volume BU3 occ (pourcentage): 0.0
+volume AQ occ (pourcentage): 0.0
+volume S occ (pourcentage): 0.0
+number_time_BU1_used : 0
+number_time_BU2_used : 0
+number_time_BU3_used : 0
+time_end :14:20:58   19/4/2014
+time_start :22:10:49   18/4/2014
+

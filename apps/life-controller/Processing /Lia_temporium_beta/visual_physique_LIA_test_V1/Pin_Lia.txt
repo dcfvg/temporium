@@ -1,0 +1,4 @@
+pin 10 : P_BR_BU
+pin 11 : P_M1_BR1
+pin 12 : P_BU_AQ
+pin 13 : P_M2_BU
