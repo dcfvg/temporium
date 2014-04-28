@@ -1,4 +1,4 @@
-# Temporium commande line interface
+# cli Temporium — interface de gestion
 
 cf. https://github.com/dcfvg/temporium/issues/1
 
