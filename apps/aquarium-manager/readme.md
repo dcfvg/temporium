@@ -1,4 +1,4 @@
-# gestion du spectacle
+# gestion de l'image vivante
 
 - baisser le filtre rouge
 - nettoyer la vitre de l'aquarium 
