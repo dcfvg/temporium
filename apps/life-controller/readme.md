@@ -1,9 +1,6 @@
-# life control
+# gestion du vivant
 
-- script arduino 
-- capteurs
-- actionneurs 
-
-
+- maintenir les niveaux des bioréacteurs
+- alimenter/renouvelle l'aquarium
 
 
