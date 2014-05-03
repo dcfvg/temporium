@@ -1,12 +1,49 @@
+
+# path definition
+# ===============
+
+#set -x
+
+clear
+
+path="/Users/immersion/temporium"
+
+
+app="$path/apps"                            # the scripts folder
+assets="$path/assets"                       # main assets folder
+archive="$assets/archive"                   # media archives
+
+captation=$archive"/exposures"              # exposures archives
+exp="$assets/exp"                           # current exposure pictures
+
+EF=$app"/capture/exposerFlasher"            # exposerFlasher processing patch path
+EFdata="$EF/data"                           # exposerFlasher data path
+
+nega_source="$assets/nega/nega.png"       
+nega_expose="$EFdata/nega.png"
+
+
+vlc='/Applications/VLC.app/Contents/MacOS/VLC' # vlc app path
+oscSend='python $path/cli/osc/sender.py'
+
+
+# setup folders
+mkdir -v $assets $archive $captation $exp $EFdata
+
+# function
+# ========
+
+# projected image (nega)
 function nega_process {
   
   # convert image to be expose into greyscale, negate and crop it at the right size
+  
   convert $nega_listPath$nega_name \
   -resize 1920x1920^ -gravity Center -crop 1920x1080+0+0 \
   -modulate 100,0,100 \
   -auto-level \
   -negate \
-  $nega_path
+  $nega_expose
 
   # open $nega # for testing
 }
@@ -29,19 +66,65 @@ function nega_getWebcam {
   # get the image
   imagesnap "$nega_listPath/$now.jpg"
 }
+
+# formation captation
+
+function exposure_init {
+  rm $nega_path
+  mv $nega_source $nega_expose
+}
+function camera_init {
+  
+  # make sure the camera is available.
+  killall PTPCamera 
+
+  # launch detection
+  gphoto2 --auto-detect
+  gphoto2 --summary
+}
+function timelaps_init {
+  
+  now=$(date +"%y.%m.%d_%H.%M.%S")
+  
+  # mouv previous captation to archive
+  mkdir "$captation/exp-$now/"
+  
+  mv "$exp/*.jpg"  "$captation/exp-$now/"
+  cp $exp/live.mp4 "$captation/exp-$now/$now.mp4"
+  
+  # create new exp folder
+  mkdir $exp
+}
 function timelaps_render {
   # lauch timelaps render script ( render the animation with ffmpeg)
-  bash $path"/exptomov.sh" &
-  sleep 15
+
+  # param
+  path="$(dirname $0)/../../assets/captation/exp"
+
+
+  # init
+  # go to curent exposure folder
+  cd $path
+
+  # render move
+  ffmpeg -loglevel panic -f image2 -pattern_type glob -i '*.jpg' -r 25 -vcodec mpeg4 -b 30000k -vf scale=1920:-1 -y tmp.mp4
+  
+  # replace live movie
+  cp -f tmp.mp4 live.mp4
+  
+  # wait for next render
+  sleep $freq
 }
 function timelaps_display {
   # display the video player window and play live.mp4
   killall -9 "VLC"
   $vlc --noaudio --fullscreen --loop ~/temporium/assets/captation/exp/live.mp4 2> /dev/null &
 }
+
+# utils
 function PDE_tell {
   # send OSC message to ExposerFlasher 
-  python $path/osc/sender.py 127.0.0.1 4242 $1
+  $oscSend 127.0.0.1 4242 $1
 }
 function PDE_run {
   # run a processing sketch 
@@ -55,36 +138,4 @@ function PDE_run {
   echo "load $patch"
 
   processing-java --sketch="$patch" --output=/tmp/processing_output --force --$2
-}
-function camera_init {
-  
-  # make sure the camera is available.
-  killall PTPCamera 
-
-  # launch detection
-  gphoto2 --auto-detect
-  gphoto2 --summary
-}
-function capation_init {
-  
-  now=$(date +"%y.%m.%d_%H.%M.%S")
-  
-  # mouve previous captation to archive
-  mkdir "$captation/exp-$now/"
-  
-  mv "$exp/*.jpg"  "$captation/exp-$now/"
-  cp $exp/live.mp4 "$captation/exp-$now/$now.mp4"
-  
-  # create new exp folder
-  mkdir $exp
-  
-  # create sequence title  
-  label="$(date +"%y.%m.%d-%H:%M:%S")"
-  #convert -pointsize 36 -size 1920x1080 -gravity center -background black -fill white label:$label "$exp/_000.JPG" # freetype bug on 'pretneuf', need fix
-  
-  # duplicate sequence title ( 50 images => 2 sec )
-  for (( i=50; i>0; i--)); do
-    #cp "$exp/_000.JPG" "$exp/_00$i.JPG"
-    cp "$captation/_000.JPG" "$exp/_00$i.jpg"
-	done
 }
