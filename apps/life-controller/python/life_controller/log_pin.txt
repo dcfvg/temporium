@@ -1,0 +1,18 @@
+comments : To add a comments, put "comments :" at the beginiing of the ligne
+comments : To add an arduino, put "arduino :" at the beginiing of the ligne, then his name, then his port, separeted by ":"
+comments : after an arduino, put the right funtion and the coresponding pin connected to it, separated by ":", if function is not connected, put "NULL" as a pin
+arduino : arduino_mega : /dev/cu.usbmodem411
+P_BR1_BU1 : 22 
+P_BR2_BU2 :  23
+P_BR3_BU3 : 24
+P_BU1_AQ : 25
+P_BU2_AQ :  26
+P_BU3_AQ :  27
+P_M1_BR1 : 28
+P_M1_BR2 : 29
+P_M1_BR3 : 30
+P_M2_BU1 : 31
+P_M2_BU2 : 32
+P_M2_BU3 : 33
+P_AQ_S : 34
+pin_array : 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34
