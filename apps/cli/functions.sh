@@ -22,7 +22,6 @@ EFdata="$EF/data"                           # exposerFlasher data path
 nega_source="$assets/nega/nega.png"       
 nega_expose="$EFdata/nega.png"
 
-
 vlc='/Applications/VLC.app/Contents/MacOS/VLC' # vlc app path
 oscSend='python $path/cli/osc/sender.py'
 
@@ -98,22 +97,13 @@ function timelaps_init {
 function timelaps_render {
   # lauch timelaps render script ( render the animation with ffmpeg)
 
-  # param
-  path="$(dirname $0)/../../assets/captation/exp"
+  cd $exp
 
-
-  # init
-  # go to curent exposure folder
-  cd $path
-
-  # render move
+  # render mov
   ffmpeg -loglevel panic -f image2 -pattern_type glob -i '*.jpg' -r 25 -vcodec mpeg4 -b 30000k -vf scale=1920:-1 -y tmp.mp4
   
   # replace live movie
   cp -f tmp.mp4 live.mp4
-  
-  # wait for next render
-  sleep $freq
 }
 function timelaps_display {
   # display the video player window and play live.mp4

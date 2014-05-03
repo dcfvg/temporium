@@ -26,6 +26,7 @@ PDE_run $EF run &
 
 exposure_init
 camera_init
+timelaps_init
 
 say "starting exposure !"
   
@@ -42,5 +43,7 @@ for (( i=$camera_framePerCaptation; i>0; i--)); do
   --hook-script $app/capture/hook.sh \
   --filename $exp/%y.%m.%d_%H.%M.%S.%C
 done
+
+timelaps_render
 
 say "exposure finished !"
