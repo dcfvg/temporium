@@ -5,9 +5,18 @@
 
 ## dépendances
 
-- processing-java
+**bash**
 - ffmpeg
 - detox
 - imagesnap
 - imagemagick
-- python
+- gphoto2
+
+**python**
+
+
+**processing**
+- processing-java
+- oscP5
+- controlP5
+- arduino
