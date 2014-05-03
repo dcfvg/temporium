@@ -31,7 +31,7 @@ String timer = "~";
 PImage nega_img, flash_img, img; 
 
 // param
-boolean fullscreen = false, flash = true, liveMode = true;
+boolean fullscreen = true, flash = true, liveMode = false;
 int fps = 10, frame = 0, w = 1920, h = 1080;
 
 void setup(){
@@ -54,24 +54,12 @@ void setup(){
   // images
   img_reload();
   img = flash_img;
-  
-  // liveMode 
-  if(liveMode){
-    video = new Capture(this, 1920, 1080);
-    video.start();
-  }
 }
 boolean sketchFullScreen() {return fullscreen;}
 void draw(){
   
   // reset image
   background(0);
-  
-  // if live mode enable nega_img is the webcam image
-  if(liveMode){
-    video.loadPixels();
-    nega_img = video;
-  }
   
   // print image
   image(img, 0, 0);
@@ -91,17 +79,17 @@ void oscEvent(OscMessage theOscMessage) {
 
   if(theOscMessage.checkAddrPattern("/exposeFlashCommander")==true) {
     
-      String o = theOscMessage.get(0).stringValue();
-      
-           if(o.equals("expose"))        img = nega_img;      // swith to nega
-      else if(o.equals("flash"))         img = flash_img;     // switch to flash
-      else if(o.equals("img_reload"))    img_reload();        // refresh image
-      else if(o.equals("kill"))          exit();              // stop application
-      else if(o.equals("reset_time"))    frame  = 0;          // reset timer
-      
-      println(o);
-      
-      return;
+    String o = theOscMessage.get(0).stringValue();
+    
+         if(o.equals("expose"))        img = nega_img;      // swith to nega
+    else if(o.equals("flash"))         img = flash_img;     // switch to flash
+    else if(o.equals("img_reload"))    img_reload();        // refresh image
+    else if(o.equals("kill"))          exit();              // stop application
+    else if(o.equals("reset_time"))    frame  = 0;          // reset timer
+    
+    println(o);
+    
+    return;
   }
 }
 void img_reload(){
@@ -110,21 +98,14 @@ void img_reload(){
    *
    */
   
-  nega_img  = loadImage("last.png");
+  nega_img  = loadImage("nega.png");
   flash_img = loadImage("flash.png");
 }
 void printTimer(){
   /**
-   * calculate experience time and display it
-   *
-   */
+  * calculate experience time and display it
+  *
+  */
   timer = nf(((frame/fps)/60/60),2)+":"+nf(((frame/fps)/60)%60,2) + ":" +nf((frame/fps)%60,2);    
   text(timer, 100, 50);
-}
-void captureEvent(Capture c) {
-  /**
-   * on live mode, read webcam image
-   */
-   
-  if(liveMode) c.read();
 }
