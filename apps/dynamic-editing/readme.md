@@ -1,10 +1,11 @@
-# montage dynamique 
+montage dynamique 
+====
 
 - projeter le film
 - varier la durée des plans
 - taux de formation de l'image de 0 à 255 donnée en OSC
 
-**table de décision**
+**Exemple de table de décision**
 
 - `at` l'instant ou il est possible de sauter
 - `jumps` les moments vers lequels on peu sauter
