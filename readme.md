@@ -9,6 +9,5 @@
 - ffmpeg
 - detox
 - imagesnap
-- vlc
-- EOS Utility
 - imagemagick
+- python
