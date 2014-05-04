@@ -29,6 +29,61 @@ vlc='/Applications/VLC.app/Contents/MacOS/VLC' # vlc app path
 # function
 # ========
 
+# formation captation
+
+function exposure_init {
+
+  # refresh negative image and flash from assets folder
+  rm $nega_path $flash_expose
+  cp $nega_source $nega_expose
+  cp $flash_source $flash_expose
+}
+function camera_init {
+  
+  # make sure the camera is available.
+  killall PTPCamera 
+
+  # launch detection
+  gphoto2 --auto-detect
+  gphoto2 --summary
+}
+function timelaps_init {
+
+  # create new exp folder
+  rm -rf $exp
+  mkdir $exp
+
+}
+function timelaps_render {
+  # lauch timelaps render script ( render the animation with ffmpeg)
+
+  cd $exp
+
+  # render mov
+  ffmpeg -loglevel panic -f image2 -pattern_type glob -i '*.jpg' -r 25 -vcodec mpeg4 -b 30000k -vf scale=1920:-1 -y tmp.mp4
+  
+  # replace live movie
+  cp -f tmp.mp4 live.mp4
+}
+function timelaps_display {
+  # display the video player window and play live.mp4
+  killall -9 "VLC"
+  $vlc --noaudio --fullscreen --loop ~/temporium/assets/captation/exp/live.mp4 2> /dev/null &
+}
+function timelaps_finish {
+
+  timelaps_firstFrame=$(basename $(find $exp -maxdepth 1 -iname '*.jpg' | head -1))
+  timelaps_firstFrameName="${timelaps_firstFrame%.*}"
+
+  # mouv previous captation to archive
+  mkdir "$captation/exp-"$timelaps_firstFrameName
+  
+  cp $exp/*.jpg    "$captation/exp-"$timelaps_firstFrameName
+  cp $exp/live.mp4 "$captation/exp-$timelaps_firstFrameName/$timelaps_firstFrameName.mp4"
+  cp $exp/live.mp4 $assets/timelaps.mp4
+}
+
+
 # projected image (nega)
 function nega_process {
   
@@ -63,65 +118,6 @@ function nega_getWebcam {
   imagesnap "$nega_listPath/$now.jpg"
 }
 
-# formation captation
-
-function exposure_init {
-
-  # refresh negative image and flash from assets folder
-  rm $nega_path $flash_expose
-  cp $nega_source $nega_expose
-  cp $flash_source $flash_expose
-}
-function camera_init {
-  
-  # make sure the camera is available.
-  killall PTPCamera 
-
-  # launch detection
-  gphoto2 --auto-detect
-  gphoto2 --summary
-}
-function timelaps_init {
-  
-  now=$(date +"%y.%m.%d_%H.%M.%S")
-  
-  # mouv previous captation to archive
-  mkdir "$captation/exp-$now/"
-  
-  mv "$exp/*.jpg"  "$captation/exp-$now/"
-  cp $exp/live.mp4 "$captation/exp-$now/$now.mp4"
-  
-  # create new exp folder
-  mkdir $exp
-}
-function timelaps_render {
-  # lauch timelaps render script ( render the animation with ffmpeg)
-
-  cd $exp
-
-  # render mov
-  ffmpeg -loglevel panic -f image2 -pattern_type glob -i '*.jpg' -r 25 -vcodec mpeg4 -b 30000k -vf scale=1920:-1 -y tmp.mp4
-  
-  # replace live movie
-  cp -f tmp.mp4 live.mp4
-}
-function timelaps_display {
-  # display the video player window and play live.mp4
-  killall -9 "VLC"
-  $vlc --noaudio --fullscreen --loop ~/temporium/assets/captation/exp/live.mp4 2> /dev/null &
-}
-function timelaps_finish {
-
-  timelaps_firstFrame=$(find $exp -maxdepth 1 -iname '*.jpg' | head -1)
-  timelaps_firstFrameName="${timelaps_lastFrame%.*}"
-
-  # mouv previous captation to archive
-  mkdir "$captation/exp-"$timelaps_firstFrameName
-  
-  mv "$exp/*.jpg"  "$captation/exp-"$timelaps_firstFrameName
-  cp $exp/live.mp4 "$captation/exp-$timelaps_firstFrameName/$timelaps_firstFrameName.mp4"
-  cp $exp/live.mp4 $assets/timelaps.mp4
-}
 
 # utils
 function oscSend {

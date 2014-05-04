@@ -27,7 +27,7 @@ timelaps_init
 
 # lanch nega in fs
 PDE_run $EF run &
-sleep 5
+sleep 7
 
 oscSend EF_imgReload   # reload picture 
 oscSend EF_resetTime   # reset timer
@@ -46,6 +46,7 @@ for (( i=$camera_framePerCaptation; i>0; i--)); do
 done
 
 timelaps_render
+timelaps_finish
 
 oscSend EF_kill
 
