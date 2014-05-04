@@ -6,6 +6,9 @@
 # @since  01.02.2014
 # 
 
+
+source /Users/immersion/temporium/apps/cli/functions.sh  
+
 self=`basename $0`
 
 case "$ACTION" in
@@ -14,10 +17,10 @@ case "$ACTION" in
         ;;
     start)
         echo "$self: START"
-        python $(dirname $0)/osc/sender.py 127.0.0.1 4242 flash
+        oscSend EF_flash
         ;;
     download)
-        python $(dirname $0)/osc/sender.py 127.0.0.1 4242 expose
+        oscSend EF_expose
         echo "$self: DOWNLOAD to $ARGUMENT" 
         ;;
     stop)

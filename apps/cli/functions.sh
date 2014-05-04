@@ -4,8 +4,6 @@
 
 #set -x
 
-clear
-
 path="/Users/immersion/temporium"
 
 
@@ -19,15 +17,14 @@ exp="$assets/exp"                           # current exposure pictures
 EF=$app"/capture/exposerFlasher"            # exposerFlasher processing patch path
 EFdata="$EF/data"                           # exposerFlasher data path
 
-nega_source="$assets/nega/nega.png"       
+nega_source="$assets/sources/nega.png"
 nega_expose="$EFdata/nega.png"
 
+flash_source="$assets/sources/flash.png"      
+flash_expose="$EFdata/flash.png"
+
 vlc='/Applications/VLC.app/Contents/MacOS/VLC' # vlc app path
-oscSend="python $app/cli/osc/sender.py"
 
-
-# setup folders
-mkdir -v $assets $archive $captation $exp $EFdata
 
 # function
 # ========
@@ -69,8 +66,11 @@ function nega_getWebcam {
 # formation captation
 
 function exposure_init {
-  rm $nega_path
+
+  # refresh negative image and flash from assets folder
+  rm $nega_path $flash_expose
   cp $nega_source $nega_expose
+  cp $flash_source $flash_expose
 }
 function camera_init {
   
@@ -124,9 +124,9 @@ function timelaps_finish {
 }
 
 # utils
-function PDE_tell {
+function oscSend {
   # send OSC message to ExposerFlasher 
-  $oscSend 127.0.0.1 4242 $1
+  python $app/cli/osc/sender.py 127.0.0.1 4242 $1
 }
 function PDE_run {
   # run a processing sketch 

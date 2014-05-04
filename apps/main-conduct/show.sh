@@ -10,30 +10,31 @@
 
 
 
-clear
-# settings
-camera_framePerCaptation=5
-
 # include var and functions for local use
 source /Users/immersion/temporium/apps/cli/functions.sh  
 
-# init session
-PDE_run $EF run &
-sleep 5
+# setup folders
+mkdir -v $assets $archive $captation $exp $EFdata
+clear
 
-# init exposure
+# settings
+camera_framePerCaptation=5
 
-
+# init
 exposure_init
 camera_init
 timelaps_init
 
-say "starting exposure !"
-  
-PDE_tell img_reload   # reload picture 
-PDE_tell reset_time   # reset timer
+# lanch nega in fs
+PDE_run $EF run &
+sleep 5
 
-# tell camera to take picture 
+oscSend EF_imgReload   # reload picture 
+oscSend EF_resetTime   # reset timer
+
+say "starting exposure !"
+
+# picture loop
 for (( i=$camera_framePerCaptation; i>0; i--)); do
 
 	printf "# $i \n"
@@ -46,6 +47,6 @@ done
 
 timelaps_render
 
-PDE_tell kill
+oscSend EF_kill
 
 say "exposure finished !"
