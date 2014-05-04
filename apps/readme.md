@@ -1,26 +1,4 @@
-# temporium
-![](https://kkbb-production.s3.amazonaws.com/uploads/project_image/image/66765/renduallum02.jpg)
 
-> **Le Temporium** est une structure en verre mêlant des systèmes biologiques, mécaniques et  informatiques. Il se compose de **trois "étages-organes"** qui s'activent successivement et participent à l'écriture narrative du flm.
+** besoin sur place **
 
-## dépendances
-
-**bash**
-- ffmpeg
-- detox
-- imagesnap
-- imagemagick
-- gphoto2
-
-**python**
-
-
-**processing**
-- processing-java
-- oscP5
-- controlP5
-- arduino
-
-**soft**
-- canon eos utility
-- sikuli
+- connection internet avec redirection de port vers la machine pour controle en vnc et ssh à distance.
