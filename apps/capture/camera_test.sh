@@ -13,4 +13,4 @@ gphoto2 --auto-detect
 gphoto2 --summary
 
 # capture
-gphoto2 --capture-image-and-download --interval 2 --frames 30 --hook-script ../hook.sh --filename ../../assets/exp/-%y.%m.%d_%H.%M.%S.%C
+gphoto2 --capture-image-and-download --interval 2 --frames 30 --hook-script camera_hook.sh --filename ../../assets/exp/-%y.%m.%d_%H.%M.%S.%C

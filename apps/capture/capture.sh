@@ -42,7 +42,7 @@ for (( i=$camera_framePerCaptation; i>0; i--)); do
 
 	gphoto2 \
  	--capture-image-and-download \
-  	--hook-script $app/capture/hook.sh \
+  	--hook-script $app/capture/camera_hook.sh \
   	--filename $exp/%y.%m.%d_%H.%M.%S.%C
 done
 
