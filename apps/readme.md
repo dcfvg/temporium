@@ -1,4 +1,7 @@
+# besoin sur place
 
-** besoin sur place **
+**connection internet**
 
-- connection internet avec redirection de port vers la machine pour controle en vnc et ssh à distance.
+- réseau filaire de préférence
+- gestion à distance (vnc) : redirection de ports pour permettre l'accès depuis l'exterieur 
+- session à distance (ssh) : redirection de ports pour permettre l'accès depuis l'exterieur
