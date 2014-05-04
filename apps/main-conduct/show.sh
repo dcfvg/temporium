@@ -12,14 +12,14 @@
 
 clear
 # settings
-camera_interval=0
-camera_framePerCaptation=2
+camera_framePerCaptation=5
 
 # include var and functions for local use
 source /Users/immersion/temporium/apps/cli/functions.sh  
 
 # init session
 PDE_run $EF run &
+sleep 5
 
 # init exposure
 
@@ -35,15 +35,17 @@ PDE_tell reset_time   # reset timer
 
 # tell camera to take picture 
 for (( i=$camera_framePerCaptation; i>0; i--)); do
-  sleep $camera_interval &
-  
-  # --interval $camera_interval --frames $camera_framePerCaptation \
-  gphoto2 \
-  --capture-image-and-download \
-  --hook-script $app/capture/hook.sh \
-  --filename $exp/%y.%m.%d_%H.%M.%S.%C
+
+	printf "# $i \n"
+
+	gphoto2 \
+ 	--capture-image-and-download \
+  	--hook-script $app/capture/hook.sh \
+  	--filename $exp/%y.%m.%d_%H.%M.%S.%C
 done
 
 timelaps_render
+
+PDE_tell kill
 
 say "exposure finished !"

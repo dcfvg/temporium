@@ -7,7 +7,6 @@
 # 
 
 self=`basename $0`
-# echo "$self: $ACTION"
 
 case "$ACTION" in
     init)

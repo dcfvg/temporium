@@ -23,7 +23,7 @@ nega_source="$assets/nega/nega.png"
 nega_expose="$EFdata/nega.png"
 
 vlc='/Applications/VLC.app/Contents/MacOS/VLC' # vlc app path
-oscSend='python $path/cli/osc/sender.py'
+oscSend="python $app/cli/osc/sender.py"
 
 
 # setup folders
@@ -70,7 +70,7 @@ function nega_getWebcam {
 
 function exposure_init {
   rm $nega_path
-  mv $nega_source $nega_expose
+  cp $nega_source $nega_expose
 }
 function camera_init {
   
@@ -109,6 +109,18 @@ function timelaps_display {
   # display the video player window and play live.mp4
   killall -9 "VLC"
   $vlc --noaudio --fullscreen --loop ~/temporium/assets/captation/exp/live.mp4 2> /dev/null &
+}
+function timelaps_finish {
+
+  timelaps_firstFrame=$(find $exp -maxdepth 1 -iname '*.jpg' | head -1)
+  timelaps_firstFrameName="${timelaps_lastFrame%.*}"
+
+  # mouv previous captation to archive
+  mkdir "$captation/exp-"$timelaps_firstFrameName
+  
+  mv "$exp/*.jpg"  "$captation/exp-"$timelaps_firstFrameName
+  cp $exp/live.mp4 "$captation/exp-$timelaps_firstFrameName/$timelaps_firstFrameName.mp4"
+  cp $exp/live.mp4 $assets/timelaps.mp4
 }
 
 # utils
