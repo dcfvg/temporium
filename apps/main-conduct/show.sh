@@ -12,6 +12,7 @@
 
 # include var and functions for local use
 source /Users/immersion/temporium/apps/cli/functions.sh  
+PATH=/usr/local/bin/:$PATH
 
 # setup folders
 mkdir -v $assets $archive $captation $exp $EFdata

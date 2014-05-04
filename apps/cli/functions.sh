@@ -4,11 +4,10 @@
 
 #set -x
 
-path="/Users/immersion/temporium"
+tempoPath="/Users/immersion/temporium"
 
-
-app="$path/apps"                            # the scripts folder
-assets="$path/assets"                       # main assets folder
+app="$tempoPath/apps"                       # the scripts folder
+assets="$tempoPath/assets"                  # main assets folder
 archive="$assets/archive"                   # media archives
 
 captation=$archive"/exposures"              # exposures archives
@@ -135,5 +134,5 @@ function PDE_run {
   patch=$1
   echo "load $patch"
 
-  processing-java --sketch="$patch" --output=/tmp/processing_output --force --$2
+  processing-java --sketch="$patch" --output=$assets/tmp --force --$2
 }
