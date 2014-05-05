@@ -7,10 +7,13 @@ Created on Apr 27, 2014
 class current_state(object):
     """ Gather all the informations about the state of the installation"""
     
-    def __init__(self):
+    def __init__(self,com_arduino  ):
+        
+        self.com_arduino = com_arduino
+        
         """state of each pump : { P_M1_BR1 : True , P_M1_BR2 : False, ...} """
-        self.state_pumps = dict()
-        self.state_pumps = { "P_M1_BR1" : True , "P_M1_BR2" : True, "P_M1_BR2" : False,\
+        #self.state_pumps = dict()
+        self.state_pumps = { "P_M1_BR1" : False , "P_M1_BR2" : False, "P_M1_BR3" : False,\
                              "P_BR1_BU1" : False, "P_BR2_BU2" : False , "P_BR3_BU3" : False,\
                              "P_M2_BU1" : False, "P_M2_BU2" : False , "P_M2_BU3" : False, "P_M2_AQ" : False,\
                              "P_BU1_AQ" : False, "P_BU2_AQ" : False , "P_BU3_AQ" : False,\
@@ -27,10 +30,170 @@ class current_state(object):
         
         """Number of usage for each BU : { BU1 : 0 , BU2 : 23, ...} """
         self.number_usage = dict()
-        
         self.__setState__()
+    
+    def P_BR1_BU1(self, state):
+        name= 'P_BR1_BU1'
+        order_ok = self.com_arduino.pump_order(name,state)
         
+        if order_ok :
+            self.state_pumps[name] = state
+        else : 
+            print("fail to activate or desactivate " + name )
+            
+        self.refresh_windows()
+    
+    def P_BR2_BU2(self, state):
+        name= 'P_BR2_BU2'
+        order_ok = self.com_arduino.pump_order(name,state)
         
+        if order_ok :
+            self.state_pumps[name] = state
+        else : 
+            print("fail to activate or desactivate " + name )
+            
+        self.refresh_windows()
+    
+    def P_BR3_BU3(self, state):
+        name = 'P_BR3_BU3'
+        order_ok = self.com_arduino.pump_order(name,state)
+        
+        if order_ok :
+            self.state_pumps[name] = state
+        else : 
+            print("fail to activate or desactivate " + name )
+            
+        self.refresh_windows()
+           
+    def P_BU1_AQ(self, state):
+        name = 'P_BU1_AQ'
+        order_ok = self.com_arduino.pump_order(name,state)
+        
+        if order_ok :
+            self.state_pumps[name] = state
+        else : 
+            print("fail to activate or desactivate " + name )
+            
+        self.refresh_windows()
+                
+    def P_BU2_AQ(self, state):
+        name = 'P_BU2_AQ'
+        order_ok = self.com_arduino.pump_order(name,state)
+        
+        if order_ok :
+            self.state_pumps[name] = state
+        else : 
+            print("fail to activate or desactivate " + name )
+            
+        self.refresh_windows()
+    
+    def P_BU3_AQ(self, state):
+        name = 'P_BU3_AQ'
+        order_ok = self.com_arduino.pump_order(name,state)
+        
+        if order_ok :
+            self.state_pumps[name] = state
+        else : 
+            print("fail to activate or desactivate " + name )
+            
+        self.refresh_windows()
+                
+    def P_M1_BR1(self, state):
+        name = 'P_M1_BR1'
+        order_ok = self.com_arduino.pump_order(name,state)
+        
+        if order_ok :
+            self.state_pumps[name] = state
+        else : 
+            print("fail to activate or desactivate " + name )
+            
+        self.refresh_windows()
+   
+    def P_M1_BR2(self, state):
+        name = 'P_M1_BR2'
+        order_ok = self.com_arduino.pump_order(name,state)
+        
+        if order_ok :
+            self.state_pumps[name] = state
+        else : 
+            print("fail to activate or desactivate " + name )
+            
+        self.refresh_windows()
+                
+    def P_M1_BR3(self, state):
+        name = 'P_M1_BR3'
+        order_ok = self.com_arduino.pump_order(name,state)
+        
+        if order_ok :
+            self.state_pumps[name] = state
+        else : 
+            print("fail to activate or desactivate " + name )
+            
+        self.refresh_windows()
+                
+    def P_M2_BU1(self, state):
+        name = 'P_M2_BU1'
+        order_ok = self.com_arduino.pump_order(name,state)
+        
+        if order_ok :
+            self.state_pumps[name] = state
+        else : 
+            print("fail to activate or desactivate " + name )
+            
+        self.refresh_windows()
+   
+    def P_M2_BU2(self, state):
+        name = 'P_M2_BU2'
+        order_ok = self.com_arduino.pump_order(name,state)
+        
+        if order_ok :
+            self.state_pumps[name] = state
+        else : 
+            print("fail to activate or desactivate " + name )
+            
+        self.refresh_windows()
+        
+    def P_M2_BU3(self, state):
+        name = 'P_M2_BU3'
+        order_ok = self.com_arduino.pump_order(name,state)
+        
+        if order_ok :
+            self.state_pumps[name] = state
+        else : 
+            print("fail to activate or desactivate " + name )
+            
+        self.refresh_windows()
+                           
+    def P_M2_AQ(self, state):
+        name = 'P_M2_AQ'
+        order_ok = self.com_arduino.pump_order(name,state)
+        
+        if order_ok :
+            self.state_pumps[name] = state
+        else : 
+            print("fail to activate or desactivate " + name )
+            
+        self.refresh_windows()
+    
+    def P_AQ_S(self, state):
+        name = 'P_AQ_S'
+        order_ok = self.com_arduino.pump_order(name,state)
+        
+        if order_ok :
+            self.state_pumps[name] = state
+        else : 
+            print("fail to activate or desactivate " + name )
+            
+        self.refresh_windows()
+        
+            
+    def set_windows(self,window):
+        self.window = window
+         
+    def refresh_windows(self):
+        self.window.refresh()
+        
+          
     def __setState__(self):
         """ Set the states to the right values according to the log_start.txt file """
             # Open the file

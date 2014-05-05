@@ -49,6 +49,8 @@ class com_arduino(object):
             print(name + " HIGH")
         else : 
             print(name + " LOW")
+            
+        return True
                 
         
    
@@ -68,6 +70,8 @@ class com_arduino(object):
             print(name + " HIGH")
         else : 
             print(name + " LOW")
+            
+        return True
 
         
         
@@ -87,6 +91,8 @@ class com_arduino(object):
             print(name + " HIGH")
         else : 
             print(name + " LOW")
+        
+        return True
            
     def P_BU1_AQ(self, state):
         name = 'P_BU1_AQ'
@@ -104,6 +110,8 @@ class com_arduino(object):
             print(name + " HIGH")
         else : 
             print(name + " LOW")
+        
+        return True
                 
     def P_BU2_AQ(self, state):
         name = 'P_BU2_AQ'
@@ -121,6 +129,8 @@ class com_arduino(object):
             print(name + " HIGH")
         else : 
             print(name + " LOW")
+        
+        return True
     
     def P_BU3_AQ(self, state):
         name = 'P_BU3_AQ'
@@ -138,6 +148,8 @@ class com_arduino(object):
             print(name + " HIGH")
         else : 
             print(name + " LOW")
+        
+        return True
                 
     def P_M1_BR1(self, state):
         name = 'P_M1_BR1'
@@ -155,6 +167,8 @@ class com_arduino(object):
             print(name + " HIGH")
         else : 
             print(name + " LOW")
+        
+        return True
    
     def P_M1_BR2(self, state):
         name = 'P_M1_BR2'
@@ -172,6 +186,8 @@ class com_arduino(object):
             print(name + " HIGH")
         else : 
             print(name + " LOW")
+        
+        return True
                 
     def P_M1_BR3(self, state):
         name = 'P_M1_BR3'
@@ -189,6 +205,8 @@ class com_arduino(object):
             print(name + " HIGH")
         else : 
             print(name + " LOW")
+        
+        return True
                 
     def P_M2_BU1(self, state):
         name = 'P_M2_BU1'
@@ -206,6 +224,8 @@ class com_arduino(object):
             print(name + " HIGH")
         else : 
             print(name + " LOW")
+        
+        return True
    
     def P_M2_BU2(self, state):
         name = 'P_M2_BU2'
@@ -223,6 +243,8 @@ class com_arduino(object):
             print(name + " HIGH")
         else : 
             print(name + " LOW")
+            
+        return True
     
     def P_M2_BU3(self, state):
         name = 'P_M2_BU3'
@@ -240,6 +262,8 @@ class com_arduino(object):
             print(name + " HIGH")
         else : 
             print(name + " LOW")
+        
+        return True
                            
     def P_M2_AQ(self, state):
         name = 'P_M2_AQ'
@@ -257,6 +281,8 @@ class com_arduino(object):
             print(name + " HIGH")
         else : 
             print(name + " LOW")
+        
+        return True
     
     def P_AQ_S(self, state):
         name = 'P_AQ_S'
@@ -274,7 +300,27 @@ class com_arduino(object):
             print(name + " HIGH")
         else : 
             print(name + " LOW")
+        
+        return True
     
+    def pump_order(self, name , state):
+        
+        if not self.test : 
+            if self.the_pins[name][1]=="NULL" :
+                print("pin not connected")
+            else : 
+                if state : 
+                    self.the_pins[name][0].setHigh(self.the_pins[name][1])
+                    print(name + " HIGH")
+                else : 
+                    self.the_pins[name][0].setLow(self.the_pins[name][1])
+               
+        if state : 
+            print(name + " HIGH")
+        else : 
+            print(name + " LOW")
+        
+        return True
     
     
     #Read analog Input

@@ -5,6 +5,7 @@ Created on Apr 24, 2014
 '''
 
 from tkinter import *
+import tkinter
 
 class visual_feedback(Canvas):
     
@@ -14,7 +15,7 @@ class visual_feedback(Canvas):
     def __init__(self, parent, current_state):
         Canvas.__init__(self, parent, width=700, height=800)
         self.parent = parent
-        self.pack()
+        self.pack(side=RIGHT)
         self.update()
         
         self.current_state = current_state
@@ -74,9 +75,9 @@ class visual_feedback(Canvas):
             if item == "M1" or item == "M2": 
                 self.create_rectangle(self.container_position[item][0]*self.winfo_width(), (self.container_position[item][1]+self.container_dimension[item][1]*(1-self.current_state.occupied_volume[item]))*self.winfo_height(),\
                                    (self.container_dimension[item][0] + self.container_position[item][0])*self.winfo_width(), (self.container_dimension[item][1] + self.container_position[item][1])*self.winfo_height(),fill="white"  )
-                print("daz")
+
             else : 
-                print("daz")
+
                 self.create_rectangle(self.container_position[item][0]*self.winfo_width(), (self.container_position[item][1]+self.container_dimension[item][1]*(1-self.current_state.occupied_volume[item]))*self.winfo_height(),\
                                   (self.container_dimension[item][0] + self.container_position[item][0])*self.winfo_width(), (self.container_dimension[item][1] + self.container_position[item][1])*self.winfo_height(),fill="green"  )
         
