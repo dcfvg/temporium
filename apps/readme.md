@@ -32,7 +32,7 @@
 **cables**
 - cable hdmi
 
-## dépendances
+## dépendances logicielles
 
 **bash**
 - ffmpeg
