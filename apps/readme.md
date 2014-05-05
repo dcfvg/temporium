@@ -31,3 +31,22 @@
 
 **cables**
 - cable hdmi
+
+## dépendances
+
+**bash**
+- ffmpeg
+- detox
+- imagesnap
+- imagemagick
+- gphoto2
+
+**python**
+
+
+**processing**
+- processing-java
+- oscP5
+
+**soft**
+- canon eos utility
