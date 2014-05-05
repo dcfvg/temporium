@@ -34,6 +34,10 @@
 
 **cables**
 - cable hdmi
+- cable dvi
+- adpatateur thunderbolt/dvi
+- mini USB
+- 2 USB ( arduino )
 
 ## dépendances logicielles
 
