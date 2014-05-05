@@ -41,8 +41,11 @@
 - imagemagick
 - gphoto2
 
-**python**
+**python 3.x**
+- pyserial
 
+**arduino**
+- prototype.ino
 
 **processing**
 - processing-java
