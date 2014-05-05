@@ -1,5 +1,6 @@
 # fiche technique
 
+## lieu
 **connection internet**
 
 - réseau filaire de préférence
@@ -10,6 +11,8 @@
 **espace de stockage**
 
 - un espace sous clés pour ranger du materiel, des pièces de rechange, une réserve de milieu etc.
+
+## connectique
 
 **alimentation**
 
