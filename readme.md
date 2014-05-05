@@ -3,21 +3,3 @@
 
 > **Le Temporium** est une structure en verre mêlant des systèmes biologiques, mécaniques et  informatiques. Il se compose de **trois "étages-organes"** qui s'activent successivement et participent à l'écriture narrative du flm.
 
-## dépendances
-
-**bash**
-- ffmpeg
-- detox
-- imagesnap
-- imagemagick
-- gphoto2
-
-**python**
-
-
-**processing**
-- processing-java
-- oscP5
-
-**soft**
-- canon eos utility
