@@ -1,4 +1,4 @@
-# besoin
+# fiche technique
 
 **connection internet**
 
@@ -28,3 +28,6 @@
 - 3 webcam
 - 2 arduino
 - souris/clavier
+
+**cables**
+- cable hdmi
