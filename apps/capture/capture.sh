@@ -19,7 +19,7 @@ mkdir -v $assets $archive $captation $exp $EFdata
 clear
 
 # settings
-camera_framePerCaptation=5
+camera_framePerCaptation=${1-650}
 
 # init
 exposure_init
