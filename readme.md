@@ -18,9 +18,6 @@
 **processing**
 - processing-java
 - oscP5
-- controlP5
-- arduino
 
 **soft**
 - canon eos utility
-- sikuli
