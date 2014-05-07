@@ -20,7 +20,7 @@ montage dynamique
 
 | terme                       | définition |
 | ---                         | ---- |
-| `séquence générée`          | séquence JPG ou une vidéo générée par '[outil de capture](https://github.com/dcfvg/temporium/tree/panorama/apps/capture) |
+| `séquence générée`          | séquence JPG ou une vidéo générée par l'[outil de capture](https://github.com/dcfvg/temporium/tree/panorama/apps/capture) |
 | `film`                      | version longue du film accompagné d’une bande-son (surround / 5.1) |
 | `mark_????`                 | timecode ou numéro d'image connu à l'avance |
 | `taux_formation`            | avancement (de 0 à 255) de la formation de l'image vivante communiquée par OSC |
