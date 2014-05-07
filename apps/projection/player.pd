@@ -1,0 +1,67 @@
+#N canvas 1718 152 1071 912 10;
+#X msg 154 252 open \$1;
+#X obj 154 216 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 154 233 openpanel;
+#X obj 118 187 gemhead 2;
+#X obj 118 308 pix_film;
+#X msg 610 167 reset;
+#X msg 610 186 destroy;
+#X obj 118 380 pix_texture;
+#X msg 42 232 auto \$1;
+#X obj 42 203 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1 1
+;
+#X obj 363 216 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 363 233 openpanel;
+#X obj 327 308 pix_film;
+#X msg 260 232 auto \$1;
+#X obj 260 215 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 1
+1;
+#X obj 118 361 pix_mix 0;
+#X obj 327 187 gemhead 3;
+#X obj 589 278 gemwin 25;
+#X msg 200 308 0;
+#X msg 433 308 150;
+#X msg 579 122 dimen 1280 720 \, create \, 1;
+#X obj 339 386 tgl 15 0 empty empty empty 0 -6 0 8 -262144 -1 -1 0
+1;
+#X msg 363 252 open \$1;
+#X obj 582 459 dumpOSC 4242;
+#X obj 118 434 rectangle 8 5;
+#X obj 681 517 r rcvOSC;
+#X obj 582 556 OSCroute /exposeFlashCommander /ok;
+#X floatatom 214 390 5 0 0 0 - - -;
+#X msg 217 42 650;
+#X msg 259 42 800;
+#X msg 296 42 1000;
+#X obj 682 656 print;
+#X connect 0 0 4 0;
+#X connect 1 0 2 0;
+#X connect 2 0 0 0;
+#X connect 3 0 4 0;
+#X connect 4 0 15 0;
+#X connect 5 0 17 0;
+#X connect 6 0 17 0;
+#X connect 7 0 24 0;
+#X connect 8 0 4 0;
+#X connect 9 0 8 0;
+#X connect 10 0 11 0;
+#X connect 11 0 22 0;
+#X connect 12 0 15 1;
+#X connect 13 0 12 0;
+#X connect 14 0 13 0;
+#X connect 15 0 7 0;
+#X connect 16 0 12 0;
+#X connect 18 0 4 1;
+#X connect 19 0 12 1;
+#X connect 20 0 17 0;
+#X connect 21 0 15 2;
+#X connect 22 0 12 0;
+#X connect 23 0 26 0;
+#X connect 25 0 26 0;
+#X connect 26 0 31 0;
+#X connect 27 0 24 1;
+#X connect 28 0 4 1;
+#X connect 29 0 4 1;
+#X connect 30 0 4 1;
