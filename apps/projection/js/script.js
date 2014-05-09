@@ -1,10 +1,17 @@
 $(function() {
   
-	console.log("ok");
-		
+	/* 
+	// http://popcornjs.org/popcorn-docs/getting-started/
+	// http://jsfiddle.net/popcornjs/G3Csf/
+	// https://www.npmjs.org/package/osc.io
+	
+	*/
+
 	var $movie = $("#movie"),
   		$life  = $("#life");
-
+			
+	// functions
+	
 	function showMovie(){
 		$movie.removeClass("off");
 		$life.addClass("off");
@@ -16,27 +23,21 @@ $(function() {
 	function reloadLife(){
 		$life.attr("src","assets/life.mp4?reload="+Math.round((new Date()).getTime() / 1000)).load();
 	}
-	
 	function getLifeState(){
-		
 		// grab get value from csv file ± every minute
-		
 	}
 	
-	// http://popcornjs.org/popcorn-docs/getting-started/
-	// http://jsfiddle.net/popcornjs/G3Csf/
+	// cue manager
 	
-	$("#movie")
-		.bind("timeupdate", function() {
-	   //console.log("Current time is " + this.currentTime);
-		if(Math.floor(this.currentTime) == 3) console.log("ah!");
-		})
-	.bind("ended", function() {
-		   alert("I'm done!");
-		});
-	
+	var $pop_mov = Popcorn("#movie");
+	$pop_mov.cue( 2, function() {
+			console.log( "from:"+this.currentTime() );
+	    this.currentTime( 10.5 ).play();
+			console.log( "to:"+this.currentTime() );
+	});
+	// shortcuts
 	$(document).keypress(function( event ){
-    console.log(event.which);
+    //console.log(event.which);
 
 		//m -> movie
     if ( event.which == 108 ) showMovie(); 
@@ -46,7 +47,13 @@ $(function() {
 		
 		//r -> refreshlife
     if ( event.which == 114 ) reloadLife();
+		
+		//s 
+		if ( event.which == 115 ) {
+				$pop_mov.currentTime( 1 ).play();
+		};
+		
+	
   });
-
 
 });
