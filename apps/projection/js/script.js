@@ -29,10 +29,16 @@ $(function() {
 	
 	// cue manager
 	
-	var $pop_mov = Popcorn("#movie");
-	$pop_mov.cue( 2, function() {
+	var $pop_movie = Popcorn("#movie");
+	var $pop_life = Popcorn("#movie");
+	$pop_movie.cue( 2, function() {
 			console.log( "from:"+this.currentTime() );
 	    this.currentTime( 10.5 ).play();
+			console.log( "to:"+this.currentTime() );
+	});
+	$pop_movie.cue( 13, function() {
+			console.log( "from:"+this.currentTime() );
+	    this.currentTime( 1 ).play();
 			console.log( "to:"+this.currentTime() );
 	});
 	// shortcuts
@@ -40,17 +46,17 @@ $(function() {
     //console.log(event.which);
 
 		//m -> movie
-    if ( event.which == 108 ) showMovie(); 
+    if ( event.which == 109 ) showMovie(); 
     
 		//l -> life
-    if ( event.which == 109 ) showLife();
+    if ( event.which == 108 ) showLife();
 		
 		//r -> refreshlife
     if ( event.which == 114 ) reloadLife();
 		
 		//s 
 		if ( event.which == 115 ) {
-				$pop_mov.currentTime( 1 ).play();
+				$pop_movie.currentTime( 1 ).play();
 		};
 		
 	

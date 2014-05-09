@@ -15,6 +15,9 @@ body {
   position: absolute;
   top: 0;
   left: 0;
+
+  transition-property: opacity;
+  transition-duration: 20s;
 }
 
 video::-webkit-media-controls-enclosure {
@@ -22,5 +25,5 @@ video::-webkit-media-controls-enclosure {
 }
 
 .off {
-  display: none;
+	opacity:0;
 }
