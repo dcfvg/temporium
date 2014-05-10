@@ -59,6 +59,8 @@ function timelaps_render {
   cd $exp
 
   # render mov
+	# TODO : adapt to movie size : 1888 x 1062 
+
   ffmpeg -loglevel panic -f image2 -pattern_type glob -i '*.jpg' -r 25 -vcodec mpeg4 -b 30000k -vf scale=1920:-1 -y tmp.mp4
   
   # replace live movie
