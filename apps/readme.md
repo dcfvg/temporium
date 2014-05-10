@@ -18,7 +18,7 @@
 
 **alimentation électrique**
 - une alimentation 220 V constante
-- une alimentation 220 V qui peut être coupée
+- une alimentation 220 V qui peut être coupée à la fermeture
 
 ## materiel
 
