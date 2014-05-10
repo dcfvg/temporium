@@ -14,6 +14,9 @@ body {
 	position:absolute;
 	top:0;
 	left:0;
+	
+	transition-property: opacity;
+  transition-duration: 5s;
 }
 #film {
 	
@@ -22,5 +25,5 @@ video::-webkit-media-controls-enclosure {
   display:none !important;
 }
 .off {
-	display:none;
+	opacity:0; 
 }
