@@ -1,6 +1,6 @@
 # fiche technique
 
-## lieu
+## espace
 **connection internet**
 
 - réseau filaire de préférence
