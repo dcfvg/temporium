@@ -17,7 +17,8 @@ class starting_capture(threading.Thread):
         thread to start capture 
         '''
         threading.Thread.__init__(self)
+        self.nbr = 5
         
-    def run(self, nbr):
-        os.system("bash ~/temporium/apps/capture/capture.sh " + str(nbr))
+    def run(self):
+        os.system("bash ~/temporium/apps/capture/capture.sh " + str(self.nbr))
         

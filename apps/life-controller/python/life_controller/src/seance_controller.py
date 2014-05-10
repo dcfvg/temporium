@@ -45,15 +45,15 @@ class seance_controller(threading.Thread):
         
         
     def film_begin(self):
-        print("film time begin in 10 sec")
-        time.sleep(10)
+        print("film time begin in 5 sec")
+        time.sleep(5)
         
         """send seance begin"""
         self.client.send_seance_begin()
         
         print("starting exposure")
         capture = starting_capture()
-        capture.start(5)
+        capture.start()
         
         self.start()
         compt = 0 
