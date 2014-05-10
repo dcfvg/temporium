@@ -65,6 +65,8 @@ function timelaps_render {
   
   # replace live movie
   cp -f tmp.mp4 live.mp4
+
+	oscSend	life_reload 1
 }
 function timelaps_display {
   # display the video player window and play live.mp4
@@ -83,7 +85,6 @@ function timelaps_finish {
   cp $exp/live.mp4 "$captation/exp-$timelaps_firstFrameName/$timelaps_firstFrameName.mp4"
   cp $exp/live.mp4 $assets/timelaps.mp4
 }
-
 
 # projected image (nega)
 function nega_process {
@@ -119,11 +120,10 @@ function nega_getWebcam {
   imagesnap "$nega_listPath/$now.jpg"
 }
 
-
 # utils
 function oscSend {
   # send OSC message to ExposerFlasher 
-  python $app/cli/osc/sender.py 127.0.0.1 4242 $1
+  python $app/cli/osc/sender.py 127.0.0.1 4242 $1 $2
 }
 function PDE_run {
   # run a processing sketch 

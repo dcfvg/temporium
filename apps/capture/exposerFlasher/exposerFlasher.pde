@@ -77,7 +77,7 @@ void oscEvent(OscMessage theOscMessage) {
    *
    */
 
-  if(theOscMessage.checkAddrPattern("/exposeFlashCommander")==true) {
+  if(theOscMessage.checkAddrPattern("/EF")==true) {
     
     String o = theOscMessage.get(0).stringValue();
     

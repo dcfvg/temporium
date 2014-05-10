@@ -30,8 +30,8 @@ timelaps_init
 PDE_run $EF run &
 sleep 7
 
-oscSend EF_imgReload   # reload picture 
-oscSend EF_resetTime   # reset timer
+oscSend EF imgReload   # reload picture 
+oscSend EF resetTime   # reset timer
 
 say "starting exposure !"
 
@@ -49,6 +49,6 @@ done
 timelaps_render
 timelaps_finish
 
-oscSend EF_kill
+oscSend EF kill
 
 say "exposure finished !"
