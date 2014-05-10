@@ -7,8 +7,8 @@ http://automata.cc/osc-web
 
 description                               |  patern               | message       | port |
 ----------------------------------------- | --------------------- | ------------- | ---- |
-debut de séance                           | /seance               | begin         | 3333 | 
-fin de séance                             | /seance               | end           | 3334 |
+debut de séance                           | /seance_start         | 1             | 3333 | 
+fin de séance                             | /seance_end           | 1             | 3334 |
 taux de formation de l'image              | /image_formation      | 0-255         | 3333 |
 afficher le negatif                       | /exposeFlashCommander | EF_expose     | 3333 |
 afficher le flash                         | /exposeFlashCommander | EF_flash      | 3333 |
