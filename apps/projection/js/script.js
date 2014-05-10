@@ -10,17 +10,24 @@ $(function() {
 	var $movie = $("#movie"),
   		$life  = $("#life"),
  			$pop_movie = Popcorn("#movie"),
-			$pop_life = Popcorn("#movie");
+			$pop_life = Popcorn("#life"),
+			started=false;
 	
 	// functions
 	
 	function showMovie(){
 		$movie.removeClass("off");
 		$life.addClass("off");
+		$pop_movie.play();
 	}
 	function showLife(){
 		$life.removeClass("off");
 		$movie.addClass("off");
+		$pop_life.play();
+	}
+	function reloadLife(){
+		// add reload argument to avoid cache
+		$life.attr("src","life.mp4?reload="+Math.round((new Date()).getTime() / 1000)).load();
 	}
 	function blackScreen(){
 		$life.addClass("off");
@@ -29,18 +36,12 @@ $(function() {
 	function reset (){
 		blackScreen();
 		
-		// seek to beginning 
-		$pop_movie.currentTime(0);	
-		$pop_life.currentTime(0)
+		started=false;
 		
-	}
-	function reloadLife(){
-		// add reload argument to avoid cache
-		$life.attr("src","assets/life.mp4?reload="+Math.round((new Date()).getTime() / 1000)).load();
-	}
-	function getLifeState(){
-		// grab get value from csv file ± every minute
-		// event OSC 
+		// seek to beginning 
+		$pop_movie.pause().currentTime(0);	
+		$pop_life.pause().currentTime(0)
+		
 	}
 
 	// OSC 
@@ -60,47 +61,53 @@ $(function() {
 			}
 		});
 	});
-  socket.on('message', function(obj) {
+  socket.on('message', function(obj){
       console.log(obj);
 
 			switch (obj[0]) {
-			case "/seance_start":
+				case "/seance_start":
+					console.log("session start");
+				break;
+				case "/life_reload":
+					reloadLife();
+				break;
+				case "/image_formation":
+					if(!started && parseInt(obj[1]) > 15){
+						started = true;
+						showMovie();
+					}
+				break;
 				
-				showMovie();
-				$pop_movie.play();
-			
-			break;
-			case "/life_reload":
-				reloadLife();
-			break;
-			case "AHAHA":
-			    day = "Monday";
-			break;
-				
-			default:
-				text ="hein ?";
-			}
+				default:
+					text ="hein ?";
+			};
   });
 
 	// cue manager
+	$pop_movie.cue( 4, function() {
 		
-	$pop_movie.cue( 2, function() {
-	    this.currentTime( 10.5 ).play();
-	});
-	$pop_movie.cue( 12, function() {
-			$pop_life.play();
+			// show life 
+			
+			console.log("cut vivant 1");
+			
+			$pop_life.currentTime( 35 );
 			showLife();
+			$pop_movie.currentTime( 120 ).pause();
+			
 	});
 	$pop_movie.cue( 20, function() {
-			console.log( "from:"+this.currentTime());
+			this.currentTime( 10.5 );
 			showMovie();
 	});
 	
-	// player event 
-	
+	// players events	
+	$life.on("ended", function() {
+		$pop_movie.play();
+		showMovie();
+	});
 	$movie.on("ended", function() {
 			console.log("seance_end ! ");
-			blackScreen();
+			reset();
 			socket.emit('1', '/seance_end');
 	});
 	
@@ -125,4 +132,5 @@ $(function() {
 	
   });
 
+	// reset();
 });

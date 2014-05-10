@@ -16,6 +16,9 @@ body {
   top: 0;
   left: 0;
 }
+video::-webkit-media-controls-enclosure {
+  display: none !important;
+}
 .off {
   display: none;
 }
