@@ -16,17 +16,16 @@
 
 - 25 °C ± 5 °C
 
-## alimentation
+**alimentation électrique**
 - une alimentation 220 V constante
 - une alimentation 220 V qui peut être coupée
 
-## appareils
+## materiel
 
 - macMini 
 - Appareil photo
 
-## connectiques
-*les connectiques font partie de l’installation*
+**connectiques**
 
 - 2 alimentations 12v : pompes
 - 1 alimentation 5v : relais pompes 
@@ -51,7 +50,7 @@
 - mini USB
 - 2 USB ( arduino )
 
-## dépendances logicielles
+## logiciels
 
 **bash**
 - ffmpeg
