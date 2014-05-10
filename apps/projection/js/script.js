@@ -84,9 +84,9 @@ $(function() {
   });
 
 	// cue manager
+	
+	// 1er plan image vivante
 	$pop_movie.cue( 4, function() {
-		
-			// show life 
 			
 			console.log("cut vivant 1");
 			
@@ -95,17 +95,14 @@ $(function() {
 			$pop_movie.currentTime( 120 ).pause();
 			
 	});
-	$pop_movie.cue( 20, function() {
-			this.currentTime( 10.5 );
-			showMovie();
-	});
+
 	
 	// players events	
-	$life.on("ended", function() {
+	$pop_life.on("ended", function() {
 		$pop_movie.play();
 		showMovie();
 	});
-	$movie.on("ended", function() {
+	$pop_movie.on("ended", function() {
 			console.log("seance_end ! ");
 			reset();
 			socket.emit('1', '/seance_end');
