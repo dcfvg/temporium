@@ -9,6 +9,8 @@ from client_OSC_seance import *
 from server_OSC_seance import *
 from com_arduino import *
 from current_state import *
+from starting_capture import *
+
 import argparse
 import random
 import time
@@ -50,7 +52,8 @@ class seance_controller(threading.Thread):
         self.client.send_seance_begin()
         
         print("starting exposure")
-        os.system("bash ~/temporium/apps/capture/capture.sh")
+        capture = starting_capture()
+        capture.start(5)
         
         self.start()
         compt = 0 
