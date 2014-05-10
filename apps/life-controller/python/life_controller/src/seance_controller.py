@@ -50,7 +50,7 @@ class seance_controller(threading.Thread):
         self.client.send_seance_begin()
         
         print("starting exposure")
-        os.system("bash ~/temporium/apps/capture/capture.sh")
+        os.system("bash ~/temporium/apps/capture/capture.sh 5")
         
         self.start()
         compt = 0 
