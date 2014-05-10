@@ -50,6 +50,7 @@
 
 **python 3.x**
 - pyserial
+- pythonosc
 
 **arduino**
 - prototype.ino
