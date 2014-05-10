@@ -58,5 +58,9 @@
 - processing-java
 - oscP5
 
+**nodeJs**
+- http://automata.cc/osc-web
+- socket.io
+
 **soft**
 - canon eos utility
