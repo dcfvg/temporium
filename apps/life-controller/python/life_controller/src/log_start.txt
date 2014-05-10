@@ -2,16 +2,16 @@ comments : Log file, to initilize current values
 time_cycle : C1 : 0 : (0-72 = wait / 72-144 = use / 144-216 = empty)
 time_cycle : C2 : 0 : (0-72 = wait / 72-144 = use / 144-216 = empty)
 time_cycle : C3 : 0 : (0-72 = wait / 72-144 = use / 144-216 = empty)
-occupied_volume : M1 :  0.5
-occupied_volume : M2 :  0.5
-occupied_volume : BR1 : 0.7
-occupied_volume : BR2 : 0.9
-occupied_volume : BR3 : 0.3
-occupied_volume : BU1 : 0.5
-occupied_volume : BU2 : 0.2 
-occupied_volume : BU3 : 0.2
-occupied_volume : AQ : 0.9
-occupied_volume : S : 0.1 
+occupied_volume : M1 :  1
+occupied_volume : M2 :  1
+occupied_volume : BR1 : 1
+occupied_volume : BR2 : 1
+occupied_volume : BR3 : 1
+occupied_volume : BU1 : 0.1
+occupied_volume : BU2 : 1 
+occupied_volume : BU3 : 0.3
+occupied_volume : AQ : 1
+occupied_volume : S : 0 
 number_usage : BU1 : 0
 number_usage : BU2 : 0
 number_usage : BU3 : 0

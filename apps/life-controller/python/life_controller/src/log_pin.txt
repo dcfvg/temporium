@@ -1,6 +1,7 @@
 comments : To add a comments, put "comments :" at the beginiing of the ligne
 comments : To add an arduino, put "arduino :" at the beginiing of the ligne, then his name, then his port, separeted by ":"
 comments : after an arduino, put the right funtion and the coresponding pin connected to it, separated by ":", if function is not connected, put "NULL" as a pin
+comments : list arduino terminal "python -m serial.tools.list_ports"
 arduino : arduino_mega : /dev/cu.usbmodem411
 P_BR1_BU1 : 22 
 P_BR2_BU2 :  23
@@ -15,4 +16,8 @@ P_M2_BU1 : 31
 P_M2_BU2 : 32
 P_M2_BU3 : 33
 P_AQ_S : 34
-pin_array : 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34
+P_AQ_FI : 35
+P_FI_AQ : 36
+EL_AQ_HIGH : 37
+Photoresistor : 12
+pin_array_output : 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36
