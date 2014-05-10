@@ -81,11 +81,11 @@ void oscEvent(OscMessage theOscMessage) {
     
     String o = theOscMessage.get(0).stringValue();
     
-         if(o.equals("EF_expose"))        img = nega_img;      // swith to nega
-    else if(o.equals("EF_flash"))         img = flash_img;     // switch to flash
-    else if(o.equals("EF_imgReload"))     img_reload();        // refresh image
-    else if(o.equals("EF_kill"))          exit();              // stop application
-    else if(o.equals("EF_resetTime"))     frame  = 0;          // reset timer
+         if(o.equals("expose"))        img = nega_img;      // swith to nega
+    else if(o.equals("flash"))         img = flash_img;     // switch to flash
+    else if(o.equals("imgReload"))     img_reload();        // refresh image
+    else if(o.equals("kill"))          exit();              // stop application
+    else if(o.equals("resetTime"))     frame  = 0;          // reset timer
     
     //println(o);
     
