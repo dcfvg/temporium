@@ -17,10 +17,10 @@ case "$ACTION" in
         ;;
     start)
         echo "$self: START"
-        oscSend EF flash
+        oscSend /EF flash
         ;;
     download)
-        oscSend EF expose
+        oscSend /EF expose
         echo "$self: DOWNLOAD to $ARGUMENT" 
         ;;
     stop)
