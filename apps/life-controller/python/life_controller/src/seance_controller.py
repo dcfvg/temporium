@@ -32,7 +32,7 @@ class seance_controller(threading.Thread):
         
        
         
-        """end received"""
+        """information about the end of the film received"""
         self.end_received = [threading.Lock(), False]
         
         """at the beginning : 
@@ -41,7 +41,8 @@ class seance_controller(threading.Thread):
         self._create_client("localhost", 3333)
         self._create_server("localhost", 3334)
         
-        self._send_image_formation_state = [threading.Lock(), False]
+        """order to send or not information about rate of image formation"""
+        self._send_formation_rate_state = [threading.Lock(), False]
         
         
     def film_begin(self):
@@ -67,10 +68,11 @@ class seance_controller(threading.Thread):
             compt= compt + 1
         
         """stop sending image_information"""
-        self.set_send_image_formation_state(False)
+        self.set_send_formation_rate_state(False)
         
         print("film time end")
         return True
+        
         
     def _create_client(self, ip, port):
         """create an UDP client on port and ip"""
@@ -80,24 +82,28 @@ class seance_controller(threading.Thread):
         """create an UDP client on port and ip"""
         self.server = server_OSC_seance(self, ip, port)
     
-    def get_send_image_formation_state(self):
-        self._send_image_formation_state[0].acquire()
-        state = self._send_image_formation_state[1]
-        self._send_image_formation_state[0].release()
+    def get_send_formation_rate_state(self):
+        """return send_formation_rate_state"""
+        self._send_formation_rate_state[0].acquire()
+        state = self._send_formation_rate_state[1]
+        self._send_formation_rate_state[0].release()
         return state
     
-    def set_send_image_formation_state(self, state):
-        self._send_image_formation_state[0].acquire()
-        self._send_image_formation_state[1] = state
-        self._send_image_formation_state[0].release()
+    def set_send_formation_rate_state(self, state):
+        """set send_formation_rate_state"""
+        self._send_formation_rate_state[0].acquire()
+        self._send_formation_rate_state[1] = state
+        self._send_formation_rate_state[0].release()
     
     def get_end_received(self):
+        """return en_received"""
         self.end_received[0].acquire()
         state = self.end_received[1]
         self.end_received[0].release()
         return state
     
     def set_end_film(self, state):
+        """set end_received"""
         self.end_received[0].acquire()
         self.end_received[1] = state
         self.end_received[0].release()
@@ -107,13 +113,17 @@ class seance_controller(threading.Thread):
     
     def run(self):
         """start sending image information, once every 10 sec"""
-        self.set_send_image_formation_state(True)
+        self.set_send_formation_rate_state(True)
         fake_comp = 0
         print('start sending formation information')
-        while self.get_send_image_formation_state() : 
+        while self.get_send_formation_rate_state() : 
             print('sending formation information')
-            #self.client.send_seance_image_formation(self.current_state.get_image_formation())
-            self.client.send_seance_image_formation(fake_comp)
+            
+            """real function to call"""
+            #self.client.send_seance_formation_rate(self.current_state.get_formation_rate())
+            
+            """for testing"""
+            self.client.send_seance_formation_rate(fake_comp)
             fake_comp = fake_comp +1
             time.sleep(3)
            

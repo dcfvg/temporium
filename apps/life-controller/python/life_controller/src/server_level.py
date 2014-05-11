@@ -55,7 +55,6 @@ class server_level(threading.Thread):
                 msg = msg.replace("{", "")
                 msg = msg.replace("}","")
                 volume_cont_list = msg.split(",")
-                
                 try:
                 
                     for item in volume_cont_list : 
@@ -66,11 +65,13 @@ class server_level(threading.Thread):
                         vol = info[1].strip()
                         self.current_state.set_occupied_volume(cont.strip(), float(vol))
                         #print("V " + cont +" = " + vol + " set")
-                    
+                    #print (self.name + " received OK : "+ data)
+                    #print("msg OK ")
                 except Exception:
                     """Sprint what is wrong"""
                     print(self.name +" Message does not fit the protocol")
-                    print( self.name + " received : "+ msg)
+                    #print( self.name + " received WRONG : "+ msg)
+                    pass
 
     
             
@@ -78,7 +79,7 @@ class server_level(threading.Thread):
         self.client_socket.sendall(msg.encode(encoding='utf_8', errors='strict'))
         
     def _recv(self):
-        return self.client_socket.recv(1024).decode()   
+        return self.client_socket.recv(2048).decode()   
         
         
     def stop(self) :

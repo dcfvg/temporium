@@ -75,30 +75,30 @@ class button_manuel(Frame):
         self.state_P_M2_AQ = tkinter.Canvas(self.frame_button_state, bg ='green')
         self.state_P_M2_AQ.pack()
         
-        self.Button_P_BU1_AQ = tkinter.Button(self.frame_button,  text ="P_BU1_AQ", command = self.Button_P_BU1_AQ)        
+        """self.Button_P_BU1_AQ = tkinter.Button(self.frame_button,  text ="P_BU1_AQ", command = self.Button_P_BU1_AQ)        
         self.Button_P_BU1_AQ.pack()
         self.state_P_BU1_AQ = tkinter.Canvas(self.frame_button_state, bg ='green')
-        self.state_P_BU1_AQ.pack()
+        self.state_P_BU1_AQ.pack()"""
         
-        self.Button_P_BU2_AQ = tkinter.Button(self.frame_button,  text ="P_BU2_AQ", command = self.Button_P_BU2_AQ)        
+        """self.Button_P_BU2_AQ = tkinter.Button(self.frame_button,  text ="P_BU2_AQ", command = self.Button_P_BU2_AQ)        
         self.Button_P_BU2_AQ.pack()
         self.state_P_BU2_AQ = tkinter.Canvas(self.frame_button_state, bg ='green')
-        self.state_P_BU2_AQ.pack()
+        self.state_P_BU2_AQ.pack()"""
         
-        self.Button_P_BU3_AQ = tkinter.Button(self.frame_button,  text ="P_BU3_AQ", command = self.Button_P_BU3_AQ)        
+        """self.Button_P_BU3_AQ = tkinter.Button(self.frame_button,  text ="P_BU3_AQ", command = self.Button_P_BU3_AQ)        
         self.Button_P_BU3_AQ.pack()
         self.state_P_BU3_AQ = tkinter.Canvas(self.frame_button_state, bg ='green')
-        self.state_P_BU3_AQ.pack()
+        self.state_P_BU3_AQ.pack()"""
         
         self.Button_P_AQ_S = tkinter.Button(self.frame_button,  text ="P_AQ_S", command = self.Button_P_AQ_S)        
         self.Button_P_AQ_S.pack()
         self.state_P_AQ_S = tkinter.Canvas(self.frame_button_state, bg ='green')
         self.state_P_AQ_S.pack()
         
-        self.Button_refresh = tkinter.Button(self.frame_button,  text ="refresh", command = self.Button_refresh)        
+        """self.Button_refresh = tkinter.Button(self.frame_button,  text ="refresh", command = self.Button_refresh)        
         self.Button_refresh.pack()
         self.state_refresh = tkinter.Canvas(self.frame_button_state, bg ='green')
-        self.state_refresh.pack()
+        self.state_refresh.pack()"""
         
         #self.Button_print = tkinter.Button(self,  text ="print_state", command = self.print_state)        
         #self.Button_print.pack()
@@ -179,8 +179,9 @@ class button_manuel(Frame):
         
     def print_state(self):
         print (self.the_buttons)  
-    def Button_refresh(self):
-        self.parent.refresh()
+    
+    """def Button_refresh(self):
+        self.parent.refresh_test()"""
         
     
                 
