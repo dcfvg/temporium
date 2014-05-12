@@ -1,4 +1,5 @@
-comments : Log file, to initilize current values  
+comments : Log file, to initialize current values  
+comments : put the value of the volume corresponding at each EL like "EL : AQ : HIGH : 0.66"
 time_cycle : C1 : 0 : (0-72 = wait / 72-144 = use / 144-216 = empty)
 time_cycle : C2 : 0 : (0-72 = wait / 72-144 = use / 144-216 = empty)
 time_cycle : C3 : 0 : (0-72 = wait / 72-144 = use / 144-216 = empty)
@@ -12,6 +13,8 @@ occupied_volume : BU2 : 1
 occupied_volume : BU3 : 0.3
 occupied_volume : AQ : 1
 occupied_volume : S : 0 
+occupied_volume : FI : 0
+EL : AQ : HIGH : 1
 number_usage : BU1 : 0
 number_usage : BU2 : 0
 number_usage : BU3 : 0

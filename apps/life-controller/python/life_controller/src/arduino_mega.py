@@ -2,7 +2,7 @@
 
 import serial
 
-class Arduino(object):
+class arduino_mega(object):
 
     __OUTPUT_PINS = -1
 

@@ -47,7 +47,8 @@ class BRBU_controller (threading.Thread):
         
     def run (self):
         
-        time.sleep(17)
+        print("Cycle BRBU will begin in 30 sec")
+        time.sleep(30)
         self.current_time = time.time()/3600
         self.old_time = time.time()/3600
         print("debut BRBU")
@@ -73,7 +74,7 @@ class BRBU_controller (threading.Thread):
             
             """1 : WAIT , 2 : USE , 3 : EMPTY, with B1 : WAIT, B2 : USE , B3 : EMPTY"""
             """Day 1 -Day  3  """
-            if time_laps_second < 72 : 
+            if time_laps_hour < 72 : 
                 self.current_state.set_BRBU_state("BU1", "WAIT")
                 self.current_state.set_BRBU_state("BU2", "USE")
                 self.current_state.set_BRBU_state("BU3", "EMPTY")
@@ -84,7 +85,7 @@ class BRBU_controller (threading.Thread):
 
 
                 """Day 3 -Day  6  """
-            elif time_laps_second < 144 :
+            elif time_laps_hour < 144 :
                 self.current_state.set_BRBU_state("BU1", "USE")
                 self.current_state.set_BRBU_state("BU2", "EMPTY")
                 self.current_state.set_BRBU_state("BU3", "WAIT")
@@ -94,7 +95,7 @@ class BRBU_controller (threading.Thread):
 
         
                 """Day 6 -Day  9  """
-            elif time_laps_second < 216 :
+            elif time_laps_hour < 216 :
                 self.current_state.set_BRBU_state("BU1", "EMPTY")
                 self.current_state.set_BRBU_state("BU2", "WAIT")
                 self.current_state.set_BRBU_state("BU3", "USE")
@@ -198,8 +199,8 @@ class BRBU_controller (threading.Thread):
                     """function to complete, action to do at the begining of EMPTY"""
                     
                     while self.current_state.get_occupied_volume("BU1") > 0.1 :
-                        self.current_state.P_BU1_AQ(True)
-                    self.current_state.P_BU1_AQ(False)
+                        self.current_state.fill_BU1_AQ(True)
+                    self.current_state.fill_BU1_AQ(False)
                     self.BU_empty["BU1"] = True  
                               
                 
@@ -208,8 +209,8 @@ class BRBU_controller (threading.Thread):
                     """function to complete, action to do at the begining of EMPTY"""
                      
                     while self.current_state.get_occupied_volume("BU2") > 0.1 :
-                        self.current_state.P_BU2_AQ(True)
-                    self.current_state.P_BU2_AQ(False) 
+                        self.current_state.fill_BU2_AQ(True)
+                    self.current_state.fill_BU2_AQ(False) 
                     self.BU_empty["BU2"] = True 
                         
                         
@@ -218,8 +219,8 @@ class BRBU_controller (threading.Thread):
                 if not self.BU_empty["BU3"]  :
                     """function to complete, action to do at the begining of EMPTY"""
                     while self.current_state.get_occupied_volume("BU3") > 0.1 :
-                        self.current_state.P_BU3_AQ(True)
-                    self.current_state.P_BU3_AQ(False) 
+                        self.current_state.fill_BU3_AQ(True)
+                    self.current_state.fill_BU3_AQ(False) 
                     self.BU_empty["BU3"] = True
             
             

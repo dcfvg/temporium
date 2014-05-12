@@ -1,4 +1,5 @@
-from arduino import*
+from arduino_mega import*
+from arduino_lift import *
 import time
 '''
 Created on Apr 21, 2014
@@ -6,6 +7,11 @@ Created on Apr 21, 2014
 @author: Cactus
 '''
 import threading
+
+
+"""things to do  : 
+    - protect access to each arduino by a mutex, only one thread can access to one arduino at the same time !
+    - server fake arduino : answer to EL information request """
  
 class com_arduino(object):
     '''
@@ -20,16 +26,19 @@ class com_arduino(object):
       
         '''
         #dictionnaire des pins {"P_M1_BR1" : [arduino_current,pin], "P_M2_BU2" : [arduino_current,pin], ...}
-        self.the_pins = dict()
-        #dictionnaire des arduino {"arduino_une" : arduino_uno, ...}
+        self.the_pumps = dict()
+        #dictionnaire des arduino {"arduino_mega" : arduino_mega, "arduino_lift" : arduino_lift ...}
         self.the_arduino = dict()
         #pin_array_output for arduino {arduino_current : [pin, pin, ...], ...}
         self.pin_array_output = dict()
+        
+        """{"AQ" : {"HIGH" : [arduino, pin],"MEDIUM" : [arduino, pin], "LOW" : [arduino, pin] }, "BR1" :  {"HIGH" : [arduino, pin],"MEDIUM" : [arduino, pin], "LOW" : [arduino, pin] }}"""
+        self.the_EL = dict()
          
         """for simulation and testing"""
          
         """do not try to connect with Arduino"""
-        self.test = True
+        self.test = False
          
         """send order received to the client connected"""
         self.server_arduino_order_state = [threading.Lock() , False]
@@ -44,350 +53,84 @@ class com_arduino(object):
     """Pump order"""  
     def P_BR1_BU1(self, state):
         name = 'P_BR1_BU1'
-        if not self.test :
-            if self.the_pins[name][1]=="NULL" :
-                print("pin not connected")
-            else :
-                if state :
-                    self.the_pins[name][0].setHigh(self.the_pins[name][1])
-                    print(name + " HIGH")
-                else :
-                    self.the_pins[name][0].setLow(self.the_pins[name][1])
-                
-        self.send_server_arduino_order(name, state)
-        if state :
-            print(name + " HIGH") 
-        else :
-            print(name + " LOW")
-                
-        return True 
+        self.pump_order(name, state)
                  
-         
-    
     def P_BR2_BU2(self, state):
         name = 'P_BR2_BU2'
-        if not self.test :
-            if self.the_pins[name][1]=="NULL" :
-                print("pin not connected")
-            else :
-                if state :
-                    self.the_pins[name][0].setHigh(self.the_pins[name][1])
-                    print(name + " HIGH")
-                else :
-                    self.the_pins[name][0].setLow(self.the_pins[name][1])
-                
-        self.send_server_arduino_order(name, state)
-        if state :
-            print(name + " HIGH") 
-        else :
-            print(name + " LOW")
-                
-        return True 
- 
-         
-         
+        self.pump_order(name, state)
+            
     def P_BR3_BU3(self, state):
         name = 'P_BR3_BU3'
-        if not self.test :
-            if self.the_pins[name][1]=="NULL" :
-                print("pin not connected")
-            else :
-                if state :
-                    self.the_pins[name][0].setHigh(self.the_pins[name][1])
-                    print(name + " HIGH")
-                else :
-                    self.the_pins[name][0].setLow(self.the_pins[name][1])
-                
-        self.send_server_arduino_order(name, state)
-        if state :
-            print(name + " HIGH") 
-        else :
-            print(name + " LOW")
-                
-        return True 
+        self.pump_order(name, state)
             
-    def P_BU1_AQ(self, state):
-        name = 'P_BU1_AQ'
-        if not self.test :
-            if self.the_pins[name][1]=="NULL" :
-                print("pin not connected")
-            else :
-                if state :
-                    self.the_pins[name][0].setHigh(self.the_pins[name][1])
-                    print(name + " HIGH")
-                else :
-                    self.the_pins[name][0].setLow(self.the_pins[name][1])
-                
-        self.send_server_arduino_order(name, state)
-        if state :
-            print(name + " HIGH") 
-        else :
-            print(name + " LOW")
-                
-        return True 
+    def P_BU1_FI(self, state):
+        name = 'P_BU1_FI'
+        self.pump_order(name, state)
                  
-    def P_BU2_AQ(self, state):
-        name = 'P_BU2_AQ'
-        if not self.test :
-            if self.the_pins[name][1]=="NULL" :
-                print("pin not connected")
-            else :
-                if state :
-                    self.the_pins[name][0].setHigh(self.the_pins[name][1])
-                    print(name + " HIGH")
-                else :
-                    self.the_pins[name][0].setLow(self.the_pins[name][1])
-                
-        self.send_server_arduino_order(name, state)
-        if state :
-            print(name + " HIGH") 
-        else :
-            print(name + " LOW")
-                
-        return True 
+    def P_BU2_FI(self, state):
+        name = 'P_BU2_FI'
+        self.pump_order(name, state)
      
-    def P_BU3_AQ(self, state):
-        name = 'P_BU3_AQ'
-        if not self.test :
-            if self.the_pins[name][1]=="NULL" :
-                print("pin not connected")
-            else :
-                if state :
-                    self.the_pins[name][0].setHigh(self.the_pins[name][1])
-                    print(name + " HIGH")
-                else :
-                    self.the_pins[name][0].setLow(self.the_pins[name][1])
-                
-        self.send_server_arduino_order(name, state)
-        if state :
-            print(name + " HIGH") 
-        else :
-            print(name + " LOW")
-                
-        return True 
+    def P_BU3_FI(self, state):
+        name = 'P_BU3_FI'
+        self.pump_order(name, state)
                  
     def P_M1_BR1(self, state):
         name = 'P_M1_BR1'
-        if not self.test :
-            if self.the_pins[name][1]=="NULL" :
-                print("pin not connected")
-            else :
-                if state :
-                    self.the_pins[name][0].setHigh(self.the_pins[name][1])
-                    print(name + " HIGH")
-                else :
-                    self.the_pins[name][0].setLow(self.the_pins[name][1])
-                
-        self.send_server_arduino_order(name, state)
-        if state :
-            print(name + " HIGH") 
-        else :
-            print(name + " LOW")
-                
-        return True 
+        self.pump_order(name, state) 
     
     def P_M1_BR2(self, state):
         name = 'P_M1_BR2'
-        if not self.test :
-            if self.the_pins[name][1]=="NULL" :
-                print("pin not connected")
-            else :
-                if state :
-                    self.the_pins[name][0].setHigh(self.the_pins[name][1])
-                    print(name + " HIGH")
-                else :
-                    self.the_pins[name][0].setLow(self.the_pins[name][1])
-                
-        self.send_server_arduino_order(name, state)
-        if state :
-            print(name + " HIGH") 
-        else :
-            print(name + " LOW")
-                
-        return True 
+        self.pump_order(name, state)
                  
     def P_M1_BR3(self, state):
         name = 'P_M1_BR3'
-        if not self.test :
-            if self.the_pins[name][1]=="NULL" :
-                print("pin not connected")
-            else :
-                if state :
-                    self.the_pins[name][0].setHigh(self.the_pins[name][1])
-                    print(name + " HIGH")
-                else :
-                    self.the_pins[name][0].setLow(self.the_pins[name][1])
-                
-        self.send_server_arduino_order(name, state)
-        if state :
-            print(name + " HIGH") 
-        else :
-            print(name + " LOW")
-                
-        return True 
+        self.pump_order(name, state)
                  
     def P_M2_BU1(self, state):
         name = 'P_M2_BU1'
-        if not self.test :
-            if self.the_pins[name][1]=="NULL" :
-                print("pin not connected")
-            else :
-                if state :
-                    self.the_pins[name][0].setHigh(self.the_pins[name][1])
-                    print(name + " HIGH")
-                else :
-                    self.the_pins[name][0].setLow(self.the_pins[name][1])
-                
-        self.send_server_arduino_order(name, state)
-        if state :
-            print(name + " HIGH") 
-        else :
-            print(name + " LOW")
-                
-        return True 
+        self.pump_order(name, state)
     
     def P_M2_BU2(self, state):
         name = 'P_M2_BU2'
-        if not self.test :
-            if self.the_pins[name][1]=="NULL" :
-                print("pin not connected")
-            else :
-                if state :
-                    self.the_pins[name][0].setHigh(self.the_pins[name][1])
-                    print(name + " HIGH")
-                else :
-                    self.the_pins[name][0].setLow(self.the_pins[name][1])
-                
-        self.send_server_arduino_order(name, state)
-        if state :
-            print(name + " HIGH") 
-        else :
-            print(name + " LOW")
-                
-        return True 
+        self.pump_order(name, state)
      
     def P_M2_BU3(self, state):
         name = 'P_M2_BU3'
-        if not self.test :
-            if self.the_pins[name][1]=="NULL" :
-                print("pin not connected")
-            else :
-                if state :
-                    self.the_pins[name][0].setHigh(self.the_pins[name][1])
-                    print(name + " HIGH")
-                else :
-                    self.the_pins[name][0].setLow(self.the_pins[name][1])
-                
-        self.send_server_arduino_order(name, state)
-        if state :
-            print(name + " HIGH") 
-        else :
-            print(name + " LOW")
-                
-        return True 
+        self.pump_order(name, state)
                             
     def P_M2_AQ(self, state):
         name = 'P_M2_AQ'
-        if not self.test :
-            if self.the_pins[name][1]=="NULL" :
-                print("pin not connected")
-            else :
-                if state :
-                    self.the_pins[name][0].setHigh(self.the_pins[name][1])
-                    print(name + " HIGH")
-                else :
-                    self.the_pins[name][0].setLow(self.the_pins[name][1])
-                
-        self.send_server_arduino_order(name, state)
-        if state :
-            print(name + " HIGH") 
-        else :
-            print(name + " LOW")
-                
-        return True 
+        self.pump_order(name, state)
      
     def P_AQ_S(self, state):
         name = 'P_AQ_S'
-        if not self.test :
-            if self.the_pins[name][1]=="NULL" :
-                print("pin not connected")
-            else :
-                if state :
-                    self.the_pins[name][0].setHigh(self.the_pins[name][1])
-                    print(name + " HIGH")
-                else :
-                    self.the_pins[name][0].setLow(self.the_pins[name][1])
-                
-        self.send_server_arduino_order(name, state)
-        if state :
-            print(name + " HIGH") 
-        else :
-            print(name + " LOW")
-                
-        return True 
+        self.pump_order(name, state)        
     
     def P_AQ_FI(self, state):
         name = 'P_AQ_FI'
-        if not self.test :
-            if self.the_pins[name][1]=="NULL" :
-                print("pin not connected")
-            else :
-                if state :
-                    self.the_pins[name][0].setHigh(self.the_pins[name][1])
-                    print(name + " HIGH")
-                else :
-                    self.the_pins[name][0].setLow(self.the_pins[name][1])
-                
-        self.send_server_arduino_order(name, state)
-        if state :
-            print(name + " HIGH") 
-        else :
-            print(name + " LOW")
-                
-        return True 
-    
-    def P_FI_AQ(self, state):
-        name = 'P_FI_AQ'
-        if not self.test :
-            if self.the_pins[name][1]=="NULL" :
-                print("pin not connected")
-            else :
-                if state :
-                    self.the_pins[name][0].setHigh(self.the_pins[name][1])
-                    print(name + " HIGH")
-                else :
-                    self.the_pins[name][0].setLow(self.the_pins[name][1])
-                
-        self.send_server_arduino_order(name, state)
-        if state :
-            print(name + " HIGH") 
-        else :
-            print(name + " LOW")
-                
+        self.pump_order(name, state)     
         
-        return True
+    def P_FI_AQ_1(self, state):
+        """control 1 pump from FI to AQ"""
+        name = 'P_FI_AQ'
+        self.pump_order(name, state)
     
-    def photoresistor(self):
-        if not self.test :
-            if self.the_pins['Photoresistor'][1]=="NULL" :
-                print("pin not connected")
-            else :
-                print(self.the_pins['Photoresistor'][0].analogRead(self.the_pins['Photoresistor'][1]))
-            
-        else :
-            print("You're in test mode, the photoresistor cannot work, u dumb ass")
-     
+    def P_FI_AQ_3(self, state):
+        """control 3 pump from FI to AQ"""
+        name = 'P_FI_AQ'
+        self.pump_order(name, state)
+        
     def pump_order(self, name , state):
          
         if not self.test :
-            if self.the_pins[name][1]=="NULL" :
+            if self.the_pumps[name][1]=="NULL" :
                 print("pin not connected")
             else :
                 if state :
-                    self.the_pins[name][0].setHigh(self.the_pins[name][1])
-                    print(name + " HIGH")
+                    self.the_pumps[name][0].setHigh(self.the_pumps[name][1])
                 else :
-                    self.the_pins[name][0].setLow(self.the_pins[name][1])      
+                    self.the_pumps[name][0].setLow(self.the_pumps[name][1])      
         
         
         self.send_server_arduino_order(name, state)
@@ -397,20 +140,44 @@ class com_arduino(object):
             print(name + " LOW")
                 
         return True 
-     
-     
-    #Read analog Input
-    def EL_AQ_HIGH(self):
-        """Return the value of the EL_BR1, return -1 if not connected to the arduino"""
-        name = "EL_AQ_HIGH"
-        if self.the_pins[name][1]=="NULL" :
+    
+    """order to read EL"""
+    
+    """Return the value of the EL_BR1, return "NULL" if not connected to the arduino"""
+    def EL_read(self,name_container, name_EL):
+        if self.the_EL[name_container][name_EL][1] == "NULL":
             print("pin not connected")
-            return -1
-        else :
+            return "NULL"
+        else : 
             if not self.test  :
-                return self.the_pins[name][0].getState(self.the_pins[name][1])   
-                       
+                value = self.the_EL[name_container][name_EL][0].getState(self.the_EL[name_container][name_EL][1])
+                return value
      
+    """Order to liftDown and liftUp, screenDown and screenUp"""
+    def liftDown(self):
+        """send the order to liftdown the lift"""
+        self.the_arduino["arduino_lift"].liftDown()
+        print("LiftDown")
+        return True
+
+    def liftUp(self):
+        """send the order to liftUp the lift"""
+        self.the_arduino["arduino_lift"].liftUp()
+        print("LiftUp")
+        return True
+
+    def screenDown(self):
+        """send the order to screenDown"""
+        self.the_arduino["arduino_lift"].screenDown()
+        print("screenDown")
+        return True
+
+    def screenUp(self):
+        """send the order to screenDown"""
+        self.the_arduino["arduino_lift"].screenUp()
+        print("screenUp")
+        return True
+    
     def send_server_arduino_order(self,name, state) : 
         """send information about order to arduino_client"""
         self.server_arduino_order_state[0].acquire()
@@ -446,16 +213,23 @@ class com_arduino(object):
                 elif list[0].strip() == "arduino" :
                     """Make an arduino with the port from the log_pin.txt file, and put it in the dict() the_arduino
                     arduino_current to associate the pin to the right arduino (the last built arduino )"""
-                    self.the_arduino[list[1].strip()] = Arduino(list[2].strip())
-                    arduino_current = self.the_arduino[list[1].strip()]
-                    print (list[1].strip() +" made on port :" + list[2].strip())                    
+                    if  list[1].strip() == "arduino_mega" :
+                        self.the_arduino[list[1].strip()] = arduino_mega(list[2].strip())
+                        arduino_current = self.the_arduino[list[1].strip()]
+                        print (list[1].strip() +" made on port :" + list[2].strip())
+                    elif  list[1].strip() == "arduino_lift" : 
+                        self.the_arduino[list[1].strip()] = arduino_lift(list[2].strip())
+                        arduino_current = self.the_arduino[list[1].strip()]
+                    else : 
+                        print("/!\ Wrong name of Arduino : " + list[1].strip() )
+                                    
                     
                 elif list[0].strip() == "Photoresistor" : 
                     """Put the Pin of the Photoresistor into the dictionnary and define this pin as an INPUT"""
                     if list[1].strip()=="NULL" :
-                        self.the_pins[list[0].strip()] = [arduino_current,list[1].strip()]
+                        self.the_pumps[list[0].strip()] = [arduino_current,list[1].strip()]
                     else : 
-                        self.the_pins[list[0].strip()] = [arduino_current,int(list[1].strip())]                     
+                        self.the_pumps[list[0].strip()] = [arduino_current,int(list[1].strip())]                     
                      
                 elif list[0].strip() =="pin_array_output" :
                     """Make a dictionnary of the pin_array_output : {arduino_current : [pin, pin, ...], ...} """
@@ -463,20 +237,33 @@ class com_arduino(object):
                     self.pin_array_output[arduino_current] = []
                     for item in list_pin :
                         self.pin_array_output[arduino_current].append(int (item.strip()))
-                     
+                
+                elif list[0].strip() =="EL" :
+                    
+                    """Make a dictionnary of the EL for a container, then put it in the_EL : {"AQ" : {"HIGH" : [arduino, pin],"MEDIUM" : [arduino, pin], "LOW" : [arduino, pin] }, "BR1" :  {"HIGH" : [arduino, pin],"MEDIUM" : [arduino, pin], "LOW" : [arduino, pin] }} """
+                    """if name_container not in the dict, we create a dictionnary for it in the_EL dictionnary"""
+                    if not list[1].strip() in self.the_EL : 
+                        self.the_EL[list[1].strip()] = {}
+                    
+                    if list[3].strip() == "NULL" : 
+                        self.the_EL[list[1].strip()][list[2].strip()] = [arduino_current,list[3].strip()]
+                    else : 
+                        self.the_EL[list[1].strip()][list[2].strip()] = [arduino_current,int(list[3].strip())]
+            
                 else :
-                    """put the pin into the the_pins dict() : {P_M1_BR1 : [arduino_current,pin], P_M2_BU2 : [arduino_current,pin], ...}"""
+                    """put the pin into the the_pumps dict() : {P_M1_BR1 : [arduino_current,pin], P_M2_BU2 : [arduino_current,pin], ...}"""
                     if list[1].strip()=="NULL" :
-                        self.the_pins[list[0].strip()] = [arduino_current,list[1].strip()]
+                        self.the_pumps[list[0].strip()] = [arduino_current,list[1].strip()]
                     else :
-                        self.the_pins[list[0].strip()] = [arduino_current,int(list[1].strip())]
+                        self.the_pumps[list[0].strip()] = [arduino_current,int(list[1].strip())]
                          
             """def output Arduino"""
              
             for ard in self.pin_array_output :
                 print(self.pin_array_output[ard])
                 ard.output(self.pin_array_output[ard])
-     
+                
+       
     def set_server_arduino_order(self, server_arduino_order):
          
         """set the server_arduino_order"""
@@ -492,24 +279,7 @@ class com_arduino(object):
                  
 if __name__ == "__main__":
     a = com_arduino()
-    #print(a.the_pins)
+    #print(a.the_pumps)
     while True :
         a.photoresistor
         time.sleep(0.1)
-    
-    """
-    while True
-        a.P_BR1_BU1(True)    #AQ to Tami
-        time.sleep(6*60)     #Tami to AQ
-        a.P_BR2_BU2(True)
-        time.sleep(2*80)
-        a.P_BR1_BU1(False)
-        time.sleep(6*60)
-        a.P_BR2_BU2(True)
-        a.P_BR3_BU3(True)   #AQ to S
-        time.sleep(10)      #0.42%
-        a.P_BR3_BU3(False)
-        a.P_BU1_AQ(True)    #BU to AQ
-        time.sleep(10)
-        a.P_BU1_AQ(False)
-    """

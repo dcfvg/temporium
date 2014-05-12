@@ -58,16 +58,15 @@ class visual_feedback(Canvas):
         
         #self.button = tkinter.Button(self,  text ="Hello", command = self.cliquer)
         #self.button.pack(side="right")
+        self.draw_state = False
         self.draw()
-        
-        
+
+
     def resize(self, event):
         """called when the user resize the windows, draw the graphics to the new scale"""
         self.draw()   
         
-            
-    def draw_init(self) :
-
+    def draw_init(self):
         
         """draw the graphics, according to the dimensions and positions from the attributs, and from the elements's states from current_state"""
         self.create_rectangle(0,0,self.winfo_width(),self.winfo_height(), fill="white")
@@ -91,35 +90,37 @@ class visual_feedback(Canvas):
          
             
     def draw(self) :
-
-        self.draw_init()
+        if self.draw_state : 
+               self.delete(ALL)
+               
+               self.draw_init()
+               
+               """filling of the container """
+               for item in self.current_state.occupied_volume : 
+                   if item == "M1" or item == "M2": 
+                       self.create_rectangle(self.container_position[item][0]*self.winfo_width(), (self.container_position[item][1]+self.container_dimension[item][1]*(1-self.current_state.get_occupied_volume(item)))*self.winfo_height(),\
+                                          (self.container_dimension[item][0] + self.container_position[item][0])*self.winfo_width(), (self.container_dimension[item][1] + self.container_position[item][1])*self.winfo_height(),fill="white"  )
         
-        """filling of the container """
-        for item in self.current_state.occupied_volume : 
-            if item == "M1" or item == "M2": 
-                self.create_rectangle(self.container_position[item][0]*self.winfo_width(), (self.container_position[item][1]+self.container_dimension[item][1]*(1-self.current_state.get_occupied_volume(item)))*self.winfo_height(),\
-                                   (self.container_dimension[item][0] + self.container_position[item][0])*self.winfo_width(), (self.container_dimension[item][1] + self.container_position[item][1])*self.winfo_height(),fill="white"  )
-
-            else : 
-                self.create_rectangle(self.container_position[item][0]*self.winfo_width(), (self.container_position[item][1]+self.container_dimension[item][1]*(1-self.current_state.get_occupied_volume(item)))*self.winfo_height(),\
-                                  (self.container_dimension[item][0] + self.container_position[item][0])*self.winfo_width(), (self.container_dimension[item][1] + self.container_position[item][1])*self.winfo_height(),fill="green"  )
- 
+                   else : 
+                       self.create_rectangle(self.container_position[item][0]*self.winfo_width(), (self.container_position[item][1]+self.container_dimension[item][1]*(1-self.current_state.get_occupied_volume(item)))*self.winfo_height(),\
+                                         (self.container_dimension[item][0] + self.container_position[item][0])*self.winfo_width(), (self.container_dimension[item][1] + self.container_position[item][1])*self.winfo_height(),fill="green"  )
         
-        """draw all the pump in red"""
-        
-        for item in self.pumps_positions : 
-            self.create_oval((self.pumps_positions[item][0][0]-0.01)*self.winfo_width(),(self.pumps_positions[item][0][1]-0.01)*self.winfo_height(),(self.pumps_positions[item][0][0]+0.01)*self.winfo_width(),(self.pumps_positions[item][0][1]+0.01)*self.winfo_height(), fill="red")
-        
-        for item in self.current_state.state_pumps : 
-            if self.current_state.get_state_pumps(item) :
-                self.create_oval((self.pumps_positions[item][0][0]-0.01)*self.winfo_width(),(self.pumps_positions[item][0][1]-0.01)*self.winfo_height(),(self.pumps_positions[item][0][0]+0.01)*self.winfo_width(),(self.pumps_positions[item][0][1]+0.01)*self.winfo_height(), fill="green")
-                """from the container_out to the pump"""
-                self.create_line(self.pumps_positions[item][0][0]*self.winfo_width(), self.pumps_positions[item][0][1]*self.winfo_height(), self.pumps_positions[item][1][0]*self.winfo_width(),self.pumps_positions[item][0][1]*self.winfo_height(), fill = "green", dash=(4, 4))
-                self.create_line(self.pumps_positions[item][1][0]*self.winfo_width(),self.pumps_positions[item][0][1]*self.winfo_height(), self.pumps_positions[item][1][0]*self.winfo_width(),self.pumps_positions[item][1][1]*self.winfo_height(), fill = "green", dash=(4, 4))
-                """from the pump to the container_in"""
-                self.create_line(self.pumps_positions[item][0][0]*self.winfo_width(), self.pumps_positions[item][0][1]*self.winfo_height(), self.pumps_positions[item][0][0]*self.winfo_width(),self.pumps_positions[item][2][1]*self.winfo_height(), fill = "green", dash=(4, 4))
-                self.create_line(self.pumps_positions[item][0][0]*self.winfo_width(), self.pumps_positions[item][2][1]*self.winfo_height(), self.pumps_positions[item][2][0]*self.winfo_width(),self.pumps_positions[item][2][1]*self.winfo_height(), fill = "green", dash=(4, 4))
-                    
+               
+               """draw all the pump in red"""
+               
+               for item in self.pumps_positions : 
+                   self.create_oval((self.pumps_positions[item][0][0]-0.01)*self.winfo_width(),(self.pumps_positions[item][0][1]-0.01)*self.winfo_height(),(self.pumps_positions[item][0][0]+0.01)*self.winfo_width(),(self.pumps_positions[item][0][1]+0.01)*self.winfo_height(), fill="red")
+               
+               for item in self.current_state.state_pumps : 
+                   if self.current_state.get_state_pumps(item) :
+                       self.create_oval((self.pumps_positions[item][0][0]-0.01)*self.winfo_width(),(self.pumps_positions[item][0][1]-0.01)*self.winfo_height(),(self.pumps_positions[item][0][0]+0.01)*self.winfo_width(),(self.pumps_positions[item][0][1]+0.01)*self.winfo_height(), fill="green")
+                       """from the container_out to the pump"""
+                       self.create_line(self.pumps_positions[item][0][0]*self.winfo_width(), self.pumps_positions[item][0][1]*self.winfo_height(), self.pumps_positions[item][1][0]*self.winfo_width(),self.pumps_positions[item][0][1]*self.winfo_height(), fill = "green", dash=(4, 4))
+                       self.create_line(self.pumps_positions[item][1][0]*self.winfo_width(),self.pumps_positions[item][0][1]*self.winfo_height(), self.pumps_positions[item][1][0]*self.winfo_width(),self.pumps_positions[item][1][1]*self.winfo_height(), fill = "green", dash=(4, 4))
+                       """from the pump to the container_in"""
+                       self.create_line(self.pumps_positions[item][0][0]*self.winfo_width(), self.pumps_positions[item][0][1]*self.winfo_height(), self.pumps_positions[item][0][0]*self.winfo_width(),self.pumps_positions[item][2][1]*self.winfo_height(), fill = "green", dash=(4, 4))
+                       self.create_line(self.pumps_positions[item][0][0]*self.winfo_width(), self.pumps_positions[item][2][1]*self.winfo_height(), self.pumps_positions[item][2][0]*self.winfo_width(),self.pumps_positions[item][2][1]*self.winfo_height(), fill = "green", dash=(4, 4))
+                           
 
 
         
