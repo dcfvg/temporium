@@ -92,7 +92,7 @@ $(function() {
 			
 			$pop_life.currentTime( 35 );
 			showLife();
-			$pop_movie.currentTime( 120 ).pause();
+			$pop_movie.currentTime( 80 ).pause();
 			
 	});
 
@@ -123,7 +123,8 @@ $(function() {
 		
 		// s -> seek 
 		if ( event.which == 115 ) {
-				$pop_movie.currentTime( 1 ).play();
+				// $pop_movie.currentTime( 1 ).play();
+				$pop_life.playbackRate(3).play(); // change player speed
 		};
 		
 	
