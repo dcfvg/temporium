@@ -152,10 +152,6 @@ class com_arduino(object):
             if not self.test  :
                 value = self.the_EL[name_container][name_EL][0].getState(self.the_EL[name_container][name_EL][1])
                 return value
-                
-            
-        
-
      
     """Order to liftDown and liftUp, screenDown and screenUp"""
     def liftDown(self):

@@ -77,12 +77,6 @@ class button_manuel(Frame):
         self.state_P_M2_AQ.pack()
         
         
-        
-        self.Button_P_AQ_S = tkinter.Button(self.frame_button,  text ="P_AQ_S", command = self.Button_P_AQ_S)        
-        self.Button_P_AQ_S.pack()
-        self.state_P_AQ_S = tkinter.Canvas(self.frame_button_state, bg ='green')
-        self.state_P_AQ_S.pack()
-        
         self.Button_P_BU1_AQ = tkinter.Button(self.frame_button,  text ="P_BU1_AQ", command = self.Button_P_BU1_AQ)        
         self.Button_P_BU1_AQ.pack()
         self.state_P_BU1_AQ = tkinter.Canvas(self.frame_button_state, bg ='green')
@@ -98,11 +92,24 @@ class button_manuel(Frame):
         self.state_P_BU3_AQ = tkinter.Canvas(self.frame_button_state, bg ='green')
         self.state_P_BU3_AQ.pack()
         
+        self.Button_P_AQ_S = tkinter.Button(self.frame_button,  text ="P_AQ_S", command = self.Button_P_AQ_S)        
+        self.Button_P_AQ_S.pack()
+        self.state_P_AQ_S = tkinter.Canvas(self.frame_button_state, bg ='green')
+        self.state_P_AQ_S.pack()
+        
+
+        
         self.Button_unlock = tkinter.Button(self.frame_button,  text ="debloque/bloque pompes interdites", command = self.Button_unlock)        
         self.Button_unlock.pack()
+        
         self.state_unlock = tkinter.Canvas(self.frame_button_state, bg ='green')
         self.state_unlock.pack()
         
+        
+        self.Button_P_AQ_FI = tkinter.Button(self.frame_button,  text ="P_AQ_FI", command = self.Button_P_AQ_FI)        
+        self.Button_P_AQ_FI.pack()
+        self.state_P_AQ_FI = tkinter.Canvas(self.frame_button_state, bg ='green')
+        self.state_P_AQ_FI.pack()
         
         self.Button_P_BU1_FI = tkinter.Button(self.frame_button,  text ="P_BU1_FI", command = self.Button_P_BU1_FI)        
         self.Button_P_BU1_FI.pack()
@@ -248,7 +255,7 @@ class button_manuel(Frame):
         if self.lock : 
             self.parent.current_state.set_state_pumps(name, not self.parent.current_state.get_state_pumps(name))
     def Button_P_BU3_FI(self) :
-        name = 'P_BU2_FI'
+        name = 'P_BU3_FI'
         if self.lock : 
             self.parent.current_state.set_state_pumps(name, not self.parent.current_state.get_state_pumps(name))
     def Button_P_AQ_FI(self) :

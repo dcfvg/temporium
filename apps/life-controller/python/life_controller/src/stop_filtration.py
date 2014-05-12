@@ -24,11 +24,11 @@ class stop_filtration(threading.Thread):
         
     def run(self):
         print("Arret des pompes de retour dans l'aquarium dans : 3 min")
-        time.sleep(3)
+        time.sleep(60)
         print("Arret des pompes de retour dans l'aquarium dans : 2 min")
-        time.sleep(2)
+        time.sleep(60)
         print("Arret des pompes de retour dans l'aquarium dans : 1 min")
-        time.sleep(1)
+        time.sleep(60)
         print("Arret des pompes de retour dans l'aquarium.")
         self.current_state.P_FI_AQ_1(False)
         self.current_state.P_FI_AQ_3(False)

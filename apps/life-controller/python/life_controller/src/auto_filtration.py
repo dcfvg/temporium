@@ -24,7 +24,7 @@ class auto_filtration(threading.Thread):
     def run(self):
         self.current_state.set_current_action("filter_aquarium",True)
         print("Filtration automatique : 5 min")
-        time.sleep(3)
+        time.sleep(300)
         print("Fin de la filtration automatique")
         self.current_state.set_current_action("filter_aquarium",False)
         

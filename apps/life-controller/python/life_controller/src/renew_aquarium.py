@@ -23,6 +23,7 @@ class renew_aquarium(threading.Thread):
         
     def run(self):
         if self.name == "light" :
+            """pump AQ->S for 12 sec"""
             self.emptying_AQ_sec(12)
             self.filling_BU_EL_AQ(self.BU_use)
         if self.name == "heavy" : 
