@@ -19,7 +19,7 @@ if __name__ == "__main__":
     w = window(None, cu_state)
     cu_state.set_windows(w)
 
-    le_server = server('',8000,cu_state)
+    le_server = server('',8001,cu_state)
 
     le_server.start()
     #BRBU_cont.start()
