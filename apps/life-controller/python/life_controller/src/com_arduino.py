@@ -38,7 +38,7 @@ class com_arduino(object):
         """for simulation and testing"""
          
         """do not try to connect with Arduino"""
-        self.test = False
+        self.test = True
          
         """send order received to the client connected"""
         self.server_arduino_order_state = [threading.Lock() , False]
@@ -145,13 +145,16 @@ class com_arduino(object):
     
     """Return the value of the EL_BR1, return "NULL" if not connected to the arduino"""
     def EL_read(self,name_container, name_EL):
-        if self.the_EL[name_container][name_EL][1] == "NULL":
-            print("pin not connected")
-            return "NULL"
+        if not self.test :
+            if self.the_EL[name_container][name_EL][1] == "NULL":
+                print("pin not connected")
+                return "NULL"
+            else : 
+                if not self.test  :
+                    value = self.the_EL[name_container][name_EL][0].getState(self.the_EL[name_container][name_EL][1])
+                    return value
         else : 
-            if not self.test  :
-                value = self.the_EL[name_container][name_EL][0].getState(self.the_EL[name_container][name_EL][1])
-                return value
+            return "NULL"
      
     """Order to liftDown and liftUp, screenDown and screenUp"""
     def liftDown(self):

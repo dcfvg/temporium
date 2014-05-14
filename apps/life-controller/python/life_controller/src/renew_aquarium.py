@@ -23,9 +23,12 @@ class renew_aquarium(threading.Thread):
         
     def run(self):
         if self.name == "light" :
-            """pump AQ->S for 12 sec"""
-            self.emptying_AQ_sec(12)
-            self.filling_BU_EL_AQ(self.BU_use)
+            if not self.current_state.get_state_EL("AQ","HIGH")=="NULL" : 
+                """pump AQ->S for 12 sec"""
+                self.emptying_AQ_sec(12)
+                self.filling_BU_EL_AQ(self.BU_use)
+            else : 
+                print( "Action impossible : EL AQ HIGH non branchee")
         if self.name == "heavy" : 
             pass
             
@@ -39,7 +42,11 @@ class renew_aquarium(threading.Thread):
             print("emptying AQ for " + str(sec) + " secondes")
             """emptying AQ 30sec"""
             self.current_state.P_AQ_S(True)
-            time.sleep(sec)
+            compt = 0 
+            while self.current_state.get_keep_going() and compt <300 : 
+                time.sleep(1)
+                compt = compt + 1
+                time.sleep(1)
             self.current_state.P_AQ_S(False)
             print("end emptying AQ")
         else : 
@@ -50,9 +57,10 @@ class renew_aquarium(threading.Thread):
         """be sure that EL is connected"""
         if not self.current_state.get_state_EL("AQ","HIGH")=="NULL" : 
             
-            print("Filling AQ with BU in USE until AQ is full")
+            print("Filling AQ with BU in USE until AQ is full or until a Stop ")
             self.current_state.fill_BU_AQ(BU_use, True)
-            while not self.current_state.get_state_EL("AQ","HIGH") : 
+            """fill until AQ full or stop"""
+            while not self.current_state.get_state_EL("AQ","HIGH") and self.current_state.get_keep_going(): 
                 time.sleep(0.05)
                 
             self.current_state.fill_BU_AQ(BU_use, False)

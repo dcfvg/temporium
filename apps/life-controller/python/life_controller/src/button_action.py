@@ -57,6 +57,9 @@ class button_action(Frame):
         self.Button_renew_light_BU3 = tkinter.Button(self.frame_button,  text ="Renouvellement algues leger BU3", command = self.renew_light_BU3)        
         self.Button_renew_light_BU3.pack()
         
+        self.Button_stop = tkinter.Button(self.frame_button,  text ="STOP / START", command = self.stop)        
+        self.Button_stop.pack()
+        
         #self.state_P_M1_BR3 = tkinter.Canvas(self.frame_button_state, bg ='green')
         #self.state_P_M1_BR3.pack()
         
@@ -148,6 +151,9 @@ class button_action(Frame):
     
     def cycle_BRBU(self) :
         pass
+    
+    def stop(self):
+        self.current_state.set_keep_going(False)
     
     
                 

@@ -57,6 +57,9 @@ class current_state(object):
         """if there is a GUI or not"""
         self.GUI = False 
         
+        "emergency stop "  
+        
+        self._keep_going = [threading.Lock(), True]
         """initialize all values after a log_start.txt"""
         self.__setState__()
         #self.__setState_EL__()
@@ -183,6 +186,9 @@ class current_state(object):
         if not self.get_current_action(name) == state : 
             if name == "filter_aquarium" : 
                 if state : 
+                    """set keep going to True, action autorized after a STOP for a new action"""
+                    self.set_keep_going(True)
+                    
                     self.P_AQ_FI(state)
                     self.P_FI_AQ_1(state)
                     self.P_FI_AQ_3(state)
@@ -192,6 +198,9 @@ class current_state(object):
                     stop.start()
             elif name == "fill_BU1_AQ" : 
                 if state : 
+                    """set keep going to True, action autorized after a STOP for a new action"""
+                    self.set_keep_going(True)
+                    
                     self.P_BU1_FI(state)
                     self.P_FI_AQ_1(state)
                 else : 
@@ -200,6 +209,9 @@ class current_state(object):
                     stop.start()
             elif name == "fill_BU2_AQ" : 
                 if state : 
+                    """set keep going to True, action autorized after a STOP for a new action"""
+                    self.set_keep_going(True)
+                    
                     self.P_BU2_FI(state)
                     self.P_FI_AQ_1(state)
                 else : 
@@ -208,6 +220,9 @@ class current_state(object):
                     stop.start()
             elif name == "fill_BU3_AQ" :
                 if state :  
+                    """set keep going to True, action autorized after a STOP for a new action"""
+                    self.set_keep_going(True)
+                    
                     self.P_BU3_FI(state)
                     self.P_FI_AQ_1(state)
                 else : 
@@ -361,7 +376,34 @@ class current_state(object):
         """set the value of formation_rate"""
         self._formation_rate[0].acquire()
         self._formation_rate[1] = value
-        self._formation_rate[0].release[0]
+        self._formation_rate[0].release()
+    
+    """not good solution, all action have to be listed in current_action in order to be stoped"""
+    def set_keep_going(self, state):
+        if state : 
+            print ("Actions Autorized")
+        else : 
+            print ("Actions Stopped") 
+            for item in self._current_action : 
+                self.set_current_action(item, state)
+            
+        self._keep_going[0].acquire()
+        self._keep_going[1]  = state 
+        self._keep_going[0].release()
+        
+    
+    def get_keep_going(self):
+        self._keep_going[0].acquire()
+        value = self._keep_going[1] 
+        self._keep_going[0].release()
+        return value
+    
+    
+    """set all action to False"""
+    def stop_action(self):
+        print ("Actions Stopped") 
+        for item in self._current_action : 
+            self.set_current_action(item, False)
     
     def __setState__(self):
         """ Set the states to the right values according to the log_start.txt file """
