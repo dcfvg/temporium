@@ -3,7 +3,7 @@ comments : To add an arduino, put "arduino :" at the beginiing of the ligne, the
 comments : after an arduino, put the right funtion and the coresponding pin connected to it, separated by ":", if function is not connected, put "NULL" as a pin
 comments : list all pin output in the pin_array_output that are connected to the last arduino declared 
 comments : list arduino terminal "python -m serial.tools.list_ports"
-arduino : arduino_mega : /dev/cu.usbmodem1421
+arduino : arduino_mega : /dev/cu.usbmodem1411
 P_BR1_BU1 : 26
 P_BR2_BU2 : 27
 P_BR3_BU3 : 28

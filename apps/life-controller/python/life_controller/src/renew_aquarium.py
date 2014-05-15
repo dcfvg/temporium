@@ -22,6 +22,9 @@ class renew_aquarium(threading.Thread):
         self.BU_use = a_Bu_use
         
     def run(self):
+        """set keep going to true"""
+        self.current_state.set_keep_going(True)
+        
         if self.name == "light" :
             if not self.current_state.get_state_EL("AQ","HIGH")=="NULL" : 
                 """pump AQ->S for 12 sec"""
@@ -43,10 +46,9 @@ class renew_aquarium(threading.Thread):
             """emptying AQ 30sec"""
             self.current_state.P_AQ_S(True)
             compt = 0 
-            while self.current_state.get_keep_going() and compt <300 : 
+            while self.current_state.get_keep_going() and compt <sec : 
                 time.sleep(1)
                 compt = compt + 1
-                time.sleep(1)
             self.current_state.P_AQ_S(False)
             print("end emptying AQ")
         else : 

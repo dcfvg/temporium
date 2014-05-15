@@ -187,7 +187,7 @@ class current_state(object):
             if name == "filter_aquarium" : 
                 if state : 
                     """set keep going to True, action autorized after a STOP for a new action"""
-                    self.set_keep_going(True)
+                    #self.set_keep_going(True)
                     
                     self.P_AQ_FI(state)
                     self.P_FI_AQ_1(state)
@@ -199,7 +199,7 @@ class current_state(object):
             elif name == "fill_BU1_AQ" : 
                 if state : 
                     """set keep going to True, action autorized after a STOP for a new action"""
-                    self.set_keep_going(True)
+                    #self.set_keep_going(True)
                     
                     self.P_BU1_FI(state)
                     self.P_FI_AQ_1(state)
@@ -210,7 +210,7 @@ class current_state(object):
             elif name == "fill_BU2_AQ" : 
                 if state : 
                     """set keep going to True, action autorized after a STOP for a new action"""
-                    self.set_keep_going(True)
+                    #self.set_keep_going(True)
                     
                     self.P_BU2_FI(state)
                     self.P_FI_AQ_1(state)
@@ -221,7 +221,7 @@ class current_state(object):
             elif name == "fill_BU3_AQ" :
                 if state :  
                     """set keep going to True, action autorized after a STOP for a new action"""
-                    self.set_keep_going(True)
+                    #self.set_keep_going(True)
                     
                     self.P_BU3_FI(state)
                     self.P_FI_AQ_1(state)

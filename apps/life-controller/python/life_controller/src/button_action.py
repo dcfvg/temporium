@@ -57,7 +57,7 @@ class button_action(Frame):
         self.Button_renew_light_BU3 = tkinter.Button(self.frame_button,  text ="Renouvellement algues leger BU3", command = self.renew_light_BU3)        
         self.Button_renew_light_BU3.pack()
         
-        self.Button_stop = tkinter.Button(self.frame_button,  text ="STOP", command = self.stop)        
+        self.Button_stop = tkinter.Button(self.frame_button,  text ="START/STOP", command = self.stop)        
         self.Button_stop.pack()
         
         #self.state_P_M1_BR3 = tkinter.Canvas(self.frame_button_state, bg ='green')
@@ -101,7 +101,9 @@ class button_action(Frame):
         
         """if there is no action running"""
         if b : 
-            self.current_state.filter_aquarium( not self.current_state.get_current_action("filter_aquarium"))
+            """if autorized"""
+            if self.current_state.get_keep_going() : 
+                self.current_state.filter_aquarium( not self.current_state.get_current_action("filter_aquarium"))
 
         
     def auto_filtration(self) :
@@ -153,7 +155,7 @@ class button_action(Frame):
         pass
     
     def stop(self):
-        self.current_state.set_keep_going(False)
+        self.current_state.set_keep_going(not self.current_state.get_keep_going())
     
     
                 
