@@ -25,7 +25,7 @@ class stop_filtration(threading.Thread):
     def run(self):
         print("Arret des pompes de retour dans l'aquarium dans : 3 min")
         compt = 0 
-        while compt <180 and self.current_state.get_keep_going() : 
+        while compt < 3 and self.current_state.get_keep_going() : 
             time.sleep(1)
             if compt == 60 : 
                 print("Arret des pompes de retour dans l'aquarium dans : 2 min")
