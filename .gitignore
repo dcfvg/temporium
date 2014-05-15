@@ -27,3 +27,8 @@
 
 .DS_Store
 /apps/cli/osc-web/node_modules
+
+/apps/interface/public/video
+
+/apps/interface/public/images
+/apps/interface/node_modules
