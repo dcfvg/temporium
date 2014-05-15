@@ -8,6 +8,7 @@ html
     script(src='/js/socket.io.min.js')
     script(src='/js/jquery-1.11.1.js')
     script(src='/js/popcorn-complete.js')
-    script(src='/js/exposure.js')
-  body#exposure
-    img#nega.off(src='/images/image_vivante.jpg')
+    script(src='/js/index.js')
+  body
+    video#movie.player.off(src='/video/montage-QT-H.264-1080pQT.mp4', controls='false', preload='auto')
+    video#life.player.off(src='/video/life.mp4', controls='false', preload='auto')

@@ -27,8 +27,6 @@ oscServer.on("message", function (msg, rinfo) {
     io.sockets.emit("message", msg);
 });
 
-
-
 /*
 * Server config
 */

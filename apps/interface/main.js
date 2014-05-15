@@ -4,7 +4,7 @@ var osc = require('node-osc');
 var util = require('util');
 
 
-var client = new osc.Client('127.0.0.1', 3334);
+var oscClient = new osc.Client('127.0.0.1', 3334);
 
 module.exports = function(app, io){
   console.log("main module initialized");
@@ -18,8 +18,7 @@ module.exports = function(app, io){
 
     socket.on("message", function(obj) {
       console.log(obj);
-      client.send(obj);
-
+      oscClient.send(obj);
     });
 
     /*
