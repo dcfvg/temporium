@@ -1,25 +1,5 @@
-event,id,type,at_min,at_sec,max_jump,from,to,speed
-coulee lave,1,plan,1,2,10,,,
-ALGUES,2,vivant,,,,0,15,0.3
-H marche,3,plan,3,2,-10,,,
-danse rocher digue,4,plan,5,0,10,,,
-ALGUES,5,vivant,,,,0,15,0.3
-port de nuit / proces,6,plan,7,0,-10,,,
-reflets noirs,7,plan,8,0,10,,,
-ALGUES,8,vivant,,,,0,15,0.3
-danse main fleurs,9,plan,10,0,-10,,,
-fin danse main fleurs,10,plan,11,0,10,,,
-ALGUES,11,vivant,,,,0,15,0.3
-danse port,12,plan,13,0,-10,,,
-coulee lave,13,plan,14,0,10,,,
-ALGUES,14,vivant,,,,0,15,0.3
-H marche,15,plan,16,0,-10,,,
-fin danse nu rocher,16,plan,17,0,10,,,
-ALGUES,17,vivant,,,,0,15,0.3
-deb petit dej,18,plan,19,0,-10,,,
-fin petit dej,19,plan,20,0,10,,,
-ALGUES,20,vivant,,,,0,15,0.3
-plan mer,21,plan,22,0,-10,,,
-plan mer proche,22,plan,23,0,10,,,
-ALGUES,23,vivant,,,,0,15,0.3
-plan mer,24,plan,25,0,-10,,,
+title,id,at_min,at_sec,jump_in,jump_out,life_speed
+Titre 1,1,0,3,10,11,1
+Titre 2,2,0,4,10,11,2
+Titre 3,3,0,5,10,11,3
+Titre 4,4,0,6,10,11,4
