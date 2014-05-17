@@ -77,8 +77,27 @@ function init() {
     };
   };
   function onSocketScore(obj){
-    score = obj[1];
-    console.log(score);
+    score = obj;
+
+    Popcorn.forEach(score, function(l) {
+
+      switch (l.type) {
+        case "plan":
+          start = parseInt(l.at_min)*60+ parseInt(l.at_sec);
+          console.log("setEvent - " + start);
+
+          $pop_movie.cue( start, function(){
+            console.log("#"+l.id+ " ("+ l.max_jump +") "+l.event);
+          });
+        break;
+        case "vivant": {
+          //console.log(l.type +" "+ l.from + " -> " + l.to );
+          $pop_movie.cue( start, function(){
+            console.log("#"+l.id+ " ("+ l.max_jump +") "+l.event);
+          });
+        }
+      }
+    });
   };
   
   /* 
@@ -87,8 +106,23 @@ function init() {
   // https://www.npmjs.org/package/osc.io
   */
 
-  // functions
+    // movie event creation 
+  // http://stackoverflow.com/questions/14573407/iterate-over-cue-method-with-popcorn-js
+
+  // players events 
+  $pop_life.on("ended", function() {
+    $pop_movie.play();
+    showMovie();
+  });
+  $pop_movie.on("ended", function() {
+      console.log("seance_end ! ");
+      reset();
+      socket.emit('1', '/seance_end');
+  });
   
+
+  // functions
+
   function showMovie(){
     $movie.removeClass("off");
     $life.addClass("off");
@@ -122,27 +156,6 @@ function init() {
     $pop_life.pause().currentTime(0);
   }
 
-  // movie event creation 
-  // http://stackoverflow.com/questions/14573407/iterate-over-cue-method-with-popcorn-js
-
-  $pop_movie.cue( 4, function() {
-      console.log("cut vivant 1");
-      //$pop_life.currentTime( 35 );
-      //showLife();
-      //$pop_movie.currentTime( 80 ).pause();
-  });
-
-  // players events 
-  $pop_life.on("ended", function() {
-    $pop_movie.play();
-    showMovie();
-  });
-  $pop_movie.on("ended", function() {
-      console.log("seance_end ! ");
-      reset();
-      socket.emit('1', '/seance_end');
-  });
-  
   getScore();
 
   // dev shortcuts
