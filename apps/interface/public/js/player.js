@@ -1,40 +1,65 @@
 function init() {
 
-  var serverBaseUrl = document.domain;
-  var socket = io.connect(serverBaseUrl);
-  var sessionId = '';
-
-  /**
-  * Events
-  */
+  var serverBaseUrl = document.domain,
+      socket = io.connect(serverBaseUrl),
+      sessionId = '',
+      $movie = $("#movie"),
+      $life  = $("#life"),
+      $pop_movie = Popcorn("#movie"),
+      $pop_life = Popcorn("#life"),
+      started=false,
+      score;
+    
   /* sockets */
 
   socket.on('connect', onSocketConnect);
+  socket.on('oscMessage', onSocketOscMessage);
+  socket.on('score', onSocketScore);
 
-
-  /**
-  * handlers
-  */
-  /* sockets */
   function onSocketConnect() {
     sessionId = socket.socket.sessionid;
     console.log('Connected ' + sessionId);
     socket.emit('newUser', {id: sessionId, name: $('#name').val()});
   };
+  function onSocketOscMessage(obj){
+    console.log(obj);
 
-    /* 
+    switch (obj[0]) {
+      case "/seance_start":
+        console.log("session start");
+        showMovie();
+      break;
+      case "/life_reload":
+        reloadLife();
+      break;
+      case "/image_formation":
+        if(!started && parseInt(obj[1]) > 15){
+          started = true;
+          showMovie();
+        }
+      break;
+      case "/player_jump":
+        $pop_movie.currentTime( obj[1] ).play();
+      break;
+      case "/player_reset":
+        reset();
+      break;
+      
+      default:
+        text ="hein ?";
+    };
+  };
+  function onSocketScore(obj){
+    score = obj[1];
+    console.log(score);
+  };
+  
+  /* 
   // http://popcornjs.org/popcorn-docs/getting-started/
   // http://jsfiddle.net/popcornjs/G3Csf/
   // https://www.npmjs.org/package/osc.io
-  
   */
 
-  var $movie = $("#movie"),
-      $life  = $("#life"),
-      $pop_movie = Popcorn("#movie"),
-      $pop_life = Popcorn("#life"),
-      started=false;
-      
   // functions
   
   function showMovie(){
@@ -55,62 +80,31 @@ function init() {
     $life.addClass("off");
     $movie.addClass("off");
   }
+  function getScore(){
+    socket.emit('getScore',true);
+  }
   function reset (){
-
     console.log("reset player");
     blackScreen();
+    getScore();
     
     started=false;
     
     // seek to beginning 
     $pop_movie.pause().currentTime(0);  
-    $pop_life.pause().currentTime(0)
-    
+    $pop_life.pause().currentTime(0);
   }
 
-  // OSC 
+  // movie event creation 
+  // http://stackoverflow.com/questions/14573407/iterate-over-cue-method-with-popcorn-js
 
-  socket.on('message', function(obj){
-      console.log(obj);
-
-      switch (obj[0]) {
-        case "/seance_start":
-          console.log("session start");
-          showMovie();
-        break;
-        case "/life_reload":
-          reloadLife();
-        break;
-        case "/image_formation":
-          if(!started && parseInt(obj[1]) > 15){
-            started = true;
-            showMovie();
-          }
-        break;
-        case "/player_jump":
-          $pop_movie.currentTime( obj[1] ).play();
-        break;
-        case "/player_reset":
-          reset();
-        break;
-        
-        default:
-          text ="hein ?";
-      };
-  });
-
-  // cue manager
-  
-  // 1er plan image vivante
   $pop_movie.cue( 4, function() {
-      
       console.log("cut vivant 1");
-      
-      $pop_life.currentTime( 35 );
-      showLife();
-      $pop_movie.currentTime( 80 ).pause();
-      
+      //$pop_life.currentTime( 35 );
+      //showLife();
+      //$pop_movie.currentTime( 80 ).pause();
   });
+
   // players events 
   $pop_life.on("ended", function() {
     $pop_movie.play();
@@ -122,7 +116,9 @@ function init() {
       socket.emit('1', '/seance_end');
   });
   
-  // shortcuts
+  getScore();
+
+  // dev shortcuts
   $(document).keypress(function( event ){
     //console.log(event.which);
 

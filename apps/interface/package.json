@@ -1,9 +1,13 @@
 {
+  "name": "temporium-interface",
+  "author": "dcfvg <qwsx@dcfvg.com>",
+  "description": "A control interface for the temporium, an alive sculpture.",
   "dependencies": {
     "express": "3.1.0",
     "jade": "*",
     "socket.io": "*",
     "underscore": "*",
-    "node-osc": "*"
+    "node-osc": "*",
+ 		"csvtojson":"*"
   }
 }

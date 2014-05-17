@@ -20,12 +20,8 @@ var util = require('util');
 // client.send('/test', 1, 1, 2, 3, 5, 8);
 
 
-var oscServer = new osc.Server(3333, '0.0.0.0');
-oscServer.on("message", function (msg, rinfo) {
-    console.log("Message:");
-    console.log(msg);
-    io.sockets.emit("message", msg);
-});
+
+
 
 /*
 * Server config

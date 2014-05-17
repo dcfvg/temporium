@@ -1,0 +1,25 @@
+Event,id,type,at,from,to,level
+coulee lave,1,seek,2,6,8,11
+ALGUES,2,cut,3,7,9,21
+H marche ,3,seek,4,8,10,32
+danse rocher digue,4,seek,5,9,11,43
+ALGUES,5,cut,6,10,12,53
+port de nuit / proces,6,seek,7,11,13,64
+reflets noirs,7,seek,8,12,14,74
+ALGUES,8,cut,9,13,15,85
+déb danse main fleurs,9,seek,10,14,16,96
+fin danse main fleurs,10,seek,11,15,17,106
+ALGUES,11,cut,12,16,18,117
+déb danse port,12,seek,13,17,19,128
+coulee lave,13,seek,14,18,20,138
+ALGUES,14,cut,15,19,21,149
+H marche ,15,seek,16,20,22,159
+fin danse nu rocher,16,seek,17,21,23,170
+ALGUES,17,cut,18,22,24,181
+déb petit dej,18,seek,19,23,25,191
+fin petit dej,19,seek,20,24,26,202
+ALGUES,20,cut,21,25,27,213
+plan mer,21,seek,22,26,28,223
+plan mer proche,22,seek,23,27,29,234
+ALGUES,23,cut,24,28,30,244
+plan mer,24,seek,25,29,31,255
