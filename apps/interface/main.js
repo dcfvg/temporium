@@ -21,7 +21,7 @@ module.exports = function(app, io, oscServer){
 
     //end_parsed will be emitted once parsing finished
     csvConverter.on("end_parsed",function(jsonObj){
-       console.log(jsonObj); //here is your result json object
+       //console.log(jsonObj); //here is your result json object
        io.sockets.emit("score", jsonObj);
     });
 
@@ -30,6 +30,7 @@ module.exports = function(app, io, oscServer){
   }
 
   var oscServer = new osc.Server(3333, '0.0.0.0');
+  
   oscServer.on("message", function (msg, rinfo) {
     console.log("Message:");
     console.log(msg);
@@ -45,7 +46,8 @@ module.exports = function(app, io, oscServer){
       console.log(obj);
       oscClient.send(obj);
     });
-    socket.on("getScore", loadScore());
+    socket.on("getScore", function(obj){
+      loadScore();
+    });
   });
-  init();
 };

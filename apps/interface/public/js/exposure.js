@@ -4,18 +4,9 @@ function init() {
   var socket = io.connect(serverBaseUrl);
   var sessionId = '';
 
-  /**
-  * Events
-  */
-  /* sockets */
+  //sockets
 
   socket.on('connect', onSocketConnect);
-
-
-  /**
-  * handlers
-  */
-  /* sockets */
   function onSocketConnect() {
     sessionId = socket.socket.sessionid;
     console.log('Connected ' + sessionId);
@@ -26,15 +17,13 @@ function init() {
   var $nega = $("#nega");
       
   // functions
-  
   function reloadNega(){
     // add reload argument to avoid cache
     $nega.attr("src","/images/image_vivante.jpg?reload="+Math.round((new Date()).getTime() / 1000)).load();
   }
 
-  // OSC 
-
-  socket.on('message', function(obj){
+  // OSC
+  socket.on('oscMessage', function(obj){
 
     switch (obj[0]){
       case "/seance_start":
@@ -79,7 +68,5 @@ function init() {
   });
 
   // reset();
-
-
 };
 $(document).on('ready', init);
