@@ -56,6 +56,8 @@ function init() {
     $movie.addClass("off");
   }
   function reset (){
+
+    console.log("reset player");
     blackScreen();
     
     started=false;
@@ -85,6 +87,12 @@ function init() {
             showMovie();
           }
         break;
+        case "/player_jump":
+          $pop_movie.currentTime( obj[1] ).play();
+        break;
+        case "/player_reset":
+          reset();
+        break;
         
         default:
           text ="hein ?";
@@ -103,8 +111,6 @@ function init() {
       $pop_movie.currentTime( 80 ).pause();
       
   });
-
-  
   // players events 
   $pop_life.on("ended", function() {
     $pop_movie.play();
@@ -135,12 +141,6 @@ function init() {
         $pop_life.playbackRate(3).play(); // change player speed
         socket.emit('message', '/test');
     };
-    
-  
   });
-
-  // reset();
-
-
 };
 $(document).on('ready', init);

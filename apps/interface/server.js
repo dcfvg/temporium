@@ -40,6 +40,6 @@ router(app, io, m);
 /**
 * Start the http server at port and IP defined before
 */
-http.listen(app.get("port"), app.get("ipaddr"), function() {
+http.listen(app.get("port"), /*app.get("ipaddr"),*/ function() {
   console.log("Server up and running. Go to http://" + app.get("ipaddr") + ":" + app.get("port"));
 });
