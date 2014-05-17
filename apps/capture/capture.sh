@@ -11,7 +11,7 @@
 
 
 # include var and functions for local use
-source /Users/immersion/temporium/apps/cli/functions.sh  
+source ~/temporium/apps/cli/functions.sh  
 PATH=/usr/local/bin/:$PATH
 
 # setup folders
@@ -27,7 +27,7 @@ camera_init
 timelaps_init
 
 # lanch nega in fs
-PDE_run $EF run &
+/Applications/Firefox.app/Contents/MacOS/firefox http://127.0.0.1:8080/exposure &
 sleep 7
 
 oscSend EF imgReload   # reload picture 
@@ -49,6 +49,6 @@ done
 timelaps_render
 timelaps_finish
 
-oscSend EF kill
+oscSend /EF kill
 
 say "exposure finished !"

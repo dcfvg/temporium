@@ -7,7 +7,7 @@
 # 
 
 
-source /Users/immersion/temporium/apps/cli/functions.sh  
+source ~/temporium/apps/cli/functions.sh  
 
 self=`basename $0`
 

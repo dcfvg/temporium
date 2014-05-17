@@ -123,7 +123,7 @@ function nega_getWebcam {
 # utils
 function oscSend {
   # send OSC message to ExposerFlasher 
-  python $app/cli/osc/sender.py 127.0.0.1 4242 $1 $2
+  python $app/cli/osc/sender.py 127.0.0.1 3333 $1 $2
 }
 function PDE_run {
   # run a processing sketch 

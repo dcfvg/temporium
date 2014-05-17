@@ -1,5 +1,0 @@
-do shell script "open '/Applications/Google Chrome.app' "
-tell application "Google Chrome" to activate
-tell application "System Events"
-	keystroke "f" using {command down, shift down}
-end tell
