@@ -1,5 +1,15 @@
-title,id,at_min,at_sec,jump_in,jump_out,life_speed
-Titre 1,1,0,3,10,11,1
-Titre 2,2,0,4,10,11,2
-Titre 3,3,0,5,10,11,3
-Titre 4,4,0,6,10,11,4
+title,id,type,at_min,at_sec,jump,life_speed
+Titre 1 / coulee lave,1,in,5,23,16,1
+Titre 2 / arbres morts,2,out,6,8,20,2
+Titre 3 / danse digue,3,in,14,35,31,3
+Titre 4 / port de nuit,4,out,15,35,22,4
+Titre 5 / reflet mer nuit,5,in,16,38,34,5
+Titre 6 / danse main,6,out,17,52,33,6
+Titre 7 / rocher ﾖ mer,7,in,18,55,25,7
+Titre 8 / danse port,8,out,19,34,7,8
+Titre 9 / dans nu,9,in,23,10,105,9
+Titre 10 / petit dej,10,out,25,38,36,10
+Titre 11 / fin petit dej,11,in,26,20,6,11
+Titre 12 / mer defile,12,out,26,43,10,12
+Titre 13 / mer defile proche,13,in,27,36,17,13
+Titre 14 / plongeon,14,out,28,14,13,14
