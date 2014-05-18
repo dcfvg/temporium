@@ -23,8 +23,6 @@ html5 :: https://dvcs.w3.org/hg/audio/raw-file/tip/webaudio/specification.html#A
 tutorial 
 
 */
-
-
 function init() {
 
   var serverBaseUrl = document.domain,
@@ -71,7 +69,6 @@ function init() {
       case "/player_reset":
         reset();
       break;
-      
       default:
         text ="hein ?";
     };
@@ -80,23 +77,12 @@ function init() {
     score = obj;
 
     Popcorn.forEach(score, function(l) {
+      start = (parseInt(l.at_min)*60+ parseInt(l.at_sec))/60;
+      console.log("set-"+ l.type, " at " + start);
 
-      switch (l.type) {
-        case "plan":
-          start = parseInt(l.at_min)*60+ parseInt(l.at_sec);
-          console.log("setEvent - " + start);
-
-          $pop_movie.cue( start, function(){
-            console.log("#"+l.id+ " ("+ l.max_jump +") "+l.event);
-          });
-        break;
-        case "vivant": {
-          //console.log(l.type +" "+ l.from + " -> " + l.to );
-          $pop_movie.cue( start, function(){
-            console.log("#"+l.id+ " ("+ l.max_jump +") "+l.event);
-          });
-        }
-      }
+      $pop_movie.cue( start, function(){
+        console.log("#"+l.id+":"+l.type+" ("+l.title +" "+ l.jump +") ");
+      });
     });
   };
   
