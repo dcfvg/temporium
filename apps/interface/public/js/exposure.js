@@ -1,43 +1,40 @@
 function init() {
 
-  var serverBaseUrl = document.domain;
-  var socket = io.connect(serverBaseUrl);
-  var sessionId = '';
+  var serverBaseUrl = document.domain,
+      socket = io.connect(serverBaseUrl),
+      sessionId = '',
+      $nega = $("#nega");
 
   //sockets
-
   socket.on('connect', onSocketConnect);
+      
+  // functions
+  function reloadNega(){
+    $nega.attr("src","/images/nega.png?reload="+Math.round((new Date()).getTime() / 1000)).load();
+  }
+  function flash(){
+    $nega.removeClass("off");
+  }
+  function expose(){
+    $nega.addClass("off");
+  }
   function onSocketConnect() {
     sessionId = socket.socket.sessionid;
     console.log('Connected ' + sessionId);
     socket.emit('newUser', {id: sessionId, name: $('#name').val()});
   };
-
-
-  var $nega = $("#nega");
-      
-  // functions
-  function reloadNega(){
-    // add reload argument to avoid cache
-    $nega.attr("src","/images/image_vivante.jpg?reload="+Math.round((new Date()).getTime() / 1000)).load();
-  }
-
   // OSC
   socket.on('oscMessage', function(obj){
-
     switch (obj[0]){
-      case "/seance_start":
-        console.log("starting sequence");
-      break;
       case "/EF": // check patern
         console.log(obj[1]);
 
         switch (obj[1]) { // check message
           case "expose":
-            $nega.removeClass("off");
+            expose();
           break;
           case "flash":
-            $nega.addClass("off");
+            flash();
           break;
           case "imgReload":
             reloadNega();
@@ -48,23 +45,10 @@ function init() {
   });
   // shortcuts
   $(document).keypress(function( event ){
-    //console.log(event.which);
-
-    //m -> movie
-    if ( event.which == 109 ) showMovie(); 
-    
-    //l -> life
-    if ( event.which == 108 ) showLife();
-    
-    //r -> refreshlife
-    if ( event.which == 114 ) reloadLife();
-    
-    // s -> seek 
-    if ( event.which == 115 ) {
-        // $pop_movie.currentTime( 1 ).play();
-        $pop_life.playbackRate(3).play(); // change player speed
-        socket.emit('message', '/test');
-    };
+    // console.log(event.which);
+    if ( event.which == 101 ) expose();       //e -> expose
+    if ( event.which == 102 ) flash();        //f -> flash 
+    if ( event.which == 114 ) reloadNega();   //r -> reload 
   });
 
   // reset();
