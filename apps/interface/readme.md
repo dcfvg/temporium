@@ -1,7 +1,5 @@
 ### partition 
-/public/score.csv`
-
-[apps/interface/public/score.csv](https://github.com/dcfvg/temporium/blob/panorama/apps/interface/public/score.csv)
+- [apps/interface/public/score.csv](https://github.com/dcfvg/temporium/blob/panorama/apps/interface/public/score.csv)
 
 | champ  | description |
 | ------ | ----------- |
@@ -14,7 +12,7 @@
 | life_speed | vitesse de défilement du timelapse — 1=vitesse normale / 8=ralenti 8 fois | 
 | life_zoom  | grossisement de l'image 1-5 | 
 
-Le temps du vivant est figuré dans le film par un cache vert de 4 secondes.
+> Le temps du vivant est figuré dans le film par un cache vert de 4 secondes.
 
 ### monitoring
 `/monitor`
