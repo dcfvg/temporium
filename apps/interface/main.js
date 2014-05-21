@@ -42,17 +42,13 @@ module.exports = function(app, io, oscServer){
 
     /// SPAWN TEST 
 
-    capt = spawn('bash',['bin/test.sh']); // the second arg is the command 
-                                            // options
-
+    capt = spawn('bash',['bin/test.sh']); 
     capt.stdout.on('data', function (data) {    // register one or more handlers
       console.log('stdout: ' + data);
     });
-
     capt.stderr.on('data', function (data) {
       console.log('stderr: ' + data);
     });
-
     capt.on('exit', function (code) {
       console.log('child process exited with code ' + code);
     });
