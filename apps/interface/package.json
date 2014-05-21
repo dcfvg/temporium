@@ -8,6 +8,7 @@
     "socket.io": "*",
     "underscore": "*",
     "node-osc": "*",
- 		"csvtojson":"*"
+ 		"csvtojson":"*",
+    "fluent-ffmpeg":"*"
   }
 }
