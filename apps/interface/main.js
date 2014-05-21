@@ -29,12 +29,42 @@ module.exports = function(app, io, oscServer){
     fileStream.pipe(csvConverter);
   }
 
+  var util  = require('util'),
+      spawn = require('child_process').spawn;
+
+
   var oscServer = new osc.Server(3333, '0.0.0.0');
   
   oscServer.on("message", function (msg, rinfo) {
-    console.log("Message:");
     console.log(msg);
     io.sockets.emit("oscMessage", msg);
+
+
+    /// SPAWN TEST 
+
+    capt = spawn('bash',['bin/test.sh']); // the second arg is the command 
+                                            // options
+
+    capt.stdout.on('data', function (data) {    // register one or more handlers
+      console.log('stdout: ' + data);
+    });
+
+    capt.stderr.on('data', function (data) {
+      console.log('stderr: ' + data);
+    });
+
+    capt.on('exit', function (code) {
+      console.log('child process exited with code ' + code);
+    });
+
+    setTimeout(function() {
+      console.log('kill');
+      capt.stdin.pause();
+      capt.kill();
+    }, 10000);
+
+    /// END SPAWN TEST
+
   });
 
   /**
