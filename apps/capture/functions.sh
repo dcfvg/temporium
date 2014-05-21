@@ -4,7 +4,7 @@
 
 #set -x
 
-tempoPath="/Users/immersion/temporium"
+tempoPath="~/Users/immersion/temporium"
 
 app="$tempoPath/apps"                       # the scripts folder
 assets="$tempoPath/assets"                  # main assets folder
@@ -123,7 +123,7 @@ function nega_getWebcam {
 # utils
 function oscSend {
   # send OSC message to ExposerFlasher 
-  python $app/cli/osc/sender.py 127.0.0.1 3333 $1 $2
+  python osc/sender.py 127.0.0.1 3333 $1 $2
 }
 function PDE_run {
   # run a processing sketch 

@@ -11,7 +11,7 @@
 
 
 # include var and functions for local use
-source ~/temporium/apps/cli/functions.sh  
+source functions.sh  
 PATH=/usr/local/bin/:$PATH
 
 # setup folders
@@ -27,8 +27,8 @@ camera_init
 timelaps_init
 
 # lanch nega in fs
-/Applications/Firefox.app/Contents/MacOS/firefox http://127.0.0.1:8080/exposure &
-sleep 7
+# /Applications/Firefox.app/Contents/MacOS/firefox http://127.0.0.1:8080/exposure &
+# sleep 7
 
 oscSend EF imgReload   # reload picture 
 oscSend EF resetTime   # reset timer
