@@ -1,6 +1,7 @@
 ### partition 
-`/public/score.csv`
+/public/score.csv`
 
+[apps/interface/public/score.csv](https://github.com/dcfvg/temporium/blob/panorama/apps/interface/public/score.csv)
 
 | champ  | description |
 | ------ | ----------- |
