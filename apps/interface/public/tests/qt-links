@@ -1,0 +1,28 @@
+// test sample :: https://www2.iis.fraunhofer.de/AAC/multichannel.html https://www2.iis.fraunhofer.de/AAC/trouble.html
+// js implement :: http://www.html5audio.org/2013/03/surround-audio-comes-to-the-web.html 
+
+
+/* 
+
+working tests 
+
+http://www.brucewiggins.co.uk/?p=265
+http://www.brucewiggins.co.uk/?p=311
+http://www.tracktimeaudio.com/?p=635
+http://www.axel-hahn.de/demos/html5-audio/tester-audio-formats.php
+http://9elements.com/html5demos/audio/
+
+browser support 
+http://stackoverflow.com/questions/6762372/html5-audio-what-audio-formats-are-supported
+
+specs
+html5 :: https://dvcs.w3.org/hg/audio/raw-file/tip/webaudio/specification.html#AudioDestinationNode
+
+  /* 
+  // http://popcornjs.org/popcorn-docs/getting-started/
+  // http://jsfiddle.net/popcornjs/G3Csf/
+  // https://www.npmjs.org/package/osc.io
+  */
+
+    // movie event creation 
+  // http://stackoverflow.com/questions/14573407/iterate-over-cue-method-with-popcorn-js
