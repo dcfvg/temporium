@@ -1,4 +1,4 @@
-id,title,type,at_min,at_sec,jump,life_speed,life_zoom
+id,title,type,at_min,at_sec,jump_max,life_speed,life_zoom
 0,coulee lave,in,5,23,16,1,"3,4"
 1,arbres morts,out,6,8,20,2,
 2,danse digue,in,14,35,31,3,3
