@@ -9,6 +9,8 @@ html
     script(src='/js/jquery-1.11.1.js')
     script(src='/js/popcorn-complete.js')
     script(src='/js/player.js')
+    script(src='/js/ac_quicktime.js')
+    script(src='/js/qtp_library.js')
   body
-    video#movie.player.off(src='/video/immersion.mov', controls='false', preload='auto')
-    video#life.player.off(src='/video/life.mp4', controls='false', preload='auto')
+    div#movie.player.off
+    video#life.player.off(src='/video/live.mp4', controls='false', preload='auto')
