@@ -40,11 +40,11 @@ module.exports = function(app, io, oscServer){
         crop_h = Math.round(crop_w/ratio),
         crop_x = Math.round((crop_w - mov_w)/2),
         crop_y = Math.round((crop_h - mov_h)/2),
-        proc = new ffmpeg({ source: 'public/exposure/im%02d.jpg' })
+        proc = new ffmpeg({ source: 'public/exposure/im%04d.jpg' })
 
         .withFps(25)
-        .addOptions(['-c:v libx264', '-preset ultrafast', '-qp 0'])
-        .addOptions(['-r 25', '-preset ultrafast', '-qp 0'])
+        .addOptions(['-pix_fmt yuv420p','-c:v libx264', '-preset ultrafast', '-crf 1'])
+        .addOptions(['-r 25'])
         .withVideoFilter('scale='+crop_w+':-1')
         .withVideoFilter('crop='+mov_w+':'+mov_h+':'+crop_x+':'+crop_y+'')
         .withVideoFilter('setpts=('+speed+'/1)*PTS')
