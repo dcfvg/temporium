@@ -45,7 +45,7 @@
 					  'obj#id'  , 'qtinstance1',
 					  'emb#NAME',	'qtinstance1' ,
 					  'emb#id'  , 'qtinstance1' ,
-					  'scale' , 'tofit' , 'AUTOPLAY', 'true', 'CONTROLLER', 'false',
+					  'scale' , 'tofit' , 'AUTOPLAY', 'true', 'CONTROLLER', 'true',
 					  'EnableJavaScript', 'True', 'postdomevents', 'True',
 						'STARTTIME',time,
 					  'qtsrc', qtsrc));
@@ -56,13 +56,13 @@
 					console.log("Event! " + ev.type);					
 				};
 					
-				addPlayer("test_6canaux.mov", "00:00:10:00", $player);
-				setTimeout(function() {
-					document.qtinstance1.Play();
-				}, 1000);
-				setTimeout(function() {
-					addPlayer("test_6canaux.mov", "00:00:2:00", $player);
-				}, 5000);
+				addPlayer("test_6canaux.mov", "00:00:00:00", $player);
+				// setTimeout(function() {
+				// 	document.qtinstance1.Play();
+				// }, 1000);
+				// setTimeout(function() {
+				// 	addPlayer("test_6canaux.mov", "00:00:2:00", $player);
+				// }, 5000);
 				
 				function seekTo(t){
 						console.log("seek -> "+ t);
@@ -77,6 +77,15 @@
 		    <a href="javascript:document.qtinstance1.Stop();">Stop Movie</a><br>
 		    <a href="javascript:seekTo(Math.floor((Math.random() * 30) + 1));">Seek Movie</a><br>
 		    <a href="javascript:console.log(document.qtinstance1.GetTime());">Get Time</a><br>
+
+			<a href="javascript:document.qtinstance1.SetRate(2.0);"> SetRate(2.0)</a><br>
+			<a href="javascript:document.qtinstance1.SetRate(1.0);"> SetRate(1.0)</a><br>
+			<a href="javascript:document.qtinstance1.SetTime(75);"> SetTime(75)</a><br>
+			<a href="javascript:document.qtinstance1.SetTime(0);"> SetTime(0)</a><br>
+	
+			<a href="javascript:document.qtinstance1.SetVolume(0);"> SetVolume(0)</a><br>
+			<a href="javascript:document.qtinstance1.SetVolume(128);"> SetVolume(128)</a><br>
+			<a href="javascript:document.qtinstance1.SetVolume(255);"> SetVolume(255)</a><br>
 		</p>
 </body>
 </html>
