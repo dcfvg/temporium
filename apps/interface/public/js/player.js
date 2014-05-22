@@ -99,15 +99,14 @@ function init() {
   };
   function reloadLife(){
     // add reload argument to avoid cache
-    $life.attr("src","life.mp4?reload="+Math.round((new Date()).getTime() / 1000)).load();
+    $life.attr("src",lifeUrl + "?reload="+Math.round((new Date()).getTime() / 1000)).load();
   };
   function blackScreen(){
     $life.addClass("off");
     $movie.addClass("off");
   };
-  function getScore(){
-    socket.emit('getScore',true);
-  };
+  function getScore(){socket.emit('getScore',true)
+  ;};
   function reset(){
     console.log("reset player");
     blackScreen();
@@ -117,7 +116,7 @@ function init() {
 
     // seek to beginning 
     //$pop_movie.pause().currentTime(0);  
-    //$pop_life.pause().currentTime(0);
+  //$pop_life.pause().currentTime(0);
   };
 
   // QT plugin implementation
@@ -134,7 +133,6 @@ function init() {
     obj.addEventListener('qt_validated', onQtPlayerEvent, false);
     obj.addEventListener('qt_canplay', onQtPlayerEvent, false);
     obj.addEventListener('qt_canplaythrough', onQtPlayerEvent, false);
-
   };
   function addQtPlayer(qtsrc, time, container, id){
 
@@ -149,11 +147,11 @@ function init() {
       'qtsrc', qtsrc));
 
       initQtPlayerCallback();
-  }
+  };
   function qtSeekTo(t){
     console.log("seek -> "+ t);
     addQtPlayer(movieUrl, "00:00:"+t+":00", $movie);
-  }
+  };
   function onQtPlayerEvent(ev){
     console.log("Event! " + ev.type);         
   };
