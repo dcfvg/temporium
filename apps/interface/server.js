@@ -10,18 +10,9 @@ var router  = require('./router');
 
 var m = new main(app, io);
 
-
 // osc
 var osc = require('node-osc');
 var util = require('util');
-
-
-// var client = new osc.Client('127.0.0.1', 3334);
-// client.send('/test', 1, 1, 2, 3, 5, 8);
-
-
-
-
 
 /*
 * Server config

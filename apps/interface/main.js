@@ -86,7 +86,6 @@ module.exports = function(app, io, oscServer){
   oscServer.on("message", function (msg, rinfo) {
     console.log(msg);
     io.sockets.emit("oscMessage", msg);
-
     switch (msg[0]) {
       case "/refreshTimelaps":
         refreshTimelaps();

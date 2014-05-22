@@ -10,8 +10,6 @@ module.exports = function(app,io,m){
   app.get("/exposure", getExposure);
   app.get("/player", getPlayer);
 
-
-
   /**
   * routing functions
   */

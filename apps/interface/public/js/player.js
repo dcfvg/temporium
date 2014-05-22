@@ -25,10 +25,12 @@ function init() {
 
       movieGoesOn = false,
       movieCurentEvent = 2,
-      t_margin = 3
+      t_margin = 3,
 
-      image_formation = 0;
-    
+      image_formation = 0,
+      formationStartLevel = 5
+      ;
+
   //////////////////////////////
   // On
   //////////////////////////////
@@ -37,14 +39,12 @@ function init() {
   socket.on('score', onSocketScore);
 
   $d // on
-    .on( "seance_start"     , function(e, obj) {
-      console.log("session start " + obj);
-      showMovie();})
-    .on( "life_reload"      , reloadLife)
+    .on( "seance_start"     , onSeanceStart)
+    .on( "life_reload"      , onReloadLife)
     .on( "image_formation"  , onImageFormation)
-    .on( "player_reset"     , reset())
-    .on( "showMovie"        , showMovie)
-    .on( "showLife"         , showLife)
+    .on( "player_reset"     , reset)
+    .on( "showMovie"        , onShowMovie)
+    .on( "showLife"         , onShowLife)
     .on( "qtSeekTo"         , onQtSeekTo)
   ;
   
@@ -85,10 +85,10 @@ function init() {
     //   });
     // });
   };
-  function onImageFormation(e){
-    if(!movieGoesOn && parseInt(obj[1]) > 15){
-      movieGoesOn = true;
-    }
+  function onImageFormation(e, obj){
+    if(!movieGoesOn && parseInt(obj) > formationStartLevel){
+      onSeanceStart();
+    };
   };
   function setNewCut(){
 
@@ -103,7 +103,7 @@ function init() {
 
       if(ct > at - 60) {
         console.log("refreshTimelaps")
-        // socket.emit('refreshTimelaps');
+        socket.emit('refreshTimelaps');
       }
       if(ct > at - t_margin){ // decision
 
@@ -120,70 +120,53 @@ function init() {
       }
     }, 500);
   };
+  function onShowMovie(){
+    $movie.removeClass("off");
+    $life.addClass("off");
+    //$pop_movie.play();
+  };
+  function onShowLife(){
+    $life.removeClass("off");
+    $movie.addClass("off");
+    $pop_life.play();
+  };
+  function onReloadLife(){
+    // add reload argument to avoid cache
+    $life.attr("src",lifeUrl + "?reload="+Math.round((new Date()).getTime() / 1000)).load();
+  };
+  function onSeanceStart(){
+    movieGoesOn = true;
+    document.qtF.Play();
+    setNewCut();
+    setQtVolume(0);
+  };
+
+  function blackScreen(){
+    $life.addClass("off");
+    $movie.addClass("off");
+  };
 
   //////////////////////////////
   // Helpers
   //////////////////////////////
   function getJump(l, ct){
-      var mov_progress  = Math.round((ct/mov_length)*100);
-      var life_progress = Math.round((image_formation/255)*100);
-      var jump = (l.jump_max/2)-(((life_progress - mov_progress)/100)*l.jump_max);
+    var mov_progress  = Math.round((ct/mov_length)*100);
+    var life_progress = Math.round((image_formation/255)*100);
 
-      console.log('jump = '+jump+'/'+l.jump_max+' (film :'+mov_progress+'% '+' life :'+life_progress+'%)');
+    // milieu du plan on retire le différenciel entre le mov_progress et le life_progress
+    var jump = (l.jump_max/2)-(((life_progress - mov_progress)/100)*l.jump_max);
 
-      // milieu du plan on retire le différenciel entre le mov_progress et le life_progress
-      return (l.jump_max/2)-(((life_progress - mov_progress)/100)*l.jump_max);
-  }
-  function randomRange (min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+    console.log('jump = '+jump+'/'+l.jump_max+' (film :'+mov_progress+'% '+' life :'+life_progress+'%)');
+
+    return jump;
+  };
+  function getScore(){socket.emit('getScore',true);
   };
   function getAt(l){
     return (parseInt(l.at_min)*60+ parseInt(l.at_sec));
   };
-  function sToQtTimecode(sTc){
-    // second timecode to QuickTime timecode
-
-    var hours = parseInt( sTc / 3600 ) % 24;
-    var minutes = parseInt( sTc / 60 ) % 60;
-    var seconds = sTc % 60; 
-
-    return (hours < 10 ? "0" + hours : hours) + ":" 
-      + (minutes  < 10 ? "0" + minutes : minutes) + ":" 
-      + (seconds  < 10 ? "0" + seconds : seconds) + ":00"; // add image count
-  };
-  function showMovie(){
-    $movie.removeClass("off");
-    $life.addClass("off");
-    //$pop_movie.play();
-  };
-  function showLife(){
-    $life.removeClass("off");
-    $movie.addClass("off");
-    $pop_life.play();
-  };
-  function reloadLife(){
-    // add reload argument to avoid cache
-    $life.attr("src",lifeUrl + "?reload="+Math.round((new Date()).getTime() / 1000)).load();
-  };
-  function blackScreen(){
-    $life.addClass("off");
-    $movie.addClass("off");
-  };
-  function getScore(){socket.emit('getScore',true);
-  };
-  function reset(){
-    console.log("reset player");
-
-    blackScreen();
-    getScore();
-    //socket.emit('refreshTimelaps');
-    createQt(movieUrl, $movie, "qtF");
-
-    movieGoesOn = false;
-
-    // seek to beginning 
-    //$pop_movie.pause().currentTime(0);  
-    //$pop_life.pause().currentTime(0);
+  function randomRange(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
   };
 
   // QT plugin manipulation
@@ -193,7 +176,7 @@ function init() {
       'obj#id'  , name,
       'emb#NAME', name,
       'emb#id'  , name,
-      'scale' , 'tofit' , 'AUTOPLAY', 'true', 'CONTROLLER', 'false',
+      'scale' , 'tofit' , 'AUTOPLAY', 'false', 'CONTROLLER', 'false',
       'EnableJavaScript', 'True', 'postdomevents', 'True',
       'STARTTIME',"00:00:00:00",
       'qtsrc', qtsrc));
@@ -213,7 +196,17 @@ function init() {
     obj.addEventListener('qt_canplay'       , onQtCanPlay    , false);
     obj.addEventListener('qt_canplaythrough', onQtPlayerEvent, false);
   };
+  function sToQtTimecode(sTc){
+    // second timecode to QuickTime timecode
 
+    var hours = parseInt( sTc / 3600 ) % 24;
+    var minutes = parseInt( sTc / 60 ) % 60;
+    var seconds = sTc % 60; 
+
+    return (hours < 10 ? "0" + hours : hours) + ":" 
+      + (minutes  < 10 ? "0" + minutes : minutes) + ":" 
+      + (seconds  < 10 ? "0" + seconds : seconds) + ":00"; // add image count
+  };
   function setQtVolume(v){
     document.qtF.SetVolume(v);
   };
@@ -230,18 +223,33 @@ function init() {
   };
   function onQtCanPlay(){
     console.log("qtReady");
+  };
 
-  }
   //////////////////////////////
   // actions
   //////////////////////////////
+
+  function reset(){
+    console.log("reset player");
+
+    blackScreen();
+    getScore();
+    //socket.emit('refreshTimelaps');
+    createQt(movieUrl, $movie, "qtF");
+
+    movieGoesOn = false;
+
+    // seek to beginning 
+    //$pop_movie.pause().currentTime(0);  
+    //$pop_life.pause().currentTime(0);
+  };
+
   reset();
-  setTimeout(function() {
-    setNewCut();
-    setQtVolume(0, document.qtF);
-  }, 250);
+
   setInterval(function(){
     image_formation++;
+    $d.trigger("image_formation", image_formation);
+    console.log("f="+image_formation);
   }, 1000);
 };
 $(document).on('ready', init);

@@ -18,7 +18,7 @@ body {
   left: 0;
 }
 .off {
-  display: none;
+  visibility: hidden;
 }
 #exposure {
   background: #cccccc url('/images/flash.png');
