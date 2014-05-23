@@ -135,6 +135,11 @@ class button_manuel(Frame):
         self.Button_P_FI_AQ_3.pack()
         self.state_P_FI_AQ_3 = tkinter.Canvas(self.frame_button_state, bg ='green')
         self.state_P_FI_AQ_3.pack()
+        
+        self.Button_P_FI_S = tkinter.Button(self.frame_button,  text ="P_FI_S", command = self.Button_P_FI_S)        
+        self.Button_P_FI_S.pack()
+        self.Button_P_FI_S = tkinter.Canvas(self.frame_button_state, bg ='green')
+        self.Button_P_FI_S.pack()
         #self.Button_print = tkinter.Button(self,  text ="print_state", command = self.print_state)        
         #self.Button_print.pack()
         
@@ -152,91 +157,64 @@ class button_manuel(Frame):
         
     def Button_P_M1_BR1(self) :
         name = 'P_M1_BR1'
-        self.parent.current_state.set_state_pumps(name, not self.parent.current_state.get_state_pumps(name))
+        self.parent.current_state.set_state_pump(name, not self.parent.current_state.get_state_pump(name))
         
     def Button_P_M1_BR2(self) :
         name = 'P_M1_BR2'
-        self.parent.current_state.set_state_pumps(name, not self.parent.current_state.get_state_pumps(name))
+        self.parent.current_state.set_state_pump(name, not self.parent.current_state.get_state_pump(name))
 
         
     def Button_P_M1_BR3(self) :
         name = 'P_M1_BR3'
-        self.parent.current_state.set_state_pumps(name, not self.parent.current_state.get_state_pumps(name))
+        self.parent.current_state.set_state_pump(name, not self.parent.current_state.get_state_pump(name))
         
         
     def Button_P_BR1_BU1(self) :
         name = 'P_BR1_BU1'
-        self.parent.current_state.set_state_pumps(name, not self.parent.current_state.get_state_pumps(name))
+        self.parent.current_state.set_state_pump(name, not self.parent.current_state.get_state_pump(name))
 
      
     def Button_P_BR2_BU2(self) :
         name = 'P_BR2_BU2'
-        self.parent.current_state.set_state_pumps(name, not self.parent.current_state.get_state_pumps(name))
+        self.parent.current_state.set_state_pump(name, not self.parent.current_state.get_state_pump(name))
         
     def Button_P_BR3_BU3(self) :
         name = 'P_BR3_BU3'
-        self.parent.current_state.set_state_pumps(name, not self.parent.current_state.get_state_pumps(name))
+        self.parent.current_state.set_state_pump(name, not self.parent.current_state.get_state_pump(name))
        
     def Button_P_M2_BU1(self) :
         name = 'P_M2_BU1'
-        self.parent.current_state.set_state_pumps(name, not self.parent.current_state.get_state_pumps(name))
+        self.parent.current_state.set_state_pump(name, not self.parent.current_state.get_state_pump(name))
      
     def Button_P_M2_BU2(self) :
         name = 'P_M2_BU2'
-        self.parent.current_state.set_state_pumps(name, not self.parent.current_state.get_state_pumps(name))
+        self.parent.current_state.set_state_pump(name, not self.parent.current_state.get_state_pump(name))
         
     def Button_P_M2_BU3(self) :
         name = 'P_M2_BU3'
-        self.parent.current_state.set_state_pumps(name, not self.parent.current_state.get_state_pumps(name))
+        self.parent.current_state.set_state_pump(name, not self.parent.current_state.get_state_pump(name))
      
     def Button_P_M2_AQ(self):
         name = 'P_M2_AQ'
-        self.parent.current_state.set_state_pumps(name, not self.parent.current_state.get_state_pumps(name))
+        self.parent.current_state.set_state_pump(name, not self.parent.current_state.get_state_pump(name))
             
     def Button_P_AQ_S(self):
         name = 'P_AQ_S'
-        self.parent.current_state.set_state_pumps(name, not self.parent.current_state.get_state_pumps(name))
+        self.parent.current_state.set_state_pump(name, not self.parent.current_state.get_state_pump(name))
     
     """fake pump"""
     def Button_P_BU1_AQ(self) :
         name = 'fill_BU1_AQ'
-        """check if there is no action running"""
-        b = True
-        for item in self.current_state._current_action : 
-            if not item == name :  
-                if self.current_state.get_current_action(item) : 
-                    b = False
-        
-        """if there is no action running"""
-        if b : 
-            self.current_state.set_current_action(name, not self.current_state.get_current_action(name))
+        self.current_state.set_current_action(name, not self.current_state.get_current_action(name))
         
     def Button_P_BU2_AQ(self) :
-        name = 'fill_BU2_AQ'
-        """check if there is no action running"""
-        b = True
-        for item in self.current_state._current_action : 
-            if not item == name :  
-                if self.current_state.get_current_action(item) : 
-                    b = False
-        
-        """if there is no action running"""
-        if b : 
-            self.current_state.set_current_action(name, not self.current_state.get_current_action(name))
+        name = 'fill_BU2_AQ' 
+        self.current_state.set_current_action(name, not self.current_state.get_current_action(name))
         
     def Button_P_BU3_AQ(self) :
         name = 'fill_BU3_AQ'
-        """check if there is no action running"""
-        """check if there is no action running"""
-        b = True
-        for item in self.current_state._current_action : 
-            if not item == name :  
-                if self.current_state.get_current_action(item) : 
-                    b = False
-        
-        """if there is no action running"""
-        if b : 
-            self.current_state.set_current_action(name, not self.current_state.get_current_action(name))
+        self.current_state.set_current_action(name, not self.current_state.get_current_action(name))
+            
     def Button_unlock(self) :
         self.lock = not self.lock
         if self.lock : 
@@ -248,28 +226,33 @@ class button_manuel(Frame):
     def Button_P_BU1_FI(self) :
         name = 'P_BU1_FI'
         if self.lock : 
-            self.parent.current_state.set_state_pumps(name, not self.parent.current_state.get_state_pumps(name))
+            self.parent.current_state.set_state_pump(name, not self.parent.current_state.get_state_pump(name))
     
     def Button_P_BU2_FI(self) :
         name = 'P_BU2_FI'
         if self.lock : 
-            self.parent.current_state.set_state_pumps(name, not self.parent.current_state.get_state_pumps(name))
+            self.parent.current_state.set_state_pump(name, not self.parent.current_state.get_state_pump(name))
     def Button_P_BU3_FI(self) :
         name = 'P_BU3_FI'
         if self.lock : 
-            self.parent.current_state.set_state_pumps(name, not self.parent.current_state.get_state_pumps(name))
+            self.parent.current_state.set_state_pump(name, not self.parent.current_state.get_state_pump(name))
     def Button_P_AQ_FI(self) :
         name = 'P_AQ_FI'
         if self.lock : 
-            self.parent.current_state.set_state_pumps(name, not self.parent.current_state.get_state_pumps(name))
+            self.parent.current_state.set_state_pump(name, not self.parent.current_state.get_state_pump(name))
     def Button_P_FI_AQ_1(self) :
         name = 'P_FI_AQ_1'
         if self.lock : 
-            self.parent.current_state.set_state_pumps(name, not self.parent.current_state.get_state_pumps(name))
+            self.parent.current_state.set_state_pump(name, not self.parent.current_state.get_state_pump(name))
     def Button_P_FI_AQ_3(self) :
         name = 'P_FI_AQ_3'
         if self.lock : 
-            self.parent.current_state.set_state_pumps(name, not self.parent.current_state.get_state_pumps(name))
+            self.parent.current_state.set_state_pump(name, not self.parent.current_state.get_state_pump(name))
+    
+    def Button_P_FI_S(self) :
+        name = 'P_FI_S'
+        if self.lock : 
+            self.parent.current_state.set_state_pump(name, not self.parent.current_state.get_state_pump(name))
         
     def print_state(self):
         print (self.the_buttons)  

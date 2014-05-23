@@ -8,6 +8,8 @@ import threading
 import time
 from server_level import *
 from server_arduino_order import *
+from server_concentration import *
+from server_formation_rate import *
 
 class server(threading.Thread) : 
     
@@ -22,6 +24,8 @@ class server(threading.Thread) :
         self.host = host 
         self.port = port
         self.name = "server_connection"
+        
+        """keep the compt of connection asked"""
         self.number = 0 
         
         self.current_state = cu_state
@@ -35,7 +39,9 @@ class server(threading.Thread) :
             
         """dictionnary of all client connected to the server"""
         
+        """list of server in charge of the communication"""
         self.client_connected = dict()
+        
         
         
    
@@ -70,24 +76,96 @@ class server(threading.Thread) :
             
             #print(first_contact_data)
             
-            if first_contact_data =="client_analyse_image":
-                self._send(client_socket,"OK")
-                self.number +=1
-                the_server_level = server_level(client_socket,str(self.number))
-                self.client_connected["client_analyse_image"] = the_server_level
+            if first_contact_data =="client_formation_rate":
+                """if it is the first time"""
+                if not "server_formation_rate" in self.client_connected :
+                    self._send(client_socket,"OK")
+                    the_server_formation_rate = server_formation_rate(client_socket, self)
+                    self.client_connected["server_formation_rate"] = [the_server_formation_rate, True]
+                    self.number +=1
+                    print("server_formation_rate accepted")
+                    """ if the server is down, new connection"""
+                elif not self.client_connected["server_formation_rate"][1] : 
+                    self._send(client_socket,"OK")
+                    the_server_formation_rate = server_formation_rate(client_socket, self)
+                    self.client_connected["server_formation_rate"] = [the_server_formation_rate, True]
+                    self.number +=1
+                    print("server_formation_rate accepted")
+                    """ if the server is ok, no new connection possible"""
+                else : 
+                    self._send(client_socket,"NO")
+                    print("server_formation_rate refused")
+                    
             
     
             elif first_contact_data =="client_level":
-                self._send(client_socket,"OK")
-                self.number +=1
-                the_server_level = server_level(client_socket,"client_analyse_image "+ str(self.number),self.current_state)
-                self.client_connected["client_analyse_image"] = the_server_level
+                """if it is the first time"""
+                if not "server_level" in self.client_connected :
+                    self._send(client_socket,"OK")
+                    the_server_level = server_level(client_socket, self)
+                    self.client_connected["server_level"] = [the_server_level, True]
+                    self.number +=1
+                    print("server_level accepted")
+                  
+                    """ if the server is down, new connection"""
+                elif not self.client_connected["server_level"][1] : 
+                    self._send(client_socket,"OK")
+                    the_server_level = server_level(client_socket, self)
+                    self.client_connected["server_level"] = [the_server_level, True]
+                    self.number +=1
+                    print("server_level accepted")
+                    
+                    """ if the server is ok, no new connection possible"""
+                else : 
+                    self._send(client_socket,"NO")
+                    print("server_level refused")
+    
             
+            elif first_contact_data =="client_concentration":
+                """if it is the first time"""
+                if not "server_concentration" in self.client_connected :
+                    self._send(client_socket,"OK")
+                    the_server_concentration = server_concentration(client_socket, self)
+                    self.client_connected["server_concentration"] = [the_server_concentration, True]
+                    self.number +=1
+                    print("server_concentration accepted")
+                  
+                    """ if the server is down, new connection"""
+                elif not self.client_connected["server_concentration"][1] : 
+                    self._send(client_socket,"OK")
+                    the_server_concentration = server_concentration(client_socket, self)
+                    self.client_connected["server_concentration"] = [the_server_concentration, True]
+                    self.number +=1
+                    print("server_concentration accepted")
+                    
+                    """ if the server is ok, no new connection possible"""
+                else : 
+                    self._send(client_socket,"NO")
+                    print("server_concentration refused")
+                
+                
+                """for test purposes"""
             elif first_contact_data =="client_arduino_order":
-                self._send(client_socket,"OK")
-                self.number +=1
-                the_server_arduino_order = server_arduino_order(client_socket,"client_arduino_order" + str(self.number),self.current_state)
-                self.client_connected["client_arduino_order"] = the_server_arduino_order    
+                """if it is the first time"""
+                if not "server_arduino_order" in self.client_connected :
+                    self._send(client_socket,"OK")
+                    the_server_arduino_order = server_arduino_order(client_socket, self)
+                    self.client_connected["server_arduino_order"] = [the_server_arduino_order, True]
+                    self.number +=1
+                    print("server_arduino_order accepted")
+                  
+                    """ if the server is down, new connection"""
+                elif not self.client_connected["server_arduino_order"][1] : 
+                    self._send(client_socket,"OK")
+                    the_server_arduino_order = server_arduino_order(client_socket, self)
+                    self.client_connected["server_arduino_order"] = [the_server_arduino_order, True]
+                    self.number +=1
+                    print("server_arduino_order accepted")
+                    
+                    """ if the server is ok, no new connection possible"""
+                else : 
+                    self._send(client_socket,"NO")
+                    print("server_arduino_order refused")
             
             else : 
                 self._send(client_socket,"NO")

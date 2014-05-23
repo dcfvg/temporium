@@ -2,6 +2,8 @@
 Created on May 1, 2014
 
 @author: Cactus
+
+Need to be adapted because, is made to deal with level_fake    
 '''
 import time
 import threading
@@ -12,19 +14,21 @@ class server_level(threading.Thread):
     classdocs
     '''
 
-    def __init__(self, client_socket,name, current_state):
+    def __init__(self, client_socket, un_server):
         
         threading.Thread.__init__(self)
         
         self.client_socket = client_socket
         self.terminated = False 
-        self.name = name
+        self.name = "server_level"
         '''
         Constructor
         
         '''
+        self.server = un_server
         """current_state"""
-        self.current_state = current_state
+        self.current_state = self.server.current_state
+
         self.start()
         
         "ask for information"
@@ -48,31 +52,48 @@ class server_level(threading.Thread):
             if data =="" :
                 self.stop()
             else :        
-                """information like '{'M1': 3, 'M2': 2} ' """
+                """information like 'M1: 3, M2: 2 \n ' """
                 #print (self.name + " received : "+ data)
-                data_list = data.split("\n")
-                msg = data_list[0]
-                msg = msg.replace("{", "")
-                msg = msg.replace("}","")
-                volume_cont_list = msg.split(",")
-                try:
+                data = data.split("\n")
                 
+                for msg in data : 
+                    
+                    volume_cont_list = msg.split(",")
+                    #print ("message " +str(volume_cont_list) )
+                    #print ("daz " +str(volume_cont_list) )
+                    
+                    """try"""
                     for item in volume_cont_list : 
-                        """info like ' 'M1': 3 '"""
-                        info = item.strip().split(":")
-                        
-                        cont =info[0].strip().replace("'","") 
-                        vol = info[1].strip()
-                        self.current_state.set_occupied_volume(cont.strip(), float(vol))
-                        #print("V " + cont +" = " + vol + " set")
-                    #print (self.name + " received OK : "+ data)
-                    #print("msg OK ")
-                except Exception:
-                    """Sprint what is wrong"""
-                    print(self.name +" Message does not fit the protocol")
-                    #print( self.name + " received WRONG : "+ msg)
-                    pass
+                        """info like ' M1 : 3 '"""
+                        #print ("message " +str(item) )
+                        info = item.split(":")
+                        #print ("info " +str(info) )
+                        try :
+                            cont =info[0].strip()
+                            vol = info[1].strip()
+                            #print (cont + " " + vol )
+                            
+                            if not vol == "null" :
+                                self.current_state.set_occupied_volume(cont, float(vol))
+                                #print("volume "+ cont.strip() + " set to " +vol)
+                            
+                                
+                            else : 
+                                print ("message daz" + cont + " "  + vol)
+                        except Exception:
 
+                            #print(self.name +" Message does not fit the protocol " + msg)
+                            pass
+                    """except Exception:
+
+                        print(self.name +" Message does not fit the protocol " + msg)"""
+                        
+                        
+    def begin_information(self):
+        self._send("level_start \n")
+    
+    def end_information(self):
+        self._send("level_stop \n")
     
             
     def _send(self , msg):
@@ -80,11 +101,13 @@ class server_level(threading.Thread):
         
     def _recv(self):
         return self.client_socket.recv(2048).decode()   
-        
+    
+    
         
     def stop(self) :
         self.terminated = True
         self._close() 
+        self.server.client_connected[self.name][1]= False
         print( self.name +" finish")
     
     def _close(self):

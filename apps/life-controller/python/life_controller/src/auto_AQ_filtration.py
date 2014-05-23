@@ -6,7 +6,7 @@ Created on 11 mai 2014
 import threading
 import time
 
-class auto_filtration(threading.Thread):
+class auto_AQ_filtration(threading.Thread):
     '''
     thread to run action
     '''
@@ -22,15 +22,21 @@ class auto_filtration(threading.Thread):
         
         
     def run(self):
-        self.current_state.set_current_action("filter_aquarium",True)
+        """set auto filtration to True"""
+        self.current_state._set_current_action_evolved("auto_AQ_filtration",True)
+        """start filtration"""
+        self.current_state.set_current_action("AQ_filtration",True)
         print("Filtration automatique : 5 min")
         """wait 300 sec or order to stop"""
         compt = 0 
-        while self.current_state.get_keep_going() and compt <300 : 
+        while compt <300 and self.current_state.get_current_action_evolved("auto_AQ_filtration"): 
             time.sleep(1)
             compt = compt + 1
         print("Fin de la filtration automatique")
-        self.current_state.set_current_action("filter_aquarium",False)
+        """end filtration"""
+        self.current_state.set_current_action("AQ_filtration",False)
+        """set auto filtration to False"""
+        self.current_state._set_current_action_evolved("auto_AQ_filtration",False)
         
         
     

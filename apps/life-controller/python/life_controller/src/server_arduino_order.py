@@ -8,24 +8,29 @@ import threading
 
 class server_arduino_order(threading.Thread):
     '''
-    classdocs
+    server to send information that arduino received to simulate the arduino
     '''
 
-    def __init__(self, client_socket,name, un_current_state):
+    def __init__(self, client_socket, un_server):
         
         threading.Thread.__init__(self)
         
         self.client_socket = client_socket
         self.terminated = False 
-        self.name = name
+        self.name = "server_arduino_order"
         '''
         Constructor
         
         '''
+        self.server = un_server
+        """current_state"""
+        self.current_state = self.server.current_state
+        """com_arduino"""
+        self.com_arduino = self.current_state.com_arduino
+        
         self.start()
         
-        """com_arduino"""
-        self.com_arduino = un_current_state.com_arduino
+        
         
         """set this server in com_arduino"""
         self.com_arduino.set_server_arduino_order(self)
@@ -59,6 +64,7 @@ class server_arduino_order(threading.Thread):
     def stop(self) :
         self.terminated = True
         self._close() 
+        self.server.client_connected[self.name][1]= False
         print( self.name +" finish")
     
     def _close(self):

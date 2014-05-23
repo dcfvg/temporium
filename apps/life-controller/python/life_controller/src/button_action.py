@@ -5,9 +5,9 @@ Created on Apr 24, 2014
 '''
 import tkinter
 from tkinter import *
-from auto_filtration import *
+from auto_AQ_filtration import *
 import time 
-from renew_aquarium import *
+from renew_light_AQ_BU import *
 
 class button_action(Frame):
     
@@ -57,8 +57,8 @@ class button_action(Frame):
         self.Button_renew_light_BU3 = tkinter.Button(self.frame_button,  text ="Renouvellement algues leger BU3", command = self.renew_light_BU3)        
         self.Button_renew_light_BU3.pack()
         
-        self.Button_stop = tkinter.Button(self.frame_button,  text ="START/STOP", command = self.stop)        
-        self.Button_stop.pack()
+        """self.Button_stop = tkinter.Button(self.frame_button,  text ="START/STOP", command = self.stop)        
+        self.Button_stop.pack()"""
         
         #self.state_P_M1_BR3 = tkinter.Canvas(self.frame_button_state, bg ='green')
         #self.state_P_M1_BR3.pack()
@@ -67,6 +67,28 @@ class button_action(Frame):
         #self.Button_renew_heavy.pack()
         #self.state_P_M1_BR3 = tkinter.Canvas(self.frame_button_state, bg ='green')
         #self.state_P_M1_BR3.pack()
+        
+        self.Button_start_BRBU = tkinter.Button(self.frame_button,  text ="Start BRBU cycle", command = self.start_BRBU_cycle)        
+        self.Button_start_BRBU.pack()
+        
+        self.Button_BRBU_pause = tkinter.Button(self.frame_button,  text ="BRBU_cycle_pause", command = self.BRBU_pause)        
+        self.Button_BRBU_pause.pack()
+        
+        self.Button_lift_down = tkinter.Button(self.frame_button,  text ="lift down", command = self.liftDown)        
+        self.Button_lift_down.pack()
+        
+        
+        self.Button_lift_up = tkinter.Button(self.frame_button,  text ="lift up", command = self.liftUp)        
+        self.Button_lift_up.pack()
+        
+        
+        self.Button_screen_down = tkinter.Button(self.frame_button,  text ="screen down", command = self.screenDown)        
+        self.Button_screen_down.pack()
+        
+        
+        self.Button_screen_up = tkinter.Button(self.frame_button,  text ="screen up", command = self.screenUp)        
+        self.Button_screen_up.pack()
+        
         
         
         
@@ -95,67 +117,61 @@ class button_action(Frame):
         """check if there is no action running"""
         b = True
         for item in self.current_state._current_action : 
-            if not item == "filter_aquarium" :  
+            if not item == "AQ_filtration" :  
                 if self.current_state.get_current_action(item) : 
                     b = False
         
         """if there is no action running"""
-        if b : 
-            """if autorized"""
-            if self.current_state.get_keep_going() : 
-                self.current_state.filter_aquarium( not self.current_state.get_current_action("filter_aquarium"))
+        if b :  
+            self.current_state.set_current_action("AQ_filtration", not self.current_state.get_current_action("AQ_filtration"))
 
         
     def auto_filtration(self) :
         b = True
-        for item in self.current_state._current_action : 
-            if self.current_state.get_current_action(item) : 
-                b = False
+        for item in self.current_state._current_action_evolved : 
+            if not item == "auto_AQ_filtration" : 
+                if self.current_state.get_current_action_evolved(item) : 
+                    b = False
         """if there is no action running"""
-        if b : 
-            filt = auto_filtration(self.current_state)
-            filt.start()
-         
+        if b :
+            self.current_state.set_current_action_evolved("auto_AQ_filtration", not self.current_state.get_current_action_evolved("auto_AQ_filtration"))
     
     def renew_light_BU1(self):
-        b = True
-        for item in self.current_state._current_action : 
-            if self.current_state.get_current_action(item) : 
-                b = False
-        """if there is no action running"""
-        if b : 
-            renew = renew_aquarium(self.parent.current_state,"BU1", "light")
-            renew.start()
+        name = "renew_light_AQ_BU1"
+        self.current_state.set_current_action_evolved(name,not self.current_state.get_current_action_evolved(name) )
         
     def renew_light_BU2(self):
-        b = True
-        for item in self.current_state._current_action : 
-            if self.current_state.get_current_action(item) : 
-                b = False
-        """if there is no action running"""
-        if b :  
-            renew = renew_aquarium(self.parent.current_state,"BU2", "light")
-            renew.start()
+        name = "renew_light_AQ_BU2"
+        self.current_state.set_current_action_evolved(name,not self.current_state.get_current_action_evolved(name) )
         
     def renew_light_BU3(self):
-        b = True
-        for item in self.current_state._current_action : 
-            if self.current_state.get_current_action(item) : 
-                b = False
-        """if there is no action running"""
-        if b : 
-            renew = renew_aquarium(self.parent.current_state,"BU3","light")
-            renew.start()
+        name = "renew_light_AQ_BU3"
+        self.current_state.set_current_action_evolved(name,not self.current_state.get_current_action_evolved(name) )
         
     def renew_heavy(self):
         #renew = renew_aquarium(self.parent.current_state,"heavy")
         pass
     
-    def cycle_BRBU(self) :
-        pass
+    def start_BRBU_cycle(self) :
+        self.current_state.BRBU_controller.start_stop_cycle()
+     
+    def liftDown(self) :
+        self.current_state.com_arduino.liftDown()
+           
+    def liftUp(self) :
+        self.current_state.com_arduino.liftUp()
     
-    def stop(self):
-        self.current_state.set_keep_going(not self.current_state.get_keep_going())
+    def screenDown(self) :
+        self.current_state.com_arduino.screenDown()
+    
+    def screenUp(self) :
+        self.current_state.com_arduino.screenUp()
+        
+    def BRBU_pause(self):
+        self.current_state.BRBU_controller.pause()
+    
+    """def stop(self):
+        self.current_state.set_keep_going(not self.current_state.get_keep_going())"""
     
     
                 

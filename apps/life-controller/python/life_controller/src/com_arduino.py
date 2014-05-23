@@ -38,7 +38,7 @@ class com_arduino(object):
         """for simulation and testing"""
          
         """do not try to connect with Arduino"""
-        self.test = False
+        self.test = True
          
         """send order received to the client connected"""
         self.server_arduino_order_state = [threading.Lock() , False]
@@ -113,12 +113,17 @@ class com_arduino(object):
         
     def P_FI_AQ_1(self, state):
         """control 1 pump from FI to AQ"""
-        name = 'P_FI_AQ'
+        name = 'P_FI_AQ_1'
         self.pump_order(name, state)
     
     def P_FI_AQ_3(self, state):
         """control 3 pump from FI to AQ"""
-        name = 'P_FI_AQ'
+        name = 'P_FI_AQ_3'
+        self.pump_order(name, state)
+        
+    def P_FI_S(self, state):
+        """control 3 pump from FI to AQ"""
+        name = 'P_FI_S'
         self.pump_order(name, state)
         
     def pump_order(self, name , state):
@@ -154,7 +159,8 @@ class com_arduino(object):
                     value = self.the_EL[name_container][name_EL][0].getState(self.the_EL[name_container][name_EL][1])
                     return value
         else : 
-            return "NULL"
+            #return "NULL"
+            return False
      
     """Order to liftDown and liftUp, screenDown and screenUp"""
     def liftDown(self):
@@ -187,9 +193,9 @@ class com_arduino(object):
         
         if self.server_arduino_order_state[1] : 
             if state : 
-                self.server_arduino_order._send(name + " : HIGH")
+                self.server_arduino_order._send(name + " : HIGH" + "\n")
             else : 
-                self.server_arduino_order._send(name + " : LOW")
+                self.server_arduino_order._send(name + " : LOW" + "\n")
         
         self.server_arduino_order_state[0].release()  
             
@@ -199,7 +205,7 @@ class com_arduino(object):
         if not self.test  :
             """ Set the pin to the right function according to the log_pin.txt file """
             # Open the file
-            log_pin = open("log_pin.txt", "r")
+            log_pin = open("config_pin.txt", "r")
       
             # read the ligne one by one
             for ligne in log_pin:
@@ -216,23 +222,23 @@ class com_arduino(object):
                 elif list[0].strip() == "arduino" :
                     """Make an arduino with the port from the log_pin.txt file, and put it in the dict() the_arduino
                     arduino_current to associate the pin to the right arduino (the last built arduino )"""
-                    if  list[1].strip() == "arduino_mega" :
+                    if  list[1].strip() == "arduino_pump" :
                         self.the_arduino[list[1].strip()] = arduino_mega(list[2].strip())
                         arduino_current = self.the_arduino[list[1].strip()]
                         print (list[1].strip() +" made on port :" + list[2].strip())
                     elif  list[1].strip() == "arduino_lift" : 
                         self.the_arduino[list[1].strip()] = arduino_lift(list[2].strip())
                         arduino_current = self.the_arduino[list[1].strip()]
+                    
+                    if  list[1].strip() == "arduino_EL" :
+                        self.the_arduino[list[1].strip()] = arduino_mega(list[2].strip())
+                        arduino_current = self.the_arduino[list[1].strip()]
+                        print (list[1].strip() +" made on port :" + list[2].strip())
+                    
                     else : 
                         print("/!\ Wrong name of Arduino : " + list[1].strip() )
                                     
-                    
-                elif list[0].strip() == "Photoresistor" : 
-                    """Put the Pin of the Photoresistor into the dictionnary and define this pin as an INPUT"""
-                    if list[1].strip()=="NULL" :
-                        self.the_pumps[list[0].strip()] = [arduino_current,list[1].strip()]
-                    else : 
-                        self.the_pumps[list[0].strip()] = [arduino_current,int(list[1].strip())]                     
+                                       
                      
                 elif list[0].strip() =="pin_array_output" :
                     """Make a dictionnary of the pin_array_output : {arduino_current : [pin, pin, ...], ...} """
@@ -279,10 +285,3 @@ class com_arduino(object):
          
              
           
-                 
-if __name__ == "__main__":
-    a = com_arduino()
-    #print(a.the_pumps)
-    while True :
-        a.photoresistor
-        time.sleep(0.1)

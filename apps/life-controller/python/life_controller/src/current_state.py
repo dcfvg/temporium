@@ -6,7 +6,11 @@ Created on Apr 27, 2014
 
 import threading
 import time
-from stop_filtration import *
+from AQ_filtration import *
+from fill_BU_AQ import *
+from auto_AQ_filtration import *
+from renew_light_AQ_BU import *
+from empty_BU_S import *
 
 class current_state(object):
     """ Gather all the informations about the state of the installation"""
@@ -21,7 +25,8 @@ class current_state(object):
                              "P_BR1_BU1" : [threading.Lock(),False], "P_BR2_BU2" : [threading.Lock(),False] , "P_BR3_BU3" : [threading.Lock(),False],\
                              "P_M2_BU1" : [threading.Lock(),False], "P_M2_BU2" : [threading.Lock(),False] , "P_M2_BU3" : [threading.Lock(),False], "P_M2_AQ" : [threading.Lock(),False],\
                              "P_BU1_FI" : [threading.Lock(),False], "P_BU2_FI" : [threading.Lock(),False] , "P_BU3_FI" : [threading.Lock(),False],\
-                             "P_AQ_S" : [threading.Lock(),False], "P_AQ_FI" : [threading.Lock(),False] , "P_FI_AQ_1" : [threading.Lock(),False], "P_FI_AQ_3" : [threading.Lock(),False]}
+                             "P_AQ_S" : [threading.Lock(),False], "P_AQ_FI" : [threading.Lock(),False] , "P_FI_AQ_1" : [threading.Lock(),False], "P_FI_AQ_3" : [threading.Lock(),False],\
+                             "P_FI_S" : [threading.Lock(),False] }
         
         """state of the EL {"AQ" : {"HIGH" : [threading.Lock(),False,1], "MEDIUM" : [threading.Lock(),False,0.66] },... }"""
         self._state_EL = dict()
@@ -44,11 +49,24 @@ class current_state(object):
         self._BRBU_state = {"BU1" : [threading.Lock(), "USE"],"BU2" : [threading.Lock(), "WAIT"],"BU3" : [threading.Lock(), "EMPTY"] }
         
         """current_action"""
-        self._current_action = {"filter_aquarium" : [threading.Lock(),False], "fill_BU1_AQ" : [threading.Lock(),False],"fill_BU2_AQ" : [threading.Lock(),False] , "fill_BU3_AQ" : [threading.Lock(),False]}
+        self._current_action = {"AQ_filtration" : [threading.Lock(),False],\
+                                "fill_BU1_AQ" : [threading.Lock(),False],\
+                                "fill_BU2_AQ" : [threading.Lock(),False] ,\
+                                "fill_BU3_AQ" : [threading.Lock(),False],\
+                                "empty_BU1_S" : [threading.Lock(),False],\
+                                "empty_BU2_S" : [threading.Lock(),False],\
+                                "empty_BU3_S" : [threading.Lock(),False],\
+                                 }
+        
+        """current_action_evolved"""
+        self._current_action_evolved = {"auto_AQ_filtration" : [threading.Lock(),False],\
+                                        "renew_light_AQ_BU1" : [threading.Lock(),False],\
+                                        "renew_light_AQ_BU2" : [threading.Lock(),False],\
+                                        "renew_light_AQ_BU3" : [threading.Lock(),False],\
+                                 }
         
         """AQ_concentration"""
-        self._AQ_concentration = [threading.Lock(), 0]
-        
+        self._concentration = {"AQ" :[threading.Lock(), 0]}
         
         self.last_time = time.time()
         
@@ -58,84 +76,89 @@ class current_state(object):
         self.GUI = False 
         
         "emergency stop "  
-        
         self._keep_going = [threading.Lock(), True]
+        
         """initialize all values after a log_start.txt"""
         self.__setState__()
         #self.__setState_EL__()
     
+        #self.client_connected = 
     
     def P_BR1_BU1(self, state):
         name= 'P_BR1_BU1'
-        self.set_state_pumps( name, state )
+        self.set_state_pump( name, state )
         
     def P_BR2_BU2(self, state):
         name= 'P_BR2_BU2'
-        self.set_state_pumps( name, state )
+        self.set_state_pump( name, state )
     
     def P_BR3_BU3(self, state):
         name = 'P_BR3_BU3'
-        self.set_state_pumps( name, state )
+        self.set_state_pump( name, state )
            
     def P_BU1_FI(self, state):
         name = 'P_BU1_FI'
-        self.set_state_pumps( name, state )
+        self.set_state_pump( name, state )
                 
     def P_BU2_FI(self, state):
         name = 'P_BU2_FI'
-        self.set_state_pumps( name, state )
+        self.set_state_pump( name, state )
     
     def P_BU3_FI(self, state):
         name = 'P_BU3_FI'
-        self.set_state_pumps( name, state )
+        self.set_state_pump( name, state )
                 
     def P_M1_BR1(self, state):
         name = 'P_M1_BR1'
-        self.set_state_pumps( name, state )
+        self.set_state_pump( name, state )
    
     def P_M1_BR2(self, state):
         name = 'P_M1_BR2'
-        self.set_state_pumps( name, state )
+        self.set_state_pump( name, state )
                 
     def P_M1_BR3(self, state):
         name = 'P_M1_BR3'
-        self.set_state_pumps( name, state )
+        self.set_state_pump( name, state )
                 
     def P_M2_BU1(self, state):
         name = 'P_M2_BU1'
-        self.set_state_pumps( name, state )
+        self.set_state_pump( name, state )
    
     def P_M2_BU2(self, state):
         name = 'P_M2_BU2'
-        self.set_state_pumps( name, state )
+        self.set_state_pump( name, state )
         
     def P_M2_BU3(self, state):
         name = 'P_M2_BU3'
-        self.set_state_pumps( name, state )
+        self.set_state_pump( name, state )
                            
     def P_M2_AQ(self, state):
         name = 'P_M2_AQ'
-        self.set_state_pumps( name, state )
+        self.set_state_pump( name, state )
     
     def P_AQ_S(self, state):
         name = 'P_AQ_S'
-        self.set_state_pumps( name, state )
+        self.set_state_pump( name, state )
         
     def P_AQ_FI(self, state):
         name = 'P_AQ_FI'
-        self.set_state_pumps( name, state )
+        self.set_state_pump( name, state )
         
     def P_FI_AQ_1(self, state):
         name = 'P_FI_AQ_1'
-        self.set_state_pumps( name, state )
+        self.set_state_pump( name, state )
         
     def P_FI_AQ_3(self, state):
         name = 'P_FI_AQ_3'
-        self.set_state_pumps( name, state )
+        self.set_state_pump( name, state )
+    
+    def P_FI_S(self, state):
+        name = 'P_FI_S'
+        self.set_state_pump( name, state )
           
-    def filter_aquarium(self, state):
+    def AQ_filtration(self, state):
         """to filter the aquarium"""
-        name = "filter_aquarium"
+        name = "AQ_filtration"
         self.set_current_action(name, state)
     
     def fill_BU1_AQ(self,state):
@@ -157,9 +180,21 @@ class current_state(object):
         """to fill AQ with BU_name"""
         action_name = "fill_"+BU_name+"_AQ"
         self.set_current_action(action_name, state)
+    
+    def empty_BU1_S(self,state):
+        """to fill AQ with BU1"""
+        name = "empty_BU1_S"
+        self.set_current_action(name, state)
+    
+    def empty_BU2_S(self, state):
+        """to fill AQ with BU2"""
+        name = "empty_BU2_S"
+        self.set_current_action(name, state)
         
-    
-    
+    def empty_BU3_S(self, state):
+        """to fill AQ with BU3"""
+        name = "empty_BU3_S"
+        self.set_current_action(name, state)
         
         
     """Order to liftDown and liftUp, screenDown and screenUp"""
@@ -183,55 +218,144 @@ class current_state(object):
         self._current_action[name][0].release()
         
     def set_current_action(self, name, state):
-        if not self.get_current_action(name) == state : 
-            if name == "filter_aquarium" : 
-                if state : 
-                    """set keep going to True, action autorized after a STOP for a new action"""
-                    #self.set_keep_going(True)
-                    
-                    self.P_AQ_FI(state)
-                    self.P_FI_AQ_1(state)
-                    self.P_FI_AQ_3(state)
-                else : 
-                    self.P_AQ_FI(state)
-                    stop = stop_filtration(self, name)
-                    stop.start()
-            elif name == "fill_BU1_AQ" : 
-                if state : 
-                    """set keep going to True, action autorized after a STOP for a new action"""
-                    #self.set_keep_going(True)
-                    
-                    self.P_BU1_FI(state)
-                    self.P_FI_AQ_1(state)
-                else : 
-                    self.P_BU1_FI(state)
-                    stop = stop_filtration(self, name)
-                    stop.start()
-            elif name == "fill_BU2_AQ" : 
-                if state : 
-                    """set keep going to True, action autorized after a STOP for a new action"""
-                    #self.set_keep_going(True)
-                    
-                    self.P_BU2_FI(state)
-                    self.P_FI_AQ_1(state)
-                else : 
-                    self.P_BU2_FI(state)
-                    stop = stop_filtration(self, name)
-                    stop.start()
-            elif name == "fill_BU3_AQ" :
-                if state :  
-                    """set keep going to True, action autorized after a STOP for a new action"""
-                    #self.set_keep_going(True)
-                    
-                    self.P_BU3_FI(state)
-                    self.P_FI_AQ_1(state)
-                else : 
-                    self.P_BU3_FI(state)
-                    stop = stop_filtration(self, name)
-                    stop.start()
-            """set the filtration end after the end of FI-> AQ"""
-            if state : 
-                self._set_current_action(name, state)
+        """check if there is no action running"""
+        b = True
+        for item in self._current_action : 
+            if not item == name :  
+                if self.get_current_action(item) : 
+                    b = False
+        
+        """if there is no action running"""
+        if b :
+            if not self.get_current_action(name) == state : 
+                if name == "AQ_filtration" : 
+                    if state : 
+                        """start the thread to for a filtration, only if there is no filtration at the same time"""
+                        if not self.get_current_action("AQ_filtration") :
+                            action = AQ_filtration(self)
+                            action.start()
+                    else : 
+                        """set the action to end, and will stop the current action""" 
+                        self._set_current_action("AQ_filtration",False)
+                        
+                elif name == "fill_BU1_AQ" : 
+                    if state : 
+                        """start the thread to for a filtration, only if there is no filtration at the same time"""
+                        if not self.get_current_action("fill_BU1_AQ") :
+                            action = fill_BU_AQ(self,"BU1")
+                            action.start()
+                        
+                    else : 
+                        self._set_current_action("fill_BU1_AQ",False)
+                elif name == "fill_BU2_AQ" : 
+                    if state : 
+                        """start the thread to for a filtration, only if there is no filtration at the same time"""
+                        if not self.get_current_action("fill_BU2_AQ") :
+                            action = fill_BU_AQ(self,"BU2")
+                            action.start()
+                        
+                    else : 
+                        self._set_current_action("fill_BU2_AQ",False)
+                elif name == "fill_BU3_AQ" :
+                    if state : 
+                        """start the thread to for a filtration, only if there is no filtration at the same time"""
+                        if not self.get_current_action("fill_BU3_AQ") :
+                            action = fill_BU_AQ(self,"BU3")
+                            action.start()
+                    else : 
+                        self._set_current_action("fill_BU3_AQ",False)
+                
+                elif name == "empty_BU1_S" :
+                    if state : 
+                        """start the thread for a emptying, only if there is no filtration at the same time"""
+                        if not self.get_current_action("empty_BU1_S") :
+                            action = empty_BU_S(self,"BU1")
+                            action.start()
+                    else : 
+                        self._set_current_action("empty_BU1_S",False)
+                
+                elif name == "empty_BU2_S" :
+                    if state : 
+                        """start the thread to for a filtration, only if there is no filtration at the same time"""
+                        if not self.get_current_action("empty_BU2_S") :
+                            action = empty_BU_S(self,"BU2")
+                            action.start()
+                    else : 
+                        self._set_current_action("empty_BU2_S",False)
+                
+                elif name == "empty_BU3_S" :
+                    if state : 
+                        """start the thread to for a filtration, only if there is no filtration at the same time"""
+                        if not self.get_current_action("empty_BU3_S") :
+                            action = empty_BU_S(self,"BU3")
+                            action.start()
+                    else : 
+                        self._set_current_action("empty_BU3_S",False)
+        else : 
+            print("already a task running")                
+        
+    
+    """do not use this function"""       
+    def _set_current_action_evolved(self, name, state):
+        self._current_action_evolved[name][0].acquire()
+        self._current_action_evolved[name][1] = state
+        self._current_action_evolved[name][0].release()
+    
+    def get_current_action_evolved(self, name):
+        self._current_action_evolved[name][0].acquire()
+        state = self._current_action_evolved[name][1]
+        self._current_action_evolved[name][0].release()
+        return state
+    
+    def set_current_action_evolved(self, name, state):
+        """check if there is no action running"""
+        b = True
+        for item in self._current_action_evolved : 
+            if not item == name :
+                if self.get_current_action_evolved(item) : 
+                    b = False
+        """if there is no action running"""
+        if b : 
+            if not self.get_current_action_evolved(name) == state : 
+                if name == "auto_AQ_filtration" : 
+                    if state : 
+                        """start the thread to for a filtration, only if there is no filtration at the same time"""
+                        if not self.get_current_action_evolved("auto_AQ_filtration") :
+                            action = auto_AQ_filtration(self)
+                            action.start()
+                    else : 
+                        """set the action to end, and will stop the current action""" 
+                        self._set_current_action_evolved("auto_AQ_filtration",False)
+                if name == "renew_light_AQ_BU1" : 
+                    if state : 
+                        """start the thread to for a filtration, only if there is no filtration at the same time"""
+                        if not self.get_current_action_evolved("renew_light_AQ_BU1") :
+                            action = renew_light_AQ_BU(self,"BU1")
+                            action.start()
+                    else : 
+                        """set the action to end, and will stop the current action""" 
+                        self._set_current_action_evolved("renew_light_AQ_BU1",False)
+                if name == "renew_light_AQ_BU2" : 
+                    if state : 
+                        """start the thread to for a filtration, only if there is no filtration at the same time"""
+                        if not self.get_current_action_evolved("renew_light_AQ_BU2") :
+                            action = renew_light_AQ_BU(self,"BU2")
+                            action.start()
+                    else : 
+                        """set the action to end, and will stop the current action""" 
+                        self._set_current_action_evolved("renew_light_AQ_BU2",False)
+                if name == "renew_light_AQ_BU3" : 
+                    if state : 
+                        """start the thread to for a filtration, only if there is no filtration at the same time"""
+                        if not self.get_current_action_evolved("renew_light_AQ_BU3") :
+                            action = renew_light_AQ_BU(self,"BU3")
+                            action.start()
+                    else : 
+                        """set the action to end, and will stop the current action""" 
+                        self._set_current_action_evolved("renew_light_AQ_BU3",False)
+            
+        else : 
+            print("already a evolved task running")   
         
         
     def get_current_action(self, name):
@@ -241,28 +365,28 @@ class current_state(object):
         return state
         
 
-    def get_state_pumps(self, name):
+    def get_state_pump(self, name):
         self._state_pumps[name][0].acquire()
         state = self._state_pumps[name][1]
         self._state_pumps[name][0].release()
         return state
     
     """do not use this function from outside"""
-    def _set_state_pumps(self, name, state ):
+    def _set_state_pump(self, name, state ):
         self._state_pumps[name][0].acquire()
         self._state_pumps[name][1] = state
         self._state_pumps[name][0].release()
     """use this function to set a pump state"""
     
-    def set_state_pumps(self, name, state ):
+    def set_state_pump(self, name, state ):
         """action only if new state is different from current state"""
-        if not self.get_state_pumps( name) == state:
+        if not self.get_state_pump( name) == state:
             """ask com arduino to set the pump"""
             order_ok = self.com_arduino.pump_order(name,state)
             
             """if com_arduino return True, it means order has been successfully conducted""" 
             if order_ok :
-                self._set_state_pumps(name, state )
+                self._set_state_pump(name, state )
             else : 
                 print("fail to activate or desactivate " + name )
             
@@ -278,30 +402,36 @@ class current_state(object):
         return v
     
     def set_occupied_volume(self, name, v):
+        """no need to have more precision"""
+        v = round(v,2)
         self._occupied_volume[name][0].acquire()
         self._occupied_volume[name][1] = v
         self._occupied_volume[name][0].release()
         """refresh GUI"""
         #print("daz" + name + " " + str(v))
+        #print (name + " set to " + str(v))
         self.refresh_windows()
   
         
         return bool
       
-    def get_AQ_concentration(self):
+    def get_concentration(self, container_name):
         """get the AQ_concentration"""
-        self._AQ_concentration[0].acquire()
-        value = self._AQ_concentration[1]
-        self._AQ_concentration[0].release()
+        self._concentration[container_name][0].acquire()
+        value = self._concentration[container_name][1]
+        self._concentration[container_name][0].release()
         return value
         
         
-    def set_AQ_concentration(self, value):
+    def set_concentration(self,container_name,  value):
         """set the AQ_concentration"""
-        self._AQ_concentration[0].acquire()
-        self._AQ_concentration[1] = value
-        self._AQ_concentration[0].release()
-
+        self._concentration[container_name][0].acquire()
+        self._concentration[container_name][1]= value
+        self._concentration[container_name][0].release()
+        
+        print( "concentration" + container_name + "set to " + str(value) )
+        
+        
     """do not use this function"""
     def _set_state_EL(self,name_container, name_EL, state):
         """name_container : AQ , name_EL : HIGH"""
@@ -348,7 +478,7 @@ class current_state(object):
                 print("refresh") 
             
             #for item in self._state_pumps : 
-                #print(self.get_state_pumps(item))
+                #print(self.get_state_pump(item))
             
         
     def set_BRBU_state(self, BU, state):
@@ -380,6 +510,7 @@ class current_state(object):
     
     """not good solution, all action have to be listed in current_action in order to be stoped"""
     def set_keep_going(self, state):
+        print("set keep going")
         if state : 
             print ("Actions Autorized")
         else : 
@@ -408,7 +539,7 @@ class current_state(object):
     def __setState__(self):
         """ Set the states to the right values according to the log_start.txt file """
             # Open the file
-        log_pin = open("log_start.txt", "r")
+        log_pin = open("config_start.txt", "r")
      
         # read the ligne one by one
         for ligne in log_pin:
@@ -461,9 +592,14 @@ class current_state(object):
                 if not name_container in self._state_EL : 
                     self._state_EL[name_container] = {}
                 self._state_EL[name_container][name_EL][1] = self.com_arduino.EL_read(name_container, name_EL)
-
-
     
+    """set the server to current_state"""
+    def set_server(self, un_server):
+        self.server = un_server
+        
+    """set the BRBU_controller to current_state"""
+    def set_BRBU_controller(self, un_BRBU_controller):
+        self.BRBU_controller = un_BRBU_controller
 """
 if __name__ == "__main__":
     a = current_state()

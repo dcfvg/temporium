@@ -5,7 +5,7 @@ Created on Apr 24, 2014
 '''
 from tkinter import *
 from visual_feedback import *
-from visual_feedback_V2 import *
+from visual_feedback import *
 from current_state import *
 from com_arduino import *
 from button_manuel import *
@@ -30,7 +30,7 @@ class window(Tk):
         self.current_state = current_state
         
 
-        self.visual_feedback  = visual_feedback_V2(self, self.current_state)
+        self.visual_feedback  = visual_feedback(self, self.current_state)
         self.button_manuel = button_manuel(self)
         self.button_action = button_action(self)
         
@@ -48,7 +48,7 @@ class window(Tk):
     
     def refresh_after(self):
         self.refresh()
-        self.after(50, self.refresh_after)   
+        self.after(100, self.refresh_after)   
         #time.sleep(0.1)     
         #self.after_idle(self.refresh_test)
 

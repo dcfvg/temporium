@@ -30,13 +30,13 @@ class fake_clock(object):
         if self.start_clock:
             self.start_clock = False
             lclstr = self.lcl.strftime('%A %d %B %Y, %H:%M:%S')
-            print (lclstr)
+            #print (lclstr)
             self.init_hour = self.lcl.hour
             self.init_day = self.lcl.day
         else:
             self.lcl = self.lcl + datetime.timedelta(seconds = 1)
             lclstr = self.lcl.strftime('%A %d %B %Y, %H:%M:%S')
-            print (lclstr)
+            #print (lclstr)
         if is_alive:
             timer = Timer(self.timelaps, self.set_time)
             timer.start()
