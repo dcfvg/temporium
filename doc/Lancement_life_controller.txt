@@ -1,29 +1,29 @@
 Lancement : 
-	- se plcer dans le dossier src : 
+	- se placer dans le dossier src : 
 		- depuis la dropbox : Ingenieurie/life_controller/src/
 		- depuis le depot gitHub : temporium/apps/life_controller/python/life_controller/src
 	- mettre a jour config_pin.txt/ config_start.txt 
-	- lancer main.py avec python3 
+	- lancer main.py avec python3 "python3 main.py" 
 
 Avancement code : 
 	- Avancement actuel: 
 		- Boutons de gauche : 
 			- Controle des pompes de maniere manuelle 
 				- autorisées  
-				- bloquées : ex P_AQ_FI car elle ne doit pas fonctionner toute seul
-			- Controle de pompes virtuelles : ex P_BU1_AQ car en vrai allume P_BU1_FI et P_FI_AQ
+				- bloquées : ex P_AQ_FI car elle ne doit pas fonctionner toute seule
+			- Controle de pompes virtuelles : ex P_BU1_AQ car en vrai allume P_BU1_FI et P_FI_AQ de maniere non continue
 
-			Rq : Lorsque que quelque chose passe dans le filtre, allumage de la pompe qui achemine en alternance pour eviter une accumulation dans le filtre du a un probleme de debit. 
+			Rq : Lorsque que quelque chose passe dans le filtre, allumage de la pompe qui achemine en alternance pour eviter une accumulation dans le filtre ( probleme de debit).
 
 		- Boutons de droite : 
 			- Lancemement manuel d'actions : 
 				- filtration de l'AQ
-				- Filtration automatique : 5 min de filtration de l'AQ
+				- Filtration automatique AQ : 5 min de filtration de l'AQ
 				- Renouvellement leger : 
 					- /!\ il doit y avoir les electrodes dans l'AQ pour que ca marche 
 					- Encore des choses à modifier, pas pret avec les nouvelles electrodes. (mise à jour demain)
 
-				- BUBR cycle : 
+				- BUBR cycle mais pas dans un cycle d'initialisation : 
 					- lance de cycle de producton d'algues. 
 					- Stop le cycle (arret du cycle sans memoire, reprise à t = 0)
 				- BUBR_cycle_pause : 
