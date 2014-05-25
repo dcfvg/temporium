@@ -38,7 +38,7 @@ class com_arduino(object):
         """for simulation and testing"""
          
         """do not try to connect with Arduino"""
-        self.test = True
+        self.test = False
          
         """send order received to the client connected"""
         self.server_arduino_order_state = [threading.Lock() , False]
