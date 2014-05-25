@@ -20,16 +20,17 @@ class security_EL(threading.Thread):
         self.current_state = a_current_state
 
         """stop the cycle, False : not stopped"""
-        self._stop = [threading.Lock(), False]
+        self._stop = [threading.Lock(), True]
         
         """time between two check"""
         self.time_laps = 1
         
+        self.start()
+        
         
     def run(self):
-        print("Checking security EL : start") 
-        while True : 
-            while not self.get_stop() : 
+        while True :
+            while not self.get_stop() :
                 name = "BR1"
                 if not self.current_state.get_state_EL(name,"MAX") =="NULL" :
                     if self.current_state.get_state_EL(name,"MAX") : 
@@ -87,6 +88,8 @@ class security_EL(threading.Thread):
                     print ("El " + name + " MAX not connected")
                     
                 time.sleep(self.time_laps)
+            
+            time.sleep(self.time_laps)
         
         
         
@@ -104,6 +107,12 @@ class security_EL(threading.Thread):
         self._stop[0].acquire()
         self._stop[1] = state 
         self._stop[0].release()
+        
+        if state : 
+            print("Checking security EL : stop") 
+        else : 
+            print("Checking security EL : start")
+           
     
         
         

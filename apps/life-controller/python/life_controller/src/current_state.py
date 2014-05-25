@@ -76,6 +76,8 @@ class current_state(object):
         "emergency stop "  
         self._keep_going = [threading.Lock(), True]
         
+        
+        
         """initialize all values after a log_start.txt"""
         self.__setState__()
         #self._check_all_EL()
@@ -636,6 +638,9 @@ class current_state(object):
                     
     def set_windows(self,window):
         self.window = window
+        
+    def set_security_EL(self, un_security_EL):
+        self.security_EL = un_security_EL
     
     def print_all_EL(self):
         for item in self._state_EL : 

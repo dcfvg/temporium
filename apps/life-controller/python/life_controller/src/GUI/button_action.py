@@ -176,8 +176,7 @@ class button_action(Frame):
         self.current_state.BRBU_controller.pause()
         
     def start_EL(self):
-        s = security_EL(self.current_state)
-        s.start()
+        self.current_state.security_EL.set_stop( not self.current_state.security_EL.get_stop())
         
     def kill_all(self):
         self.current_state.kill_all()
