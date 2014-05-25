@@ -38,7 +38,7 @@ class com_arduino(object):
         """for simulation and testing"""
          
         """do not try to connect with Arduino"""
-        self.test = True
+        self.test = False
          
         """send order received to the client connected"""
         self.server_arduino_order_state = [threading.Lock() , False]
@@ -218,7 +218,10 @@ class com_arduino(object):
                  
                 if list[0].strip() == "comments" :
                     print (list[1].strip())
-                 
+                
+                elif list[0].strip() == "realcomments" :
+                    continue
+                    
                 elif list[0].strip() == "arduino" :
                     """Make an arduino with the port from the log_pin.txt file, and put it in the dict() the_arduino
                     arduino_current to associate the pin to the right arduino (the last built arduino )"""
@@ -230,7 +233,7 @@ class com_arduino(object):
                         self.the_arduino[list[1].strip()] = arduino_lift(list[2].strip())
                         arduino_current = self.the_arduino[list[1].strip()]
                     
-                    if  list[1].strip() == "arduino_EL" :
+                    elif  list[1].strip() == "arduino_EL" :
                         self.the_arduino[list[1].strip()] = arduino_mega(list[2].strip())
                         arduino_current = self.the_arduino[list[1].strip()]
                         print (list[1].strip() +" made on port :" + list[2].strip())
