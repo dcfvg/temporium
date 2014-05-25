@@ -158,7 +158,7 @@ class button_action(Frame):
         pass
     
     def start_BRBU_cycle(self) :
-        self.current_state.BRBU_controller.start_stop_cycle()
+        self.current_state.set_BRBU_controller_state(not self.current_state.get_BRBU_controller_state())
      
     def liftDown(self) :
         self.current_state.com_arduino.liftDown()

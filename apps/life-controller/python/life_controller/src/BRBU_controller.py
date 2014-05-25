@@ -340,7 +340,7 @@ class BRBU_controller (threading.Thread):
         self._stop[0].release()
         
     
-    def start_stop_cycle(self):
+    def old_start_stop_cycle(self):
         """if not in pause, just stop the programme"""
         if not self._get_in_pause() : 
             if not self._get_stop() : 
@@ -352,31 +352,38 @@ class BRBU_controller (threading.Thread):
         else : 
             print("BRBU in pause mode : no stop possible because in pause mode, unpaused it to  be able to stop it after")
 
-    """
+    """set to True to stop, False to start"""
     def set_stop_start(self, state):
-    
+        """if different from current state"""
         if not state == self._get_stop() : 
-            if state : 
-                
+            """first get out from pause"""
+            self.set_pause(False)
             
+            """Stop"""
+            if state : 
+                self._set_stop(True)
+            
+                """start"""
             else : 
-    """
-        
-        
-    def _set_in_pause(self, state):
-        self._in_pause[0].acquire()
-        self._in_pause[1] = state
-        self._in_pause[0].release()
-        
+                """set self.stop to False, in order to pursue """
+                self._set_stop(False)
+                self.lock_start.release()
     
-    def _get_in_pause(self): 
-        self._in_pause[0].acquire()
-        state = self._in_pause[1]
-        self._in_pause[0].release()
-        return state
-        
-
-         
+    
+    def set_pause(self, state):
+        """pause is possible only if if is not already stopped"""
+        if not self._get_stop() : 
+            """if order different from current state"""
+            if not state == self._get_in_pause() :
+                if state == True : 
+                    """get in the mode pause"""
+                    self._lock_pause.acquire()
+                    self._set_in_pause(True)
+                
+                    """if False : get out from the pause"""
+                else : 
+                    self._lock_pause.release()
+                    self._set_in_pause(False)
         
     """get in or get out of the pause mode"""
     def pause(self):
@@ -397,6 +404,25 @@ class BRBU_controller (threading.Thread):
         
         else : 
             print("BRBU in stop mode : no pause possible because it is not running")
+    
+        
+        
+    def _set_in_pause(self, state):
+        self._in_pause[0].acquire()
+        self._in_pause[1] = state
+        self._in_pause[0].release()
+        
+    
+    def _get_in_pause(self): 
+        self._in_pause[0].acquire()
+        state = self._in_pause[1]
+        self._in_pause[0].release()
+        return state
+        
+
+         
+        
+    
             
         
         
