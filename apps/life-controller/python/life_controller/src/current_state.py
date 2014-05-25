@@ -612,8 +612,8 @@ class current_state(object):
     """kill all action running, st all pump to false"""          
     def kill_all(self):
         
-        self.set_BRBU_controller_state(False
-                                       )
+        self.set_BRBU_controller_state(False)
+        
         for item in self._current_action_evolved : 
             self.set_current_action_evolved(item, False)
         
