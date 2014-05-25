@@ -6,10 +6,10 @@ Created on Apr 28, 2014
 import socket
 import threading
 import time
-from server_level import *
-from server_arduino_order import *
-from server_concentration import *
-from server_formation_rate import *
+from communication.server_level import *
+from communication.server_arduino_order import *
+from communication.server_concentration import *
+from communication.server_formation_rate import *
 
 class server(threading.Thread) : 
     

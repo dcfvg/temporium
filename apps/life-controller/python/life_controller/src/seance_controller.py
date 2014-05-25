@@ -5,8 +5,8 @@ Created on 10 mai 2014
 '''
 from pythonosc import osc_message_builder
 from pythonosc import udp_client
-from client_OSC_seance import *
-from server_OSC_seance import *
+from communication.client_OSC_seance import * 
+from communication.server_OSC_seance import *
 from com_arduino import *
 from current_state import *
 from starting_capture import *
@@ -50,15 +50,16 @@ class seance_controller(threading.Thread):
         time.sleep(5)
         
         """send seance begin"""
-        self.client.send_seance_begin()
+        self.client_seance.send_seance_begin()
         
+        """
         print("starting exposure")
         capture = starting_capture()
         capture.start()
+        """
+        """server_OSC_seance is waiting for first photo to begin analysing image and send it """
         
-        self.start()
         compt = 0 
-        
         
         """while film not end or timeout = 40 min """
         self.set_end_film(False)
@@ -76,11 +77,11 @@ class seance_controller(threading.Thread):
         
     def _create_client(self, ip, port):
         """create an UDP client on port and ip"""
-        self.client = client_OSC_seance(self, ip, port)
+        self.client_seance = client_OSC_seance(self, ip, port)
     
     def _create_server(self, ip, port):
         """create an UDP client on port and ip"""
-        self.server = server_OSC_seance(self, ip, port)
+        self.server_seance = server_OSC_seance(self, ip, port)
     
     def get_send_formation_rate_state(self):
         """return send_formation_rate_state"""
@@ -112,20 +113,56 @@ class seance_controller(threading.Thread):
 
     
     def run(self):
-        """start sending image information, once every 10 sec"""
-        self.set_send_formation_rate_state(True)
-        fake_comp = 0
-        print('start sending formation information')
-        while self.get_send_formation_rate_state() : 
-            print('sending formation information')
+        if True : 
+            """if client_formation_rate connected"""
+        if True : 
+            """ask client_formation_rate to begin to analyse photo"""
+            print ("begin formation rate asked")
             
-            """real function to call"""
-            #self.client.send_seance_formation_rate(self.current_state.get_formation_rate())
-            
-            """for testing"""
-            self.client.send_seance_formation_rate(fake_comp)
-            fake_comp = fake_comp +1
-            time.sleep(3)
+            """start sending image information, once every 10 sec"""
+            self.set_send_formation_rate_state(True)
+            fake_comp = 0
+            print('start sending formation information')
+            while self.get_send_formation_rate_state() : 
+                print('sending formation information')
+                
+                """real function to call"""
+                #self.client.send_seance_formation_rate(self.current_state.get_formation_rate())
+                
+                """for testing"""
+                self.client_seance.send_seance_formation_rate(fake_comp)
+                fake_comp = fake_comp +1
+                time.sleep(3)
+                
+            """stop asking information"""
+            print ("end formation rate asked")
+        else : 
+            print ("client_formation_rate not connected")
+        if False : 
+            """if client_formation_rate connected"""
+            if self.current_state.server.client_connected["server_formation_rate"][1] : 
+                """ask client_formation_rate to begin to analyse photo"""
+                self.current_state.server.client_connected["server_formation_rate"][0].start_information()
+                
+                """start sending image information, once every 10 sec"""
+                self.set_send_formation_rate_state(True)
+                fake_comp = 0
+                print('start sending formation information')
+                while self.get_send_formation_rate_state() : 
+                    print('sending formation information')
+                    
+                    """real function to call"""
+                    #self.client.send_seance_formation_rate(self.current_state.get_formation_rate())
+                    
+                    """for testing"""
+                    self.client_seance.send_seance_formation_rate(fake_comp)
+                    fake_comp = fake_comp +1
+                    time.sleep(3)
+                    
+                """stop asking information"""
+                self.current_state.server.client_connected["server_formation_rate"][0].stop_information()
+            else : 
+                print ("client_formation_rate not connected")
            
         
      

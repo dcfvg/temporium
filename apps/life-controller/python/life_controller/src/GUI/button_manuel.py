@@ -21,7 +21,7 @@ class button_manuel(Frame):
         self.frame_button = Frame(self)
         self.frame_button_state = Frame(self)
         
-        
+        self.bind("<Configure>", self.update())
 
         
         """def Button"""

@@ -4,13 +4,9 @@ Created on Apr 24, 2014
 @author: Cactus
 '''
 from tkinter import *
-from visual_feedback import *
-from visual_feedback import *
-from current_state import *
-from com_arduino import *
-from button_manuel import *
-from button_action import *
-from server import *
+from GUI.visual_feedback import *
+from GUI.button_manuel import *
+from GUI.button_action import *
 import time
 
 

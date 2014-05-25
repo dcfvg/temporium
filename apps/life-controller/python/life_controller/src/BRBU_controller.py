@@ -44,7 +44,7 @@ class BRBU_controller (threading.Thread):
         self._in_pause = [threading.Lock(), False]
         
         """stop the cycle, False : not stopped"""
-        self.stop = [threading.Lock(), True]
+        self._stop = [threading.Lock(), True]
         
 
         
@@ -81,12 +81,10 @@ class BRBU_controller (threading.Thread):
                 self.current_time = time.time()/3600
                 self.old_time = time.time()/3600
             
-            """set self.stop to False, in order to pursue """
-            self.set_stop(False)
             
             
             
-            while not self.get_stop() :
+            while not self._get_stop() :
                 
                 """way of knowing time betweeen two round"""
                 if self.fake :
@@ -155,9 +153,10 @@ class BRBU_controller (threading.Thread):
                         """check if it is not in pause, not in stop and if volume occupied ... """
                         """name of the pump associatedto this action"""
                         name = "P_BR1_BU1"
-                        while self.current_state.get_occupied_volume("BU1") < 0.66 and not self.get_stop() :
+                        while self.current_state.get_occupied_volume("BU1") < 0.66 and not self._get_stop() :
                             self.current_state.set_state_pump(name, True)
                             self.get_pause(name,0)
+                            time.sleep(0.2)
                             """maybe add : if pump is in manuel-mode, end the manuel mode"""
                         self.current_state.set_state_pump(name, False)
                         
@@ -166,18 +165,20 @@ class BRBU_controller (threading.Thread):
                         
                         """fill BU : full with M2 """
                         name = "P_M2_BU1"
-                        while self.current_state.get_occupied_volume("BU1") < 0.90  and not self.get_stop(): 
+                        while self.current_state.get_occupied_volume("BU1") < 0.90  and not self._get_stop(): 
                             self.current_state.set_state_pump(name, True)
                             self.get_pause(name,0)
+                            time.sleep(0.2)
                             """maybe add : if pump is in manuel-mode, end the manuel mode"""
                         self.current_state.set_state_pump(name, False)
         
                         
                         """fill BR : full with M1 """
                         name = "P_M1_BR1"
-                        while self.current_state.get_occupied_volume("BR1") < 0.90 and not self.get_stop() : 
+                        while self.current_state.get_occupied_volume("BR1") < 0.90 and not self._get_stop() : 
                             self.current_state.set_state_pump(name, True)
                             self.get_pause(name,0)
+                            time.sleep(0.2)
                             """maybe add : if pump is in manuel-mode, end the manuel mode"""
                         self.current_state.set_state_pump(name, False )
                          
@@ -194,9 +195,10 @@ class BRBU_controller (threading.Thread):
                         """empty BR and fill BU : 2/3 BR -> BU """
                         
                         name = "P_BR2_BU2"
-                        while self.current_state.get_occupied_volume("BU2") < 0.66 and not self.get_stop()  :
+                        while self.current_state.get_occupied_volume("BU2") < 0.66 and not self._get_stop()  :
                             self.current_state.set_state_pump(name, True)
                             self.get_pause(name,0)
+                            time.sleep(0.2)
                             """maybe add : if pump is in manuel-mode, end the manuel mode"""
                         self.current_state.set_state_pump(name, False )
                         
@@ -204,18 +206,20 @@ class BRBU_controller (threading.Thread):
                         
                         """fill BU : full with M2 """
                         name = "P_M2_BU2"
-                        while self.current_state.get_occupied_volume("BU2") <  0.90 and not self.get_stop() :
+                        while self.current_state.get_occupied_volume("BU2") <  0.90 and not self._get_stop() :
                             self.current_state.set_state_pump(name, True)
                             self.get_pause(name,0)
+                            time.sleep(0.2)
                             """maybe add : if pump is in manuel-mode, end the manuel mode"""
                         self.current_state.set_state_pump(name, False )
                
                         
                         """fill BR : full with M1 """
                         name = "P_M1_BR2"
-                        while self.current_state.get_occupied_volume("BR2") < 0.90 and not self.get_stop()  :
+                        while self.current_state.get_occupied_volume("BR2") < 0.90 and not self._get_stop()  :
                             self.current_state.set_state_pump(name, True)
                             self.get_pause(name,0)
+                            time.sleep(0.2)
                             """maybe add : if pump is in manuel-mode, end the manuel mode"""
                         self.current_state.set_state_pump(name, False )  
                         
@@ -230,27 +234,30 @@ class BRBU_controller (threading.Thread):
                         
                         """empty BR and fill BU : 2/3 BR -> BU """
                         name = "P_BR3_BU3"
-                        while self.current_state.get_occupied_volume("BU3") < 0.66 and not self.get_stop() :
+                        while self.current_state.get_occupied_volume("BU3") < 0.66 and not self._get_stop() :
                             self.current_state.set_state_pump(name, True)
                             self.get_pause(name,0)
+                            time.sleep(0.2)
                             """maybe add : if pump is in manuel-mode, end the manuel mode"""
                         self.current_state.set_state_pump(name, False )  
                  
                  
                         """fill BU : full with M2 """
                         name = "P_M2_BU3"
-                        while self.current_state.get_occupied_volume("BU3") < 0.90 and not self.get_stop()  :
+                        while self.current_state.get_occupied_volume("BU3") < 0.90 and not self._get_stop()  :
                             self.current_state.set_state_pump(name, True)
                             self.get_pause(name,0)
+                            time.sleep(0.2)
                             """maybe add : if pump is in manuel-mode, end the manuel mode"""
                         self.current_state.set_state_pump(name, False )  
                         
                         
                         """fill BR : full with M1 """
                         name = "P_M1_BR3"
-                        while self.current_state.get_occupied_volume("BR3") < 0.90 and not self.get_stop()  :
+                        while self.current_state.get_occupied_volume("BR3") < 0.90 and not self._get_stop()  :
                             self.current_state.set_state_pump(name, True)
                             self.get_pause(name,0)
+                            time.sleep(0.2)
                             """maybe add : if pump is in manuel-mode, end the manuel mode"""
                         self.current_state.set_state_pump(name, False )    
                         
@@ -265,9 +272,10 @@ class BRBU_controller (threading.Thread):
                         
                         """function to complete, action to do at the begining of EMPTY"""
                         name = "empty_BU1_S"
-                        while self.current_state.get_occupied_volume("BU1") > 0.1 and not self.get_stop()  :
+                        while self.current_state.get_occupied_volume("BU1") > 0.1 and not self._get_stop()  :
                             self.current_state.set_current_action(name, True)
                             self.get_pause(name, 1)
+                            time.sleep(0.2)
                         self.current_state.set_current_action(name, False)
                         
                         self.BU_empty["BU1"] = True  
@@ -278,9 +286,10 @@ class BRBU_controller (threading.Thread):
                     if not self.BU_empty["BU2"]  :
                         """function to complete, action to do at the begining of EMPTY"""
                         name = "empty_BU2_S" 
-                        while self.current_state.get_occupied_volume("BU2") > 0.1 and not self.get_stop() :
+                        while self.current_state.get_occupied_volume("BU2") > 0.1 and not self._get_stop() :
                             self.current_state.set_current_action(name, True)
                             self.get_pause(name, 1)
+                            time.sleep(0.2)
                         self.current_state.set_current_action(name, False)
                         self.BU_empty["BU2"] = True 
                          
@@ -291,9 +300,10 @@ class BRBU_controller (threading.Thread):
                     if not self.BU_empty["BU3"]  :
                         """function to complete, action to do at the begining of EMPTY"""
                         name = "empty_BU3_S"
-                        while self.current_state.get_occupied_volume("BU3") > 0.1 and not self.get_stop() :
+                        while self.current_state.get_occupied_volume("BU3") > 0.1 and not self._get_stop() :
                             self.current_state.set_current_action(name, True)
                             self.get_pause(name, 1)
+                            time.sleep(0.2)
                         self.current_state.set_current_action(name, False) 
                         self.BU_empty["BU3"] = True
                         
@@ -315,32 +325,43 @@ class BRBU_controller (threading.Thread):
                 self.BU_empty[item] = False
     
     """return the value of self.stop"""
-    def get_stop(self):
+    def _get_stop(self):
 
-        self.stop[0].acquire()
-        state = self.stop[1]
-        self.stop[0].release()
+        self._stop[0].acquire()
+        state = self._stop[1]
+        self._stop[0].release()
         return state
     
     """set stop to state, will interrupt the cycle definitly if False, """
-    def set_stop(self, state):
-        """get out of the pause mode"""
-        """if state : 
-            self.set_out_pause()"""
+    def _set_stop(self, state):
             
-        self.stop[0].acquire()
-        self.stop[1] = state 
-        self.stop[0].release()
+        self._stop[0].acquire()
+        self._stop[1] = state 
+        self._stop[0].release()
         
     
     def start_stop_cycle(self):
-        if not self.get_stop() : 
-            self.set_stop(True)
-            
+        """if not in pause, just stop the programme"""
+        if not self._get_in_pause() : 
+            if not self._get_stop() : 
+                self._set_stop(True)  
+            else : 
+                """set self.stop to False, in order to pursue """
+                self._set_stop(False)
+                self.lock_start.release()
         else : 
-            self.lock_start.release()
+            print("BRBU in pause mode : no stop possible because in pause mode, unpaused it to  be able to stop it after")
 
-
+    """
+    def set_stop_start(self, state):
+    
+        if not state == self._get_stop() : 
+            if state : 
+                
+            
+            else : 
+    """
+        
         
     def _set_in_pause(self, state):
         self._in_pause[0].acquire()
@@ -359,23 +380,30 @@ class BRBU_controller (threading.Thread):
         
     """get in or get out of the pause mode"""
     def pause(self):
-        """if already in pause """
-        if self._get_in_pause() : 
-            """get out from pause mode"""
-            self._lock_pause.release()
-            self._set_in_pause(False)
-            
-            """if not in pause mode"""
+        
+        """pause is possible only if if is not already stopped"""
+        if not self._get_stop() : 
+            """if already in pause """
+            if self._get_in_pause() : 
+                """get out from pause mode"""
+                self._lock_pause.release()
+                self._set_in_pause(False)
+                
+                """if not in pause mode"""
+            else : 
+                """get in the mode pause"""
+                self._lock_pause.acquire()
+                self._set_in_pause(True)
+        
         else : 
-            """get in the mode pause"""
-            self._lock_pause.acquire()
-            self._set_in_pause(True)
+            print("BRBU in stop mode : no pause possible because it is not running")
             
         
         
-    """stop the programme until someone release the lock : type : 0 = pump, 1 = action """
+    """stop the programme if someone took the lock, until someone release the lock"""
     def get_pause(self, name, type):
-      
+        """name : name of the action running, type : type of the action running )  """
+        
         """if in pause"""
         if self._get_in_pause() :  
             """turn off the action"""
@@ -403,11 +431,30 @@ class BRBU_controller (threading.Thread):
                 
                 """turn on the pump"""
                 self.current_state.set_current_action(name, True) 
-                
-        
-        
-        
+                 
         return True
+    
+    
+    """action to set the system in the right situation to start the production-cycle"""
+    def initialization(self):
+        """initial situation : BR1 = 1 , BR2 = 2/3 , BR3 = 1/3"""
+        
+        """filling BR2 with M1"""
+        name = "P_M1_BR2"
+        while self.current_state.get_occupied_volume("BR2") < 0.9  :
+            self.current_state.set_current_action(name, True)
+            time.sleep(0.2)
+        self.current_state.set_current_action(name, False) 
+        
+        """filling BR3 with M1"""
+        name = "P_M1_BR3"
+        while self.current_state.get_occupied_volume("BR3") < 0.9  :
+            self.current_state.set_current_action(name, True)
+            time.sleep(0.2)
+            
+        print ("Initialisation finished : production cycle can be launched")
+        self.current_state.set_current_action(name, False) 
+         
 
         
              

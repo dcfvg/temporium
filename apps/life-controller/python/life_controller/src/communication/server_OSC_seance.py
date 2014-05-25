@@ -29,6 +29,7 @@ class server_OSC_seance(threading.Thread):
         
         self.dispatcher = dispatcher.Dispatcher()
         self.dispatcher.map("/debug", print)
+        self.dispatcher.map("/first_photo", self.start_formation_rate)
         self.dispatcher.map("/seance_end", self._seance_end)
         self.dispatcher.map("/action", self._action)
 
@@ -53,3 +54,8 @@ class server_OSC_seance(threading.Thread):
         """start teh server in a thread"""
         print("Serving on {}".format(self.server.server_address))
         self.server.serve_forever()
+    
+    def start_formation_rate(self, msg):
+        print ("first_photo received")
+        """strat the thread : ask to analyse photo"""
+        self.seance_controller.start()

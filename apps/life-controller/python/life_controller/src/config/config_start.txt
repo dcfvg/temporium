@@ -15,7 +15,17 @@ occupied_volume : AQ : 1
 occupied_volume : S : 0 
 occupied_volume : FI : 0
 comments : indiquer ou sont place les electrodes en volume, car met a jour le volume dans currentstate. 
-comments : EL : AQ : HIGH : 1
+EL : BR1 : MAX : 1.1
+EL : BR2 : MAX : 1.1
+EL : BR3 : MAX : 1.1
+EL : BU1 : MAX : 1.1
+EL : BU2 : MAX : 1.1
+EL : BU3 : MAX : 1.1
+EL : AQ : MAX : 1.1
+EL : AQ : HIGH : 1
+comments : electrode de 10% du vidage de l'aq
+EL : AQ : MIDDLE : 0.9
+EL : AQ : MIN : 0.05
 number_usage : BU1 : 0
 number_usage : BU2 : 0
 number_usage : BU3 : 0

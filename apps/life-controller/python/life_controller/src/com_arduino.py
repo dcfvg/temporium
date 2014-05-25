@@ -1,5 +1,5 @@
-from arduino_mega import*
-from arduino_lift import *
+from arduino.arduino_mega import*
+from arduino.arduino_lift import *
 import time
 '''
 Created on Apr 21, 2014
@@ -32,7 +32,7 @@ class com_arduino(object):
         #pin_array_output for arduino {arduino_current : [pin, pin, ...], ...}
         self.pin_array_output = dict()
         
-        """{"AQ" : {"HIGH" : [arduino, pin],"MEDIUM" : [arduino, pin], "LOW" : [arduino, pin] }, "BR1" :  {"HIGH" : [arduino, pin],"MEDIUM" : [arduino, pin], "LOW" : [arduino, pin] }}"""
+        """{"AQ" : {"HIGH" : [arduino, pin, pin_5V],"MEDIUM" : [arduino, pin, , pin_5V], "LOW" : [arduino, pin, , pin_5V] }, "BR1" :  {"HIGH" : [arduino, pin, pin_5V],"MEDIUM" : [arduino, pin, pin_5V], "LOW" : [arduino, pin, pin_5V] }}"""
         self.the_EL = dict()
          
         """for simulation and testing"""
@@ -156,11 +156,19 @@ class com_arduino(object):
                 return "NULL"
             else : 
                 if not self.test  :
+                    """set the pin_5V to high"""
+                    self.the_EL[name_container][name_EL][0].setHigh(self.the_EL[name_container][name_EL][2]) 
+                    
+                    """check the EL"""
                     value = self.the_EL[name_container][name_EL][0].getState(self.the_EL[name_container][name_EL][1])
+                    
+                    """set the pin_5V to high"""
+                    self.the_EL[name_container][name_EL][0].setLow(self.the_EL[name_container][name_EL][2]) 
+                    
                     return value
         else : 
-            #return "NULL"
-            return False
+            return "NULL"
+            #return False
      
     """Order to liftDown and liftUp, screenDown and screenUp"""
     def liftDown(self):
@@ -205,7 +213,7 @@ class com_arduino(object):
         if not self.test  :
             """ Set the pin to the right function according to the log_pin.txt file """
             # Open the file
-            log_pin = open("config_pin.txt", "r")
+            log_pin = open("config/config_pin.txt", "r")
       
             # read the ligne one by one
             for ligne in log_pin:
@@ -217,10 +225,10 @@ class com_arduino(object):
                  
                  
                 if list[0].strip() == "comments" :
-                    print (list[1].strip())
-                
-                elif list[0].strip() == "realcomments" :
                     continue
+                
+                elif list[0].strip() == "print" :
+                    print (list[1].strip())
                     
                 elif list[0].strip() == "arduino" :
                     """Make an arduino with the port from the log_pin.txt file, and put it in the dict() the_arduino
@@ -258,9 +266,9 @@ class com_arduino(object):
                         self.the_EL[list[1].strip()] = {}
                     
                     if list[3].strip() == "NULL" : 
-                        self.the_EL[list[1].strip()][list[2].strip()] = [arduino_current,list[3].strip()]
+                        self.the_EL[list[1].strip()][list[2].strip()] = [arduino_current,list[3].strip(), list[4].strip()]
                     else : 
-                        self.the_EL[list[1].strip()][list[2].strip()] = [arduino_current,int(list[3].strip())]
+                        self.the_EL[list[1].strip()][list[2].strip()] = [arduino_current,int(list[3].strip()), list[4].strip()]
             
                 else :
                     """put the pin into the the_pumps dict() : {P_M1_BR1 : [arduino_current,pin], P_M2_BU2 : [arduino_current,pin], ...}"""

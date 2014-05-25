@@ -5,9 +5,8 @@ Created on Apr 24, 2014
 '''
 import tkinter
 from tkinter import *
-from auto_AQ_filtration import *
 import time 
-from renew_light_AQ_BU import *
+from security_EL import *
 
 class button_action(Frame):
     
@@ -89,7 +88,11 @@ class button_action(Frame):
         self.Button_screen_up = tkinter.Button(self.frame_button,  text ="screen up", command = self.screenUp)        
         self.Button_screen_up.pack()
         
+        self.Button_start_EL = tkinter.Button(self.frame_button,  text ="start_EL", command = self.start_EL)        
+        self.Button_start_EL.pack()
         
+        self.Button_kill_all = tkinter.Button(self.frame_button,  text ="kill_all", command = self.kill_all)        
+        self.Button_kill_all.pack()
         
         
         
@@ -107,6 +110,8 @@ class button_action(Frame):
         #self.button = tkinter.Button(self,  text ="Hello", command = self.cliquer)
         #self.button.pack(side="right")
         
+        
+        self.bind("<Configure>", self.update())
         
         self.frame_button.pack(side = "left", fill=NONE, expand=1)
         #self.frame_button_state.pack(side = "right",fill=NONE, expand=1)
@@ -169,6 +174,17 @@ class button_action(Frame):
         
     def BRBU_pause(self):
         self.current_state.BRBU_controller.pause()
+        
+    def start_EL(self):
+        s = security_EL(self.current_state)
+        s.start()
+        
+    def kill_all(self):
+        self.current_state.kill_all()
+    
+        
+        
+        
     
     """def stop(self):
         self.current_state.set_keep_going(not self.current_state.get_keep_going())"""
