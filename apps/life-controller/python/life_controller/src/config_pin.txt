@@ -49,6 +49,8 @@ realcomments : pin_array_output : 28, 29, 30, 31, 32, 33, 34, 35, 37, 39, 41, 43
 realcomments : pin_array_output : 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 40, 41
 comments : Arduino pour EL, indiquer les pins (MAX : niveau de securitŽ alarme , HIGH : niveau haut normal, Middle : 10pourcent de l'aq ...) 
 arduino : arduino_EL : /dev/cu.usbmodem1d1141
+EL : ACTBRBU : 28
+EL : ACTAQ : 52
 EL : BR1 : MAX : 22
 EL : BR2 : MAX : 23
 EL : BR3 : MAX : 29
