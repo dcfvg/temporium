@@ -35,7 +35,7 @@ class security_EL(threading.Thread):
                 if not self.current_state.get_state_EL(name,"MAX") =="NULL" :
                     if self.current_state.get_state_EL(name,"MAX") : 
                         print ("WARNING : " +name+ " boiled over ")
-                        self.current_state.kill_all()
+                        self.action_emergency()
                 else : 
                     print ("El " + name + " MAX not connected")
                 
@@ -43,7 +43,7 @@ class security_EL(threading.Thread):
                 if not self.current_state.get_state_EL(name,"MAX") =="NULL" :
                     if self.current_state.get_state_EL(name,"MAX") : 
                         print ("WARNING : " +name+ " boiled over ")
-                        self.current_state.kill_all()
+                        self.action_emergency()
                 else : 
                     print ("El " + name + " MAX not connected")
                 
@@ -51,7 +51,7 @@ class security_EL(threading.Thread):
                 if not self.current_state.get_state_EL(name,"MAX") =="NULL" :
                     if self.current_state.get_state_EL(name,"MAX") : 
                         print ("WARNING : " +name+ " boiled over ")
-                        self.current_state.kill_all()
+                        self.action_emergency()
                 else : 
                     print ("El " + name + " MAX not connected")
                 
@@ -59,7 +59,7 @@ class security_EL(threading.Thread):
                 if not self.current_state.get_state_EL(name,"MAX") =="NULL" :
                     if self.current_state.get_state_EL(name,"MAX") : 
                         print ("WARNING : " +name+ " boiled over ")
-                        self.current_state.kill_all()
+                        self.action_emergency()
                 else : 
                     print ("El " + name + " MAX not connected")
                 
@@ -67,7 +67,7 @@ class security_EL(threading.Thread):
                 if not self.current_state.get_state_EL(name,"MAX") =="NULL" :
                     if self.current_state.get_state_EL(name,"MAX") : 
                         print ("WARNING : " +name+ " boiled over ")
-                        self.current_state.kill_all()
+                        self.action_emergency()
                 else : 
                     print ("El " + name + " MAX not connected")
                 
@@ -75,7 +75,7 @@ class security_EL(threading.Thread):
                 if not self.current_state.get_state_EL(name,"MAX") =="NULL" :
                     if self.current_state.get_state_EL(name,"MAX") : 
                         print ("WARNING : " +name+ " boiled over ")
-                        self.current_state.kill_all()
+                        self.action_emergency()
                 else : 
                     print ("El " + name + " MAX not connected")
                 
@@ -83,7 +83,7 @@ class security_EL(threading.Thread):
                 if not self.current_state.get_state_EL(name,"MAX") =="NULL" :
                     if self.current_state.get_state_EL(name,"MAX") : 
                         print ("WARNING : " +name+ " boiled over ")
-                        self.current_state.kill_all()
+                        self.action_emergency()
                 else : 
                     print ("El " + name + " MAX not connected")
                     
@@ -112,6 +112,11 @@ class security_EL(threading.Thread):
             print("Checking security EL : stop") 
         else : 
             print("Checking security EL : start")
+    
+    def action_emergency(self):
+        self.set_stop(True)
+        self.current_state.kill_all()
+        
            
     
         

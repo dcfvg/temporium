@@ -94,6 +94,9 @@ class button_action(Frame):
         self.Button_kill_all = tkinter.Button(self.frame_button,  text ="kill_all", command = self.kill_all)        
         self.Button_kill_all.pack()
         
+        self.Button_print_EL = tkinter.Button(self.frame_button,  text ="print EL", command = self.print_EL)        
+        self.Button_print_EL.pack()
+        
         
         
         """self.Button_refresh = tkinter.Button(self.frame_button,  text ="refresh", command = self.Button_refresh)        
@@ -180,6 +183,11 @@ class button_action(Frame):
         
     def kill_all(self):
         self.current_state.kill_all()
+        
+    def print_EL(self):
+        self.current_state._check_all_EL()
+        self.current_state.print_all_EL()
+    
     
         
         
