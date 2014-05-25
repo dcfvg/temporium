@@ -18,7 +18,7 @@ class visual_feedback(Canvas):
         
         Canvas.__init__(self, parent, width=700, height=800)
         self.parent = parent
-        self.pack(side=RIGHT)
+        self.pack(side=RIGHT,  fill=NONE, expand=1)
         self.update()
         
         
@@ -74,6 +74,10 @@ class visual_feedback(Canvas):
         
     def resize(self, event):
         """called when the user resize the windows, draw the graphics to the new scale"""
+        
+        """draw the graphics, according to the dimensions and positions from the attributs, and from the elements's states from current_state"""
+        self.create_rectangle(0,0,self.winfo_width(),self.winfo_height(), fill="white")
+        self.draw_init()
         self.draw()   
         
     def draw(self) :

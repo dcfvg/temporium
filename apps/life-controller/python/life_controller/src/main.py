@@ -4,13 +4,12 @@ Created on 9 mai 2014
 @author: ensadlab
 
 '''
-from window import *
+from GUI.window import *
 from current_state import *
 from com_arduino import *
-from server import *
+from communication.server import *
 from BRBU_controller import *
 from seance_controller import *
-
 from BRBU_controller import *
 
 if __name__ == "__main__":

@@ -25,15 +25,15 @@ class client_OSC_seance(object):
         """order are :   
             - debut seance : /seance, begin """
         msg = osc_message_builder.OscMessageBuilder(address = "/seance_start")
-        msg.add_arg("begin")
+        msg.add_arg("1")
         msg = msg.build()
         self.client.send(msg)
         print("film begin send")
     
     def send_seance_formation_rate (self, value):
         """order are :   
-            - rate of image_foramtion : /formation_rate, value """
-        msg = osc_message_builder.OscMessageBuilder(address = "/formation_rate")
+            - rate of image_foramtion : /image_formation, value """
+        msg = osc_message_builder.OscMessageBuilder(address = "/image_formation")
         msg.add_arg(value)
         msg = msg.build()
         self.client.send(msg)

@@ -8,7 +8,7 @@ import time
 
 class auto_AQ_filtration(threading.Thread):
     '''
-    thread to run action
+    thread to run to start an automatic filtration of AQ, but do not call it directly, use current_state.set_current_action
     '''
 
     def __init__(self,a_current_state):

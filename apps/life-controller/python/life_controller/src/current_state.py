@@ -6,11 +6,11 @@ Created on Apr 27, 2014
 
 import threading
 import time
-from AQ_filtration import *
-from fill_BU_AQ import *
-from auto_AQ_filtration import *
-from renew_light_AQ_BU import *
-from empty_BU_S import *
+from action_thread.AQ_filtration import *
+from action_thread.fill_BU_AQ import *
+from action_thread.auto_AQ_filtration import *
+from action_thread.renew_light_AQ_BU import *
+from action_thread.empty_BU_S import *
 
 class current_state(object):
     """ Gather all the informations about the state of the installation"""
@@ -31,10 +31,6 @@ class current_state(object):
         """state of the EL {"AQ" : {"HIGH" : [threading.Lock(),False,1], "MEDIUM" : [threading.Lock(),False,0.66] },... }"""
         self._state_EL = dict()
         
-                               
-        
-        """state of each electrode : { EL_M1 : True , EL_M2 : False, ...} """
-        self.state_electrodes = dict()
         
         """Occupied volume for each container : { M1 : [Lock, 0.75] , M2 : ...} """
         self._occupied_volume = dict()
@@ -80,7 +76,7 @@ class current_state(object):
         
         """initialize all values after a log_start.txt"""
         self.__setState__()
-        #self.__setState_EL__()
+        #self._check_all_EL()
     
         #self.client_connected = 
     
@@ -292,7 +288,7 @@ class current_state(object):
                     else : 
                         self._set_current_action("empty_BU3_S",False)
         else : 
-            print("already a task running")                
+            print(name + " to "+ str(state) + " impossible : already a task running")                
         
     
     """do not use this function"""       
@@ -421,8 +417,7 @@ class current_state(object):
         value = self._concentration[container_name][1]
         self._concentration[container_name][0].release()
         return value
-        
-        
+         
     def set_concentration(self,container_name,  value):
         """set the AQ_concentration"""
         self._concentration[container_name][0].acquire()
@@ -435,6 +430,7 @@ class current_state(object):
     """do not use this function"""
     def _set_state_EL(self,name_container, name_EL, state):
         """name_container : AQ , name_EL : HIGH"""
+        """set the state of the electrode in state_EL, and set the occupied_volume associated to occupied_volume"""
         if not state == self._get_state_EL(name_container, name_EL) : 
             
             self.set_occupied_volume(name_container, self._state_EL[name_container][name_EL][2] )
@@ -446,24 +442,24 @@ class current_state(object):
             
         
         """return the value stocked in _state_EL without asking it to the arduino"""
+    
+    """do not use this function"""
     def _get_state_EL(self,name_container, name_EL):
         self._state_EL[name_container][name_EL][0].acquire()
         state = self._state_EL[name_container][name_EL][1]
         self._state_EL[name_container][name_EL][0].release() 
         return state
     
-    def get_state_EL(self,name_container, name_EL):
-        """get state EL from arduino and set it in _state_EL"""
+    """get state EL from arduino and set it in _state_EL"""
+    def get_state_EL(self,name_container, name_EL): 
         """after each call to this function : be sure that it is different from NULL"""
         state = self.com_arduino.EL_read(name_container, name_EL)
         """if NULL, EL not connected"""
         
         self._set_state_EL(name_container, name_EL, state)
         return state
-                  
-    def set_windows(self,window):
-        self.window = window
-         
+        
+    """function to call each time something changes"""     
     def refresh_windows(self):
         if self.GUI :
             delta = time.time() -self.last_time
@@ -471,7 +467,7 @@ class current_state(object):
                 """refresh the GUI"""
                 #add in the thread of Tkinter the draw function
                 #self.window.after(0,self.window.refresh)
-                self.window.after(0,self.window.refresh)
+                #self.window.after(0,self.window.refresh)
                 #self.window.visual_feedback.after_idle(self.window.visual_feedback.draw)
                 self.last_time = time.time()
         
@@ -532,14 +528,15 @@ class current_state(object):
     
     """set all action to False"""
     def stop_action(self):
+        """rq : not used"""
         print ("Actions Stopped") 
         for item in self._current_action : 
             self.set_current_action(item, False)
     
+    """ Set the states to the right values according to the log_start.txt file """
     def __setState__(self):
-        """ Set the states to the right values according to the log_start.txt file """
             # Open the file
-        log_pin = open("config_start.txt", "r")
+        log_pin = open("config/config_start.txt", "r")
      
         # read the ligne one by one
         for ligne in log_pin:
@@ -581,9 +578,9 @@ class current_state(object):
                     else: 
                         self._state_EL[name_container][name_EL] = [threading.Lock(),self.com_arduino.EL_read(name_container, name_EL),float(level_ref) ]
     
-               
-    def __setState_EL__(self):
-        """set all the EL to their current state"""
+    
+    """check all the EL and set their state to their current state"""       
+    def _check_all_EL(self):    
         for name_container in self.com_arduino.the_EL : 
             """name_container is for ex : "AQ" """
             for name_EL in self.com_arduino.the_EL[name_container] : 
@@ -593,6 +590,22 @@ class current_state(object):
                     self._state_EL[name_container] = {}
                 self._state_EL[name_container][name_EL][1] = self.com_arduino.EL_read(name_container, name_EL)
     
+    """kill all action running, st all pump to false"""          
+    def kill_all(self):
+        
+        for item in self._current_action_evolved : 
+            self.set_current_action_evolved(item, False)
+        
+        for item in self._current_action : 
+            self.set_current_action(item, False)
+        
+        """set all the pump to false"""
+        for item in self._state_pumps : 
+            self.set_state_pump(item, False)
+            
+                
+        
+    
     """set the server to current_state"""
     def set_server(self, un_server):
         self.server = un_server
@@ -600,12 +613,17 @@ class current_state(object):
     """set the BRBU_controller to current_state"""
     def set_BRBU_controller(self, un_BRBU_controller):
         self.BRBU_controller = un_BRBU_controller
-"""
-if __name__ == "__main__":
-    a = current_state()
-    #print(a.the_pins)
-"""  
+        
+                    
+    def set_windows(self,window):
+        self.window = window
     
-    
+    def print_all_EL(self):
+        for item in self._state_EL : 
+            for i in self._state_EL[item] : 
+                print(item + "_" + i + " : " + str(self._state_EL[item][i][1]))
+        
+        
+
         
     

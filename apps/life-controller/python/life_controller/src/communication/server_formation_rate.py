@@ -75,6 +75,12 @@ class server_formation_rate(threading.Thread):
         
     def _recv(self):
         return self.client_socket.recv(2048).decode()   
+    
+    def start_information(self):
+        self._send("start")
+    
+    def stop_information(self):
+        self._send("stop")
         
         
     def stop(self) :
