@@ -115,7 +115,6 @@ class seance_controller(threading.Thread):
     def run(self):
         if True : 
             """if client_formation_rate connected"""
-        if True : 
             """ask client_formation_rate to begin to analyse photo"""
             print ("begin formation rate asked")
             
