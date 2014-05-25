@@ -40,8 +40,8 @@ P_M1_BR1 : 44
 P_M2_AQ : 45
 P_M1_BR2 : 46
 P_M1_BR3 : 47
-comments : 48
-P_M2_BU3 : 49
+comments : 49
+P_M2_BU3 : 48
 P_M2_BU1 : 50
 P_M2_BU2 : 51
 pin_array_output : 28, 29, 30, 31, 32, 33, 34, 35, 37, 39, 41, 43, 44, 45, 46, 47, 49, 50, 51
@@ -60,4 +60,4 @@ EL : AQ : MAX : 41 : 52
 EL : AQ : HIGH : 43 : 52
 EL : AQ : MIDDLE : 45 : 52
 EL : AQ : MIN : 47 : 52
-arduino : arduino_lift : /dev/cu.usbmodem1d1121
+comments : arduino : arduino_lift : /dev/cu.usbmodem1d1121

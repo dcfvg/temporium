@@ -1,0 +1,9 @@
+#!/bin/bash
+
+convert im_BU_level.jpeg -crop 146x468+894+327 buf1.jpeg
+#convert im_BU_level.jpeg -crop 500x500+0+0 buf2.jpeg
+#convert im_BU_level.jpeg -crop 500x500+0+0 buf3.jpeg
+
+#convert im_a_decouper.jpeg -crop 0x0+200+200 flot1.jpg
+#convert im_a_decouper.jpeg -crop 0x0+200+200 flot2.jpg
+#convert im_a_decouper.jpeg -crop 0x0+200+200 flot3.jpg

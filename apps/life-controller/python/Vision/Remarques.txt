@@ -1,0 +1,17 @@
+Erreur dans le Client_level
+
+
+connection granted
+client_level received : level_start
+Ask for image analysis
+Exception in thread client_level:
+Traceback (most recent call last):
+  File "/usr/lib/python2.7/threading.py", line 551, in __bootstrap_inner
+    self.run()
+  File "/home/edgar/python_ws/Scripts_WorkShop_Avril/Test_Niveau/client_level_py2_V2.py", line 66, in run
+    self.image_level_V2.lock.release()
+error: release unlocked lock
+
+
+
+Important : effectuer des moyennes sur les 3/4 valeurs précédentes pour atténuer les oscillations
