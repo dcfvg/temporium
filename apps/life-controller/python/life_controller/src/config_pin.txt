@@ -48,15 +48,15 @@ pin_array_output : 28, 29, 30, 31, 32, 33, 34, 35, 37, 39, 41, 43, 44, 45, 46, 4
 realcomments : pin_array_output : 28, 29, 30, 31, 32, 33, 34, 35, 37, 39, 41, 43, 44, 45, 46, 47, 48, 49, 50, 51
 realcomments : pin_array_output : 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 40, 41
 comments : Arduino pour EL, indiquer les pins (MAX : niveau de securitŽ alarme , HIGH : niveau haut normal, Middle : 10pourcent de l'aq ...) 
-comments :arduino : arduino_EL : /dev/cu.usbmodem1d1141
-comments :EL : BR1 : MAX : NULL
-comments :EL : BR2 : MAX : NULL
-comments :EL : BR3 : MAX : NULL
-comments :EL : BU1 : MAX : NULL
-comments :EL : BU2 : MAX : NULL
-comments :EL : BU3 : MAX : NULL
-comments :EL : AQ : MAX : NULL
-comments :EL : AQ : HIGH : NULL
-comments :EL : AQ : MIDDLE : NULL
-comments :EL : AQ : MIN : NULL
+arduino : arduino_EL : /dev/cu.usbmodem1d1141
+EL : BR1 : MAX : 22
+EL : BR2 : MAX : 23
+EL : BR3 : MAX : 29
+EL : BU1 : MAX : 25
+EL : BU2 : MAX : 26
+EL : BU3 : MAX : 24
+EL : AQ : MAX : 41
+EL : AQ : HIGH : 43
+EL : AQ : MIDDLE : 45
+EL : AQ : MIN : 47
 comments : arduino : arduino_lift : /dev/cu.usbmodem1411
