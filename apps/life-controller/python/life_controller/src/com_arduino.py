@@ -157,7 +157,8 @@ class com_arduino(object):
             else : 
                 if not self.test  :
                     """set the pin_5V to high"""
-                    self.the_EL[name_container][name_EL][0].setHigh(self.the_EL[name_container][name_EL][2]) 
+                    #print(self.the_EL[name_container][name_EL][2])
+                    self.the_EL[name_container][name_EL][0].setHigh(self.the_EL[name_container][name_EL][2])
                     
                     """check the EL"""
                     value = self.the_EL[name_container][name_EL][0].getState(self.the_EL[name_container][name_EL][1])
