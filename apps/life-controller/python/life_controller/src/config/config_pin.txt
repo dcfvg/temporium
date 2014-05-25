@@ -4,6 +4,7 @@ comments : To add an arduino, put "arduino :" at the beginiing of the ligne, the
 comments : after an arduino, put the right function and the coresponding pin connected to it, separated by ":", if function is not connected, put "NULL" as a pin
 comments : list all pin output in the pin_array_output that are connected to the last arduino declared 
 comments : list arduino terminal "python -m serial.tools.list_ports"
+<<<<<<< HEAD
 arduino : arduino_pump :  /dev/cu.usbmodem1d1141
 comments : P_BR1_BU1 : 26 ok
 comments : P_BR2_BU2 : 27 ok
@@ -62,3 +63,40 @@ EL : AQ : HIGH : 43
 EL : AQ : MIDDLE : 45
 EL : AQ : MIN : 47
 comments : arduino : arduino_lift : /dev/cu.usbmodem1121
+=======
+arduino : arduino_pump :  /cu.usbmodem411 
+P_BR1_BU1 : 26				
+P_BR2_BU2 : 27
+P_BR3_BU3 : 28
+P_BU1_FI : 33
+P_BU2_FI : 34
+P_BU3_FI : 35
+P_M1_BR1 : 22
+P_M1_BR2 : 23
+P_M1_BR3 : 24
+P_M2_BU1 : 30
+P_M2_BU2 : 31
+P_M2_BU3 : 32
+P_M2_AQ : 25
+P_AQ_S : 29
+P_AQ_FI : 36
+P_FI_AQ_3 :37
+P_FI_AQ_1 :38
+P_FI_S : 40
+P_SPEC : 41
+pin_array_output : 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 40, 41
+comments : Arduino pour EL, indiquer les pins (MAX : niveau de securite alarme , HIGH : niveau haut normal, Middle : 10% de l'aq ...) 
+comments : ne pas oublier de mettre les niveaux correspondant dans config_start.txt
+arduino : arduino_EL : /dev/cu.usbmodem411
+EL : BR1 : MAX : 22 : 28
+EL : BR2 : MAX : 23 : 28
+EL : BR3 : MAX : 29 : 28
+EL : BU1 : MAX : 25 : 28
+EL : BU2 : MAX : 26 : 28
+EL : BU3 : MAX : 24 : 28
+EL : AQ : MAX : 41 : 52
+EL : AQ : HIGH : 43 : 52
+EL : AQ : MIDDLE : 45 : 52
+EL : AQ : MIN : 47 : 52
+comments : arduino : arduino_lift : /dev/cu.usbmodem411
+>>>>>>> c2937ed6d357809d19b4efd0645fabc146ffb7ae

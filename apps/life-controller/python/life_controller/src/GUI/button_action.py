@@ -158,7 +158,7 @@ class button_action(Frame):
         pass
     
     def start_BRBU_cycle(self) :
-        self.current_state.BRBU_controller.start_stop_cycle()
+        self.current_state.set_BRBU_controller_state(not self.current_state.get_BRBU_controller_state())
      
     def liftDown(self) :
         self.current_state.com_arduino.liftDown()
@@ -176,8 +176,7 @@ class button_action(Frame):
         self.current_state.BRBU_controller.pause()
         
     def start_EL(self):
-        s = security_EL(self.current_state)
-        s.start()
+        self.current_state.security_EL.set_stop( not self.current_state.security_EL.get_stop())
         
     def kill_all(self):
         self.current_state.kill_all()

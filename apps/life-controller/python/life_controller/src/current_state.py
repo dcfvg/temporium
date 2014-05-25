@@ -61,6 +61,8 @@ class current_state(object):
                                         "renew_light_AQ_BU3" : [threading.Lock(),False],\
                                  }
         
+        """BRBU_controller state"""
+        self._BRBU_controller_state = [threading.Lock(),False]
         """AQ_concentration"""
         self._concentration = {"AQ" :[threading.Lock(), 0]}
         
@@ -73,6 +75,8 @@ class current_state(object):
         
         "emergency stop "  
         self._keep_going = [threading.Lock(), True]
+        
+        
         
         """initialize all values after a log_start.txt"""
         self.__setState__()
@@ -490,6 +494,18 @@ class current_state(object):
         self._BRBU_state[BU][0].release()
         return state
     
+    def set_BRBU_controller_state(self, state) : 
+        self._BRBU_controller_state[0].acquire()
+        self.BRBU_controller.set_stop_start(not state)
+        self._BRBU_controller_state[1] = state 
+        self._BRBU_controller_state[0].release()
+    
+    def get_BRBU_controller_state(self):
+        self._BRBU_controller_state[0].acquire()
+        state =  self._BRBU_controller_state[1] 
+        self._BRBU_controller_state[0].release()
+        return state
+    
     
     def get_formation_rate(self):
         """get the value of formation_rate"""
@@ -548,6 +564,9 @@ class current_state(object):
             
             
             if list[0].strip() == "comments" :
+                continue
+            
+            elif list[0].strip() == "print" :
                 print (list[1].strip())
             
             elif list[0].strip() == "time_cycle" : 
@@ -593,6 +612,8 @@ class current_state(object):
     """kill all action running, st all pump to false"""          
     def kill_all(self):
         
+        self.set_BRBU_controller_state(False)
+        
         for item in self._current_action_evolved : 
             self.set_current_action_evolved(item, False)
         
@@ -617,6 +638,9 @@ class current_state(object):
                     
     def set_windows(self,window):
         self.window = window
+        
+    def set_security_EL(self, un_security_EL):
+        self.security_EL = un_security_EL
     
     def print_all_EL(self):
         for item in self._state_EL : 

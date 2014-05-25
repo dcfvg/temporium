@@ -11,6 +11,7 @@ from communication.server import *
 from BRBU_controller import *
 from seance_controller import *
 from BRBU_controller import *
+from security_EL import *
 
 if __name__ == "__main__":
     co_ard = com_arduino()
@@ -26,6 +27,8 @@ if __name__ == "__main__":
 
     le_server.start()
     BRBU_cont.start()
+    s = security_EL(cu_state)
+    cu_state.set_security_EL(s)
     
     w.mainloop()
 
