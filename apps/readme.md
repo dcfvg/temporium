@@ -7,6 +7,7 @@
 - gestion à distance (vnc) : redirection du port 5900 pour permettre l’accès depuis l’extérieur 
 - session à distance (ssh) : redirection d'un port pour permettre l’accès depuis l’extérieur
 - ouverture des protocoles torrent pour permettre le bon fonctionnement de <http://www.bittorrent.com/sync> qui servira d’outil de récupération des médias produits.
+- adresse ip sur laquelle se connecter + possibilité de filtrage des adresses
 
 **espace de stockage**
 
