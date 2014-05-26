@@ -4,8 +4,8 @@
 **connection internet**
 
 - réseau filaire de préférence
-- gestion à distance (vnc) : redirection de ports pour permettre l’accès depuis l’extérieur 
-- session à distance (ssh) : redirection de ports pour permettre l’accès depuis l’extérieur
+- gestion à distance (vnc) : redirection du port 5900 pour permettre l’accès depuis l’extérieur 
+- session à distance (ssh) : redirection d'un port pour permettre l’accès depuis l’extérieur
 - ouverture des protocoles torrent pour permettre le bon fonctionnement de <http://www.bittorrent.com/sync> qui servira d’outil de récupération des médias produits.
 
 **espace de stockage**
