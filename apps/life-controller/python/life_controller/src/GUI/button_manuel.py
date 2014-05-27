@@ -97,6 +97,12 @@ class button_manuel(Frame):
         self.state_P_AQ_S = tkinter.Canvas(self.frame_button_state, bg ='green')
         self.state_P_AQ_S.pack()
         
+        self.Button_P_SPECTRO = tkinter.Button(self.frame_button,  text ="P_SPECTRO", command = self.Button_P_SPECTRO)        
+        self.Button_P_SPECTRO.pack()
+        self.state_P_SPECTRO = tkinter.Canvas(self.frame_button_state, bg ='green')
+        self.state_P_SPECTRO.pack()
+        
+        
 
         
         self.Button_unlock = tkinter.Button(self.frame_button,  text ="debloque/bloque pompes interdites", command = self.Button_unlock)        
@@ -253,6 +259,11 @@ class button_manuel(Frame):
         name = 'P_FI_S'
         if self.lock : 
             self.parent.current_state.set_state_pump(name, not self.parent.current_state.get_state_pump(name))
+        
+    def Button_P_SPECTRO(self) :
+        name = 'P_SPECTRO'
+        if self.lock : 
+            self.parent.current_state.set_state_pump(name, not self.parent.current_state.get_state_pump(name))    
         
     def print_state(self):
         print (self.the_buttons)  

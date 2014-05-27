@@ -128,6 +128,11 @@ class com_arduino(object):
         """control 3 pump from FI to AQ"""
         name = 'P_FI_S'
         self.pump_order(name, state)
+    
+    def P_SPECTRO(self, state):
+        """control 3 pump from FI to AQ"""
+        name = 'P_SPECTRO'
+        self.pump_order(name, state)
         
     def pump_order(self, name , state):
         

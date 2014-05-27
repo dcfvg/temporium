@@ -26,7 +26,7 @@ class current_state(object):
                              "P_M2_BU1" : [threading.Lock(),False], "P_M2_BU2" : [threading.Lock(),False] , "P_M2_BU3" : [threading.Lock(),False], "P_M2_AQ" : [threading.Lock(),False],\
                              "P_BU1_FI" : [threading.Lock(),False], "P_BU2_FI" : [threading.Lock(),False] , "P_BU3_FI" : [threading.Lock(),False],\
                              "P_AQ_S" : [threading.Lock(),False], "P_AQ_FI" : [threading.Lock(),False] , "P_FI_AQ_1" : [threading.Lock(),False], "P_FI_AQ_3" : [threading.Lock(),False],\
-                             "P_FI_S" : [threading.Lock(),False] }
+                             "P_FI_S" : [threading.Lock(),False], "P_SPECTRO" : [threading.Lock(),False] }
         
         """state of the EL {"AQ" : {"HIGH" : [threading.Lock(),False,1], "MEDIUM" : [threading.Lock(),False,0.66] },... }"""
         self._state_EL = dict()
@@ -155,6 +155,10 @@ class current_state(object):
     
     def P_FI_S(self, state):
         name = 'P_FI_S'
+        self.set_state_pump( name, state )
+        
+    def P_SPECTRO(self, state):
+        name = 'P_SPECTRO'
         self.set_state_pump( name, state )
           
     def AQ_filtration(self, state):
