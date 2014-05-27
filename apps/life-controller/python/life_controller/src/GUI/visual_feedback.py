@@ -81,7 +81,9 @@ class visual_feedback(Canvas):
         self.draw()   
         
     def draw(self) :
-        for item in self.current_state._state_pumps : 
+        """need to be update"""
+        #for item in self.current_state._state_pumps : 
+        for item in self.pumps_positions : 
             self.set_state_pump(item, self.current_state.get_state_pump(item))
         for item in self.current_state._occupied_volume :
             self.set_fill_container(item, self.current_state.get_occupied_volume(item))
