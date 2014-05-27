@@ -3,7 +3,7 @@ comments : To add a comments, put "comments :" at the beginiing of the ligne
 comments : To add an arduino, put "arduino :" at the beginiing of the ligne, then his name(arduino_mega or arduino_lift) , then his port, separeted by ":"
 comments : after an arduino, put the right function and the coresponding pin connected to it, separated by ":", if function is not connected, put "NULL" as a pin
 comments : list all pin output in the pin_array_output that are connected to the last arduino declared 
-comments : list arduino terminal "python -m serial.tools.list_ports" ou Òls /dev/cu.usbmodem*Ó
+comments : list arduino terminal "python -m serial.tools.list_ports" ou "ls /dev/cu.usbmodem*"
 arduino : arduino_pump :  /dev/cu.usbmodem14221
 PUMP : P_SPEC : 28
 PUMP : P_FI_S : 29
