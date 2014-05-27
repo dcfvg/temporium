@@ -4,7 +4,7 @@ comments : To add an arduino, put "arduino :" at the beginiing of the ligne, the
 comments : after an arduino, put the right function and the coresponding pin connected to it, separated by ":", if function is not connected, put "NULL" as a pin
 comments : list all pin output in the pin_array_output that are connected to the last arduino declared 
 comments : list arduino terminal "python -m serial.tools.list_ports"
-arduino : arduino_pump :  /dev/cu.usbmodem1d1141
+arduino : arduino_pump :  /dev/cu.usbmodem14231
 comments : P_BR1_BU1 : 26 ok
 comments : P_BR2_BU2 : 27 ok
 comments : P_BR3_BU3 : 28 ok
@@ -48,7 +48,7 @@ pin_array_output : 28, 29, 30, 31, 32, 33, 34, 35, 37, 39, 41, 43, 44, 45, 46, 4
 comments : pin_array_output : 28, 29, 30, 31, 32, 33, 34, 35, 37, 39, 41, 43, 44, 45, 46, 47, 48, 49, 50, 51
 comments : pin_array_output : 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 40, 41
 comments : Arduino pour EL, indiquer les pins (MAX : niveau de securite alarme , HIGH : niveau haut normal, Middle : 10pourcent de l'aq ...) 
-arduino : arduino_EL : /dev/cu.usbmodem1d1111
+arduino : arduino_EL : /dev/cu.usbmodem14231	
 pin_array_output : 28, 52
 EL : BR1 : MAX : 22 : 28
 EL : BR2 : MAX : 23 : 28
