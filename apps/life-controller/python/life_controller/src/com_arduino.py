@@ -34,6 +34,9 @@ class com_arduino(object):
         
         """{"AQ" : {"HIGH" : [arduino, pin, pin_5V],"MEDIUM" : [arduino, pin, , pin_5V], "LOW" : [arduino, pin, , pin_5V] }, "BR1" :  {"HIGH" : [arduino, pin, pin_5V],"MEDIUM" : [arduino, pin, pin_5V], "LOW" : [arduino, pin, pin_5V] }}"""
         self.the_EL = dict()
+        
+        """pin for the spectro : {"SPECTRO = [arduino, pin])"""
+        self.the_SPECTRO = dict()
          
         """for simulation and testing"""
          
@@ -150,6 +153,32 @@ class com_arduino(object):
                 
         return True 
     
+    """order to turn on/off the spectro"""
+    def spectro(self, state):
+        name = "SPECTRO"
+        """if not in test mode"""
+        if not self.test :
+            """if arduino_pump connected"""
+            if "arduino_pump" in self.the_arduino :  
+                if self.the_SPECTRO[name][1]=="NULL" :
+                    print("pin not connected")
+                else :
+                    if state :
+                        self.the_SPECTRO[name][0].setHigh(self.the_SPECTRO[name][1])
+                    else :
+                        self.the_SPECTRO[name][0].setLow(self.the_SPECTRO[name][1])      
+            else : 
+                print ("arduino_pump not declared/connected")
+        """send information to arduino_server"""
+        self.send_server_arduino_order(name, state)
+        if state :
+            print(name + " HIGH") 
+        else :
+            print(name + " LOW")
+                
+        return True 
+        
+    
     """order to read EL"""
     
     """Return the value of the EL_BR1, return "NULL" if not connected to the arduino"""
@@ -229,6 +258,7 @@ class com_arduino(object):
                 self.server_arduino_order._send(name + " : LOW" + "\n")
         
         self.server_arduino_order_state[0].release()  
+
             
             
     def __setPin__(self):
@@ -292,13 +322,25 @@ class com_arduino(object):
                         self.the_EL[list[1].strip()][list[2].strip()] = [arduino_current,list[3].strip(), list[4].strip()]
                     else : 
                         self.the_EL[list[1].strip()][list[2].strip()] = [arduino_current,int(list[3].strip()), list[4].strip()]
-            
-                else :
+                
+                elif list[0].strip() =="PUMP" :
+                    
                     """put the pin into the the_pumps dict() : {P_M1_BR1 : [arduino_current,pin], P_M2_BU2 : [arduino_current,pin], ...}"""
-                    if list[1].strip()=="NULL" :
-                        self.the_pumps[list[0].strip()] = [arduino_current,list[1].strip()]
+                    if list[2].strip()=="NULL" :
+                        self.the_pumps[list[1].strip()] = [arduino_current,list[2].strip()]
                     else :
-                        self.the_pumps[list[0].strip()] = [arduino_current,int(list[1].strip())]
+                        self.the_pumps[list[1].strip()] = [arduino_current,int(list[2].strip())]
+                
+                elif list[0].strip() =="SPECTRO" :
+                    """put the pin into the the_pumps dict() : {P_M1_BR1 : [arduino_current,pin], P_M2_BU2 : [arduino_current,pin], ...}"""
+                    if list[2].strip()=="NULL" :
+                        self.the_SPECTRO[list[1].strip()] = [arduino_current,list[2].strip()]
+                    else :
+                        self.the_SPECTRO[list[1].strip()] = [arduino_current,int(list[2].strip())]
+                    
+                
+                else :
+                    print( "unknown type" + ligne)
                          
             """def output Arduino"""
              

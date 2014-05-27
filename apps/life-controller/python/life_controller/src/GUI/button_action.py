@@ -23,6 +23,8 @@ class button_action(Frame):
        # self.frame_button_state = Frame(self)
         self.current_state = parent.current_state
         
+        self.spectro_test = False
+        
         
 
         
@@ -96,6 +98,9 @@ class button_action(Frame):
         
         self.Button_print_EL = tkinter.Button(self.frame_button,  text ="print EL", command = self.print_EL)        
         self.Button_print_EL.pack()
+        
+        self.Button_SPECTRO = tkinter.Button(self.frame_button,  text ="SPECTRO", command = self.spectro)        
+        self.Button_SPECTRO.pack()
         
         
         
@@ -187,6 +192,13 @@ class button_action(Frame):
     def print_EL(self):
         self.current_state._check_all_EL()
         self.current_state.print_all_EL()
+        
+    def spectro(self):
+        self.current_state.com_arduino.spectro(not self.spectro_test)
+        self.spectro_test= not self.spectro_test
+        
+        
+    
     
     
         
