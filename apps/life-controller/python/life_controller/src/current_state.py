@@ -574,17 +574,17 @@ class current_state(object):
                 self.time_cycle[list[1].strip()] = [threading.Lock(), float(list[2].strip())]
                 print ("cycle "+ list[1].strip() +" set at " + list[2].strip())
                 
+                
             elif list[0].strip() =="occupied_volume" :
                 """set the occupied volume { M1 : [Lock, 0.75] , C2 : ...} """
                 self._occupied_volume[list[1].strip()] = [threading.Lock(), float(list[2].strip())]
-                #print ("hello")
                 
             elif list[0].strip() =="number_usage" :
                 """set the number_usage { BU1 : 0 , BU2 : 23, ...} """
                 self.number_usage[list[1].strip()] = int(list[2].strip())
             
             elif list[0].strip() =="EL" :
-                 
+                    
                     """Make a dictionnary of the EL for a container, then put it in the_EL :  {"AQ" : {"HIGH" : [threading.Lock(),False,1], "MEDIUM" : [threading.Lock(),False,0.66] },... } """
                     """if name_container not in the dict, we create a dictionnary for it in the_EL dictionnary"""
                     name_container =list[1].strip() 
@@ -596,7 +596,6 @@ class current_state(object):
                         self._state_EL[name_container][name_EL] = [threading.Lock(),self.com_arduino.EL_read(name_container, name_EL),level_ref ]
                     else: 
                         self._state_EL[name_container][name_EL] = [threading.Lock(),self.com_arduino.EL_read(name_container, name_EL),float(level_ref) ]
-                        print("hello")
     
     
     """check all the EL and set their state to their current state"""       

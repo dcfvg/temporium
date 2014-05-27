@@ -127,17 +127,21 @@ class com_arduino(object):
         self.pump_order(name, state)
         
     def pump_order(self, name , state):
-         
+        
+        """if not in test mode"""
         if not self.test :
-            if self.the_pumps[name][1]=="NULL" :
-                print("pin not connected")
-            else :
-                if state :
-                    self.the_pumps[name][0].setHigh(self.the_pumps[name][1])
+            """if arduino_pimp connected"""
+            if "arduino_pump" in self.the_arduino :  
+                if self.the_pumps[name][1]=="NULL" :
+                    print("pin not connected")
                 else :
-                    self.the_pumps[name][0].setLow(self.the_pumps[name][1])      
-        
-        
+                    if state :
+                        self.the_pumps[name][0].setHigh(self.the_pumps[name][1])
+                    else :
+                        self.the_pumps[name][0].setLow(self.the_pumps[name][1])      
+            else : 
+                print ("arduino_pump not declared/connected")
+        """send information to arduino_server"""
         self.send_server_arduino_order(name, state)
         if state :
             print(name + " HIGH") 
@@ -151,48 +155,66 @@ class com_arduino(object):
     """Return the value of the EL_BR1, return "NULL" if not connected to the arduino"""
     def EL_read(self,name_container, name_EL):
         if not self.test :
-            if self.the_EL[name_container][name_EL][1] == "NULL":
-                print("pin not connected")
-                return "NULL"
+            if "arduino_EL" in self.the_arduino : 
+                if self.the_EL[name_container][name_EL][1] == "NULL":
+                    print("pin not connected")
+                    return "NULL"
+                else : 
+                    if not self.test  :
+                        """set the pin_5V to high"""
+                        self.the_EL[name_container][name_EL][0].setHigh(self.the_EL[name_container][name_EL][2]) 
+                        
+                        """check the EL"""
+                        value = self.the_EL[name_container][name_EL][0].getState(self.the_EL[name_container][name_EL][1])
+                        
+                        """set the pin_5V to high"""
+                        self.the_EL[name_container][name_EL][0].setLow(self.the_EL[name_container][name_EL][2])           
+                        return value
             else : 
-                if not self.test  :
-                    """set the pin_5V to high"""
-                    #print(self.the_EL[name_container][name_EL][2])
-                    self.the_EL[name_container][name_EL][0].setHigh(self.the_EL[name_container][name_EL][2])
-                    
-                    """check the EL"""
-                    value = self.the_EL[name_container][name_EL][0].getState(self.the_EL[name_container][name_EL][1])
-                    
-                    """set the pin_5V to high"""
-                    self.the_EL[name_container][name_EL][0].setLow(self.the_EL[name_container][name_EL][2]) 
-                    
-                    return value
+                print ("arduino_EL not declared/connected") 
         else : 
             return "NULL"
             #return False
      
     """Order to liftDown and liftUp, screenDown and screenUp"""
     def liftDown(self):
-        """send the order to liftdown the lift"""
-        self.the_arduino["arduino_lift"].liftDown()
+        if not self.test : 
+            if "arduino_lift" in self.the_arduino : 
+                """send the order to liftdown the lift"""
+                self.the_arduino["arduino_lift"].liftDown()
+            else : 
+                print ("arduino_lift not declared/connected")   
+        
         print("LiftDown")
         return True
 
     def liftUp(self):
-        """send the order to liftUp the lift"""
-        self.the_arduino["arduino_lift"].liftUp()
+        if not self.test : 
+            if "arduino_lift" in self.the_arduino :
+                """send the order to liftUp the lift"""
+                self.the_arduino["arduino_lift"].liftUp()
+            else : 
+                print ("arduino_lift not declared/connected")      
         print("LiftUp")
         return True
 
     def screenDown(self):
-        """send the order to screenDown"""
-        self.the_arduino["arduino_lift"].screenDown()
+        if not self.test : 
+            if "arduino_lift" in self.the_arduino :
+                """send the order to screenDown"""
+                self.the_arduino["arduino_lift"].screenDown()
+            else : 
+                print ("arduino_lift not declared/connected")
         print("screenDown")
         return True
 
     def screenUp(self):
-        """send the order to screenDown"""
-        self.the_arduino["arduino_lift"].screenUp()
+        if not self.test : 
+            if "arduino_lift" in self.the_arduino :
+                """send the order to screenDown"""
+                self.the_arduino["arduino_lift"].screenUp()
+            else : 
+                print ("arduino_lift not declared/connected")  
         print("screenUp")
         return True
     
