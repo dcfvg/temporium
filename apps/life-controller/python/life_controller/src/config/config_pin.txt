@@ -27,7 +27,7 @@ P_M2_BU1 : 50
 P_M2_BU2 : 51
 pin_array_output : 28, 29, 30, 31, 32, 33, 34, 35, 37, 39, 41, 43, 44, 45, 46, 47, 49, 50, 51
 comments : Arduino pour EL, indiquer les pins (MAX : niveau de securite alarme , HIGH : niveau haut normal, Middle : 10pourcent de l'aq ...) 
-arduino : arduino_EL : /dev/cu.usbmodem14231	
+arduino : arduino_EL : /dev/cu.usbmodem14241	
 pin_array_output : 28, 52
 EL : BR1 : MAX : 22 : 28
 EL : BR2 : MAX : 23 : 28
