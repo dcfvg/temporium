@@ -262,8 +262,8 @@ class button_manuel(Frame):
         
     def Button_P_SPECTRO(self) :
         name = 'P_SPECTRO'
-        if self.lock : 
-            self.parent.current_state.set_state_pump(name, not self.parent.current_state.get_state_pump(name))    
+        self.parent.current_state.set_state_pump(name, not self.parent.current_state.get_state_pump(name)) 
+               
         
     def print_state(self):
         print (self.the_buttons)  
