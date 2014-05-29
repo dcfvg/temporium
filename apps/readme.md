@@ -67,10 +67,6 @@
 **arduino**
 - prototype.ino
 
-**processing**
-- processing-java
-- oscP5
-
 **nodeJs**
 - http://automata.cc/osc-web
 - socket.io
