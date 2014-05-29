@@ -1,0 +1,350 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>QuickTime Properties</title></head><body>
+<div>
+<div>
+<h1>QuickTime Properties</h1>
+</div>
+<tt>string GetQuickTimeVersion()</tt>
+<p>Returns the version of QuickTime.</p>
+<tt>string GetQuickTimeLanguage()</tt>
+<p>Returns the user's QuickTime language (set with the Plug-in's "Set Language" dialog).</p>
+<tt>int GetQuickTimeConnectionSpeed()</tt>
+<p>Returns the connection speed setting from the users QuickTime preferences.</p>
+<tt>boolean GetIsQuickTimeRegistered()</tt>
+<p>Returns <tt>true</tt> if the user is registered for the Pro version of QuickTime, it otherwise returns <tt>false</tt>.</p>
+<tt>string GetComponentVersion(string type, string subType,<br/>
+string manufacturer)</tt>
+<p>Returns the version of a specific QuickTime component. The component is specified using a four character string for the type, subType, and manufacturer. For example, to check the version of Apple's JPEG graphics importer call</p>
+<tt>GetComponentVersion(`grip','JPEG', `appl')</tt>
+<p>`0' is a wildcard for any field. If the component is not available, "0.0" is returned.</p>
+</div>
+<div>
+<div>
+<h1>Plug-in Properties</h1>
+</div>
+<tt>string GetPluginVersion()</tt>
+<p>Returns the version of the QuickTime Plug-in.</p>
+<tt>string GetPluginStatus()</tt>
+<p>Returns a string with the status of the current movie. Possible states are:</p>
+<ul>
+<li>"Waiting" - waiting for the movie data stream to begin</li>
+<li>"Loading" - data stream has begun, not able to play/display the movie yet</li>
+<li>"Playable" - movie is playable, although not all data has been downloaded</li>
+<li>"Complete" - all data has been downloaded</li>
+<li>"Error: &lt;error number&gt;" - the movie failed with the specified error number</li>
+</ul>
+<tt>boolean GetResetPropertiesOnReload()<br/>
+void SetResetPropertiesOnReload(boolean reset)</tt>
+<p>By default, most movie and plug-in properies are reset when a new movie is loaded (QTSRC, target="myself", etc).</p>
+</div>
+<br/>
+<div>
+<div>
+<h1>QuickTime VR Movie Properties</h1>
+</div>
+<tt>boolean GetIsVRMovie()</tt>
+<p>Returns <tt>true</tt> if the movie is a QuickTime VR movie, <tt>false</tt> otherwise.</p>
+<tt>void SetPanAngle(float angle)<br/>
+float GetPanAngle()</tt>
+<p>Gets and sets the QuickTime VR movie's pan angle (in degrees).</p>
+<tt>void SetTiltAngle(float angle)<br/>
+float GetTiltAngle()</tt>
+<p>Gets and sets the QuickTime VR movie's tilt angle (in degrees).</p>
+<tt>void SetFieldOfView(float fov)<br/>
+float GetFieldOfView()</tt>
+<p>Gets and sets the QuickTime VR movie's field of view (in degrees).</p>
+<tt>int GetNodeCount()</tt>
+<p>Returns the number of nodes in a QuickTime VR movie.</p>
+<tt>int GetNodeID()</tt>
+<p>Returns the ID of the current node in a QuickTime VR movie.</p>
+<tt>void SetNodeID(int id)</tt>
+<p>Sets the current node (by ID) in a QuickTime VR movie (i.e., it goes to the node with the specified ID).</p>
+</div>
+<div>
+<div>
+<h1>Sprite Track Properties</h1>
+</div>
+<tt>void SetSpriteTrackVariable(int trackIndex, int variableIndex, string value)<br/>
+string GetSpriteTrackVariable(int trackIndex, int variableIndex)</tt>
+<p>These get and set the specified sprite track variable in the specified track.</p>
+</div>
+<br/>
+<div>
+<div>
+<h1>Track Properties</h1>
+</div>
+<tt>int GetTrackCount()</tt>
+<p>Returns the number of tracks in the movie.</p>
+<tt>string GetTrackName(int index)</tt>
+<p>Returns the name of the specified track.</p>
+<tt>string GetTrackType(int index)</tt>
+<p>Returns the type of the specified track.</p>
+<tt>boolean GetTrackEnabled(int index)</tt><tt>void SetTrackEnabled(int index, boolean enabled)</tt>
+<p>These get and set the enabled state of a track.</p>
+</div>
+<br/>
+<div>
+<div>
+<h1>Movie Properties</h1>
+</div>
+<tt>void SetRate(float rate)<br/>
+float GetRate()</tt>
+<p>Gets and sets the playback rate of the movie. A value of "1" indicates that the movie is playing in normally. A paused movie has a rate of "0". Negative values indicate that the movie is playing in reverse. Setting the rate of a paused movie to a non-zero value starts the movie playing.</p>
+<tt>void SetTime(int time)<br/>
+int GetTime()</tt>
+<p>Gets and sets the current time of the specified QuickTime movie. Setting this property causes the movie to go to that time in the movie and stop.</p>
+<tt>void SetVolume(int volume)<br/>
+int GetVolume()</tt>
+<p>Gets and sets the audio volume of the movie. A negative value mutes the movie.</p>
+<tt>void SetMovieName(string movieName)<br/>
+string GetMovieName()</tt>
+<p>Gets and sets the name optionally used by a wired sprite when targeting an external movie. This is the same as the "MOVIENAME" embed tag.</p>
+<tt>void SetMovieID(int movieID)<br/>
+int GetMovieID()</tt>
+<p>Gets and sets the ID optionally used by a wired sprite when targeting an external movie. This is the same as the "MOVIEID" embed tag.</p>
+<tt>void SetStartTime(int time)<br/>
+int GetStartTime()</tt>
+<p>Gets and sets the time at which it begins to play, and the time at which it loops when playing in reverse. Initially, the startTime of a movie is set to "0" unless specified in the "STARTTIME" embed tag. It cannot be set to a time greater than the endTime. This is the same as the "STARTTIME" embed tag.</p>
+<tt>void SetEndTime(int time)<br/>
+int GetEndTime()</tt>
+<p>Gets and sets the time at which the movie will loop or stop playing. Initially, the endTime of a movie is set to its duration unless specified in the "ENDTIME" embed tag. It cannot be set to a time less than the startTime, nor greater than the movie's duration. This is the same as the "ENDTIME" embed tag.</p>
+<tt>void SetBgColor(string color)<br/>
+string GetBgColor()</tt>
+<p>Gets and sets the color used to fill any space withing the embed region not covered by the movie. This is the same as the "BGCOLOR" embed tag and takes the same values. Regardless of how the color was specified, <tt>GetBgColor()</tt> always returns the color number, e.g., if the <tt>bgcolor</tt> was set to <tt>"Navy",</tt><tt>GetBgColor()</tt> will return "#000080".</p>
+<tt>void SetIsLooping(boolean loop)<br/>
+boolean GetIsLooping()</tt>
+<p>Gets and sets whether or not a movie loops when it reaches its end. A movie loops in either reverse or forward play. This is the same as the "LOOP=TRUE" or "LOOP=FALSE" embed tag.</p>
+<tt>void SetLoopIsPalindrome(boolean loop)<br/>
+boolean GetLoopIsPalindrome()</tt>
+<p>Gets and sets whether or not a looping movie will reverse direction when it loops. The "LOOP" property must be <tt>true</tt> for this to have any effect. This is the same as the "LOOP=PALINDROME" embed tag.</p>
+<tt>boolean GetMute()<br/>
+void SetMute(boolean mute)</tt>
+<p>Gets and sets the audio mute of a movie while maintaining the magnitude of the volume, so turning mute off restores the volume.</p>
+<tt>void SetPlayEveryFrame(boolean playAll)<br/>
+boolean GetPlayEveryFrame()</tt>
+<p>This is the same as the PLAYEVERYFRAME embed tag.</p>
+<tt>void SetAutoPlay(boolean autoPlay)<br/>
+boolean GetAutoPlay()</tt>
+<p>This is the same as the AUTOPLAY embed tag.</p>
+<tt>void SetControllerVisible(boolean visible)<br/>
+boolean GetControllerVisible()</tt>
+<p>Gets and sets the visibility of the movie controller. This is the same as the CONTROLLER embed tag.</p>
+<tt>void SetHREF(string url)<br/>
+string GetHREF()</tt>
+<p>Gets and sets the movie's HREF url. This is the same as the "HREF" embed tag.</p>
+<tt>void SetTarget(string target)<br/>
+string GetTarget()</tt>
+<p>Gets and sets the movie's HREF url target. This is the same as the "TARGET" embed tag.</p>
+<tt>void SetQTNEXTUrl(int index, string url)<br/>
+string GetQTNEXTUrl(int index)</tt>
+<p>Gets and sets the specified QTNEXT url and target. This is the same as the "QTNEXTnn" embed tag).</p>
+<tt>void SetHotspotUrl(int hotspotID, string url)<br/>
+string GetHotspotUrl(int hotspotID)</tt>
+<p>Gets and sets the specified VR movie hotspot url. This is the same as the "HOTSPOTnn" embed tag).</p>
+<tt>void SetHotspotTarget(int hotspotID, string target)<br/>
+string GetHotspotTarget(int hotspotID)</tt>
+<p>Gets and sets the specified VR movie hotspot url target. This is the same as the "TARGETnn" embed tag).</p>
+<tt>void SetURL(string url)</tt>
+<p>Replaces the movie with that specified by the parameter.</p>
+<tt>string GetURL()</tt>
+<p>Returns the movie's fully specified URL.</p>
+<tt>void SetKioskMode(boolean kioskMode)</tt>
+<p>This is the same as the KIOSKMODE embed tag.</p>
+<blockquote><b>Note:  </b> If the movie's embed tag or user data has ½<tt>"KIOSKMODE=TRUE", SetKioskMode()</tt> does nothing.</blockquote>
+<tt>boolean GetKioskMode()</tt>
+<p>Returns the current KIOSKMODE setting.</p>
+<tt>int GetDuration()</tt>
+<p>Returns the length of the movie (in the movie's time scale).</p>
+<tt>int GetMaxTimeLoaded()</tt>
+<p>Returns the amount of the movie that has been downloaded (in the movie's time scale).</p>
+<tt>int GetTimeScale()</tt>
+<p>Returns the number of units of time per second in the movie.</p>
+<tt>int GetMovieSize()</tt>
+<p>Returns the size of the movie in bytes.</p>
+<tt>int GetMaxBytesLoaded()</tt>
+<p>Returns the number of bytes of the movie that have been downloaded.</p>
+<tt>void SetMatrix(string matrix)<br/>
+string GetMatrix()</tt>
+<p>These allow you to get and set the movie's transformation matrix. QuickTime uses a 3 x 3 transformation matrix, represented in JavaScript by three lines of three numbers separated by commas:</p>
+<p>a, b, u</p>
+<p>c, d, v</p>
+<p>h, k, w</p>
+<blockquote><b>Note:  </b> Normally, the QuickTime Plug-in keeps the movie centered within the embed area, even if the embed area changes. Once a movie's location is changed with SetRect or SetMatrix, the movie's absolute location within the embed area is maintained rather than centering it.</blockquote>
+<tt>void SetRectangle(string rect)<br/>
+string GetRectangle()</tt>
+<p>These allow you to get and set location and dimensions of the movie within the embed area.</p>
+<blockquote><b>Note:  </b> Normally, the QuickTime Plug-in keeps the movie centered within the embed area, even if the embed area changes. Once a movie's location is changed with SetRect or SetMatrix, the movie's absolute location within the embed area is maintained rather than centering it.</blockquote>
+<tt>void SetLanguage(string language)</tt>
+<p>Sets the movie's current language. This causes the tracks associated with that language to be enabled and tracks associated with other languages to be disabled. If it cannot find an appropriate track for the specified language, the movie's language is not changed.</p>
+<tt>string GetLanguage()</tt>
+<p>Returns the name of movie's current language.</p>
+<p>Supported language names are shown in <a href="http://web.archive.org/web/20030216045903/http://developer.apple.com/techpubs/quicktime/qtdevdocs/REF/QT41_HTML/QT41WhatsNew-74.html#48035" target="_blank">Table 1</a>.</p>
+<p><b>Table 1  Supported language names</b></p>
+<table>
+<tbody>
+<tr>
+<th colspan="1" rowspan="1">
+<p>Language</p>
+</th>
+<th colspan="1" rowspan="1">
+<p>Script system</p>
+</th>
+</tr>
+<tr>
+<td colspan="1" rowspan="1">English</td>
+<td colspan="1" rowspan="1">Roman script</td>
+</tr>
+<tr>
+<td colspan="1" rowspan="1">French</td>
+<td colspan="1" rowspan="1">Roman script</td>
+</tr>
+<tr>
+<td colspan="1" rowspan="1">German</td>
+<td colspan="1" rowspan="1">Roman script</td>
+</tr>
+<tr>
+<td colspan="1" rowspan="1">Italian</td>
+<td colspan="1" rowspan="1">Roman script</td>
+</tr>
+<tr>
+<td colspan="1" rowspan="1">Dutch</td>
+<td colspan="1" rowspan="1">Roman script</td>
+</tr>
+<tr>
+<td colspan="1" rowspan="1">Swedish</td>
+<td colspan="1" rowspan="1">Roman script</td>
+</tr>
+<tr>
+<td colspan="1" rowspan="1">Spanish</td>
+<td colspan="1" rowspan="1">Roman script</td>
+</tr>
+<tr>
+<td colspan="1" rowspan="1">Danish</td>
+<td colspan="1" rowspan="1">Roman script</td>
+</tr>
+<tr>
+<td colspan="1" rowspan="1">Portuguese</td>
+<td colspan="1" rowspan="1">Roman script</td>
+</tr>
+<tr>
+<td colspan="1" rowspan="1">Norwegian</td>
+<td colspan="1" rowspan="1">Roman script</td>
+</tr>
+<tr>
+<td colspan="1" rowspan="1">Hebrew</td>
+<td colspan="1" rowspan="1">Hebrew script</td>
+</tr>
+<tr>
+<td colspan="1" rowspan="1">Japanese</td>
+<td colspan="1" rowspan="1">Japanese script</td>
+</tr>
+<tr>
+<td colspan="1" rowspan="1">Arabic</td>
+<td colspan="1" rowspan="1">Arabic script</td>
+</tr>
+<tr>
+<td colspan="1" rowspan="1">Finnish</td>
+<td colspan="1" rowspan="1">Roman script</td>
+</tr>
+<tr>
+<td colspan="1" rowspan="1">Greek</td>
+<td colspan="1" rowspan="1">Greek script using Roman script code</td>
+</tr>
+<tr>
+<td colspan="1" rowspan="1">Icelandic</td>
+<td colspan="1" rowspan="1">variant Roman script</td>
+</tr>
+<tr>
+<td colspan="1" rowspan="1">Maltese</td>
+<td colspan="1" rowspan="1">variant Roman script</td>
+</tr>
+<tr>
+<td colspan="1" rowspan="1">Turkish</td>
+<td colspan="1" rowspan="1">variant Roman script</td>
+</tr>
+<tr>
+<td colspan="1" rowspan="1">Croatian</td>
+<td colspan="1" rowspan="1">Serbo-Croatian in variant Roman script</td>
+</tr>
+<tr>
+<td colspan="1" rowspan="1">TradChinese</td>
+<td colspan="1" rowspan="1">Chinese (Mandarin) in traditional characters</td>
+</tr>
+<tr>
+<td colspan="1" rowspan="1">Urdu</td>
+<td colspan="1" rowspan="1">Arabic script</td>
+</tr>
+</tbody>
+</table>
+<p><tt>string GetMIMEType()</tt></p>
+<p>Returns the movie's MIME type.</p>
+<tt>string GetUserData(string type)</tt>
+<p>Returns the movie user data text with the specified tag. The tag is specified with a four character string, for example `@cpy' returns a movie's copyright string. For a more complete list of user data tags, see</p>
+<p><a href="http://web.archive.org/web/20030216045903/http://developer.apple.com/techpubs/quicktime/qtdevdocs/RM/rmMTFundamentals.htm" target="_blank">&lt;http://developer.apple.com/techpubs/quicktime/qtdevdocs/RM/rmMTFundamentals.htm&gt;.<sup>[1]</sup></a></p>
+</div>
+<br/>
+<div>
+<div>
+<h1>Movie Commands</h1>
+</div>
+<tt>void Play()</tt>
+<p>The play command plays the movie at the default rate from the point (time) at which it receives the command.</p>
+<tt>void Stop()</tt>
+<p>This command stops the movie at the point in time at which the command is received.</p>
+<tt>void Rewind()</tt>
+<p>The rewind command sets the current time to the movie's start time and pauses the movie.</p>
+<tt>void Step(int count)</tt>
+<p>This command steps the movie forward or backward the specified number of frames from the point at which the command is received. If the movie's rate is non-zero, it is paused.</p>
+<tt>void ShowDefaultView()</tt>
+<p>This command displays a QuickTime VR movie's default node, using the default pan angle, tilt angle, and field of view as set by the movie's author.</p>
+<tt>void GoPreviousNode()</tt>
+<p>This command returns to the previous node in a QuickTime VR movie (equivalent to clicking the Back button on the VR movie controller).</p>
+</div>
+<br/>
+<div>
+<div>
+<h1>JavaScript Support</h1>
+</div>
+<p>The QuickTime plug-in now supports JavaScript, allowing you to query and control QuickTime movies in a Web page.</p>
+<p>QuickTime 4.1 is scriptable by browsers that support the LiveConnect interface between JavaScript and plug-ins. This includes Netscape 4.x and 5.x on both Windows and Macintosh. It does not include Internet Explorer on either Windows or Macintosh.</p>
+<p>QuickTime 6 and later is scriptable using either the LiveConnect or XPCOM interface, and the QuickTime 6 ActiveX control for Windows is scriptable using the COM interface. This makes QuickTime 6 scriptable in Netscape 6 and other Mozilla-based browsers that use the XPCOM interface, as well as Internet Explorer for Windows, which uses the COM interface.</p>
+<p>Internet Explorer for Macintosh does not currently support any interface allowing JavaScript to access a plug-in's methods.</p>
+<p>To summarize</p>
+<ul>
+<li>QuickTime 4.1 is scriptable using Netscape 4 or 5 on Windows and Macintosh</li>
+<li>QuickTime 6 is scriptable using Internet Explorer on Windows, and most or all Netscape or Mozilla-based browsers on Windows or Macintosh. For more details, see "<a href="http://web.archive.org/web/20030217042022/http://developer.apple.com/techpubs/quicktime/qtdevdocs/RM/PDF.htm" target="_blank">What's New in QuickTime 6<sup>[1]</sup></a>."</li>
+<li>Plug-ins are not scriptable using Internet Explorer for Macintosh.</li>
+</ul>
+<p>To control a movie through the QuickTime plug-in using JavaScript, you must include the parameter <tt>EnableJavaSript="true"</tt> in the movie's <tt>EMBED</tt> tag (this parameter is not needed in the <tt>OBJECT</tt> tag, but it does no harm).</p>
+<p><b>Note:</b><br/>
+You cannot query or control QuickTime from JavaScript until the browser loads an instance of the plug-in. For example, you can write a movie's <tt>EMBED</tt> tag using JavaScript, but you cannot use JavaScript to check the QuickTime version before writing the tag. For this kind of interaction, you must run the JavaScript from a page that already has an embedded movie loaded; you can then write tags to other documents based on QuickTime properties.</p>
+<p>JavaScript treats each embedded QuickTime movie in a Web page as a separately addressable object. Movies can be identified by name if there is a <tt>NAME</tt> parameter in the movie's <tt>EMBED</tt> tag and an <tt>ID</tt> attribute in the movie's <tt>OBJECT</tt> tag. Internet Explorer for Windows uses the <tt>ID</tt> attribute. All other browsers use the <tt>NAME</tt> parameter. Both <tt>NAME</tt> and <tt>ID</tt> should be set to the same value.</p>
+<p>For example, to create a movie that can be addressed in JavaScript as "Movie1", your <tt>OBJECT</tt> and <tt>EMBED</tt> tags would look something like this:</p>
+<p><tt>&lt;OBJECT classid="clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B"<br/>
+        codebase="http://www.apple.com/qtactivex/qtplugin.cab"<br/>
+        width="180" height="160"<br/>
+        id="movie1" &gt;<br/>
+<br/>
+&lt;PARAM name="src" value="My.mov"&gt;<br/>
+<br/>
+&lt;EMBED width="180" height="160"<br/>
+        src="My.mov"<br/>
+        name="movie1"<br/>
+        enablejavascript="true"&gt;<br/>
+ &lt;/EMBED&gt;<br/>
+&lt;/OBJECT&gt;<br/></tt></p>
+<p>Movies can also be identified by their ordinal number in the JavaScript <tt>embeds[]</tt> array.</p>
+<p>For an example of usage and syntax, showing JavaScript control of multiple QuickTime movies using both methods of identification, see <a href="http://web.archive.org/web/20030217042022/http://developer.apple.com/techpubs/quicktime/qtdevdocs/REF/QT41_HTML/QT41WhatsNew-80.html" target="_blank">Listing 6, "Sample JavaScript Usage"<sup>[2]</sup></a>.</p>
+<p>QuickTime exposes dozens of methods to JavaScript, allowing you to control not only the standard user interface actions, such as playing and stopping a movie, but also more complex actions, such as layering and compositing. You can use JavaScript, for example, to enable and disable alternate audio, text, or video tracks, or change a video track's graphics mode or a sprite's current image.</p>
+<p>The following pages describe the QuickTime methods and properties available to JavaScript.</p>
+<h4><a href="http://web.archive.org/web/20030217042022/http://developer.apple.com/techpubs/quicktime/qtdevdocs/REF/QT41_HTML/QT41WhatsNew-73.html" target="_blank">Movie Commands<sup>[3]</sup></a></h4>
+<h4><a href="http://web.archive.org/web/20030217042022/http://developer.apple.com/techpubs/quicktime/qtdevdocs/REF/QT41_HTML/QT41WhatsNew-74.html" target="_blank">Movie Properties<sup>[4]</sup></a></h4>
+<h4><a href="http://web.archive.org/web/20030217042022/http://developer.apple.com/techpubs/quicktime/qtdevdocs/REF/QT41_HTML/QT41WhatsNew-75.html" target="_blank">Track Properties<sup>[5]</sup></a></h4>
+<h4><a href="http://web.archive.org/web/20030217042022/http://developer.apple.com/techpubs/quicktime/qtdevdocs/REF/QT41_HTML/QT41WhatsNew-76.html" target="_blank">Sprite Track Properties<sup>[6]</sup></a></h4>
+<h4><a href="http://web.archive.org/web/20030217042022/http://developer.apple.com/techpubs/quicktime/qtdevdocs/REF/QT41_HTML/QT41WhatsNew-77.html" target="_blank">QuickTime VR Movie Properties<sup>[7]</sup></a></h4>
+<h4><a href="http://web.archive.org/web/20030217042022/http://developer.apple.com/techpubs/quicktime/qtdevdocs/REF/QT41_HTML/QT41WhatsNew-78.html" target="_blank">Plug-in Properties<sup>[8]</sup></a></h4>
+<h4><a href="http://web.archive.org/web/20030217042022/http://developer.apple.com/techpubs/quicktime/qtdevdocs/REF/QT41_HTML/QT41WhatsNew-79.html" target="_blank">QuickTime Properties<sup>[9]</sup></a></h4>
+</div>
+<br/>
+</body></html>
