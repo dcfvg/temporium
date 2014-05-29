@@ -12,10 +12,10 @@ function init() {
   function reloadNega(){
     $nega.attr("src","/images/nega.png?reload="+Math.round((new Date()).getTime() / 1000)).load();
   }
-  function flash(){
+  function expose(){
     $nega.removeClass("off");
   }
-  function expose(){
+  function flash(){
     $nega.addClass("off");
   }
   function onSocketConnect() {

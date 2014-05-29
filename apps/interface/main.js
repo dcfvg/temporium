@@ -5,7 +5,7 @@ var fs = require('fs'),
     oscClient = new osc.Client('127.0.0.1', 3334);
 
 module.exports = function(app, io, oscServer){
-  console.log("movie <> temporim link initialized");
+  console.info('movie <> temporim link initialized');
 
   //////////////////////////////
   // dynamic editing
