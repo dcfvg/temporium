@@ -66,7 +66,7 @@ function init() {
   function onSocketConnect() {
     sessionId = socket.socket.sessionid;
     console.log('Connected ' + sessionId);
-    socket.emit('newUser', {id: sessionId, name: $('#name').val()});
+    //socket.emit('newUser', {id: sessionId, name: $('#name').val()});
   };
   function onSocketOscMessage(obj){
     //console.log(obj[0]);
@@ -89,8 +89,12 @@ function init() {
     if(!movieGoesOn && parseInt(obj) > formationStartLevel){
       onSeanceStart();
     };
+    console.log('image_formation',obj);
   };
   function setNewCut(){
+    
+    // set CUT without QT events (set interval approach)
+    // deprecated
 
     var l = score[movieCurentEvent],
         at = 10,//getAt(l),
@@ -100,10 +104,9 @@ function init() {
       ct = getQtCurrentTime();
       console.log('ct: '+ct);
 
-
       if(ct > at - 60) {
         console.log("refreshTimelaps")
-        socket.emit('refreshTimelaps');
+        //socket.emit('refreshTimelaps');
       }
       if(ct > at - t_margin){ // decision
 
@@ -136,11 +139,12 @@ function init() {
   };
   function onSeanceStart(){
     movieGoesOn = true;
+    
     document.qtF.Play();
-    setNewCut();
+    $d.trigger("showMovie", image_formation);
+    //setNewCut();
     setQtVolume(0);
   };
-
   function blackScreen(){
     $life.addClass("off");
     $movie.addClass("off");
@@ -150,10 +154,15 @@ function init() {
   // Helpers
   //////////////////////////////
   function getJump(l, ct){
+
+    /* 
+    calcul du cut (plan in) ou du saut (plan out)
+    1. différenciel entre le mov_progress et le life_progress
+    2. le pourcentage obtenu est retiré du plan à couper à partir du centre de -50% à +50%
+    */
     var mov_progress  = Math.round((ct/mov_length)*100);
     var life_progress = Math.round((image_formation/255)*100);
 
-    // milieu du plan on retire le différenciel entre le mov_progress et le life_progress
     var jump = (l.jump_max/2)-(((life_progress - mov_progress)/100)*l.jump_max);
 
     console.log('jump = '+jump+'/'+l.jump_max+' (film :'+mov_progress+'% '+' life :'+life_progress+'%)');
@@ -211,7 +220,7 @@ function init() {
     document.qtF.SetVolume(v);
   };
   function getQtCurrentTime(){
-    return document.qtF.GetTime();
+    return document.qtF.GetTimeScale();
   };
   function onQtSeekTo(e, obj){
     console.log("seek -> "+ obj);
@@ -219,7 +228,7 @@ function init() {
     document.qtF.SetTime(parseInt(obj));
   };
   function onQtPlayerEvent(ev){
-    console.log("Event! " + ev.type);    
+    console.log("QtEvent :: " + ev.type);    
   };
   function onQtCanPlay(){
     console.log("qtReady");
@@ -247,9 +256,17 @@ function init() {
   reset();
 
   setInterval(function(){
+    console.log("t",getQtCurrentTime());
+  },1000);
+
+  /*
+  image_formation emulator 
+
+  setInterval(function(){
     image_formation++;
     $d.trigger("image_formation", image_formation);
     console.log("f="+image_formation);
   }, 1000);
+  */
 };
 $(document).on('ready', init);
