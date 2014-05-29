@@ -28,7 +28,9 @@ function init() {
       t_margin = 3,
 
       image_formation = 0,
-      formationStartLevel = 5
+      formationStartLevel = 5,
+
+      qt_timeScale = 0
       ;
 
   //////////////////////////////
@@ -144,6 +146,9 @@ function init() {
     $d.trigger("showMovie", image_formation);
     //setNewCut();
     setQtVolume(0);
+    setInterval(function(){
+      console.log("t",getQtCurrentTime());
+    },250);
   };
   function blackScreen(){
     $life.addClass("off");
@@ -191,6 +196,7 @@ function init() {
       'qtsrc', qtsrc));
 
       initQtCallback();
+
   };
   function initQtCallback(){
     console.log("Register Qt player Event");
@@ -220,7 +226,7 @@ function init() {
     document.qtF.SetVolume(v);
   };
   function getQtCurrentTime(){
-    return document.qtF.GetTimeScale();
+    return Math.round(document.qtF.GetTime()/qt_timeScale * 100)/100;
   };
   function onQtSeekTo(e, obj){
     console.log("seek -> "+ obj);
@@ -231,6 +237,7 @@ function init() {
     console.log("QtEvent :: " + ev.type);    
   };
   function onQtCanPlay(){
+    qt_timeScale = document.qtF.GetTimeScale();
     console.log("qtReady");
   };
 
@@ -255,9 +262,7 @@ function init() {
 
   reset();
 
-  setInterval(function(){
-    console.log("t",getQtCurrentTime());
-  },1000);
+
 
   /*
   image_formation emulator 
