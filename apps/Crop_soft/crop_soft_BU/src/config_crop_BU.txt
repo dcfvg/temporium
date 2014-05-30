@@ -1,0 +1,5 @@
+Temporium
+CONFIGURATION_CROP  : BU 
+BU3 : 0, 0, 0, 0
+BU1 : 170, 492, 318, 870
+BU2 : 0, 0, 0, 0
