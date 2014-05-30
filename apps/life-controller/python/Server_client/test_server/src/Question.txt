@@ -1,0 +1,3 @@
+gestion des connexions entrantes : 
+	accepter connexion, creer socket, demande identification puis refus ? 
+	refus directement ? 

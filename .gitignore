@@ -24,3 +24,13 @@
 /apps/data-server/osc/OSC.pyc
 
 /.DS_Store
+
+.DS_Store
+/apps/cli/osc-web/node_modules
+
+/apps/interface/public/video
+
+/apps/interface/public/images
+/apps/interface/node_modules
+
+/todo-temporium.md
