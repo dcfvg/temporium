@@ -13,12 +13,10 @@ function init() {
       //$pop_movie = Popcorn("#movie"),
       $pop_life = Popcorn("#life"),
 
-      score = {},
+      score_step = 0,
 
       mov_w = 1280,
       mov_h = 720,
-
-      mov_length = 20808; // in seconds x 10 
 
       lifeUrl  = "/video/live.mp4",
       movieUrl = "/video/test_6canaux.mov",
@@ -123,8 +121,26 @@ function init() {
           console.log("life !");
         }, jump*1000);
       }
-    }, 500);
+    }, 5000);
   };
+  function setNextCut(){
+
+    var step = score[score_step];
+
+    console.log("staring n°",step.id,step.title);
+    var inter = setInterval(function(){
+      t = getQtCurrentTime();
+
+      if(t > step.id *2){
+        clearInterval(inter);
+        score_step++;
+        setNextCut();
+        setTimeout(function(){
+         // console.log('jump');
+        },2000);
+      }
+    },250);
+  }
   function onShowMovie(){
     $movie.removeClass("off");
     $life.addClass("off");
@@ -140,15 +156,14 @@ function init() {
     $life.attr("src",lifeUrl + "?reload="+Math.round((new Date()).getTime() / 1000)).load();
   };
   function onSeanceStart(){
-    movieGoesOn = true;
-    
+
     document.qtF.Play();
     $d.trigger("showMovie", image_formation);
-    //setNewCut();
+    
+    score_step = 0;
+    setNextCut();
+    
     setQtVolume(0);
-    setInterval(function(){
-      console.log("t",getQtCurrentTime());
-    },250);
   };
   function blackScreen(){
     $life.addClass("off");
@@ -159,7 +174,6 @@ function init() {
   // Helpers
   //////////////////////////////
   function getJump(l, ct){
-
     /* 
     calcul du cut (plan in) ou du saut (plan out)
     1. différenciel entre le mov_progress et le life_progress
@@ -256,7 +270,6 @@ function init() {
     movieGoesOn = false;
 
     // seek to beginning 
-    //$pop_movie.pause().currentTime(0);  
     //$pop_life.pause().currentTime(0);
   };
 
