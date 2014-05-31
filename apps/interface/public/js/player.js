@@ -3,32 +3,30 @@ function init() {
   //////////////////////////////
   // vars
   //////////////////////////////
+
   var serverBaseUrl = document.domain,
       socket = io.connect(serverBaseUrl),
       sessionId = '',
+      $d = $(document)
+      ;
 
-      $d = $(document),
-      $movie = $("#movie"),
-      $life  = $("#life"),
-      //$pop_movie = Popcorn("#movie"),
-      $pop_life = Popcorn("#life"),
-
-      score_step = 0,
-
-      mov_w = 1280,
-      mov_h = 720,
-
-      lifeUrl  = "/video/live.mp4",
+  var $movie = $("#movie"),
       movieUrl = "/video/test_6canaux.mov",
+      movieWidth = 1280, movieHeight = 720,
+      movieGoesOn = false,        
+      movieCurentStep = 0,
+      movieWatchInteval = 250,
+      movieTimeScale = 0,
+      movieDuration = 0
+      ;
 
-      movieGoesOn = false,
-      movieCurentEvent = 2,
-      t_margin = 3,
+  var $life  = $("#life"),
+      lifeUrl  = "/video/live.mp4",
+      $pop_life = Popcorn("#life")
+      ;
 
-      image_formation = 0,
-      formationStartLevel = 5,
-
-      qt_timeScale = 0
+  var image_formation = 0,
+      formationStartLevel = 5
       ;
 
   //////////////////////////////
@@ -48,9 +46,7 @@ function init() {
     .on( "qtSeekTo"         , onQtSeekTo)
   ;
   
-  $pop_life.on("ended", function() {
-    $pop_movie.play();
-    showMovie();});
+  $pop_life.on("ended",onLifeEnded);
 
   // dev shortcuts
   $d.keypress(function( event ){
@@ -73,17 +69,8 @@ function init() {
     $d.trigger(obj[0],[ obj[1] ]);
   };
   function onSocketScore(obj){
-
     score = obj;
     console.log(obj);
-    // Popcorn.forEach(score, function(l) {
-    //   start = (parseInt(l.at_min)*60+ parseInt(l.at_sec))/60;
-    //   console.log("set-"+ l.type, " at " + start);
-
-    //   //$pop_movie.cue( start, function(){
-    //     console.log("#"+l.id+":"+l.type+" ("+l.title +" "+ l.jump_max +") ");
-    //   });
-    // });
   };
   function onImageFormation(e, obj){
     if(!movieGoesOn && parseInt(obj) > formationStartLevel){
@@ -91,60 +78,59 @@ function init() {
     };
     console.log('image_formation',obj);
   };
-  function setNewCut(){
-    
-    // set CUT without QT events (set interval approach)
-    // deprecated
+  function setNextStep(){
 
-    var l = score[movieCurentEvent],
-        at = 10,//getAt(l),
-        ct = 0;
+    var step = score[movieCurentStep],
+        at = getAt(step)/100,
+        compileDelay = 4,
+        decideDelay = 2,
+        renderStarted = false,
+        decideStarted = false
+        ;
 
-    var wait = setInterval(function(){
-      ct = getQtCurrentTime();
-      console.log('ct: '+ct);
+    console.log("waiting for step",step.id,step.title, "@", at);
 
-      if(ct > at - 60) {
-        console.log("refreshTimelaps")
-        //socket.emit('refreshTimelaps');
-      }
-      if(ct > at - t_margin){ // decision
-
-        //var jump = randomRange(t_margin , l.jump_max); // dev value
-        var jump = getJump(l, ct);
-        console.log("decide ! jump in "+jump);
-
-        getJump(l, ct)
-        clearInterval(wait);
-
-        setTimeout(function(){ 
-          console.log("life !");
-        }, jump*1000);
-      }
-    }, 5000);
-  };
-  function setNextCut(){
-
-    var step = score[score_step];
-
-    console.log("staring n°",step.id,step.title);
     var inter = setInterval(function(){
+
       t = getQtCurrentTime();
 
-      if(t > step.id *2){
+      // TIMELAPS COMPILATION
+      if(t > (at - compileDelay) && !renderStarted){
+        renderStarted = true;
+        console.log('start life render x',step.life_speed,"zoom",step.life_zoom);
+
+        //socket.emit('refreshTimelaps',(step.life_speed,step.life_zoom));
+      };
+
+      // TAKE DECISION
+      if (t > (at - decideDelay) && !decideStarted) {
+        decideStarted = true;
+
+        var jump = getJump(step, t);
+        console.log("decide ! jump in "+jump);
+      };
+      // APPLY DECISION
+      if(t > at){
         clearInterval(inter);
-        score_step++;
-        setNextCut();
         setTimeout(function(){
-         // console.log('jump');
-        },2000);
-      }
-    },250);
+          
+          console.log('APPLY decision');
+
+          movieCurentStep++;
+          setNextStep();
+
+          $d.trigger("showLife", image_formation);
+
+          document.qtF.Stop();
+
+        },jump);
+      };
+
+    },movieWatchInteval);
   }
   function onShowMovie(){
     $movie.removeClass("off");
     $life.addClass("off");
-    //$pop_movie.play();
   };
   function onShowLife(){
     $life.removeClass("off");
@@ -160,10 +146,13 @@ function init() {
     document.qtF.Play();
     $d.trigger("showMovie", image_formation);
     
-    score_step = 0;
-    setNextCut();
+    movieCurentStep = 0;
+    setNextStep();
     
     setQtVolume(0);
+  };
+  function onLifeEnded(){
+    $d.trigger("showMovie");
   };
   function blackScreen(){
     $life.addClass("off");
@@ -179,7 +168,7 @@ function init() {
     1. différenciel entre le mov_progress et le life_progress
     2. le pourcentage obtenu est retiré du plan à couper à partir du centre de -50% à +50%
     */
-    var mov_progress  = Math.round((ct/mov_length)*100);
+    var mov_progress  = Math.round((ct/movieDuration)*100);
     var life_progress = Math.round((image_formation/255)*100);
 
     var jump = (l.jump_max/2)-(((life_progress - mov_progress)/100)*l.jump_max);
@@ -200,7 +189,7 @@ function init() {
   // QT plugin manipulation
   function createQt(qtsrc, container, name){
     container.html(QT_GenerateOBJECTText(
-      qtsrc, mov_w, mov_h, 'sff',
+      qtsrc, movieWidth, movieHeight, 'sff',
       'obj#id'  , name,
       'emb#NAME', name,
       'emb#id'  , name,
@@ -210,7 +199,6 @@ function init() {
       'qtsrc', qtsrc));
 
       initQtCallback();
-
   };
   function initQtCallback(){
     console.log("Register Qt player Event");
@@ -240,7 +228,7 @@ function init() {
     document.qtF.SetVolume(v);
   };
   function getQtCurrentTime(){
-    return Math.round(document.qtF.GetTime()/qt_timeScale * 100)/100;
+    return Math.round(document.qtF.GetTime()/movieTimeScale * 100)/100;
   };
   function onQtSeekTo(e, obj){
     console.log("seek -> "+ obj);
@@ -251,7 +239,8 @@ function init() {
     console.log("QtEvent :: " + ev.type);    
   };
   function onQtCanPlay(){
-    qt_timeScale = document.qtF.GetTimeScale();
+    movieTimeScale = document.qtF.GetTimeScale();
+    movieDuration  = document.qtF.GetDuration();
     console.log("qtReady");
   };
 
@@ -273,10 +262,6 @@ function init() {
     //$pop_life.pause().currentTime(0);
   };
 
-  reset();
-
-
-
   /*
   image_formation emulator 
 
@@ -286,5 +271,8 @@ function init() {
     console.log("f="+image_formation);
   }, 1000);
   */
+
+  reset();
+
 };
 $(document).on('ready', init);
