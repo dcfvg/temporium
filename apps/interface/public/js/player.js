@@ -11,13 +11,14 @@ function init() {
       ;
 
   var $movie            = $("#movie"),                  // container
-      movieUrl          = "/video/test_6canaux.mov",    // video file url
+      movieUrl          = "/video/Montage-DEF_1805_INSTAL _422HQ-QuickTime_H.264.mov",       // video file url
       movieWidth        = 1280, movieHeight = 720,      // size to display
       movieGoesOn       = false,                        // 
       movieCurentStep   = 0,                            // current event step
       movieWatchInteval = 250,                          // timecode events refresh frequency
       movieTimeScale    = 0,                            // qt property
       movieDuration     = 0                             // duration of the movie
+      movieStartMargin  = 4
       ;
 
   var $life             = $("#life"),
@@ -50,10 +51,16 @@ function init() {
 
   // dev shortcuts
   $d.keypress(function( event ){
-    //console.log(event.which);
+    // console.log(event.which);
     if ( event.which == 109 ) $d.trigger("showMovie");  // m
     if ( event.which == 108 ) $d.trigger("showLife");   // l
     if ( event.which == 114 ) $d.trigger("reloadLife"); // r
+    if ( event.which == 107 ) console.log("t :",getQtCurrentTime()); // k
+    if ( event.which == 106 ) { // j
+      var time  = (getQtCurrentTime()+30) * movieTimeScale;
+      document.qtF.SetTime(time);
+      console.log("jump +30s -> "+time/movieTimeScale);
+    };
   });
 
   //////////////////////////////
@@ -88,7 +95,7 @@ function init() {
     movieCurentStep = 0;
     setNextStep();
     
-    setQtVolume(0);
+    //setQtVolume(0);
   };
   function onReloadLife(){
     // add reload argument to avoid cache
@@ -105,7 +112,7 @@ function init() {
     $life.removeClass("off");
     $movie.addClass("off");
   };
-  function OnBlackScreen(){
+  function onBlackScreen(){
     $life.addClass("off");
     $movie.addClass("off");
   };
@@ -118,7 +125,7 @@ function init() {
   function getScore(){socket.emit('getScore',true);
   };
   function getAt(l){
-    return (parseInt(l.at_min)*60+ parseInt(l.at_sec))/100; 
+    return (parseInt(l.at_min)*60 + parseInt(l.at_sec) + movieStartMargin); 
   };
   function randomRange(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -189,7 +196,7 @@ function init() {
   function reset(){
     console.log("reset player");
 
-    OnBlackScreen();
+    onBlackScreen();
     getScore();
     //socket.emit('refreshTimelaps');
     createQt(movieUrl, $movie, "qtF");
@@ -200,11 +207,13 @@ function init() {
     //$pop_life.pause().currentTime(0);
   };
   function getJump(step){
-
     var jump_max = step.jump_max;
     var movieProgress  = Math.round((getQtCurrentTime()/movieDuration)*100);
     var lifeProgress = Math.round((image_formation/255)*100);
     var jump = (jump_max/2)-(((lifeProgress - movieProgress)/100)*jump_max);
+
+    if(jump > jump_max) jump = jump_max; // to FIX 
+
     console.log('jump = ',jump,'/',jump_max,' (film :',movieProgress,'% ',' life :',lifeProgress,'%)');
     return jump;
   };
@@ -258,19 +267,24 @@ function init() {
       };
     },movieWatchInteval);
   };
-    // player event
+  
+  // player event
   function onLifeEnded(){
     
     var step = score[movieCurentStep],
         jump = getJump(step),
         at   = getAt(step);
 
+    console.log("~ cut",step.id,step.title,'(',step.type,')',"@", at);
     console.log("restarting life at", jump,'/',step.jump_max);
 
-    document.qtF.SetTime(jump * movieTimeScale);
+    document.qtF.SetTime((at + jump) * movieTimeScale);
     document.qtF.Play();
 
     $d.trigger("showMovie");
+
+    movieCurentStep++;
+
     setNextStep();
 
   };
