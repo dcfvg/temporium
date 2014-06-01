@@ -10,19 +10,19 @@ function init() {
       $d = $(document)
       ;
 
-  var $movie = $("#movie"),
-      movieUrl = "/video/test_6canaux.mov",
-      movieWidth = 1280, movieHeight = 720,
-      movieGoesOn = false,        
-      movieCurentStep = 0,
-      movieWatchInteval = 250,
-      movieTimeScale = 0,
-      movieDuration = 0
+  var $movie            = $("#movie"),                  // container
+      movieUrl          = "/video/test_6canaux.mov",    // video file url
+      movieWidth        = 1280, movieHeight = 720,      // size to display
+      movieGoesOn       = false,                        // 
+      movieCurentStep   = 0,                            // current event step
+      movieWatchInteval = 250,                          // timecode events refresh frequency
+      movieTimeScale    = 0,                            // qt property
+      movieDuration     = 0                             // duration of the movie
       ;
 
-  var $life  = $("#life"),
-      lifeUrl  = "/video/live.mp4",
-      $pop_life = Popcorn("#life")
+  var $life             = $("#life"),
+      lifeUrl           = "/video/live.mp4",
+      $pop_life         = Popcorn("#life")
       ;
 
   var image_formation = 0,
@@ -59,6 +59,8 @@ function init() {
   //////////////////////////////
   // HANDLERS 
   //////////////////////////////
+
+  // messages events
   function onSocketConnect() {
     sessionId = socket.socket.sessionid;
     console.log('Connected ' + sessionId);
@@ -78,69 +80,6 @@ function init() {
     };
     console.log('image_formation',obj);
   };
-  function setNextStep(){
-
-    var step = score[movieCurentStep],
-        at = getAt(step)/100,
-        compileDelay = 4,
-        decideDelay = 2,
-        renderStarted = false,
-        decideStarted = false
-        ;
-
-    console.log("waiting for step",step.id,step.title, "@", at);
-
-    var inter = setInterval(function(){
-
-      t = getQtCurrentTime();
-
-      // TIMELAPS COMPILATION
-      if(t > (at - compileDelay) && !renderStarted){
-        renderStarted = true;
-        console.log('start life render x',step.life_speed,"zoom",step.life_zoom);
-
-        //socket.emit('refreshTimelaps',(step.life_speed,step.life_zoom));
-      };
-
-      // TAKE DECISION
-      if (t > (at - decideDelay) && !decideStarted) {
-        decideStarted = true;
-
-        var jump = getJump(step, t);
-        console.log("decide ! jump in "+jump);
-      };
-      // APPLY DECISION
-      if(t > at){
-        clearInterval(inter);
-        setTimeout(function(){
-          
-          console.log('APPLY decision');
-
-          movieCurentStep++;
-          setNextStep();
-
-          $d.trigger("showLife", image_formation);
-
-          document.qtF.Stop();
-
-        },jump);
-      };
-
-    },movieWatchInteval);
-  }
-  function onShowMovie(){
-    $movie.removeClass("off");
-    $life.addClass("off");
-  };
-  function onShowLife(){
-    $life.removeClass("off");
-    $movie.addClass("off");
-    $pop_life.play();
-  };
-  function onReloadLife(){
-    // add reload argument to avoid cache
-    $life.attr("src",lifeUrl + "?reload="+Math.round((new Date()).getTime() / 1000)).load();
-  };
   function onSeanceStart(){
 
     document.qtF.Play();
@@ -151,36 +90,35 @@ function init() {
     
     setQtVolume(0);
   };
-  function onLifeEnded(){
-    $d.trigger("showMovie");
+  function onReloadLife(){
+    // add reload argument to avoid cache
+    $life.attr("src",lifeUrl + "?reload="+Math.round((new Date()).getTime() / 1000)).load();
   };
-  function blackScreen(){
+
+  // movies action
+  function onShowMovie(){
+    $movie.removeClass("off");
+    $life.addClass("off");
+  };
+  function onShowLife(){
+    $pop_life.play();
+    $life.removeClass("off");
+    $movie.addClass("off");
+  };
+  function OnBlackScreen(){
     $life.addClass("off");
     $movie.addClass("off");
   };
 
+
   //////////////////////////////
   // Helpers
   //////////////////////////////
-  function getJump(l, ct){
-    /* 
-    calcul du cut (plan in) ou du saut (plan out)
-    1. différenciel entre le mov_progress et le life_progress
-    2. le pourcentage obtenu est retiré du plan à couper à partir du centre de -50% à +50%
-    */
-    var mov_progress  = Math.round((ct/movieDuration)*100);
-    var life_progress = Math.round((image_formation/255)*100);
 
-    var jump = (l.jump_max/2)-(((life_progress - mov_progress)/100)*l.jump_max);
-
-    console.log('jump = '+jump+'/'+l.jump_max+' (film :'+mov_progress+'% '+' life :'+life_progress+'%)');
-
-    return jump;
-  };
   function getScore(){socket.emit('getScore',true);
   };
   function getAt(l){
-    return (parseInt(l.at_min)*60+ parseInt(l.at_sec));
+    return (parseInt(l.at_min)*60+ parseInt(l.at_sec))/100; 
   };
   function randomRange(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -210,8 +148,8 @@ function init() {
     obj.addEventListener('qt_ended'         , onQtPlayerEvent, false);
     obj.addEventListener('qt_begin'         , onQtPlayerEvent, false);
     obj.addEventListener('qt_validated'     , onQtPlayerEvent, false);
-    obj.addEventListener('qt_canplay'       , onQtCanPlay    , false);
-    obj.addEventListener('qt_canplaythrough', onQtPlayerEvent, false);
+    obj.addEventListener('qt_canplay'       , onQtPlayerEvent, false);
+    obj.addEventListener('qt_canplaythrough', onQtCanPlayThrough, false);
   };
   function sToQtTimecode(sTc){
     // second timecode to QuickTime timecode
@@ -238,10 +176,10 @@ function init() {
   function onQtPlayerEvent(ev){
     console.log("QtEvent :: " + ev.type);    
   };
-  function onQtCanPlay(){
+  function onQtCanPlayThrough(){
     movieTimeScale = document.qtF.GetTimeScale();
-    movieDuration  = document.qtF.GetDuration();
-    console.log("qtReady");
+    movieDuration  = document.qtF.GetDuration() / movieTimeScale;
+    console.log("movie is ready !");
   };
 
   //////////////////////////////
@@ -251,7 +189,7 @@ function init() {
   function reset(){
     console.log("reset player");
 
-    blackScreen();
+    OnBlackScreen();
     getScore();
     //socket.emit('refreshTimelaps');
     createQt(movieUrl, $movie, "qtF");
@@ -261,7 +199,81 @@ function init() {
     // seek to beginning 
     //$pop_life.pause().currentTime(0);
   };
+  function getJump(step){
 
+    var jump_max = step.jump_max;
+    var movieProgress  = Math.round((getQtCurrentTime()/movieDuration)*100);
+    var lifeProgress = Math.round((image_formation/255)*100);
+    var jump = (jump_max/2)-(((lifeProgress - movieProgress)/100)*jump_max);
+    console.log('jump = ',jump,'/',jump_max,' (film :',movieProgress,'% ',' life :',lifeProgress,'%)');
+    return jump;
+  };
+  function setNextStep(){
+
+    var step = score[movieCurentStep],
+        at = getAt(step),
+        compileDelay = 4,
+        decideDelay = 2,
+        renderStarted = false,
+        decideStarted = false,
+        jump
+        ;
+
+    console.log("~ waiting",step.id,step.title,'(',step.type,')',"@", at);
+
+    var inter = setInterval(function(){
+
+      t = getQtCurrentTime();
+
+      // TIMELAPS COMPILATION
+      if(t > (at - compileDelay) && !renderStarted){
+        renderStarted = true;
+        //socket.emit('refreshTimelaps',(step.life_speed,step.life_zoom));
+
+        console.log('~ life render x',step.life_speed,"zoom",step.life_zoom);
+      };
+
+      // TAKE DECISION
+      if (t > (at - decideDelay) && !decideStarted){
+        decideStarted = true;
+        console.log('~ decide !');
+        
+        jump = getJump(step);
+      };
+      // APPLY DECISION
+      if(t > at){
+        clearInterval(inter);
+        console.log('life in', jump);
+
+        setTimeout(function(){
+          
+          console.log('~ top !');
+
+          movieCurentStep++;
+
+          $d.trigger("showLife"); // show life 
+          document.qtF.Stop();   // stop movie
+
+        },jump*1000);
+      };
+    },movieWatchInteval);
+  };
+    // player event
+  function onLifeEnded(){
+    
+    var step = score[movieCurentStep],
+        jump = getJump(step),
+        at   = getAt(step);
+
+    console.log("restarting life at", jump,'/',step.jump_max);
+
+    document.qtF.SetTime(jump * movieTimeScale);
+    document.qtF.Play();
+
+    $d.trigger("showMovie");
+    setNextStep();
+
+  };
   /*
   image_formation emulator 
 
