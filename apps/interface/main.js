@@ -8,10 +8,27 @@ module.exports = function(app, io, oscServer){
   console.info('movie <> temporim link initialized');
   
   var capt; // capture programme (bash)
+  var spawn = require('child_process').spawn;
+
+  // initClientWindows(); // lauch chrome at launch
 
   //////////////////////////////
-  // dynamic editing
+  // server side
   //////////////////////////////
+  
+  function initClientWindows(){
+    clientWindows = spawn('bash',['bin/initClientWindows.sh']);
+
+    clientWindows.stdout.on('data', function (data) {
+      console.log('stdout: ' + data);
+    });
+    clientWindows.stderr.on('data', function (data) {
+      console.log('stderr: ' + data);
+    });
+    clientWindows.on('exit', function (code) {
+      console.log('child process exited with code ' + code);
+    });
+  };
   function loadScore(){
     var Converter=require("csvtojson").core.Converter;
     var fs=require("fs");
@@ -64,10 +81,7 @@ module.exports = function(app, io, oscServer){
     refreshTimelaps(param[0],param[1]);
   };
   function onCaptureInit(){
-
-    spawn = require('child_process').spawn;
     capt = spawn('bash',['bin/test.sh']);
-
     capt.stdout.on('data', function (data) {
       console.log('stdout: ' + data);
     });
