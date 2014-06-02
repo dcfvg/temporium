@@ -12,10 +12,10 @@ case "$ACTION" in
         ;;
     start)
         echo "$self: START"
-        python osc/sender.py 127.0.0.1 3333 /EF flash
+        python bin/osc/sender.py 127.0.0.1 3333 /EF flash
         ;;
     download)
-        python osc/sender.py 127.0.0.1 3333 /EF expose
+        python bin/osc/sender.py 127.0.0.1 3333 /EF expose
         echo "$self: DOWNLOAD to $ARGUMENT" 
         ;;
     stop)

@@ -11,15 +11,15 @@
 # ===============
 
 #set -x
+pwd
 
-tempoPath="~/Users/immersion/temporium"
+nodebin="bin/"
+public="public/" 	                          # main public folder
+archive="$public/archive"                   # media archives
 
-app="$tempoPath/apps"                       # the scripts folder
-assets="$tempoPath/apps/interface/public/" 	# main assets folder
-archive="$assets/archive"                   # media archives
-
-captation=$archive"/exposures"              # exposures archives
-exp="$assets/exposure"						# current exposure pictures
+exposures=$archive"/exposures"              # exposures archives
+exp=$public"exposure"						            # current exposure pictures
+oscScript=$nodebin"/osc/sender.py"          # osc sender 
 
 function camera_init {
   # make sure the camera is available.
@@ -30,22 +30,22 @@ function camera_init {
   gphoto2 --summary
 }
 function timelaps_archive {
-  timelaps_firstFrame=$(basename $(find $exp -maxdepth 1 -iname '*.jpg' | head -1))
-  timelaps_firstFrameName="${timelaps_firstFrame%.*}"
+
+  now=$(date +"%y.%m.%d-%H.%M.%S")
+
+  archiveDir="$exposures/exp-"$now"/"
   
-  archiveDir="$captation/exp-"$timelaps_firstFrameName"/"
+  # mouv previous exposures to archive
+  mkdir $archiveDir
   
-  # mouv previous captation to archive
-  mkdir archiveDir
-  
-  mv $exp/*.jpg archiveDir
-  mv $exp/data.json archiveDir
+  mv $exp/*.jpg $archiveDir
+  mv $exp/data.json $archiveDir
 }
 
 # init
 timelaps_archive
 camera_init
-python osc/sender.py 127.0.0.1 3333 /EF flash
+python $oscScript 127.0.0.1 3333 /EF flash
 
 say "starting exposure !"
 
@@ -62,11 +62,11 @@ do
 
 	gphoto2 \
  	--capture-image-and-download \
-  	--hook-script camera_hook.sh \
+  	--hook-script $nodebin/camera_hook.sh \
   	--force-overwrite \
-  	--filename "../public/exposure/"$photoName".jpg"
+  	--filename "public/exposure/"$photoName".jpg"
 
-  	python osc/sender.py 127.0.0.1 3333 image_capture $exp/$photoName
+  	python $oscScript 127.0.0.1 3333 image_capture $exp/$photoName.jpg
 
-##  	sleep 10 
+sleep 2 
 done

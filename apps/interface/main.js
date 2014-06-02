@@ -76,11 +76,12 @@ module.exports = function(app, io, oscServer){
     io.sockets.emit("refreshTimelapsEnd");
   };
   function onRefreshTimelaps(param){
+    console.log(param);
     console.log("refreshTimelaps zomm",param[0],"speed",param[1]);
     refreshTimelaps(param[0],param[1]);
   };
   function onCaptureInit(){
-    capt = spawn('bash',['bin/test.sh']);
+    capt = spawn('bash',['bin/capture.sh']);
     capt.stdout.on('data', function (data) {
       console.log('stdout: ' + data);
     });
@@ -108,13 +109,13 @@ module.exports = function(app, io, oscServer){
     console.log(msg);
     io.sockets.emit("oscMessage", msg);
     switch (msg[0]) {
-      case "/refreshTimelaps":
+      case "refreshTimelaps":
         refreshTimelaps();
       break;
-      case "/seance_start":
+      case "seance_start":
         onCaptureInit();
       break;
-      case "/captureStop":
+      case "captureStop":
         onCaptureStop();
       break;
     };
@@ -124,5 +125,6 @@ module.exports = function(app, io, oscServer){
     socket.on("getScore", loadScore);
     socket.on("refreshTimelaps", onRefreshTimelaps);
     socket.on("captureStop", onCaptureStop);
+    socket.on("captureInit", onCaptureInit);
   });
 };

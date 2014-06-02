@@ -1,15 +1,15 @@
 id,title,type,at_min,at_sec,jump_max,life_speed,life_zoom
-0,coulee lave,in,5,37,15,1,3,4
-1,arbres morts,out,6,18,20,2,3,4
+0,coulee lave,in,5,37,15,1,3
+1,arbres morts,out,6,18,20,2,3
 2,danse digue,in,14,45,32,3,3
 3,port de nuit,out,15,45,22,4,3
-4,reflet mer nuit,in,16,48,34,5,2,6
-5,danse main,out,18,2,33,6,2,6
-6,rocher et mer,in,19,5,25,7,2,2
-7,danse port,out,19,44,7,8,2,2
-8,danse nu,in,23,20,105,9,1,8
-9,petit dej,out,25,48,36,10,1,8
-10,fin petit dej,in,26,30,6,11,1,4
-11,mer defile,out,26,53,10,12,1,4
+4,reflet mer nuit,in,16,48,34,5,2
+5,danse main,out,18,2,33,6,2
+6,rocher et mer,in,19,5,25,7,2
+7,danse port,out,19,44,7,8,2
+8,danse nu,in,23,20,105,9,1
+9,petit dej,out,25,48,36,10,1
+10,fin petit dej,in,26,30,6,11,1
+11,mer defile,out,26,53,10,12,1
 12,mer defile proche,in,27,46,17,13,1
 13,plongeon,out,28,24,13,14,1

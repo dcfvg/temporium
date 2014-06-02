@@ -39,6 +39,7 @@ function init() {
   socket.on('oscMessage', onSocketOscMessage);
   socket.on('score', onSocketScore);
   socket.on('refreshTimelapsEnd', onRefreshTimelapsEnd); 
+  
   $d // on
     .on( "seance_start"     , onSeanceStart)
     .on( "lifeRefreshMovie" , onReloadLife)
@@ -90,10 +91,11 @@ function init() {
     console.log(obj);
   };
   function onImageFormation(e, obj){
-    if(!movieGoesOn && parseInt(obj) > formationStartLevel){
-      onSeanceStart();
+    /*if(!movieGoesOn && parseInt(obj) > formationStartLevel){
+    //onSeanceStart();
     };
-    //console.log('image_formation',obj);
+    console.log('image_formation',obj);
+    */
   };
   function onSeanceStart(){
 
@@ -132,7 +134,6 @@ function init() {
     $movie.addClass("off");
   };
 
-
   //////////////////////////////
   // Helpers
   //////////////////////////////
@@ -158,7 +159,7 @@ function init() {
       'STARTTIME',"00:00:00:00",
       'qtsrc', qtsrc));
 
-      initQtCallback();
+    initQtCallback();
   };
   function initQtCallback(){
     console.log("Register Qt player Event");
@@ -204,7 +205,8 @@ function init() {
     console.log("movie is ready !");
   };
   function onQtEnded(){
-    io.sockets.emit("message", seance_end);
+    io.sockets.emit("message", "seance_end");
+    reset();
   };
 
   //////////////////////////////
@@ -216,12 +218,19 @@ function init() {
 
     onBlackScreen();
     getScore();
-    //socket.emit('refreshTimelaps');
-    createQt(movieUrl, $movie, "qtF");
 
+    //socket.emit('refreshTimelaps');
+
+    createQt(movieUrl, $movie, "qtF");
     movieGoesOn = false;
 
     // seek to beginning 
+
+    document.qtF.Stop(0);
+    document.qtF.SetTime(0);
+  
+    $pop_life.pause().currentTime(0);
+
     //$pop_life.pause().currentTime(0);
   };
   function getJump(step){
@@ -244,7 +253,7 @@ function init() {
         jump
         ;
 
-    console.log("~ waiting",step.id,step.title,'(',step.type,')',"@", at);
+    console.log("~ waiting", step.id, step.title, '(', step.type, ')', "@", at);
 
     var inter = setInterval(function(){
 
@@ -253,7 +262,7 @@ function init() {
       // TIMELAPS COMPILATION
       if(t > (at - compileDelay) && !renderStarted){
         renderStarted = true;
-        socket.emit('refreshTimelaps',(step.life_speed,step.life_zoom));
+        socket.emit('refreshTimelaps',(step.life_speed, step.life_zoom));
 
         console.log('~ life render x',step.life_speed,"zoom",step.life_zoom);
       };
@@ -311,9 +320,9 @@ function init() {
     $d.trigger("image_formation", image_formation);
     //console.log("f="+image_formation);
   }, 3000);
-  
 
   reset();
+
   //socket.emit('refreshTimelaps',[2,3]);
 };
 $(document).on('ready', init);
