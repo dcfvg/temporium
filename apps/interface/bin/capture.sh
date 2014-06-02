@@ -15,11 +15,11 @@
 tempoPath="~/Users/immersion/temporium"
 
 app="$tempoPath/apps"                       # the scripts folder
-assets="$tempoPath/assets"                  # main assets folder
+assets="$tempoPath/apps/interface/public/" 	# main assets folder
 archive="$assets/archive"                   # media archives
 
 captation=$archive"/exposures"              # exposures archives
-exp="$assets/exp"                           # current exposure pictures
+exp="$assets/exposure"						# current exposure pictures
 
 function camera_init {
   # make sure the camera is available.
@@ -29,24 +29,22 @@ function camera_init {
   gphoto2 --auto-detect
   gphoto2 --summary
 }
-function timelaps_finish {
+function timelaps_archive {
   timelaps_firstFrame=$(basename $(find $exp -maxdepth 1 -iname '*.jpg' | head -1))
   timelaps_firstFrameName="${timelaps_firstFrame%.*}"
-
-  # mouv previous captation to archive
-  mkdir "$captation/exp-"$timelaps_firstFrameName
   
-  cp $exp/*.jpg    "$captation/exp-"$timelaps_firstFrameName
-  cp $exp/live.mp4 "$captation/exp-$timelaps_firstFrameName/$timelaps_firstFrameName.mp4"
-  cp $exp/live.mp4 $assets/timelaps.mp4
-}
-function oscSend {
-  # send OSC message to ExposerFlasher 
-  python osc/sender.py 127.0.0.1 3333 $1 $2
+  archiveDir="$captation/exp-"$timelaps_firstFrameName"/"
+  
+  # mouv previous captation to archive
+  mkdir archiveDir
+  
+  mv $exp/*.jpg archiveDir
+  mv $exp/data.json archiveDir
 }
 
 # init
 
+timelaps_archive
 camera_init
 python osc/sender.py 127.0.0.1 3333 /EF flash
 python osc/sender.py 127.0.0.1 3333 /EF imgReload   # reload picture 
