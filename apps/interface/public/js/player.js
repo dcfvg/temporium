@@ -11,7 +11,7 @@ function init() {
       ;
 
   var $movie            = $("#movie"),                  // container
-      movieUrl          = "/video/Montage-DEF_1805_INSTAL _422HQ-QuickTime_H.264.mov",       // video file url
+      movieUrl          = "/video/test_6canaux.mov",       // video file url
       movieWidth        = 1280, movieHeight = 720,      // size to display
       movieGoesOn       = false,                        // 
       movieCurentStep   = 0,                            // current event step
