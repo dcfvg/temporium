@@ -6,6 +6,8 @@ var fs = require('fs'),
 
 module.exports = function(app, io, oscServer){
   console.info('movie <> temporim link initialized');
+  
+  var capt; // capture programme (bash)
 
   //////////////////////////////
   // dynamic editing
@@ -23,7 +25,7 @@ module.exports = function(app, io, oscServer){
     });
     //read from file
     fileStream.pipe(csvConverter);
-  }
+  };
 
   //////////////////////////////
   //  movies Management
@@ -52,22 +54,21 @@ module.exports = function(app, io, oscServer){
         .on('end', onRefreshTimelapsEnd)
         .on('error', function(err) { console.log('an error happened: ' + err.message);})
         .saveToFile('public/video/live.mp4');
-  }
+  };
   function onRefreshTimelapsEnd(){
     console.log('timelapse updated');
     io.sockets.emit("refreshTimelapsEnd");
-
-  }
+  };
   function onRefreshTimelaps(param){
     console.log("refreshTimelaps zomm",param[0],"speed",param[1]);
     refreshTimelaps(param[0],param[1]);
-  }
-  function initCapture(){
-    
-    /// SPAWN TEST 
+  };
+  function onCaptureInit(){
+
     spawn = require('child_process').spawn;
-    capt = spawn('bash',['bin/test.sh']); 
-    capt.stdout.on('data', function (data) {    // register one or more handlers
+    capt = spawn('bash',['bin/test.sh']);
+
+    capt.stdout.on('data', function (data) {
       console.log('stdout: ' + data);
     });
     capt.stderr.on('data', function (data) {
@@ -76,15 +77,15 @@ module.exports = function(app, io, oscServer){
     capt.on('exit', function (code) {
       console.log('child process exited with code ' + code);
     });
+  };
+  function onCaptureStop (){
+    console.log('kill capture in 4 s');
 
     setTimeout(function() {
-      console.log('kill');
       capt.stdin.pause();
       capt.kill();
-    }, 10000);
-
-    /// END SPAWN TEST
-  }
+    }, 5000);
+  };
 
   //////////////////////////////
   //  communication 
@@ -97,6 +98,12 @@ module.exports = function(app, io, oscServer){
       case "/refreshTimelaps":
         refreshTimelaps();
       break;
+      case "/seance_start":
+        onCaptureInit();
+      break;
+      case "/captureStop":
+        onCaptureStop();
+      break;
     };
   });
 
@@ -104,5 +111,6 @@ module.exports = function(app, io, oscServer){
     socket.on("message", oscClient.send);
     socket.on("getScore", loadScore);
     socket.on("refreshTimelaps", onRefreshTimelaps);
+    socket.on("captureStop", onCaptureStop);
   });
 };

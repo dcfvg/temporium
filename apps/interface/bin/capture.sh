@@ -43,16 +43,14 @@ function timelaps_archive {
 }
 
 # init
-
 timelaps_archive
 camera_init
 python osc/sender.py 127.0.0.1 3333 /EF flash
-python osc/sender.py 127.0.0.1 3333 /EF imgReload   # reload picture 
 
 say "starting exposure !"
 
 # picture loop
-while true; 
+while true;
 do
 	printf "# $i \n"
 
