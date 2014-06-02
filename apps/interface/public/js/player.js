@@ -121,7 +121,6 @@ function init() {
     $movie.removeClass("off");
     $life.addClass("off");
     $d.trigger("lifeRefreshMovie");
-
   };
   function onShowLife(){
     $pop_life.play();
@@ -168,7 +167,7 @@ function init() {
     obj.addEventListener('qt_error'         , onQtPlayerEvent, false);
     obj.addEventListener('qt_pause'         , onQtPlayerEvent, false);
     obj.addEventListener('qt_stalled'       , onQtPlayerEvent, false);
-    obj.addEventListener('qt_ended'         , onQtPlayerEvent, false);
+    obj.addEventListener('qt_ended'         , onQtEnded, false);
     obj.addEventListener('qt_begin'         , onQtPlayerEvent, false);
     obj.addEventListener('qt_validated'     , onQtPlayerEvent, false);
     obj.addEventListener('qt_canplay'       , onQtPlayerEvent, false);
@@ -203,6 +202,9 @@ function init() {
     movieTimeScale = document.qtF.GetTimeScale();
     movieDuration  = document.qtF.GetDuration() / movieTimeScale;
     console.log("movie is ready !");
+  };
+  function onQtEnded(){
+    io.sockets.emit("message", seance_end);
   };
 
   //////////////////////////////
@@ -296,12 +298,13 @@ function init() {
 
     $d.trigger("showMovie");
 
-    movieCurentStep++;
-
-    setNextStep();
+    if(movieCurentStep < score.length){
+      movieCurentStep++;
+      setNextStep();
+      $d.trigger("last_sequence");
+    };
   };
   
-
   //image_formation emulator 
   setInterval(function(){
     image_formation++;
