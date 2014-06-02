@@ -52,16 +52,21 @@ say "starting exposure !"
 # picture loop
 while true;
 do
+	((i++))
 	printf "# $i \n"
 
 	#%y.%m.%d_%H.%M.%S.%C
 	photoName=$(printf %04d $i)
 
+	echo $photoName
+
 	gphoto2 \
  	--capture-image-and-download \
-  	--hook-script $app/capture/camera_hook.sh \
+  	--hook-script camera_hook.sh \
   	--force-overwrite \
-  	--filename $exp/$photoName
+  	--filename "../public/exposure/"$photoName".jpg"
 
   	python osc/sender.py 127.0.0.1 3333 image_capture $exp/$photoName
+
+##  	sleep 10 
 done

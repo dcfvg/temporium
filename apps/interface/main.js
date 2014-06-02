@@ -120,7 +120,6 @@ module.exports = function(app, io, oscServer){
       break;
     };
   });
-
   io.on("connection", function(socket){
     socket.on("message", oscClient.send);
     socket.on("getScore", loadScore);
