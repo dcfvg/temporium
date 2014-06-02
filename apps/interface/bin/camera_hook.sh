@@ -6,21 +6,16 @@
 # @since  01.02.2014
 # 
 
-
-source functions.sh  
-
-self=`basename $0`
-
 case "$ACTION" in
     init)
 
         ;;
     start)
         echo "$self: START"
-        oscSend /EF flash
+        python osc/sender.py 127.0.0.1 3333 /EF flash
         ;;
     download)
-        oscSend /EF expose
+        python osc/sender.py 127.0.0.1 3333 /EF expose
         echo "$self: DOWNLOAD to $ARGUMENT" 
         ;;
     stop)
