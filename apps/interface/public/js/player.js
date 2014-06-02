@@ -93,13 +93,15 @@ function init() {
     if(!movieGoesOn && parseInt(obj) > formationStartLevel){
       onSeanceStart();
     };
-    console.log('image_formation',obj);
+    //console.log('image_formation',obj);
   };
   function onSeanceStart(){
 
     document.qtF.Play();
     $d.trigger("showMovie", image_formation);
     
+    movieGoesOn = true;
+
     movieCurentStep = 0;
     setNextStep();
     
@@ -298,15 +300,15 @@ function init() {
 
     setNextStep();
   };
-  /*
-  image_formation emulator 
+  
 
+  //image_formation emulator 
   setInterval(function(){
     image_formation++;
     $d.trigger("image_formation", image_formation);
-    console.log("f="+image_formation);
-  }, 1000);
-  */
+    //console.log("f="+image_formation);
+  }, 3000);
+  
 
   reset();
   //socket.emit('refreshTimelaps',[2,3]);
