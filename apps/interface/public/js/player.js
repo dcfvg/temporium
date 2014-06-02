@@ -11,7 +11,7 @@ function init() {
       ;
 
   var $movie            = $("#movie"),                  // container
-      movieUrl          = "/video/test_6canaux.mov",       // video file url
+      movieUrl          = "/video/Montage-DEF_1805_INSTAL _422HQ-QuickTime_H.264.mov",       // video file url
       movieWidth        = 1280, movieHeight = 720,      // size to display
       movieGoesOn       = false,                        // 
       movieCurentStep   = 0,                            // current event step
@@ -27,40 +27,48 @@ function init() {
       ;
 
   var image_formation = 0,
-      formationStartLevel = 5
+      formationStartLevel = 5,
+      compileDelay = 120,
+      decideDelay = 2
       ;
-
+ 
   //////////////////////////////
   // On
   //////////////////////////////
   socket.on('connect', onSocketConnect);
   socket.on('oscMessage', onSocketOscMessage);
   socket.on('score', onSocketScore);
-
+  socket.on('refreshTimelapsEnd', onRefreshTimelapsEnd); 
   $d // on
     .on( "seance_start"     , onSeanceStart)
-    .on( "life_reload"      , onReloadLife)
+    .on( "lifeRefreshMovie" , onReloadLife)
     .on( "image_formation"  , onImageFormation)
     .on( "player_reset"     , reset)
     .on( "showMovie"        , onShowMovie)
     .on( "showLife"         , onShowLife)
-    .on( "qtSeekTo"         , onQtSeekTo)
+    .on( "qtSeekTo"         , onQtSeekTo) 
   ;
   
   $pop_life.on("ended",onLifeEnded);
 
   // dev shortcuts
   $d.keypress(function( event ){
-    // console.log(event.which);
+    //console.log(event.which);
     if ( event.which == 109 ) $d.trigger("showMovie");  // m
     if ( event.which == 108 ) $d.trigger("showLife");   // l
     if ( event.which == 114 ) $d.trigger("reloadLife"); // r
-    if ( event.which == 107 ) console.log("t :",getQtCurrentTime()); // k
-    if ( event.which == 106 ) { // j
+    if ( event.which == 104 ) { // h
       var time  = (getQtCurrentTime()+30) * movieTimeScale;
       document.qtF.SetTime(time);
       console.log("jump +30s -> "+time/movieTimeScale);
     };
+    if ( event.which == 106 ) { // j
+      var time  = (getQtCurrentTime()+10) * movieTimeScale;
+      document.qtF.SetTime(time);
+      console.log("jump +10s -> "+time/movieTimeScale);
+    };
+
+    if ( event.which == 107 ) console.log("t :",getQtCurrentTime()); // k
   });
 
   //////////////////////////////
@@ -95,17 +103,23 @@ function init() {
     movieCurentStep = 0;
     setNextStep();
     
-    //setQtVolume(0);
+    setQtVolume(0);
   };
   function onReloadLife(){
     // add reload argument to avoid cache
-    $life.attr("src",lifeUrl + "?reload="+Math.round((new Date()).getTime() / 1000)).load();
+    if($life.hasClass("off")) $life.attr("src",lifeUrl + "?reload="+Math.round((new Date()).getTime() / 1000)).load();
   };
-
+  function onRefreshTimelapsEnd (obj) {
+    console.log('~ life render finished !');
+    $d.trigger("lifeRefreshMovie");
+  };
+ 
   // movies action
   function onShowMovie(){
     $movie.removeClass("off");
     $life.addClass("off");
+    $d.trigger("lifeRefreshMovie");
+
   };
   function onShowLife(){
     $pop_life.play();
@@ -221,8 +235,6 @@ function init() {
 
     var step = score[movieCurentStep],
         at = getAt(step),
-        compileDelay = 4,
-        decideDelay = 2,
         renderStarted = false,
         decideStarted = false,
         jump
@@ -237,7 +249,7 @@ function init() {
       // TIMELAPS COMPILATION
       if(t > (at - compileDelay) && !renderStarted){
         renderStarted = true;
-        //socket.emit('refreshTimelaps',(step.life_speed,step.life_zoom));
+        socket.emit('refreshTimelaps',(step.life_speed,step.life_zoom));
 
         console.log('~ life render x',step.life_speed,"zoom",step.life_zoom);
       };
@@ -267,8 +279,7 @@ function init() {
       };
     },movieWatchInteval);
   };
-  
-  // player event
+  // player event=
   function onLifeEnded(){
     
     var step = score[movieCurentStep],
@@ -286,7 +297,6 @@ function init() {
     movieCurentStep++;
 
     setNextStep();
-
   };
   /*
   image_formation emulator 
@@ -299,6 +309,6 @@ function init() {
   */
 
   reset();
-
+  //socket.emit('refreshTimelaps',[2,3]);
 };
 $(document).on('ready', init);

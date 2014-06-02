@@ -40,6 +40,7 @@ module.exports = function(app, io, oscServer){
         crop_h = Math.round(crop_w/ratio),
         crop_x = Math.round((crop_w - mov_w)/2),
         crop_y = Math.round((crop_h - mov_h)/2),
+
         proc = new ffmpeg({ source: 'public/exposure/im%04d.jpg' })
 
         .withFps(25)
@@ -54,9 +55,15 @@ module.exports = function(app, io, oscServer){
   }
   function onRefreshTimelapsEnd(){
     console.log('timelapse updated');
+    io.sockets.emit("refreshTimelapsEnd");
+
+  }
+  function onRefreshTimelaps(param){
+    console.log("refreshTimelaps zomm",param[0],"speed",param[1]);
+    refreshTimelaps(param[0],param[1]);
   }
   function initCapture(){
-
+    
     /// SPAWN TEST 
     spawn = require('child_process').spawn;
     capt = spawn('bash',['bin/test.sh']); 
@@ -96,6 +103,6 @@ module.exports = function(app, io, oscServer){
   io.on("connection", function(socket){
     socket.on("message", oscClient.send);
     socket.on("getScore", loadScore);
-    socket.on("refreshTimelaps", refreshTimelaps);
+    socket.on("refreshTimelaps", onRefreshTimelaps);
   });
 };
