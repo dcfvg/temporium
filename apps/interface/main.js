@@ -15,7 +15,6 @@ module.exports = function(app, io, oscServer){
   //////////////////////////////
   // server side
   //////////////////////////////
-  
   function initClientWindows(){
     clientWindows = spawn('bash',['bin/initClientWindows.sh']);
 
@@ -60,7 +59,7 @@ module.exports = function(app, io, oscServer){
         crop_x = Math.round((crop_w - mov_w)/2),
         crop_y = Math.round((crop_h - mov_h)/2),
 
-        proc = new ffmpeg({ source: 'public/exposure/im%04d.jpg' })
+        proc = new ffmpeg({ source: 'public/exposure/%04d.jpg' })
 
         .withFps(25)
         .addOptions(['-pix_fmt yuv420p','-c:v libx264', '-preset ultrafast', '-crf 1'])
