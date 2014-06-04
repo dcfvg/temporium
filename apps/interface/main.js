@@ -92,12 +92,12 @@ module.exports = function(app, io, oscServer){
     });
   };
   function onCaptureStop (){
-    console.log('kill capture in 4 s');
+    console.log('kill capture in 2 s');
 
     setTimeout(function() {
       capt.stdin.pause();
       capt.kill();
-    }, 5000);
+    }, 2000);
   };
 
   //////////////////////////////

@@ -36,6 +36,7 @@ function init() {
   //////////////////////////////
   // On
   //////////////////////////////
+
   socket.on('connect', onSocketConnect);
   socket.on('oscMessage', onSocketOscMessage);
   socket.on('score', onSocketScore);
@@ -85,7 +86,7 @@ function init() {
     //socket.emit('newUser', {id: sessionId, name: $('#name').val()});
   };
   function onSocketOscMessage(obj){
-    console.log(obj);
+    //console.log(obj);
     $d.trigger(obj[0],[ obj[1] ]);
   };
   function onSocketScore(obj){
@@ -95,11 +96,16 @@ function init() {
 
   // seance == top vivant
   function onSeanceStart(){
+    console.log("# seance seance_start !");
     $d.trigger("projectionStart");
+
+    socket.emit('captureInit',true);
   };
   // projection == film
   function onProjectionStart(){
     
+    console.log("# projection !");
+ 
     document.qtF.Play();
     $d.trigger("showMovie");
     
@@ -217,6 +223,9 @@ function init() {
   };
   function onQtEnded(){
     io.sockets.emit("message", "seance_end");
+    
+    socket.on("captureStop", onCaptureStop);
+
     reset();
   };
 
@@ -252,7 +261,7 @@ function init() {
 
     if(jump > jump_max) jump = jump_max; // to FIX 
 
-    console.log('jump = ',jump,'/',jump_max,' (film :',movieProgress,'% ',' life :',lifeProgress,'%)');
+    console.log(step.type,'jump = ',jump,'/',jump_max,' (film :',movieProgress,'% ',' life :',lifeProgress,'%)');
     return jump;
   };
 
@@ -312,7 +321,7 @@ function init() {
     console.log("~ cut",step.id,step.title,'(',step.type,')',"@", at);
     console.log("restarting life at", jump,'/',step.jump_max);
 
-    document.qtF.SetTime((at + jump) * movieTimeScale);
+    document.qtF.SetTime((at - jump) * movieTimeScale);
     document.qtF.Play();
 
     $d.trigger("showMovie");
