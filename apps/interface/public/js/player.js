@@ -12,7 +12,7 @@ function init() {
 
   var $movie            = $("#movie"),                  // container
       movieUrl          = "/video/IMMERSION_1998_1080H264_10MB_SON_TEMPORAIRE.mov",       // video file url
-      movieWidth        = 1920, movieHeight = 1080,      // size to display
+      movieWidth        = 1920, movieHeight = 1080,     // size to display
       movieGoesOn       = false,                        // 
       movieCurentStep   = 0,                            // current event step
       movieWatchInteval = 250,                          // timecode events refresh frequency
@@ -261,7 +261,7 @@ function init() {
       // TIMELAPS COMPILATION
       if(t > (at - compileDelay) && !renderStarted){
         renderStarted = true;
-        socket.emit('refreshTimelaps',(step.life_speed, step.life_zoom));
+        socket.emit('refreshTimelaps',[step.life_speed, step.life_zoom]);
 
         console.log('~ life render x',step.life_speed,"zoom",step.life_zoom);
       };
