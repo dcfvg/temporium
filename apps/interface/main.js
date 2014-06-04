@@ -76,8 +76,7 @@ module.exports = function(app, io, oscServer){
     io.sockets.emit("refreshTimelapsEnd");
   };
   function onRefreshTimelaps(param){
-    console.log(param);
-    console.log("refreshTimelaps zomm",param[0],"speed",param[1]);
+    console.log("refreshTimelaps zoom",param[0],"speed",param[1]);
     refreshTimelaps(param[0],param[1]);
   };
   function onCaptureInit(){

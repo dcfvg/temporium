@@ -68,5 +68,5 @@ do
 
   	python $oscScript 127.0.0.1 3333 image_capture $exp/$photoName.jpg
 
-sleep 2 
+  sleep 2
 done

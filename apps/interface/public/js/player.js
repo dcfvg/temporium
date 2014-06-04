@@ -319,9 +319,5 @@ function init() {
     $d.trigger("image_formation", image_formation);
     //console.log("f="+image_formation);
   }, 3000);
-
-  reset();
-
-  //socket.emit('refreshTimelaps',[2,3]);
 };
 $(document).on('ready', init);
