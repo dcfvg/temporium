@@ -31,6 +31,8 @@ class current_state(object):
         """state of the EL {"AQ" : {"HIGH" : [threading.Lock(),False,1], "MEDIUM" : [threading.Lock(),False,0.66] },... }"""
         self._state_EL = dict()
         
+        """state of Automatically checking the important values : ex EL_max"""
+        self._security_checking = {"EL_max" : [threading.Lock(),False]}
         
         """Occupied volume for each container : { M1 : [Lock, 0.75] , M2 : ...} """
         self._occupied_volume = dict()
@@ -42,7 +44,7 @@ class current_state(object):
         self.number_usage = dict()
         
         """BRBU_controller state"""
-        self._BRBU_state = {"BU1" : [threading.Lock(), "USE"],"BU2" : [threading.Lock(), "WAIT"],"BU3" : [threading.Lock(), "EMPTY"] }
+        self._BU_state = {"BU1" : [threading.Lock(), "NULL"],"BU2" : [threading.Lock(), "NULL"],"BU3" : [threading.Lock(), "NULL"] }
         
         """current_action"""
         self._current_action = {"AQ_filtration" : [threading.Lock(),False],\
@@ -60,15 +62,44 @@ class current_state(object):
                                         "renew_light_AQ_BU2" : [threading.Lock(),False],\
                                         "renew_light_AQ_BU3" : [threading.Lock(),False],\
                                  }
+        """current_action_lift_screen"""
+        self._current_action_lift_screen = {"lift_down" : [threading.Lock(),False],\
+                                            "lift_up" : [threading.Lock(),False],\
+                                            "screen_down" : [threading.Lock(),False],\
+                                            "screen_up" : [threading.Lock(),False],\
+                                            }
         
-        """BRBU_controller state"""
-        self._BRBU_controller_state = [threading.Lock(),False]
+        """current_spectro_state"""
+        self._current_spectro_state = {"spectro" : [threading.Lock(),False]}
+         
+        """current_light_state"""                               
+        self._current_light_state = {"spectro_light" : [threading.Lock(),False]}
+        
+        
+        """BRBU_controller state : true if it is running"""
+        self._BRBU_controller_state = {"run" : [threading.Lock(),False],\
+                                       "pause" : [threading.Lock(),False]}
+        
+        
         """AQ_concentration"""
         self._concentration = {"AQ" :[threading.Lock(), 0]}
         
-        self.last_time = time.time()
+        """time since last resfresh of the GUI"""
+        self._GUI_last_time = time.time()
         
         self._formation_rate = [threading.Lock(), 35]
+        
+        """list of server in charge of the communication"""
+        self._client_connected = {"server_formation_rate" : [threading.Lock(), None, False],\
+                                 "server_level" : [threading.Lock(), None, False],\
+                                 "server_concentration" : [threading.Lock(), None, False],\
+                                 "server_arduino_order" : [threading.Lock(), None, False]}
+        
+        """list of information asked : name : [lock, state, name_server] """
+        self._information_asked = {"formation_rate" : [threading.Lock(), False,"server_formation_rate" ],\
+                                 "level" : [threading.Lock(), False, "server_level"],\
+                                 "concentration" : [threading.Lock(), False,"server_concentration"]}
+      
         
         """if there is a GUI or not"""
         self.GUI = False 
@@ -83,7 +114,7 @@ class current_state(object):
         self.__setState__()
         #self._check_all_EL()
     
-        #self.client_connected = 
+        #self._client_connected = 
     
     def P_BR1_BU1(self, state):
         name= 'P_BR1_BU1'
@@ -161,6 +192,36 @@ class current_state(object):
         name = 'P_SPECTRO'
         self.set_state_pump( name, state )
           
+    """use this function to set a pump state""" 
+    def set_state_pump(self, name, state ):
+        """action only if new state is different from current state"""
+        if not self.get_state_pump( name) == state:
+            """ask com arduino to set the pump"""
+            order_ok = self.com_arduino.pump_order(name,state)
+            
+            """if com_arduino return True, it means order has been successfully conducted""" 
+            if order_ok :
+                self._set_state_pump(name, state )
+            else : 
+                print("fail to activate or desactivate " + name )
+            
+            
+            self.refresh_windows()
+            
+            
+    def get_state_pump(self, name):
+        self._state_pumps[name][0].acquire()
+        state = self._state_pumps[name][1]
+        self._state_pumps[name][0].release()
+        return state
+    
+    """do not use this function from outside"""
+    def _set_state_pump(self, name, state ):
+        self._state_pumps[name][0].acquire()
+        self._state_pumps[name][1] = state
+        self._state_pumps[name][0].release()
+        
+    """ACTION"""
     def AQ_filtration(self, state):
         """to filter the aquarium"""
         name = "AQ_filtration"
@@ -200,28 +261,9 @@ class current_state(object):
         """to fill AQ with BU3"""
         name = "empty_BU3_S"
         self.set_current_action(name, state)
-        
-        
-    """Order to liftDown and liftUp, screenDown and screenUp"""
-    def liftDown(self):
-        print("LiftDown")
-
-    def liftUp(self):
-        print("liftUp")
-
-    def screenDown(self):
-        print("screenDown")
-
-    def screenUp(self):
-        print("screenUp")
-    
-    
-    """do not use this function"""       
-    def _set_current_action(self, name, state):
-        self._current_action[name][0].acquire()
-        self._current_action[name][1] = state
-        self._current_action[name][0].release()
-        
+      
+    """use this function to launch an action :    
+    action possible : ..."""
     def set_current_action(self, name, state):
         """check if there is no action running"""
         b = True
@@ -298,20 +340,152 @@ class current_state(object):
                         self._set_current_action("empty_BU3_S",False)
         else : 
             print(name + " to "+ str(state) + " impossible : already a task running")                
-        
     
     """do not use this function"""       
-    def _set_current_action_evolved(self, name, state):
-        self._current_action_evolved[name][0].acquire()
-        self._current_action_evolved[name][1] = state
-        self._current_action_evolved[name][0].release()
+    def _set_current_action(self, name, state):
+        self._current_action[name][0].acquire()
+        self._current_action[name][1] = state
+        self._current_action[name][0].release()
     
-    def get_current_action_evolved(self, name):
-        self._current_action_evolved[name][0].acquire()
-        state = self._current_action_evolved[name][1]
-        self._current_action_evolved[name][0].release()
+    def get_current_action(self, name):
+        self._current_action[name][0].acquire()
+        state = self._current_action[name][1]
+        self._current_action[name][0].release()
+        return state   
+    
+    """LIFT ORDERS"""   
+    """Order to liftDown and liftUp, screenDown and screenUp"""
+    
+    def liftDown(self):
+        print("lift_down")
+        self.set_current_action_lift_screen("lift_down")
+
+    def liftUp(self):
+        print("lift_up")
+        self.set_current_action_lift_screen("lift_up")
+
+    def screenDown(self):
+        print("screen_down")
+        self.set_current_action_lift_screen("screen_down")
+
+    def screenUp(self):
+        print("screen_up")
+        self.set_current_action_lift_screen("screen_up")
+    
+    def set_current_action_lift_screen(self, name):
+        """checking if there is not already a task runnig on this arduino"""
+        b = True
+        for item in self._current_action_lift_screen : 
+            if not item == name :  
+                if self.get_current_action_lift_screen(item) : 
+                    b = False
+        """if there is no action running"""
+        if b : 
+            if name == "lift_down": 
+                self.com_arduino.liftDown()
+            elif name == "lift_up": 
+                self.com_arduino.liftUp()  
+            elif name == "screen_down": 
+                self.com_arduino.screenDown() 
+            elif name == "screen_up": 
+                self.com_arduino.screenUp() 
+                  
+            
+
+        
+    """do not use this function"""       
+    def _set_current_action_lift_screen(self, name, state):
+        self._current_action_lift_screen[name][0].acquire()
+        self._current_action_lift_screen[name][1] = state
+        self._current_action_lift_screen[name][0].release()
+    
+    def get_current_action_lift_screen(self, name):
+        self._current_action_lift_screen[name][0].acquire()
+        state = self._current_action_lift_screen[name][1]
+        self._current_action_lift_screen[name][0].release()
+        return state   
+    
+    """LIGHT """
+    
+    def set_current_light_state(self, name, state,):
+        """if different from current state"""
+        if not self.get_current_light_state(name) == state : 
+            """checking if there is not already a task runnig on this arduino"""
+            if name == "spectro_light": 
+                self.com_arduino.spectro_light(state)
+                self._set_current_light_state(name, state)
+                
+    
+    """do not use this function"""       
+    def _set_current_light_state(self, name, state):
+        self._current_light_state[name][0].acquire()
+        self._current_light_state[name][1] = state
+        self._current_light_state[name][0].release()
+    
+    def get_current_light_state(self, name):
+        self._current_light_state[name][0].acquire()
+        state = self._current_light_state[name][1]
+        self._current_light_state[name][0].release()
+        return state   
+    
+    """SECURITY CHECKING"""
+
+    """set the checking to True or False : security system name : 
+        - EL_max"""       
+    def set_security_checking(self, name, state):
+        """if state asked is different from current_state"""
+        if not self.get_security_checking(name) == state : 
+            """start"""
+            if state : 
+                self.security_EL.lock_start.release()
+                self._set_security_checking(name, True)
+                """stop"""
+            else : 
+                self.security_EL.lock_start.acquire()
+                self._set_security_checking(name, False)
+                
+    """do not use this function"""       
+    def _set_security_checking(self, name, state):
+        self._security_checking[name][0].acquire()
+        self._security_checking[name][1] = state
+        self._security_checking[name][0].release()
+    
+    def get_security_checking(self, name):
+        self._security_checking[name][0].acquire()
+        state = self._security_checking[name][1]
+        self._security_checking[name][0].release()
         return state
     
+    """SPECTRO"""
+    def set_current_spectro_state(self, name, state,):
+        """if different from current state"""
+        if not self.get_current_spectro_state(name) == state : 
+            
+            """checking if there is not already a task runnig on this arduino"""
+            if name == "spectro": 
+                self.set_current_light_state("spectro_light", state)
+                self.set_state_pump("P_SPECTRO", state)
+                self._set_current_spectro_state(name, state)
+    
+    
+            
+            
+    """do not use this function"""       
+    def _set_current_spectro_state(self, name, state):
+        self._current_spectro_state[name][0].acquire()
+        self._current_spectro_state[name][1] = state
+        self._current_spectro_state[name][0].release()
+    
+    def get_current_spectro_state(self, name):
+        self._current_spectro_state[name][0].acquire()
+        state = self._current_spectro_state[name][1]
+        self._current_spectro_state[name][0].release()
+        return state   
+    
+    """EVOLVED ACTION""" 
+    
+    """use this function to launch an evolved action :    
+    action possible : ..."""
     def set_current_action_evolved(self, name, state):
         """check if there is no action running"""
         b = True
@@ -362,44 +536,22 @@ class current_state(object):
         else : 
             print("already a evolved task running")   
         
-        
-    def get_current_action(self, name):
-        self._current_action[name][0].acquire()
-        state = self._current_action[name][1]
-        self._current_action[name][0].release()
-        return state
-        
+    """do not use this function"""       
+    def _set_current_action_evolved(self, name, state):
+        self._current_action_evolved[name][0].acquire()
+        self._current_action_evolved[name][1] = state
+        self._current_action_evolved[name][0].release()
+    
+    def get_current_action_evolved(self, name):
+        self._current_action_evolved[name][0].acquire()
+        state = self._current_action_evolved[name][1]
+        self._current_action_evolved[name][0].release()
+        return state   
 
-    def get_state_pump(self, name):
-        self._state_pumps[name][0].acquire()
-        state = self._state_pumps[name][1]
-        self._state_pumps[name][0].release()
-        return state
     
-    """do not use this function from outside"""
-    def _set_state_pump(self, name, state ):
-        self._state_pumps[name][0].acquire()
-        self._state_pumps[name][1] = state
-        self._state_pumps[name][0].release()
-    """use this function to set a pump state"""
     
-    def set_state_pump(self, name, state ):
-        """action only if new state is different from current state"""
-        if not self.get_state_pump( name) == state:
-            """ask com arduino to set the pump"""
-            order_ok = self.com_arduino.pump_order(name,state)
-            
-            """if com_arduino return True, it means order has been successfully conducted""" 
-            if order_ok :
-                self._set_state_pump(name, state )
-            else : 
-                print("fail to activate or desactivate " + name )
-            
-            
-            self.refresh_windows()
-            #for item in self._occupied_volume : 
-                #print(item + " " + str(self.get_occupied_volume(item)))
     
+    """VOLUME"""
     def get_occupied_volume(self, name):
         self._occupied_volume[name][0].acquire()
         v = self._occupied_volume[name][1]
@@ -416,10 +568,9 @@ class current_state(object):
         #print("daz" + name + " " + str(v))
         #print (name + " set to " + str(v))
         self.refresh_windows()
-  
         
-        return bool
-      
+
+    """CONCENTRATION"""  
     def get_concentration(self, container_name):
         """get the AQ_concentration"""
         self._concentration[container_name][0].acquire()
@@ -435,7 +586,21 @@ class current_state(object):
         
         print( "concentration" + container_name + "set to " + str(value) )
         
+      
+    """ELECTRODES""" 
+    
+    """get state EL from arduino and set it in _state_EL"""
+    def get_state_EL(self,name_container, name_EL): 
+        """after each call to this function : be sure that it is different from NULL"""
+        state = self.com_arduino.EL_read(name_container, name_EL)
+        """if NULL, EL not connected"""
         
+        """f state == NULL, do not updtate _EL_state"""
+        if not state == "NULL" : 
+            self._set_state_EL(name_container, name_EL, state)
+        
+        return state
+     
     """do not use this function"""
     def _set_state_EL(self,name_container, name_EL, state):
         """name_container : AQ , name_EL : HIGH"""
@@ -452,66 +617,168 @@ class current_state(object):
         
         """return the value stocked in _state_EL without asking it to the arduino"""
     
-    """do not use this function"""
+    """do not use this function, use get_state_EL"""
     def _get_state_EL(self,name_container, name_EL):
         self._state_EL[name_container][name_EL][0].acquire()
         state = self._state_EL[name_container][name_EL][1]
         self._state_EL[name_container][name_EL][0].release() 
         return state
     
-    """get state EL from arduino and set it in _state_EL"""
-    def get_state_EL(self,name_container, name_EL): 
-        """after each call to this function : be sure that it is different from NULL"""
-        state = self.com_arduino.EL_read(name_container, name_EL)
-        """if NULL, EL not connected"""
-        
-        self._set_state_EL(name_container, name_EL, state)
-        return state
-        
-    """function to call each time something changes"""     
-    def refresh_windows(self):
-        if self.GUI :
-            delta = time.time() -self.last_time
-            if delta > 0.01 :
-                """refresh the GUI"""
-                #add in the thread of Tkinter the draw function
-                #self.window.after(0,self.window.refresh)
-                #self.window.after(0,self.window.refresh)
-                #self.window.visual_feedback.after_idle(self.window.visual_feedback.draw)
-                self.last_time = time.time()
-        
-                print("refresh") 
-            
-            #for item in self._state_pumps : 
-                #print(self.get_state_pump(item))
-            
-        
-    def set_BRBU_state(self, BU, state):
+    """check all the EL and set their state to their current state"""       
+    def _check_all_EL(self):    
+        for name_container in self._state_EL : 
+            """name_container is for ex : "AQ" """
+            for name_EL in self._state_EL[name_container] : 
+                """name_EL is for ex "HIGH" """
+                """if name container is not already in _state_EL, creation of a dictionnary at this key"""
+                if not name_container in self._state_EL : 
+                    self._state_EL[name_container] = {}
+                self._state_EL[name_container][name_EL][1] = self.com_arduino.EL_read(name_container, name_EL)
+    
+    def print_all_EL(self):
+        """refresh all EL before printing them"""
+        self._check_all_EL()
+        print ("EL state : ")
+        for item in self._state_EL : 
+            for i in self._state_EL[item] : 
+                print("EL  : "  + item + " : " + i + " : " + str(self._state_EL[item][i][1]))
+    
+        print("\n")
+    
+    """INFORMATION ASKED"""
+    
+    """use this function to ask information"""
+    def set_information_asked(self, name, state):
         """set the state of BU"""
-        self._BRBU_state[BU][0].acquire()
-        self._BRBU_state[BU][1] = state
-        self._BRBU_state[BU][0].release()
+        """if asked different from current state"""
+        if not self.get_information_asked(name) == state : 
+            """checking if the client is connected"""
+            server_name = self.get_information_asked_server(name)
+            if self.get_client_connected_state(server_name) :
+                """if OK"""
+                self.get_client_connected(server_name).ask_information(state)
+                self._set_information_asked(name, state)
+            else : 
+                print("information asked : " + name + " " + str(state) + " failed : " +  server_name + " not connected") 
+            
         
-    def get_BRBU_state(self, BU):
+    """do not use this function"""
+    def _set_information_asked(self, name, state):
+        """set the state of information aksed"""
+        self._information_asked[name][0].acquire()
+        self._information_asked[name][1] = state
+        self._information_asked[name][0].release()
+        
+    """get the state of information aksed :formation_rate, level, concentration """   
+    def get_information_asked(self, name):
+        self._information_asked[name][0].acquire()
+        state = self._information_asked[name][1]
+        self._information_asked[name][0].release()
+        return state
+
+    """get the name of the server associated to the information aksed  """   
+    def get_information_asked_server(self, name):
+        self._information_asked[name][0].acquire()
+        n = self._information_asked[name][2]
+        self._information_asked[name][0].release()
+        return n
+     
+    """BU_STATE""" 
+    
+    """set the state of each BU : WAIT, USE, EMPTY, or NULL if no status"""  
+    def set_BU_state(self, BU, state):
         """set the state of BU"""
-        self._BRBU_state[BU][0].acquire()
-        state = self._BRBU_state[BU][1]
-        self._BRBU_state[BU][0].release()
+        self._BU_state[BU][0].acquire()
+        self._BU_state[BU][1] = state
+        self._BU_state[BU][0].release()
+    
+    """get the state of BU"""    
+    def get_BU_state(self, BU):
+        self._BU_state[BU][0].acquire()
+        state = self._BU_state[BU][1]
+        self._BU_state[BU][0].release()
         return state
     
-    def set_BRBU_controller_state(self, state) : 
-        self._BRBU_controller_state[0].acquire()
-        self.BRBU_controller.set_stop_start(not state)
-        self._BRBU_controller_state[1] = state 
-        self._BRBU_controller_state[0].release()
+    """BRBU_COTROLLER"""
     
-    def get_BRBU_controller_state(self):
-        self._BRBU_controller_state[0].acquire()
-        state =  self._BRBU_controller_state[1] 
-        self._BRBU_controller_state[0].release()
+    
+    """Use it to start/stop or pause/restart a cycle of BRBU : 
+    type : run, pause """
+    def set_BRBU_controller_state(self, type,  state) : 
+        """if not already in the same state"""
+        if not self.get_BRBU_controller_state(type) == state :
+            if type == "run" : 
+                """get out from pause mode"""
+                self.set_BRBU_controller_state("pause",False)
+                
+                """start"""
+                if state : 
+                    """set self.stop to False, in order to pursue """
+                    self._set_BRBU_controller_state("run", True)
+                    self.BRBU_controller._reset_time()
+                    self.BRBU_controller.lock_start.release()
+    
+                    """Stop"""   
+                else : 
+                    self._set_BRBU_controller_state("run",False)
+                    self.BRBU_controller._reset_time()
+                    
+            if type == "pause" :
+                """if not stopped"""
+                if self.get_BRBU_controller_state("run") : 
+                    """if order different from current state"""
+                    
+                    if state == True : 
+                        """get in the mode pause"""
+                        self.BRBU_controller._lock_pause.acquire()
+                        self._set_BRBU_controller_state("pause",True)
+                    
+                        """if False : get out from the pause"""
+                    else : 
+                        self.BRBU_controller._lock_pause.release()
+                        self._set_BRBU_controller_state("pause",False)
+    
+    """do not use this function"""
+    def _set_BRBU_controller_state(self, type, state) : 
+        self._BRBU_controller_state[type][0].acquire()
+        self._BRBU_controller_state[type][1] = state 
+        self._BRBU_controller_state[type][0].release()
+    
+    """get the status of  BRBU_controller : True if cycle is running, false otherwise : 
+    initial condition : """
+    def get_BRBU_controller_state(self, type):
+        self._BRBU_controller_state[type][0].acquire()
+        state =  self._BRBU_controller_state[type][1] 
+        self._BRBU_controller_state[type][0].release()
         return state
     
+    """CLIENT CONNECTED"""
     
+    """set the state of a server"""
+    def set_client_connected_state(self, type, state) : 
+        self._client_connected[type][0].acquire()
+        self._client_connected[type][2] = state 
+        self._client_connected[type][0].release()
+    """set the actual server"""
+    def set_client_connected(self, type, server) : 
+        self._client_connected[type][0].acquire()
+        self._client_connected[type][1] = server 
+        self._client_connected[type][0].release()
+    
+    """get the actual server"""""
+    def get_client_connected(self, type):
+        self._client_connected[type][0].acquire()
+        server =  self._client_connected[type][1] 
+        self._client_connected[type][0].release()
+        return server
+    """set the status server"""
+    def get_client_connected_state(self, type):
+        self._client_connected[type][0].acquire()
+        state =  self._client_connected[type][2] 
+        self._client_connected[type][0].release()
+        return state
+    
+    """FORMATION RATE"""
     def get_formation_rate(self):
         """get the value of formation_rate"""
         self._formation_rate[0].acquire()
@@ -524,6 +791,35 @@ class current_state(object):
         self._formation_rate[0].acquire()
         self._formation_rate[1] = value
         self._formation_rate[0].release()
+    
+    
+    
+    
+    
+    """EMERGENCY ACTIONS"""
+    
+    
+    
+    """kill all action running, st all pump to false"""          
+    def kill_all(self):
+        
+        self.set_BRBU_controller_state("run",False)
+        
+        for item in self._current_action_evolved : 
+            self.set_current_action_evolved(item, False)
+        
+        for item in self._current_action : 
+            self.set_current_action(item, False)
+        
+        """set all the pump to false"""
+        for item in self._state_pumps : 
+            self.set_state_pump(item, False)
+        
+        for item in self._current_light_state : 
+            self.set_current_light_state(item, False)
+            
+        for item in self._current_spectro_state : 
+            self.set_current_spectro_state(item, False)
     
     """not good solution, all action have to be listed in current_action in order to be stoped"""
     def set_keep_going(self, state):
@@ -545,15 +841,16 @@ class current_state(object):
         value = self._keep_going[1] 
         self._keep_going[0].release()
         return value
-    
-    
+
     """set all action to False"""
     def stop_action(self):
         """rq : not used"""
         print ("Actions Stopped") 
         for item in self._current_action : 
             self.set_current_action(item, False)
+            
     
+    """READING CONFIGURATIONS SCRIPTS"""
     """ Set the states to the right values according to the log_start.txt file """
     def __setState__(self):
             # Open the file
@@ -603,35 +900,13 @@ class current_state(object):
                         self._state_EL[name_container][name_EL] = [threading.Lock(),self.com_arduino.EL_read(name_container, name_EL),float(level_ref) ]
     
     
-    """check all the EL and set their state to their current state"""       
-    def _check_all_EL(self):    
-        for name_container in self.com_arduino.the_EL : 
-            """name_container is for ex : "AQ" """
-            for name_EL in self.com_arduino.the_EL[name_container] : 
-                """name_EL is for ex "HIGH" """
-                """if name container is not already in _state_EL, creation of a dictionnary at this key"""
-                if not name_container in self._state_EL : 
-                    self._state_EL[name_container] = {}
-                self._state_EL[name_container][name_EL][1] = self.com_arduino.EL_read(name_container, name_EL)
     
-    """kill all action running, st all pump to false"""          
-    def kill_all(self):
-        
-        self.set_BRBU_controller_state(False)
-        
-        for item in self._current_action_evolved : 
-            self.set_current_action_evolved(item, False)
-        
-        for item in self._current_action : 
-            self.set_current_action(item, False)
-        
-        """set all the pump to false"""
-        for item in self._state_pumps : 
-            self.set_state_pump(item, False)
+                
+    
             
                 
         
-    
+    """SETTING OBJECT IN ATTRIBUTE"""
     """set the server to current_state"""
     def set_server(self, un_server):
         self.server = un_server
@@ -646,11 +921,26 @@ class current_state(object):
         
     def set_security_EL(self, un_security_EL):
         self.security_EL = un_security_EL
+        
+    def set_config_manager(self, a_config_manager):
+        self.config_manager = a_config_manager
     
-    def print_all_EL(self):
-        for item in self._state_EL : 
-            for i in self._state_EL[item] : 
-                print(item + "_" + i + " : " + str(self._state_EL[item][i][1]))
+    """function to call each time something changes"""     
+    def refresh_windows(self):
+        if self.GUI :
+            delta = time.time() -self._GUI_last_time
+            if delta > 0.01 :
+                """refresh the GUI"""
+                #add in the thread of Tkinter the draw function
+                #self.window.refresh()
+                #self.window.after(0,self.window.refresh)
+                #self.window.visual_feedback.after_idle(self.window.visual_feedback.draw)
+                self._GUI_last_time = time.time()
+        
+                #print("refresh") 
+            
+            #for item in self._state_pumps : 
+                #print(self.get_state_pump(item)) 
         
         
 

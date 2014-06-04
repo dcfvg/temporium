@@ -2,16 +2,19 @@
 
 import serial
 import threading
+from arduino.arduino_alive_thread import *
 
+"""/!\ arduino_alive_thread launch at the end of output, make sure to launch it otherwose the arduino will keep stopping"""
 
 class arduino_mega(object):
 
     __OUTPUT_PINS = -1
 
-    def __init__(self, port, baudrate=115200):
+    def __init__(self, port, a_com_arduino, baudrate=115200):
         self.serial = serial.Serial(port, baudrate)
         self.serial.write(bytearray('99','utf-8'))
         
+        self.com_arduino = a_com_arduino
         """to secure the access to the arduino to only one person at the same time"""
         self.lock = threading.Lock()
  
@@ -32,6 +35,10 @@ class arduino_mega(object):
                 
         """release access to the arduino"""
         self.lock.release()
+        
+        """after having set the output, launch arduin_alive_thread"""
+        self.arduino_alive_thread = arduino_alive_thread(self) 
+        
         return True
 
     def setLow(self, pin):
@@ -105,6 +112,13 @@ class arduino_mega(object):
         """release access to the arduino"""
         self.lock.release()
         return True
+    
+    """signal to send every 5 sec to inform the arduino that life_controller is alive, otherwise, the rduino set all his pin to false"""
+    def alive(self):
+        self.lock.acquire()
+        self.__sendData('5')
+        self.lock.release()
+        
 
     def __sendData(self, serial_data):
         while(self.__getData()[0] != "w"):

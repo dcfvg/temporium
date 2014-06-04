@@ -16,7 +16,7 @@ class visual_feedback(Canvas):
     
     def __init__(self, parent, current_state):
         
-        Canvas.__init__(self, parent, width=700, height=800)
+        Canvas.__init__(self, parent, width=500, height=600)
         self.parent = parent
         self.pack(side=RIGHT,  fill=NONE, expand=1)
         self.update()
@@ -28,12 +28,14 @@ class visual_feedback(Canvas):
         self.container_position = {"M1" : [0.02, 0], "M2" : [0.68, 0],\
                                     "BR1" : [0.02, 0.16+0.05],"BR2" : [0.22, 0.16+0.05],"BR3" : [0.42, 0.16+0.05],\
                                     "BU1" : [0.02, 2*(0.16+0.05)],"BU2" : [0.22, 2*(0.16+0.05)],"BU3" : [0.42,2*(0.16+0.05)],\
-                                    "AQ" : [0.2, 3*(0.16+0.05)], "S" : [0.2, 4*(0.16+0.05)], "FI" : [0.8, 3*(0.16+0.05)-0.05/2]}
+                                    "AQ" : [0.2, 3*(0.16+0.05)], "S" : [0.2, 4*(0.16+0.05)], "FI" : [0.8, 3*(0.16+0.05)-0.05/2],\
+                                    "SPECTRO" : [0.1, 3*(0.16+0.05)+0.16/2]}
         
         self.container_dimension = {"M1" : [0.3, 0.16], "M2" : [0.3, 0.16],\
                                     "BR1" : [0.1, 0.16],"BR2" : [0.1, 0.16],"BR3" : [0.1, 0.16],\
                                     "BU1" : [0.1, 0.16],"BU2" : [0.1, 0.16],"BU3" : [0.1, 0.16],\
-                                    "AQ" : [0.5, 0.16], "S" : [0.2, 0.16] , "FI" :[0.3, 0.16]}
+                                    "AQ" : [0.5, 0.16], "S" : [0.2, 0.16] , "FI" :[0.3, 0.16],\
+                                    "SPECTRO" : [0.05, 0.05]}
         """pumps: {"P_M1_BR1" :[position, position_container_from, position_container_in]"""
         self.pumps_positions = {"P_M1_BR1" : [[0.02, 0.16 + 0.05/2], self.container_position["M1"],self.container_position["BR1"]],\
                                 "P_M1_BR2" : [[0.22, 0.16 + 0.05/2], self.container_position["M1"],self.container_position["BR2"]],\
@@ -52,13 +54,14 @@ class visual_feedback(Canvas):
                                 "P_AQ_FI" : [[0.8, 4*(0.16+0.05)-0.05/2],[self.container_position["AQ"][0] +self.container_dimension["AQ"][0], self.container_position["AQ"][1] +self.container_dimension["AQ"][1]] ,[self.container_position["FI"][0],self.container_position["FI"][1]+self.container_dimension["FI"][1] ] ],\
                                 "P_FI_AQ_3" : [[0.8, 3*(0.16+0.05)-0.05/2],self.container_position["FI"] ,self.container_position["AQ"]],\
                                 "P_FI_AQ_1" : [[0.8, 3*(0.16+0.05)-0.05/4],self.container_position["FI"] ,self.container_position["AQ"]],\
-                                "P_FI_S" : [[0.8, 4*(0.16+0.05)-0.05/4],self.container_position["FI"] ,self.container_position["S"]]}
+                                "P_FI_S" : [[0.8, 4*(0.16+0.05)-0.05/4],self.container_position["FI"] ,self.container_position["S"]],\
+                                "P_SPECTRO" : [[0.1, 3*(0.16+0.05)],self.container_position["AQ"] ,[self.container_position["AQ"][0],self.container_position["AQ"][1] + 0.16] ]}
         
         self.containers = dict()
         self.pumps = dict()
 
         
-        self.bind("<Configure>", self.resize)
+        #self.bind("<Configure>", self.resize)
         
         
         

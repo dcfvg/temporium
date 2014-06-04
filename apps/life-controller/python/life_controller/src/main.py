@@ -7,29 +7,51 @@ Created on 9 mai 2014
 from GUI.window import *
 from current_state import *
 from com_arduino import *
-from communication.server import *
+from communication.TCP.server import *
 from BRBU_controller import *
 from seance_controller import *
 from BRBU_controller import *
 from security_EL import *
+from config_manager import *
+from current_state_order import *
+import sys
 
 if __name__ == "__main__":
-    co_ard = com_arduino()
+    """test must be set to False when using with terminal mode"""
+    test = False
+    for i in sys.argv : 
+        if i.strip() == "test" : 
+            test = True
+    
+    co_ard = com_arduino(test)
     cu_state = current_state(co_ard)
+    co_ard.set_current_state(cu_state)
+    co_ard.__readPin__()
     le_server = server('',8000,cu_state)
     BRBU_cont = BRBU_controller(cu_state)
-    w = window(None, cu_state)
-    cu_state.set_windows(w)
+    
+    config_m = config_manager(cu_state)
+    
+    
+    cu_state.set_config_manager(config_m)
     cu_state.set_BRBU_controller(BRBU_cont)
+    cu_state.set_server(le_server)
     #se = seance_controller(cu_state)
     
-    cu_state.set_server(le_server)
+    
 
     le_server.start()
     BRBU_cont.start()
     s = security_EL(cu_state)
     cu_state.set_security_EL(s)
     
-    w.mainloop()
+    """will be an option later"""
+    GUI = True
+    if GUI : 
+        current_state_o = current_state_order(cu_state)
+        w = window(None, cu_state,current_state_o )
+        cu_state.set_windows(w)
+        w.title("Temporium : Beta")
+        w.mainloop()
 
     

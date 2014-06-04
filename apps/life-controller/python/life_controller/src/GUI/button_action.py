@@ -21,7 +21,7 @@ class button_action(Frame):
 
         self.frame_button = Frame(self)
        # self.frame_button_state = Frame(self)
-        self.current_state = parent.current_state
+        self.current_state = self.parent.parent.parent.current_state
         
         self.spectro_test = False
         
@@ -119,7 +119,7 @@ class button_action(Frame):
         #self.button.pack(side="right")
         
         
-        self.bind("<Configure>", self.update())
+        #self.bind("<Configure>", self.update())
         
         self.frame_button.pack(side = "left", fill=NONE, expand=1)
         #self.frame_button_state.pack(side = "right",fill=NONE, expand=1)

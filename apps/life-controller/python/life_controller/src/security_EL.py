@@ -18,103 +18,102 @@ class security_EL(threading.Thread):
         threading.Thread.__init__(self)
 
         self.current_state = a_current_state
-
-        """stop the cycle, False : not stopped"""
-        self._stop = [threading.Lock(), True]
         
         """time between two check"""
         self.time_laps = 1
+        
+        """set to True if there is a pb"""
+        self.boiling_over = False
+        """lock to start/stop the thread"""
+        self.lock_start = threading.Lock()
+        self.lock_start.acquire()
         
         self.start()
         
         
     def run(self):
         while True :
-            while not self.get_stop() :
-                name = "BR1"
-                if not self.current_state.get_state_EL(name,"MAX") =="NULL" :
-                    if self.current_state.get_state_EL(name,"MAX") : 
-                        print ("WARNING : " +name+ " boiled over ")
-                        self.action_emergency()
-                else : 
-                    print ("El " + name + " MAX not connected")
-                
-                name = "BR2"
-                if not self.current_state.get_state_EL(name,"MAX") =="NULL" :
-                    if self.current_state.get_state_EL(name,"MAX") : 
-                        print ("WARNING : " +name+ " boiled over ")
-                        self.action_emergency()
-                else : 
-                    print ("El " + name + " MAX not connected")
-                
-                name = "BR3"
-                if not self.current_state.get_state_EL(name,"MAX") =="NULL" :
-                    if self.current_state.get_state_EL(name,"MAX") : 
-                        print ("WARNING : " +name+ " boiled over ")
-                        self.action_emergency()
-                else : 
-                    print ("El " + name + " MAX not connected")
-                
-                name = "BU1"
-                if not self.current_state.get_state_EL(name,"MAX") =="NULL" :
-                    if self.current_state.get_state_EL(name,"MAX") : 
-                        print ("WARNING : " +name+ " boiled over ")
-                        self.action_emergency()
-                else : 
-                    print ("El " + name + " MAX not connected")
-                
-                name = "BU2"
-                if not self.current_state.get_state_EL(name,"MAX") =="NULL" :
-                    if self.current_state.get_state_EL(name,"MAX") : 
-                        print ("WARNING : " +name+ " boiled over ")
-                        self.action_emergency()
-                else : 
-                    print ("El " + name + " MAX not connected")
-                
-                name = "BU3"
-                if not self.current_state.get_state_EL(name,"MAX") =="NULL" :
-                    if self.current_state.get_state_EL(name,"MAX") : 
-                        print ("WARNING : " +name+ " boiled over ")
-                        self.action_emergency()
-                else : 
-                    print ("El " + name + " MAX not connected")
-                
-                name = "AQ"
-                if not self.current_state.get_state_EL(name,"MAX") =="NULL" :
-                    if self.current_state.get_state_EL(name,"MAX") : 
-                        print ("WARNING : " +name+ " boiled over ")
-                        self.action_emergency()
-                else : 
-                    print ("El " + name + " MAX not connected")
-                    
-                time.sleep(self.time_laps)
             
+            self.lock_start.acquire()
+            """no probleme at the beginning"""
+            self.boiling_over = False
+            
+            name = "BR1"
+            if not self.current_state.get_state_EL(name,"MAX") =="NULL" :
+                if self.current_state.get_state_EL(name,"MAX") : 
+                    print ("WARNING : " +name+ " boiled over ")
+                    """there is a pb"""
+                    self.boiling_over = True
+            else : 
+                print ("El " + name + " MAX not connected")
+            
+            name = "BR2"
+            if not self.current_state.get_state_EL(name,"MAX") =="NULL" :
+                if self.current_state.get_state_EL(name,"MAX") : 
+                    print ("WARNING : " +name+ " boiled over ")
+                    """there is a pb"""
+                    self.boiling_over = True
+            else : 
+                print ("El " + name + " MAX not connected")
+            
+            name = "BR3"
+            if not self.current_state.get_state_EL(name,"MAX") =="NULL" :
+                if self.current_state.get_state_EL(name,"MAX") : 
+                    print ("WARNING : " +name+ " boiled over ")
+                    """there is a pb"""
+                    self.boiling_over = True
+            else : 
+                print ("El " + name + " MAX not connected")
+            
+            name = "BU1"
+            if not self.current_state.get_state_EL(name,"MAX") =="NULL" :
+                if self.current_state.get_state_EL(name,"MAX") : 
+                    print ("WARNING : " +name+ " boiled over ")
+                    """there is a pb"""
+                    self.boiling_over = True
+            else : 
+                print ("El " + name + " MAX not connected")
+            
+            name = "BU2"
+            if not self.current_state.get_state_EL(name,"MAX") =="NULL" :
+                if self.current_state.get_state_EL(name,"MAX") : 
+                    print ("WARNING : " +name+ " boiled over ")
+                    """there is a pb"""
+                    self.boiling_over = True
+            else : 
+                print ("El " + name + " MAX not connected")
+            
+            name = "BU3"
+            if not self.current_state.get_state_EL(name,"MAX") =="NULL" :
+                if self.current_state.get_state_EL(name,"MAX") : 
+                    print ("WARNING : " +name+ " boiled over ")
+                    """there is a pb"""
+                    self.boiling_over = True
+            else : 
+                print ("El " + name + " MAX not connected")
+            
+            name = "AQ"
+            if not self.current_state.get_state_EL(name,"MAX") =="NULL" :
+                if self.current_state.get_state_EL(name,"MAX") : 
+                    print ("WARNING : " +name+ " boiled over ")
+                    """there is a pb"""
+                    self.boiling_over = True
+            else : 
+                print ("El " + name + " MAX not connected")
+            
+            self.lock_start.release()
+            
+            """if there has been a pb : """
+            if self.boiling_over : 
+                self.action_emergency()
+                
             time.sleep(self.time_laps)
         
-        
-        
-    """return the value of self.stop"""
-    def get_stop(self):
 
-        self._stop[0].acquire()
-        state = self._stop[1]
-        self._stop[0].release()
-        return state
-    
-    """set state to stop, will interrupt the cycle of checking security EL """
-    def set_stop(self, state):
-            
-        self._stop[0].acquire()
-        self._stop[1] = state 
-        self._stop[0].release()
-        
-        if state : 
-            print("Checking security EL : stop") 
-        else : 
-            print("Checking security EL : start")
-    
+    """action to do in case of emergency probleme"""
     def action_emergency(self):
-        self.set_stop(True)
+        """disable checking securtity EL to resolve the probleme"""  
+        self.current_state.set_security_checking("EL_max", False)
         self.current_state.kill_all()
         
            

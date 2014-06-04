@@ -5,8 +5,8 @@ Created on 10 mai 2014
 '''
 from pythonosc import osc_message_builder
 from pythonosc import udp_client
-from communication.client_OSC_seance import * 
-from communication.server_OSC_seance import *
+from communication.OSC.client_OSC_seance import * 
+from communication.OSC.server_OSC_seance import *
 from com_arduino import *
 from current_state import *
 from starting_capture import *
@@ -33,7 +33,7 @@ class seance_controller(threading.Thread):
        
         
         """information about the end of the film received"""
-        self.end_received = [threading.Lock(), False]
+        self._end_film = [threading.Lock(), False]
         
         """at the beginning : 
         - create client, create server
@@ -64,7 +64,7 @@ class seance_controller(threading.Thread):
         """while film not end or timeout = 40 min """
         self.set_end_film(False)
         
-        while not self.get_end_received() or compt > 1200:
+        while not self.get_end_film() or compt > 1200:
             time.sleep(2)
             compt= compt + 1
         
@@ -96,18 +96,18 @@ class seance_controller(threading.Thread):
         self._send_formation_rate_state[1] = state
         self._send_formation_rate_state[0].release()
     
-    def get_end_received(self):
+    def get_end_film(self):
         """return en_received"""
-        self.end_received[0].acquire()
-        state = self.end_received[1]
-        self.end_received[0].release()
+        self._end_film[0].acquire()
+        state = self._end_film[1]
+        self._end_film[0].release()
         return state
     
     def set_end_film(self, state):
-        """set end_received"""
-        self.end_received[0].acquire()
-        self.end_received[1] = state
-        self.end_received[0].release()
+        """set _end_fil"""
+        self._end_film[0].acquire()
+        self._end_film[1] = state
+        self._end_film[0].release()
         
     
 

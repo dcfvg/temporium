@@ -14,6 +14,7 @@ occupied_volume : BU3 : 0.3
 occupied_volume : AQ : 1
 occupied_volume : S : 0 
 occupied_volume : FI : 0
+occupied_volume : SPECTRO : 1
 comments : indiquer ou sont place les electrodes en volume, car met a jour le volume dans currentstate. 
 EL : BR1 : MAX : 1.1
 EL : BR2 : MAX : 1.1

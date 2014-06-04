@@ -20,7 +20,7 @@ class com_arduino(object):
     '''
  
  
-    def __init__(self):
+    def __init__(self, test):
         '''
         Constructor
       
@@ -41,15 +41,10 @@ class com_arduino(object):
         """for simulation and testing"""
          
         """do not try to connect with Arduino"""
-        self.test = False
+        self.test = test
          
         """send order received to the client connected"""
         self.server_arduino_order_state = [threading.Lock() , False]
-         
-        
-        
-        self.__setPin__()
-         
          
          
          
@@ -150,7 +145,7 @@ class com_arduino(object):
             else : 
                 print ("arduino_pump not declared/connected")
         """send information to arduino_server"""
-        self.send_server_arduino_order(name, state)
+        self.send_server_arduino_order("PUMP", name, state)
         if state :
             print(name + " HIGH") 
         else :
@@ -158,9 +153,10 @@ class com_arduino(object):
                 
         return True 
     
-    """order to turn on/off the spectro"""
-    def spectro(self, state):
-        name = "SPECTRO"
+    
+    """order to turn on/off the spectro_light"""
+    def spectro_light(self, state):
+        name = "SPECTRO_LIGHT"
         """if not in test mode"""
         if not self.test :
             """if arduino_pump connected"""
@@ -175,7 +171,7 @@ class com_arduino(object):
             else : 
                 print ("arduino_pump not declared/connected")
         """send information to arduino_server"""
-        self.send_server_arduino_order(name, state)
+        self.send_server_arduino_order("LIGHT", name, state)
         if state :
             print(name + " HIGH") 
         else :
@@ -201,72 +197,108 @@ class com_arduino(object):
                         """check the EL"""
                         value = self.the_EL[name_container][name_EL][0].getState(self.the_EL[name_container][name_EL][1])
                         
-                        """set the pin_5V to high"""
+                        """set the pin_5V to low"""
                         self.the_EL[name_container][name_EL][0].setLow(self.the_EL[name_container][name_EL][2])           
+                        
+                        """boolean"""
                         return value
             else : 
-                print ("arduino_EL not declared/connected") 
+                print ("arduino_EL not declared/connected")
+                 
         else : 
-            return "NULL"
+            return self.ask_server_arduino_EL(name_container,name_EL)
+        
             #return False
      
     """Order to liftDown and liftUp, screenDown and screenUp"""
     def liftDown(self):
+        """answer : True if order send to the arduino, false otherwise"""
+        answer = False
         if not self.test : 
             if "arduino_lift" in self.the_arduino : 
                 """send the order to liftdown the lift"""
-                self.the_arduino["arduino_lift"].liftDown()
+                answer = self.the_arduino["arduino_lift"].liftDown()
             else : 
                 print ("arduino_lift not declared/connected")   
         
-        print("LiftDown")
-        return True
+        print("LiftDown asked")
+            
+        return answer
 
     def liftUp(self):
+        """answer : True if order send to the arduino, false otherwise"""
+        answer = False
         if not self.test : 
             if "arduino_lift" in self.the_arduino :
                 """send the order to liftUp the lift"""
-                self.the_arduino["arduino_lift"].liftUp()
+                answer = self.the_arduino["arduino_lift"].liftUp()
             else : 
                 print ("arduino_lift not declared/connected")      
-        print("LiftUp")
-        return True
+        print("LiftUp asked")
+        
+        return answer
 
     def screenDown(self):
+        """answer : True if order send to the arduino, false otherwise"""
+        answer = False
         if not self.test : 
             if "arduino_lift" in self.the_arduino :
                 """send the order to screenDown"""
-                self.the_arduino["arduino_lift"].screenDown()
+                answer = self.the_arduino["arduino_lift"].screenDown()
             else : 
                 print ("arduino_lift not declared/connected")
-        print("screenDown")
-        return True
+        print("screenDown asked")
+        return answer 
 
     def screenUp(self):
+        """answer : True if order send to the arduino, false otherwise"""
+        answer = False
         if not self.test : 
             if "arduino_lift" in self.the_arduino :
                 """send the order to screenDown"""
-                self.the_arduino["arduino_lift"].screenUp()
+                answer = self.the_arduino["arduino_lift"].screenUp()
             else : 
                 print ("arduino_lift not declared/connected")  
-        print("screenUp")
-        return True
+        print("screenUp asked")
+        
+        return answer
     
-    def send_server_arduino_order(self,name, state) : 
-        """send information about order to arduino_client"""
+    """send information about order to arduino_client, like pump, spectro"""
+    def send_server_arduino_order(self, type, name, state) : 
+        
         self.server_arduino_order_state[0].acquire()
         
         if self.server_arduino_order_state[1] : 
             if state : 
-                self.server_arduino_order._send(name + " : HIGH" + "\n")
+                self.server_arduino_order._send(type + " : " + name + " : HIGH" )
             else : 
-                self.server_arduino_order._send(name + " : LOW" + "\n")
+                self.server_arduino_order._send(type + " : " + name + " : LOW")
         
         self.server_arduino_order_state[0].release()  
-
+        
+    
+    def ask_server_arduino_EL(self, name_container, name_EL):
+        #print("information EL asked to arduin_order")
+        self.server_arduino_order_state[0].acquire()
+        answer = "NULL"
+        
+        if self.server_arduino_order_state[1] :  
             
+                self.server_arduino_order._send("EL : " + name_container+ " : "  + name_EL)
+                
+                answer = self.server_arduino_order._answer_EL(name_container, name_EL)
+        self.server_arduino_order_state[0].release()
+        
+        #print("answer : " + str(answer))
+        return answer
+        
+        
+        
+    """set curernt_state as attribut here"""
+    def set_current_state(self, cu_state):
+        self.current_state = cu_state  
             
-    def __setPin__(self):
+    def __readPin__(self):
         """if not in test mode (without arduino connected)"""
         if not self.test  :
             """ Set the pin to the right function according to the log_pin.txt file """
@@ -292,15 +324,15 @@ class com_arduino(object):
                     """Make an arduino with the port from the log_pin.txt file, and put it in the dict() the_arduino
                     arduino_current to associate the pin to the right arduino (the last built arduino )"""
                     if  list[1].strip() == "arduino_pump" :
-                        self.the_arduino[list[1].strip()] = arduino_mega(list[2].strip())
+                        self.the_arduino[list[1].strip()] = arduino_mega(list[2].strip(), self)
                         arduino_current = self.the_arduino[list[1].strip()]
                         print (list[1].strip() +" made on port :" + list[2].strip())
                     elif  list[1].strip() == "arduino_lift" : 
-                        self.the_arduino[list[1].strip()] = arduino_lift(list[2].strip())
+                        self.the_arduino[list[1].strip()] = arduino_lift(list[2].strip(), self)
                         arduino_current = self.the_arduino[list[1].strip()]
                     
                     elif  list[1].strip() == "arduino_EL" :
-                        self.the_arduino[list[1].strip()] = arduino_mega(list[2].strip())
+                        self.the_arduino[list[1].strip()] = arduino_mega(list[2].strip(), self)
                         arduino_current = self.the_arduino[list[1].strip()]
                         print (list[1].strip() +" made on port :" + list[2].strip())
                     
@@ -352,15 +384,19 @@ class com_arduino(object):
             for ard in self.pin_array_output :
                 print(self.pin_array_output[ard])
                 ard.output(self.pin_array_output[ard])
-                
+    
+    """set the state of the serv_arduino_order"""  
+    def set_server_arduino_order_state(self, state):
+        self.server_arduino_order_state[0].acquire()
+        self.server_arduino_order_state[1] = state
+        self.server_arduino_order_state[0].release()
+    
+    
        
     def set_server_arduino_order(self, server_arduino_order):
-         
         """set the server_arduino_order"""
         self.server_arduino_order = server_arduino_order
-        self.server_arduino_order_state[0].acquire()
-        self.server_arduino_order_state[1] = True
-        self.server_arduino_order_state[0].release()
+        
          
          
          

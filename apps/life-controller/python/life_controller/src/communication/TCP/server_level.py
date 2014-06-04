@@ -31,22 +31,12 @@ class server_level(threading.Thread):
 
         self.start()
         
-        "ask for information"
-        self._send("level_start")
       
         
     def run(self): 
         print(self.name +" start")
         
         while not self.terminated : 
-            """
-            while True : 
-                data = self._recv()
-                print("boucle")
-                if data !="" : 
-                    break
-            """
-            
             
             data = self._recv()
             if data =="" :
@@ -89,14 +79,15 @@ class server_level(threading.Thread):
                         print(self.name +" Message does not fit the protocol " + msg)"""
                         
                         
-    def begin_information(self):
-        self._send("level_start \n")
-    
-    def end_information(self):
-        self._send("level_stop \n")
+    def ask_information (self, state):
+        if state : 
+            self._send("level_start") 
+        else : 
+            self._send("level_stop")
     
             
     def _send(self , msg):
+        msg = msg + "\n"
         self.client_socket.sendall(msg.encode(encoding='utf_8', errors='strict'))
         
     def _recv(self):
@@ -107,7 +98,7 @@ class server_level(threading.Thread):
     def stop(self) :
         self.terminated = True
         self._close() 
-        self.server.client_connected[self.name][1]= False
+        self.server.current_state.set_client_connected_state(self.name, False)
         print( self.name +" finish")
     
     def _close(self):

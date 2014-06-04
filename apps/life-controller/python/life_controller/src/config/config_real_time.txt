@@ -1,0 +1,8 @@
+Temporium
+CONFIGURATION REAL TIME : file is read, every morning, and can be read on asked
+renew_light_AQ : TIME : 12
+auto_AQ_filtration : TIME : 300
+BRBU_controller : BR_FULL : 0.9
+BRBU_controller : BU_FULL : 0.9
+BRBU_controller : BU_EMPTY : 0.1
+BRBU_controller : FILLING_BR_BU : 0.66

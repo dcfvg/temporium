@@ -20,12 +20,15 @@ class renew_light_AQ_BU(threading.Thread):
         self.current_state = a_current_state
         self.BU_use = a_Bu_use
         
+        """time in second for emptying AQ, load the value at the beginning"""
+        self.time_emptying_AQ = self.current_state.config_manager.get_renew_light_AQ("TIME")
+        
     def run(self):
         
         if not self.current_state.get_state_EL("AQ","HIGH")=="NULL" : 
             self.current_state._set_current_action_evolved("renew_light_AQ_" + self.BU_use, True)
             """pump AQ->S for 12 sec"""
-            self.emptying_AQ_sec(12)
+            self.emptying_AQ_sec(self.time_emptying_AQ)
             self.filling_BU_EL_AQ(self.BU_use)
             self.current_state._set_current_action_evolved("renew_light_AQ_" + self.BU_use, False)
         else : 
@@ -60,4 +63,4 @@ class renew_light_AQ_BU(threading.Thread):
             self.current_state.fill_BU_AQ(BU_use, False)
         else : 
             print( "EL_AQ_HIGH not connected, it will be impossible to fill AQ after")
-        
+    

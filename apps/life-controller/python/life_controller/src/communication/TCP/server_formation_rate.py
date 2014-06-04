@@ -7,7 +7,7 @@ import time
 import threading
 from current_state import*
 
-class server_concentration(threading.Thread):
+class server_formation_rate(threading.Thread):
     '''
     classdocs
     '''
@@ -18,7 +18,7 @@ class server_concentration(threading.Thread):
         
         self.client_socket = client_socket
         self.terminated = False 
-        self.name = "server_concentration"
+        self.name = "server_formation_rate"
         '''
         Constructor
         
@@ -27,9 +27,8 @@ class server_concentration(threading.Thread):
         self.server = un_server
         """current_state"""
         self.current_state = self.server.current_state
-        
+
         self.start()
-        
         
         "ask for information"
         #self._send("concentration_start")
@@ -52,7 +51,7 @@ class server_concentration(threading.Thread):
             if data =="" :
                 self.stop()
             else :        
-                """information like '{'M1': 3, 'M2': 2} ' """
+                """information like 'AQ : 100 \n ' """
                 #print (self.name + " received : "+ data)
                 print (self.name + " received " + data )
                 data = data.split("\n")
@@ -62,25 +61,33 @@ class server_concentration(threading.Thread):
                     container_name = data_list[0].strip()
                     value = data_list[1].strip()
                     try:
-                        self.current_state.set_concentration(container_name, float(value))
+                        self.current_state.set_formation_rate( float(value))
                     
                     except Exception:
                         """Sprint what is wrong"""
                         print(self.name +" Message does not fit the protocol")
+                        
 
     
             
     def _send(self , msg):
+        msg = msg + "\n"
         self.client_socket.sendall(msg.encode(encoding='utf_8', errors='strict'))
         
     def _recv(self):
         return self.client_socket.recv(2048).decode()   
-        
+     
+    def ask_information (self, state):
+        if state : 
+            self._send("formation_rate_start") 
+        else : 
+            self._send("formation_rate_stop")
+           
         
     def stop(self) :
         self.terminated = True
         self._close() 
-        self.server.client_connected[self.name][1]= False
+        self.server.current_state.set_client_connected_state(self.name, False)
         print( self.name +" finish")
     
     def _close(self):

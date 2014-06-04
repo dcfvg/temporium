@@ -1,0 +1,12 @@
+Temporium : BRBU_controller  
+auto_start : False 
+time_save_second : 1401886866 
+time_save_second : Wed, 04 Jun 2014 15:01:06 +0000
+time_cycle_second : 1 
+time_cycle : 0h0m1 
+BU1 : READY : True 
+BU2 : READY : False 
+BU3 : READY : False 
+BU1 : EMPTY : False 
+BU2 : EMPTY : False 
+BU3 : EMPTY : True

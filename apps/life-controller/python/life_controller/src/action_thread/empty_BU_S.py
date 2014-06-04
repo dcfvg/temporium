@@ -8,7 +8,7 @@ import time
 
 class empty_BU_S(threading.Thread):
     '''
-    thread to run to start a filling AQ with BU, but do not call it directly, use current_state.set_current_action
+    thread to run to start a emptying BU in S, but do not call it directly, use current_state.set_current_action
     '''
 
 

@@ -7,7 +7,7 @@ import time
 import threading
 from current_state import*
 
-class server_formation_rate(threading.Thread):
+class server_concentration(threading.Thread):
     '''
     classdocs
     '''
@@ -18,7 +18,7 @@ class server_formation_rate(threading.Thread):
         
         self.client_socket = client_socket
         self.terminated = False 
-        self.name = "server_formation_rate"
+        self.name = "server_concentration"
         '''
         Constructor
         
@@ -27,8 +27,9 @@ class server_formation_rate(threading.Thread):
         self.server = un_server
         """current_state"""
         self.current_state = self.server.current_state
-
+        
         self.start()
+        
         
         "ask for information"
         #self._send("concentration_start")
@@ -51,42 +52,50 @@ class server_formation_rate(threading.Thread):
             if data =="" :
                 self.stop()
             else :        
-                """information like 'AQ : 100 \n ' """
+                
                 #print (self.name + " received : "+ data)
                 print (self.name + " received " + data )
                 data = data.split("\n")
                 
                 for msg in data : 
-                    data_list = msg.split(":")
-                    container_name = data_list[0].strip()
-                    value = data_list[1].strip()
-                    try:
-                        self.current_state.set_formation_rate( float(value))
+                    try : 
+                        """information in shape AQ : %,realvalue"""
+                        data_list = msg.split(":")
+                        
+                        container_name = data_list[0].strip()
+                        """value = [%,real_value]"""
+                        value = data_list[1].split(",")
+                        percent = float(value[0].strip())
+                        real_value = float(value[1].strip())
+                    
+                    
+                        self.current_state.set_concentration(container_name, percent)
                     
                     except Exception:
                         """Sprint what is wrong"""
-                        print(self.name +" Message does not fit the protocol")
-                        
+                        pass
+                        #print(self.name +" Message does not fit the protocol")
 
     
             
     def _send(self , msg):
+        msg = msg + " \n"
         self.client_socket.sendall(msg.encode(encoding='utf_8', errors='strict'))
         
     def _recv(self):
-        return self.client_socket.recv(2048).decode()   
+        return self.client_socket.recv(2048).decode()  
     
-    def start_information(self):
-        self._send("start")
-    
-    def stop_information(self):
-        self._send("stop")
+    def ask_information (self, state):
+        if state : 
+            self._send("concentration_start") 
+        else : 
+            self._send("concentration_stop")
         
         
     def stop(self) :
         self.terminated = True
         self._close() 
-        self.server.client_connected[self.name][1]= False
+        self.server.current_state.set_client_connected_state(self.name, False)
         print( self.name +" finish")
     
     def _close(self):

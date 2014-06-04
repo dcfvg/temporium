@@ -1,0 +1,285 @@
+'''
+Created on Apr 24, 2014
+
+@author: Cactus
+'''
+import tkinter
+from tkinter import *
+
+
+class manual_action(Frame):
+    
+    """Notre fenetre principale.
+    Tous les widgets sont stockes comme attributs de cette fenetre."""
+    
+    def __init__(self, parent):
+        Frame.__init__(self, parent, width=768, height=576)
+        self.parent = parent
+        self.pack(side=LEFT)
+        self.current_state_order = self.parent.parent.parent.current_state_order
+        self.current_state = self.parent.parent.parent.current_state
+        
+        """store each button in a dict()like : { "P_M1_BR1" : [0, button, label_state]...}"""
+        self.button_biological_actions = {"AQ_filtration" : [0],\
+                                "fill_BU1_AQ" : [1],\
+                                "fill_BU2_AQ" : [2] ,\
+                                "fill_BU3_AQ" : [3],\
+                                "empty_BU1_S" : [4],\
+                                "empty_BU2_S" : [5],\
+                                "empty_BU3_S" : [6],\
+                                 }
+        
+        """current_action_lift_screen"""
+        self.button_action_lift_screen = {"lift_down" : [0],\
+                                        "lift_up" : [1],\
+                                        "screen_down" : [2],\
+                                        "screen_up" : [3],\
+                                        }
+        """current_spectro"""
+        self.button_spectro = {"spectro" : [0]}
+         
+        """current_light_state"""                               
+        self.button_light = {"spectro_light" : [0]}
+        
+        """current_action_evolved"""
+        self.button_action_evolved = {"auto_AQ_filtration" : [0],\
+                                        "renew_light_AQ_BU1" : [1],\
+                                        "renew_light_AQ_BU2" : [2],\
+                                        "renew_light_AQ_BU3" : [3],\
+                                 }
+        
+        """list of information asked : name : [lock, state, name_server] """
+        self.button_information_asked = {"formation_rate" : [0],\
+                                         "level" : [1],\
+                                         "concentration" : [2]}
+        
+        
+
+        self._build_button_biological()
+        self._build_button_action_lift_screen()
+        self._build_button_spectro()
+        self._build_button_light()
+        self._build_button_action_evolved()
+        self._build_button_information_asked()
+        self._build_state_label()
+        self._add_to_frame()
+        
+        self.pack(side = "left", fill=NONE, expand=1)
+    
+
+            
+    """build each label state"""
+    def _build_state_label(self):
+        for item in self.button_biological_actions : 
+            self.button_biological_actions[item].append(tkinter.Label(self,bg ='red', text = "FALSE")) 
+        for item in self.button_action_lift_screen : 
+            self.button_action_lift_screen[item].append(tkinter.Label(self,bg ='red', text = "FALSE")) 
+        for item in self.button_spectro : 
+            self.button_spectro[item].append(tkinter.Label(self,bg ='red', text = "FALSE"))
+        for item in self.button_light : 
+            self.button_light[item].append(tkinter.Label(self,bg ='red', text = "FALSE")) 
+        for item in self.button_action_evolved : 
+            self.button_action_evolved[item].append(tkinter.Label(self,bg ='red', text = "FALSE")) 
+        
+        for item in self.button_information_asked : 
+            self.button_information_asked[item].append(tkinter.Label(self,bg ='red', text = "FALSE"))   
+            
+        
+    
+    """add the widget to the frame"""
+    def _add_to_frame(self):
+        """LEFT SIDE"""
+        """compting where we are in the grid"""
+        compt = 0
+        
+        Label(self, text = "Biologie : ",fg = "white", bg = "black").grid(sticky = W,row=compt, columnspan = 2)
+        compt = compt+1
+        
+        internal_compt = 0
+        for item in self.button_biological_actions :
+            internal_compt = internal_compt +1
+            self.button_biological_actions[item][1].grid(sticky=W, row= self.button_biological_actions[item][0]+compt, column=0)
+            self.button_biological_actions[item][2].grid(sticky=E, row=self.button_biological_actions[item][0]+compt, column=1)
+        compt = compt+internal_compt
+        
+        Label(self, text = "Ascenseur : ",fg = "white", bg = "black").grid(sticky = W,row=compt, columnspan = 2)
+        compt = compt+1
+        
+        internal_compt = 0
+        for item in self.button_action_lift_screen :
+            internal_compt = internal_compt +1
+            self.button_action_lift_screen[item][1].grid(sticky=W, row= self.button_action_lift_screen[item][0]+compt, column=0)
+            self.button_action_lift_screen[item][2].grid(sticky=E, row=self.button_action_lift_screen[item][0]+compt, column=1)
+        compt = compt+internal_compt
+        
+        Label(self, text = "Spectro : ",fg = "white", bg = "black").grid(sticky = W,row=compt, columnspan = 2)
+        compt = compt+1
+        
+        internal_compt = 0
+        for item in self.button_spectro :
+            internal_compt = internal_compt +1
+            self.button_spectro[item][1].grid(sticky=W, row= self.button_spectro[item][0]+compt, column=0)
+            self.button_spectro[item][2].grid(sticky=E, row=self.button_spectro[item][0]+compt, column=1)
+        compt = compt+internal_compt
+        
+        Label(self, text = "Light : ",fg = "white", bg = "black").grid(sticky = W,row=compt, columnspan = 2)
+        compt = compt+1
+        
+        internal_compt = 0
+        for item in self.button_light :
+            internal_compt = internal_compt +1
+            self.button_light[item][1].grid(sticky=W, row= self.button_light[item][0]+compt, column=0)
+            self.button_light[item][2].grid(sticky=E, row=self.button_light[item][0]+compt, column=1)
+        compt = compt+internal_compt
+        
+        Label(self, text = "Actions evoluees  /!\ BU pas pret /!\ : ",fg = "white", bg = "black").grid(sticky = W,row=compt, columnspan = 2)
+        compt = compt+1
+        
+        internal_compt = 0
+        for item in self.button_action_evolved :
+            internal_compt = internal_compt +1
+            self.button_action_evolved[item][1].grid(sticky=W, row= self.button_action_evolved[item][0]+compt, column=0)
+            self.button_action_evolved[item][2].grid(sticky=E, row=self.button_action_evolved[item][0]+compt, column=1)
+        compt = compt+internal_compt
+        
+        """RIGHT SIDE"""
+        """compting where we are in the grid"""
+        compt_right = 0
+        
+        Label(self, text = "Information asked : ",fg = "white", bg = "black").grid(sticky = W,row=compt_right, column = 2, columnspan = 2)
+        compt_right = compt_right+1
+        
+        internal_compt = 0
+        for item in self.button_information_asked :
+            internal_compt = internal_compt +1
+            self.button_information_asked[item][1].grid(sticky=W, row= self.button_information_asked[item][0]+compt_right, column=2)
+            self.button_information_asked[item][2].grid(sticky=E, row=self.button_information_asked[item][0]+compt_right, column=3)
+        compt_right = compt_right+internal_compt
+
+    """BUILD BUTTON"""
+    """build the button associated to the action"""
+    def _build_button_biological(self):
+        for item in self.button_biological_actions : 
+            if item =="AQ_filtration" : 
+                self.button_biological_actions[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_action("AQ_filtration"))) 
+            elif item =="fill_BU1_AQ" : 
+                self.button_biological_actions[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_action("fill_BU1_AQ")))
+            elif item =="fill_BU2_AQ" : 
+                self.button_biological_actions[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_action("fill_BU2_AQ")))
+            elif item =="fill_BU3_AQ" : 
+                self.button_biological_actions[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_action("fill_BU3_AQ")))
+            elif item =="empty_BU1_S" : 
+                self.button_biological_actions[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_action("empty_BU1_S")))
+            elif item =="empty_BU2_S" : 
+                self.button_biological_actions[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_action("empty_BU2_S")))
+            elif item =="empty_BU3_S" : 
+                self.button_biological_actions[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_action("empty_BU3_S")))
+    
+    def _build_button_action_lift_screen(self):
+        for item in self.button_action_lift_screen : 
+            if item =="lift_down" : 
+                self.button_action_lift_screen[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_action_lift_screen("lift_down"))) 
+            elif item =="lift_up" : 
+                self.button_action_lift_screen[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_action_lift_screen("lift_up")))
+            elif item =="screen_down" : 
+                self.button_action_lift_screen[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_action_lift_screen("screen_down")))
+            elif item =="screen_up" : 
+                self.button_action_lift_screen[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_action_lift_screen("screen_up")))
+    
+    def _build_button_spectro(self):
+        for item in self.button_spectro : 
+            if item == "spectro" : 
+                self.button_spectro[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_spectro("spectro"))) 
+    
+    def _build_button_light(self):
+        for item in self.button_light : 
+            if item == "spectro_light" : 
+                self.button_light[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_light("spectro_light"))) 
+            
+    
+    def _build_button_action_evolved(self):
+        for item in self.button_action_evolved : 
+            if item =="auto_AQ_filtration" : 
+                self.button_action_evolved[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_action_evolved("auto_AQ_filtration"))) 
+            elif item =="renew_light_AQ_BU1" : 
+                self.button_action_evolved[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_action_evolved("renew_light_AQ_BU1")))
+            elif item =="renew_light_AQ_BU2" : 
+                self.button_action_evolved[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_action_evolved("renew_light_AQ_BU2")))
+            elif item =="renew_light_AQ_BU3" : 
+                self.button_action_evolved[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_action_evolved("renew_light_AQ_BU3")))
+    
+   
+    def _build_button_information_asked(self):
+        for item in self.button_information_asked : 
+            if item =="formation_rate" : 
+                self.button_information_asked[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_information_asked("formation_rate"))) 
+            elif item =="level" : 
+                self.button_information_asked[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_information_asked("level")))
+            elif item =="concentration" : 
+                self.button_information_asked[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_information_asked("concentration")))
+           
+    def refresh_state(self):
+        for item in self.button_biological_actions :  
+            if self.current_state.get_current_action(item) : 
+                color = "green"
+                t = "TRUE"
+            else : 
+                color = "red"
+                t = "FALSE"
+            self.button_biological_actions[item][2].config (bg = color, text = t)
+        
+        for item in self.button_action_lift_screen :  
+            if self.current_state.get_current_action_lift_screen(item) : 
+                color = "green"
+                t = "TRUE"
+            else : 
+                color = "red"
+                t = "FALSE"
+            self.button_action_lift_screen[item][2].config (bg = color, text = t)
+        
+        for item in self.button_spectro :  
+            if self.current_state.get_current_spectro_state(item) : 
+                color = "green"
+                t = "TRUE"
+            else : 
+                color = "red"
+                t = "FALSE"
+            self.button_spectro[item][2].config (bg = color, text = t)
+            
+        for item in self.button_light :  
+            if self.current_state.get_current_light_state(item) : 
+                color = "green"
+                t = "TRUE"
+            else : 
+                color = "red"
+                t = "FALSE"
+            self.button_light[item][2].config (bg = color, text = t)
+        
+        for item in self.button_action_evolved :  
+            if self.current_state.get_current_action_evolved(item) : 
+                color = "green"
+                t = "TRUE"
+            else : 
+                color = "red"
+                t = "FALSE"
+            self.button_action_evolved[item][2].config (bg = color, text = t)
+        
+        
+        for item in self.button_action_evolved :  
+            if self.current_state.get_current_action_evolved(item) : 
+                color = "green"
+                t = "TRUE"
+            else : 
+                color = "red"
+                t = "FALSE"
+            self.button_action_evolved[item][2].config (bg = color, text = t)
+        for item in self.button_information_asked :  
+            if self.current_state.get_information_asked(item) : 
+                color = "green"
+                t = "TRUE"
+            else : 
+                color = "red"
+                t = "FALSE"
+            self.button_information_asked[item][2].config (bg = color, text = t)
+        
+        
