@@ -10,7 +10,7 @@ module.exports = function(app, io, oscServer){
   var capt; // capture programme (bash)
   var spawn = require('child_process').spawn;
 
-  // initClientWindows(); // lauch chrome at launch
+  //initClientWindows(); // lauch chrome at launch
 
   //////////////////////////////
   // server side
@@ -113,7 +113,7 @@ module.exports = function(app, io, oscServer){
         refreshTimelaps();
       break;
       case "seance_start":
-        onCaptureInit();
+        //onCaptureInit();
       break;
       case "captureStop":
         onCaptureStop();

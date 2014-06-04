@@ -11,14 +11,14 @@ function init() {
       ;
 
   var $movie            = $("#movie"),                  // container
-      movieUrl          = "/video/Montage-DEF_1805_INSTAL _422HQ-QuickTime_H.264.mov",       // video file url
+      movieUrl          = "/video/immersion-s.mov",       // video file url
       movieWidth        = 1280, movieHeight = 720,      // size to display
       movieGoesOn       = false,                        // 
       movieCurentStep   = 0,                            // current event step
       movieWatchInteval = 250,                          // timecode events refresh frequency
       movieTimeScale    = 0,                            // qt property
       movieDuration     = 0                             // duration of the movie
-      movieStartMargin  = 4
+      movieStartMargin  = 44
       ;
 
   var $life             = $("#life"),
@@ -107,7 +107,7 @@ function init() {
     movieCurentStep = 0;
     setNextStep();
     
-    setQtVolume(0);
+    //setQtVolume(0);
   };
   function onReloadLife(){
     // add reload argument to avoid cache
@@ -245,7 +245,6 @@ function init() {
     return jump;
   };
   function setNextStep(){
-
     var step = score[movieCurentStep],
         at = getAt(step),
         renderStarted = false,
