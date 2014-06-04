@@ -17,8 +17,9 @@ function init() {
       movieCurentStep   = 0,                            // current event step
       movieWatchInteval = 250,                          // timecode events refresh frequency
       movieTimeScale    = 25,                           // qt property
-      movieDuration     = 0                             // duration of the movie
-      movieStartMargin  = 44
+      movieDuration     = 0,                            // duration of the movie
+      movieStartMargin  = 44,
+      movieVolume       = 100
       ;
 
   var $life             = $("#life"),
@@ -27,7 +28,7 @@ function init() {
       ;
 
   var image_formation = 0,
-      formationStartLevel = 5,
+      formationStartLevel = 20,
       compileDelay = 120,
       decideDelay = 2
       ;
@@ -47,6 +48,7 @@ function init() {
     .on( "player_reset"     , reset)
     .on( "showMovie"        , onShowMovie)
     .on( "showLife"         , onShowLife)
+    .on( "projectionStart"  , onProjectionStart)
     .on( "qtSeekTo"         , onQtSeekTo) 
   ;
   
@@ -69,7 +71,7 @@ function init() {
       console.log("jump +10s -> "+time/movieTimeScale);
     };
 
-    if ( event.which == 107 ) { console.log("t :",getQtCurrentTime()) }// k
+    if ( event.which == 107 ) { console.log("t :",getQtCurrentTime());}// k
   });
 
   //////////////////////////////
@@ -83,31 +85,40 @@ function init() {
     //socket.emit('newUser', {id: sessionId, name: $('#name').val()});
   };
   function onSocketOscMessage(obj){
-    //console.log(obj[0]);
+    console.log(obj);
     $d.trigger(obj[0],[ obj[1] ]);
   };
   function onSocketScore(obj){
     score = obj;
     console.log(obj);
   };
-  function onImageFormation(e, obj){
-    /*if(!movieGoesOn && parseInt(obj) > formationStartLevel){
-    //onSeanceStart();
-    };
-    console.log('image_formation',obj);
-    */
-  };
-  function onSeanceStart(){
 
+  // seance == top vivant
+  function onSeanceStart(){
+    $d.trigger("projectionStart");
+  };
+  // projection == film
+  function onProjectionStart(){
+    
     document.qtF.Play();
-    $d.trigger("showMovie", image_formation);
+    $d.trigger("showMovie");
     
     movieGoesOn = true;
 
     movieCurentStep = 0;
     setNextStep();
-    
-    //setQtVolume(0);
+    setQtVolume(movieVolume);
+  }
+
+  // player events
+  function onImageFormation(e, obj){
+
+    image_formation = parseInt(obj);
+    console.log('image_formation updt',image_formation);
+
+    if(!movieGoesOn && parseInt(obj) > formationStartLevel){
+      $d.trigger("projectionStart");
+    };
   };
   function onReloadLife(){
     // add reload argument to avoid cache
@@ -236,7 +247,7 @@ function init() {
   function getJump(step){
     var jump_max = step.jump_max;
     var movieProgress  = Math.round((getQtCurrentTime()/movieDuration)*100);
-    var lifeProgress = Math.round((image_formation/255)*100);
+    var lifeProgress = image_formation; //Math.round((image_formation/255)*100);
     var jump = (jump_max/2)-(((lifeProgress - movieProgress)/100)*jump_max);
 
     if(jump > jump_max) jump = jump_max; // to FIX 
@@ -244,6 +255,7 @@ function init() {
     console.log('jump = ',jump,'/',jump_max,' (film :',movieProgress,'% ',' life :',lifeProgress,'%)');
     return jump;
   };
+
   function setNextStep(){
     var step = score[movieCurentStep],
         at = getAt(step),
@@ -291,7 +303,6 @@ function init() {
       };
     },movieWatchInteval);
   };
-  // player event=
   function onLifeEnded(){
     
     var step = score[movieCurentStep],
@@ -306,18 +317,21 @@ function init() {
 
     $d.trigger("showMovie");
 
-    if(movieCurentStep < score.length){
+    if(movieCurentStep > score.length - 2){
+      $d.trigger("last_sequence");
+    }else{
       movieCurentStep++;
       setNextStep();
       $d.trigger("last_sequence");
-    };
+    }
   };
   
   //image_formation emulator 
   setInterval(function(){
-    image_formation++;
-    $d.trigger("image_formation", image_formation);
+    $d.trigger("image_formation", ((image_formation + 1)%100));
     //console.log("f="+image_formation);
-  }, 3000);
+  }, 10000);
+
+  reset();
 };
 $(document).on('ready', init);
