@@ -339,6 +339,8 @@ function init() {
   setInterval(function(){
     $d.trigger("image_formation", ((image_formation + 1)%100));
     //console.log("f="+image_formation);
+    socket.emit('message', "seance_end" , true);
+
   }, 10000);
 
   reset();

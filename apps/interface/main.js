@@ -98,7 +98,10 @@ module.exports = function(app, io, oscServer){
       capt.stdin.pause();
       capt.kill();
     }, 2000);
-  };
+  }; 
+  function onMessage(msg){
+    oscClient.send(msg);
+  }
 
   //////////////////////////////
   //  communication 
@@ -120,7 +123,7 @@ module.exports = function(app, io, oscServer){
     };
   });
   io.on("connection", function(socket){
-    socket.on("message", oscClient.send);
+    socket.on("message", onMessage);
     socket.on("getScore", loadScore);
     socket.on("refreshTimelaps", onRefreshTimelaps);
     socket.on("captureStop", onCaptureStop);
