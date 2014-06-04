@@ -11,12 +11,12 @@ function init() {
       ;
 
   var $movie            = $("#movie"),                  // container
-      movieUrl          = "/video/immersion-s.mov",       // video file url
+      movieUrl          = "/video/IMMERSION_1998_1080H264_10MB_SON_TEMPORAIRE-10mb.mov",       // video file url
       movieWidth        = 1280, movieHeight = 720,      // size to display
       movieGoesOn       = false,                        // 
       movieCurentStep   = 0,                            // current event step
       movieWatchInteval = 250,                          // timecode events refresh frequency
-      movieTimeScale    = 0,                            // qt property
+      movieTimeScale    = 25,                           // qt property
       movieDuration     = 0                             // duration of the movie
       movieStartMargin  = 44
       ;
@@ -69,7 +69,7 @@ function init() {
       console.log("jump +10s -> "+time/movieTimeScale);
     };
 
-    if ( event.which == 107 ) console.log("t :",getQtCurrentTime()); // k
+    if ( event.which == 107 ) { console.log("t :",getQtCurrentTime()) }// k
   });
 
   //////////////////////////////
@@ -154,7 +154,7 @@ function init() {
       'obj#id'  , name,
       'emb#NAME', name,
       'emb#id'  , name,
-      'scale' , 'tofit' , 'AUTOPLAY', 'false', 'CONTROLLER', 'false',
+      'scale' , 'tofit' , 'AUTOPLAY', 'false', 'CONTROLLER', 'true',
       'EnableJavaScript', 'True', 'postdomevents', 'True',
       'STARTTIME',"00:00:00:00",
       'qtsrc', qtsrc));
@@ -202,7 +202,7 @@ function init() {
   function onQtCanPlayThrough(){
     movieTimeScale = document.qtF.GetTimeScale();
     movieDuration  = document.qtF.GetDuration() / movieTimeScale;
-    console.log("movie is ready !");
+    console.log("movie is ready !", movieTimeScale, movieDuration);
   };
   function onQtEnded(){
     io.sockets.emit("message", "seance_end");
