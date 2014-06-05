@@ -11,15 +11,15 @@ function init() {
       ;
 
   var $movie            = $("#movie"),                  // container
-      movieUrl          = "/video/IMMERSION_1998_1080H264_10MB_SON_TEMPORAIRE.mov",       // video file url
+      movieUrl          = "/video/IMMERSION_DIFF_PANORAMAOK-2.mov",       // video file url
       movieWidth        = 1920, movieHeight = 1037,     // size to display
       movieGoesOn       = false,                        // 
       movieCurentStep   = 0,                            // current event step
-      movieWatchInteval = 250,                          // timecode events refresh frequency
+      movieWatchInteval = 500,                          // timecode events refresh frequency
       movieTimeScale    = 25,                           // qt property
-      movieDuration     = 0,                            // duration of the movie
+      movieDuration     = 1934.92,                       // duration of the movie
       movieStartMargin  = 44,
-      movieVolume       = 100
+      movieVolume       = 255
       ;
 
   var $life             = $("#life"),
@@ -27,7 +27,7 @@ function init() {
       $pop_life         = Popcorn("#life")
       ;
 
-  var image_formation = 0,
+  var image_formation = 50,
       formationStartLevel = 20,
       compileDelay = 120,
       decideDelay = 2
@@ -99,7 +99,7 @@ function init() {
     console.log("# seance seance_start !");
     $d.trigger("projectionStart");
 
-    socket.emit('captureInit',true);
+    //socket.emit('captureInit',true);
   };
   // projection == film
   function onProjectionStart(){
@@ -171,7 +171,7 @@ function init() {
       'obj#id'  , name,
       'emb#NAME', name,
       'emb#id'  , name,
-      'scale' , 'tofit' , 'AUTOPLAY', 'false', 'CONTROLLER', 'false',
+      'scale' , 'tofit' , 'AUTOPLAY', 'false', 'CONTROLLER', 'true',
       'EnableJavaScript', 'True', 'postdomevents', 'True',
       'STARTTIME',"00:00:00:00",
       'qtsrc', qtsrc));
@@ -220,7 +220,7 @@ function init() {
     movieTimeScale = document.qtF.GetTimeScale();
     movieDuration  = document.qtF.GetDuration() / movieTimeScale;
 
-    emulateImageFormation(60);
+    //emulateImageFormation(60);
 
     console.log("movie is ready !", movieTimeScale, movieDuration);
   };
@@ -228,6 +228,7 @@ function init() {
     io.sockets.emit("message", "seance_end");
     
     socket.on("captureStop", onCaptureStop);
+    socket.emit('message', "seance_end" , true);
 
     reset();
   };
@@ -323,7 +324,7 @@ function init() {
     console.log("~ cut",step.id,step.title,'(',step.type,')',"@", at);
     console.log("restarting life at", jump,'/',step.jump_max);
 
-    document.qtF.SetTime((at - jump) * movieTimeScale);
+    document.qtF.SetTime((at + jump) * movieTimeScale);
     document.qtF.Play();
 
     $d.trigger("showMovie");
@@ -344,7 +345,6 @@ function init() {
       
       $d.trigger("image_formation", newImageFormation);
       //console.log("f="+image_formation);s
-      socket.emit('message', "seance_end" , true);
     }, freq*1000); 
   }
 

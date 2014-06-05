@@ -47,7 +47,7 @@ timelaps_archive
 camera_init
 python $oscScript 127.0.0.1 3333 /EF flash
 
-say "starting exposure !"
+#say "starting exposure !"
 
 # picture loop
 while true;
