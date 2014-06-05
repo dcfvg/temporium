@@ -51,8 +51,8 @@ module.exports = function(app, io, oscServer){
     speed = typeof speed !== 'undefined' ? speed : 1;
     zoom  = typeof zoom  !== 'undefined' ? zoom  : 1;
 
-    var mov_w  = 1888,
-        mov_h  = 1062, 
+    var mov_w  = 1920,
+        mov_h  = 1037, 
         ratio  = mov_w/mov_h,
         crop_w = Math.round(mov_w*zoom),
         crop_h = Math.round(crop_w/ratio),
