@@ -6,3 +6,4 @@ BRBU_controller : BR_FULL : 0.9
 BRBU_controller : BU_FULL : 0.9
 BRBU_controller : BU_EMPTY : 0.1
 BRBU_controller : FILLING_BR_BU : 0.66
+AQ : CONCENTRAION_OPT : 50

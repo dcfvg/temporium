@@ -31,6 +31,7 @@ class config_manager(object):
                                        "BU_EMPTY" :0,\
                                        "FILLING_BR_BU" :0,\
                                        }
+        self._AQ = {"CONCENTRATION_OPT" : 0}
         
         
         
@@ -68,10 +69,16 @@ class config_manager(object):
             elif key  == "BRBU_controller" :
                 name = list[1].strip()
                 value = float(list[2].strip())
-                self._set_BRBU_controller(name, value)   
+                self._set_BRBU_controller(name, value)  
+            
+            elif key  == "AQ" :
+                name = list[1].strip()
+                value = float(list[2].strip())
+                self._set_BRBU_controller(name, value)  
         
         """release the lock to enable access to the value"""
         self.lock.release()
+        file.close()
                 
     """RENEW LIGHT AQ"""           
     def _set_renew_light_AQ(self, name, value):
@@ -108,5 +115,17 @@ class config_manager(object):
         self.lock.acquire()
         value = self._BRBU_controller_value[name]    
         self.lock.release()
-        return value      
+        return value    
+    
+    """BRBU CONTROLLER"""
+    def _set_AQ(self, name, value):
+        self._AQ[name] = value      
+    
+    
+    """return the value corresponding to the name you asked : ex "BU_FULL" here""" 
+    def get_AQ(self, name):
+        self.lock.acquire()
+        value = self._AQ[name]    
+        self.lock.release()
+        return value     
                 

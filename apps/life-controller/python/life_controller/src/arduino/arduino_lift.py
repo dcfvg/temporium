@@ -42,7 +42,6 @@ class arduino_lift(object):
                     self.__sendData(each_pin)
             """function to lauch to set the arduino to busy of arduino"""
             self.lock.release()
-            self.start_busy()
             answer = True
         
         
@@ -63,7 +62,7 @@ class arduino_lift(object):
             self.__sendData('0')
             
             self.lock.release()
-            self.start_busy()
+            self.start_busy("lift_down")
             answer = True
             
         return answer
@@ -79,7 +78,7 @@ class arduino_lift(object):
             self.lock.acquire()
             self.__sendData('1')
             self.lock.release()
-            self.start_busy()
+            self.start_busy("lift_up")
             answer = True
             
         return answer
@@ -95,7 +94,7 @@ class arduino_lift(object):
             self.lock.acquire()
             self.__sendData('2')
             self.lock.release()
-            self.start_busy()
+            self.start_busy("screen_down")
             answer = True
             
         return answer
@@ -111,7 +110,7 @@ class arduino_lift(object):
             self.lock.acquire()
             self.__sendData('3')
             self.lock.release()
-            self.start_busy()
+            self.start_busy("screen_up")
             answer = True
             
         return answer
@@ -153,8 +152,8 @@ class arduino_lift(object):
     
     
     """function to lauch to set the arduino to busy of arduino"""
-    def start_busy(self):
-        self.arduino_lift_thread.start_busy()
+    def start_busy(self, action_name):
+        self.arduino_lift_thread.start_busy(action_name)
     
     def close(self):
         self.lock.acquire()

@@ -30,6 +30,7 @@ class server_arduino_order(threading.Thread):
         
         """lock to be sure to not send several message at the same time"""
         self.lock_message = threading.Lock()
+        
         self.start()
         
         """state of EL receivde : 
@@ -116,10 +117,14 @@ class server_arduino_order(threading.Thread):
         return status
             
     def _send(self , msg):
-        self.lock_message.acquire()
-        msg = msg + "\n"
-        self.client_socket.sendall(msg.encode(encoding='utf_8', errors='strict'))
-        self.lock_message.release()
+        if not self.terminated : 
+            try : 
+                msg = msg + " \n"
+                self.lock_message.acquire()
+                self.client_socket.sendall(msg.encode(encoding='utf_8', errors='strict'))
+                self.lock_message.release()
+            except Exception as e : 
+                print(str(e))
         
     def _recv(self):
         return self.client_socket.recv(1024).decode()   

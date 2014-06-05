@@ -27,7 +27,10 @@ class server_formation_rate(threading.Thread):
         self.server = un_server
         """current_state"""
         self.current_state = self.server.current_state
-
+        
+        """lock to be sure to not send several message at the same time"""
+        self.lock_message = threading.Lock()
+        
         self.start()
         
         "ask for information"
@@ -71,8 +74,14 @@ class server_formation_rate(threading.Thread):
     
             
     def _send(self , msg):
-        msg = msg + "\n"
-        self.client_socket.sendall(msg.encode(encoding='utf_8', errors='strict'))
+        if not self.terminated : 
+            try : 
+                msg = msg + " \n"
+                self.lock_message.acquire()
+                self.client_socket.sendall(msg.encode(encoding='utf_8', errors='strict'))
+                self.lock_message.release()
+            except Exception as e : 
+                print(str(e))
         
     def _recv(self):
         return self.client_socket.recv(2048).decode()   

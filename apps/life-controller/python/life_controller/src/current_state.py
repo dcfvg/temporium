@@ -90,10 +90,10 @@ class current_state(object):
         self._formation_rate = [threading.Lock(), 35]
         
         """list of server in charge of the communication"""
-        self._client_connected = {"server_formation_rate" : [threading.Lock(), None, False],\
-                                 "server_level" : [threading.Lock(), None, False],\
-                                 "server_concentration" : [threading.Lock(), None, False],\
-                                 "server_arduino_order" : [threading.Lock(), None, False]}
+        self._client_connected = {"server_formation_rate" : [threading.Lock(), None, False,"formation_rate"],\
+                                 "server_level" : [threading.Lock(), None, False,"level"],\
+                                 "server_concentration" : [threading.Lock(), None, False,"concentration"],\
+                                 "server_arduino_order" : [threading.Lock(), None, False,"arduino"]}
         
         """list of information asked : name : [lock, state, name_server] """
         self._information_asked = {"formation_rate" : [threading.Lock(), False,"server_formation_rate" ],\
@@ -382,14 +382,15 @@ class current_state(object):
         """if there is no action running"""
         if b : 
             if name == "lift_down": 
-                self.com_arduino.liftDown()
+                answer = self.com_arduino.liftDown()
             elif name == "lift_up": 
-                self.com_arduino.liftUp()  
+                answer = self.com_arduino.liftUp()  
             elif name == "screen_down": 
-                self.com_arduino.screenDown() 
+                answer = self.com_arduino.screenDown() 
             elif name == "screen_up": 
-                self.com_arduino.screenUp() 
-                  
+                answer = self.com_arduino.screenUp() 
+                
+        """value in _current_action_lift_screen is set to Tru by arduino_lift_thread"""
             
 
         
@@ -755,15 +756,35 @@ class current_state(object):
     """CLIENT CONNECTED"""
     
     """set the state of a server"""
-    def set_client_connected_state(self, type, state) : 
+    def set_client_connected_state(self, type, state) :
+        """if false : set the information asked associated to the client to false"""
+        if not state : 
+            """if different from arduino, because arduino for test_mode"""
+            if not self.get_client_connected_information_asked(type) =="arduino" : 
+                self.set_information_asked(self.get_client_connected_information_asked(type), False)
+         
         self._client_connected[type][0].acquire()
-        self._client_connected[type][2] = state 
+        self._client_connected[type][2] = state
         self._client_connected[type][0].release()
+        
+        
+        
+        
+        
+     
+        
     """set the actual server"""
     def set_client_connected(self, type, server) : 
         self._client_connected[type][0].acquire()
         self._client_connected[type][1] = server 
         self._client_connected[type][0].release()
+    
+    """get information_asked associated to the client"""
+    def get_client_connected_information_asked(self, type):
+        self._client_connected[type][0].acquire()
+        information_asked =  self._client_connected[type][3] 
+        self._client_connected[type][0].release()
+        return information_asked
     
     """get the actual server"""""
     def get_client_connected(self, type):

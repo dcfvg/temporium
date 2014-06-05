@@ -39,4 +39,5 @@ EL : AQ : MAX : 41 : 52
 EL : AQ : HIGH : 43 : 52
 EL : AQ : MIDDLE : 45 : 52
 EL : AQ : MIN : 47 : 52
-comments : arduino : arduino_lift : /dev/cu.usbmodem14231
+arduino : arduino_lift : /dev/cu.usbmodem14221
+pin_array_output : 5
