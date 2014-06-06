@@ -1,5 +1,17 @@
-### partition 
-- [apps/interface/public/score.csv](https://github.com/dcfvg/temporium/blob/panorama/apps/interface/public/score.csv)
+interface
+=====
+
+### installation
+_depuis le terminal_
+1. aller dans le dossier `cd ~/temporim/apps/interface/`
+2. installer les modules nodejs `npm install`
+3. création les dossiers pour les médias dans le dossier`interface/public/` 
+	- `exposure`, l’emplacement des images capturées par l’appareil
+	- `images`, l’emplacement pour l’image à exploser `nega.png` et du flash gris `flash.png`
+
+### configuration du montage dynamique
+
+- le fichier `[/public/score.csv](https://github.com/dcfvg/temporium/blob/panorama/apps/interface/public/score.csv)` permet de modifier les paramètres du montage dynamique.
 
 | champ  | description |
 | ------ | ----------- |
@@ -14,17 +26,38 @@
 
 > Le temps du vivant est figuré dans le film par un cache vert de 4 secondes.
 
-### monitoring
-`/monitor`
+### démarrage de l’application : 
 
+_depuis le terminal_
+1. aller dans le dossier `cd ~/temporim/apps/interface/`
+2. démarrer le serveur node `node server.js`
 
-**fonctions** 
-- redémarrage du Systeme
-- donner l'état
-- donner le niveau des différents organes 
-- bloquer d'un biréacteur
-- lire les logs
+_depuis le navigateur_
+1. ouvrir `localhost:8080/player` pour afficher le film
+2. ouvrir `localhost:8080/exposure` pour afficher l’image à exposer
+3. **attendre** plusieurs minutes que le film ait le temps de se précharger
 
-**interface ssh**
-- en wifi sur place 
-- en depuis l'extérieur par internet (bonus)
+_depuis le vivant_
+1. envoyer le message `seance_start`
+2. envoyer le taux de formation en réponse à 
+
+### utilisation du player
+La console du navigateur permet de suivre l’état du player.
+
+_raccourcits clavier_
+
+- `m` montrer le film
+- `l` montrer l’image live 
+- `k` afficher le timecode courant dans la console
+- `j` avancer le film de 10 s
+- `h` avancer le film de 30 s
+
+### utilisation de d'exposure
+
+La page `/exposure` peut être déporté sur un autre poste en consultant `xxx.xxx.xxx.xxx:8080/exposure/` avec `xxx.xxx.xxx.xxx` l'ip du serveur sur le réseau local. .
+
+### TODO
+
+- interface de gestion du montage `/monitor`
+- mise en place du lancement plein écran automatique
+- mode debug qui affiche l'état du film

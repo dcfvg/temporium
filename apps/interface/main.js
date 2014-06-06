@@ -115,7 +115,7 @@ module.exports = function(app, io, oscServer){
         refreshTimelaps();
       break;
       case "seance_start":
-        //onCaptureInit();
+        //onCaptureInit(); // lanch from client
       break;
       case "captureStop":
         onCaptureStop();
@@ -126,7 +126,7 @@ module.exports = function(app, io, oscServer){
     socket.on("message", onMessage);
     socket.on("getScore", loadScore);
     socket.on("refreshTimelaps", onRefreshTimelaps);
-    //socket.on("captureStop", onCaptureStop);
-    //socket.on("captureInit", onCaptureInit);
+    socket.on("captureStop", onCaptureStop);
+    socket.on("captureInit", onCaptureInit);
   });
 };

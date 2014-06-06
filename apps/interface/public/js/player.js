@@ -11,13 +11,13 @@ function init() {
       ;
 
   var $movie            = $("#movie"),                  // container
-      movieUrl          = "/video/IMMERSION_DIFF_PANORAMAOK-2.mov",       // video file url
+      movieUrl          = "/video/immersion.mov",       // video file url
       movieWidth        = 1920, movieHeight = 1037,     // size to display
       movieGoesOn       = false,                        // 
       movieCurentStep   = 0,                            // current event step
       movieWatchInteval = 500,                          // timecode events refresh frequency
       movieTimeScale    = 25,                           // qt property
-      movieDuration     = 1934.92,                       // duration of the movie
+      movieDuration     = 1935,                         // duration of the movie
       movieStartMargin  = 44,
       movieVolume       = 255
       ;
@@ -99,7 +99,7 @@ function init() {
     console.log("# seance seance_start !");
     $d.trigger("projectionStart");
 
-    //socket.emit('captureInit',true);
+    socket.emit('captureInit',true);
   };
   // projection == film
   function onProjectionStart(){
@@ -171,7 +171,7 @@ function init() {
       'obj#id'  , name,
       'emb#NAME', name,
       'emb#id'  , name,
-      'scale' , 'tofit' , 'AUTOPLAY', 'false', 'CONTROLLER', 'true',
+      'scale' , 'tofit' , 'AUTOPLAY', 'false', 'CONTROLLER', 'false',
       'EnableJavaScript', 'True', 'postdomevents', 'True',
       'STARTTIME',"00:00:00:00",
       'qtsrc', qtsrc));
