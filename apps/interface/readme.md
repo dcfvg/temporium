@@ -5,13 +5,13 @@ interface
 _depuis le terminal_
 - aller dans le dossier `cd ~/temporim/apps/interface/`
 - installer les modules nodejs `npm install`
-- création les dossiers pour les médias dans le dossier`interface/public/` 
+- création les dossiers pour les médias dans le dossier `interface/public/` 
 	- `exposure`, l’emplacement des images capturées par l’appareil
 	- `images`, l’emplacement pour l’image à exposer `nega.png` et du flash gris `flash.png`
 
 ### configuration du montage dynamique
 
-- le fichier `score.csv' ([/public/score.csv](https://github.com/dcfvg/temporium/blob/panorama/apps/interface/public/score.csv)) permet de modifier les paramètres du montage dynamique.
+- le fichier `score.csv` ([/public/score.csv](https://github.com/dcfvg/temporium/blob/panorama/apps/interface/public/score.csv)) permet de modifier les paramètres du montage dynamique.
 
 | champ  | description |
 | ------ | ----------- |
