@@ -12,7 +12,7 @@ function init() {
 
   var $movie            = $("#movie"),                  // container
       movieUrl          = "/video/immersion.mov",       // video file url
-      movieWidth        = 1920, movieHeight = 1037,     // size to display
+      movieWidth        = 1920, movieHeight = 1036,     // size to display
       movieGoesOn       = false,                        // 
       movieCurentStep   = 0,                            // current event step
       movieWatchInteval = 500,                          // timecode events refresh frequency
