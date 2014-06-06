@@ -11,7 +11,7 @@ _depuis le terminal_
 
 ### configuration du montage dynamique
 
-- le fichier `score.csv' ([/public/score.csv](https://github.com/dcfvg/temporium/blob/panorama/apps/interface/public/score.csv) permet de modifier les paramètres du montage dynamique.
+- le fichier `score.csv' ([/public/score.csv](https://github.com/dcfvg/temporium/blob/panorama/apps/interface/public/score.csv)) permet de modifier les paramètres du montage dynamique.
 
 | champ  | description |
 | ------ | ----------- |
