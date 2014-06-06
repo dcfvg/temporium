@@ -28,15 +28,14 @@ _depuis le terminal_
 
 ### préparation des media
 
-film
+**film**
 - exporte en H264 avec un débit entre 8-10 Mb/s
 - format 1.35 ( 1920 × 1036 px ), pas de bandes noires
 
-image à former
+**image à former**
 - photogramme en png
-- format fullHD ( 1920 x 1080 )
+- format fullHD ( 1920 x 1080 px)
 - négatif, miroir, contraste/niveaux adaptés
-
 
 ## démarrage 
 
