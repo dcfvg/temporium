@@ -7,7 +7,7 @@ _depuis le terminal_
 - installer les modules nodejs `npm install`
 - création les dossiers pour les médias dans le dossier`interface/public/` 
 	- `exposure`, l’emplacement des images capturées par l’appareil
-	- `images`, l’emplacement pour l’image à exploser `nega.png` et du flash gris `flash.png`
+	- `images`, l’emplacement pour l’image à exposer `nega.png` et du flash gris `flash.png`
 
 ### configuration du montage dynamique
 
