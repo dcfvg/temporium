@@ -1,8 +1,6 @@
 interface
 =====
 
-## déploiment
-
 ### installation
 _depuis le terminal_
 - aller dans le dossier `cd ~/temporim/apps/interface/`
