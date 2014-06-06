@@ -52,7 +52,7 @@ _raccourcits clavier_
 - `j` avancer le film de 10 s
 - `h` avancer le film de 30 s
 
-### utilisation de d'exposure
+### utilisation d'exposure
 
 La page `/exposure` peut être déporté sur un autre poste en consultant `xxx.xxx.xxx.xxx:8080/exposure/` avec `xxx.xxx.xxx.xxx` l'ip du serveur sur le réseau local. .
 
