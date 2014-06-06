@@ -29,17 +29,17 @@ _depuis le terminal_
 ### démarrage de l’application : 
 
 _depuis le terminal_
-1. aller dans le dossier `cd ~/temporim/apps/interface/`
-2. démarrer le serveur node `node server.js`
+- aller dans le dossier `cd ~/temporim/apps/interface/`
+- démarrer le serveur node `node server.js`
 
 _depuis le navigateur_
-1. ouvrir `localhost:8080/player` pour afficher le film
-2. ouvrir `localhost:8080/exposure` pour afficher l’image à exposer
-3. **attendre** plusieurs minutes que le film ait le temps de se précharger
+- ouvrir `localhost:8080/player` pour afficher le film
+- ouvrir `localhost:8080/exposure` pour afficher l’image à exposer
+- **attendre** (plusieurs minutes) la disparition du message de pré-préchargement du film `loading …`.
 
 _depuis le vivant_
-1. envoyer le message `seance_start`
-2. envoyer le taux de formation en réponse à 
+- envoyer le message `seance_start`
+- envoyer le taux de formation en réponse à `/image_capture/public/000XX.jpg`
 
 ### utilisation du player
 La console du navigateur permet de suivre l’état du player.

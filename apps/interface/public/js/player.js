@@ -217,6 +217,8 @@ function init() {
     console.log("QtEvent :: " + ev.type);    
   };
   function onQtCanPlayThrough(){
+    $("#wait").addClass('off');
+
     movieTimeScale = document.qtF.GetTimeScale();
     movieDuration  = document.qtF.GetDuration() / movieTimeScale;
 
@@ -349,5 +351,6 @@ function init() {
   }
 
   reset();
+
 };
 $(document).on('ready', init);

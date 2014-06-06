@@ -10,17 +10,25 @@ body {
   overflow: hidden;
 }
 .player {
-  width: 1888px;
-  height: 1062px;
   width: 100%;
   height: 100%;
   position: absolute;
   top: 0;
   left: 0;
 }
+#life {
+  top: -2 px;
+}
+video::-webkit-media-controls-enclosure {
+  display: none !important;
+}
 .off {
   opacity: 0;
 }
 #exposure {
   background: #cccccc url('/images/flash.png');
+}
+#wait {
+  text-align: center;
+  color: royalblue;
 }
