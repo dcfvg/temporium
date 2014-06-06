@@ -1,6 +1,8 @@
 interface
 =====
 
+## déploiment
+
 ### installation
 _depuis le terminal_
 - aller dans le dossier `cd ~/temporim/apps/interface/`
@@ -26,7 +28,19 @@ _depuis le terminal_
 
 > Le temps du vivant est figuré dans le film par un cache vert de 4 secondes.
 
-### démarrage de l’application : 
+### préparation des media
+
+film
+- exporte en H264 avec un débit entre 8-10 Mb/s
+- format 1.35 ( 1920 × 1036 px ), pas de bandes noires
+
+image à former
+- photogramme en png
+- format fullHD ( 1920 x 1080 )
+- négatif, miroir, contraste/niveaux adaptés
+
+
+## démarrage 
 
 _depuis le terminal_
 - aller dans le dossier `cd ~/temporim/apps/interface/`
@@ -41,7 +55,10 @@ _depuis le vivant_
 - envoyer le message `seance_start`
 - envoyer le taux de formation en réponse à `/image_capture/public/000XX.jpg`
 
-### utilisation du player
+
+## utilisation
+
+### player
 La console du navigateur permet de suivre l’état du player.
 
 _raccourcits clavier_
@@ -52,11 +69,11 @@ _raccourcits clavier_
 - `j` avancer le film de 10 s
 - `h` avancer le film de 30 s
 
-### utilisation d'exposure
+### exposure
 
 La page `/exposure` peut être déporté sur un autre poste en consultant `xxx.xxx.xxx.xxx:8080/exposure/` avec `xxx.xxx.xxx.xxx` l'ip du serveur sur le réseau local. .
 
-### TODO
+## TODO
 
 - interface de gestion du montage `/monitor`
 - mise en place du lancement plein écran automatique
