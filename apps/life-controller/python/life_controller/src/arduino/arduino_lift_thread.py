@@ -39,7 +39,7 @@ class arduino_lift_thread(threading.Thread):
             """set arduino_lift_busy_state to True"""
             self.arduino_lift.set_busy_state(True)
             
-            self.arduino_lift._is_occupied()
+            q#self.arduino_lift._is_occupied()
             
             self.arduino_lift.set_busy_state(False)
             self.current_state._set_current_action_lift_screen(self.action_name,False )
