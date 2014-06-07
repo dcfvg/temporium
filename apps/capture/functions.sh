@@ -67,7 +67,9 @@ function timelaps_finish {
 # utils
 function oscSend {
   # send OSC message to ExposerFlasher 
-  python $current"/osc/sender.py" 127.0.0.1 4242 $1
+  set -x
+  python $current"/osc/sender.py" 127.0.0.1 4242 $1 $2
+  set +x
 }
 function PDE_run {
   # run a processing sketch 
