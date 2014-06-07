@@ -27,3 +27,4 @@
 
 .DS_Store
 node_modules/*
+apps/capture/tmpfiles*
