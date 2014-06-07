@@ -1,5 +1,5 @@
 #!/bin/bash
-#set -x
+set -x
 #
 # the temporium main script
 #  
@@ -8,11 +8,8 @@
 # @since  01.02.2014
 #
 
-
-
 # include var and functions for local use
-source /Users/immersion/temporium/apps/cli/functions.sh  
-PATH=/usr/local/bin/:$PATH
+source functions.sh  
 
 # setup folders
 mkdir -v $assets $archive $captation $exp $EFdata
@@ -22,7 +19,6 @@ clear
 camera_framePerCaptation=${1-650}
 
 # init
-exposure_init
 camera_init
 timelaps_init
 
@@ -40,10 +36,10 @@ for (( i=$camera_framePerCaptation; i>0; i--)); do
 
 	printf "# $i \n"
 
-	gphoto2 \
- 	--capture-image-and-download \
-  	--hook-script $app/capture/camera_hook.sh \
-  	--filename $exp/%y.%m.%d_%H.%M.%S.%C
+	#gphoto2 \
+ 	#--capture-image-and-download \
+  #	--hook-script $app/capture/camera_hook.sh \
+  #	--filename $exp/%y.%m.%d_%H.%M.%S.%C
 done
 
 timelaps_render
