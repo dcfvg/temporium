@@ -22,7 +22,6 @@ flash_expose="$EFdata/flash.png"
 # ========
 
 # formation captation
-
 function camera_init {
   
   # make sure the camera is available.

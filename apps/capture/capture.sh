@@ -16,7 +16,7 @@ mkdir -v $assets $archive $captation $exp $EFdata
 clear
 
 # settings
-camera_framePerCaptation=${1-650}
+camera_framePerCaptation=${1-370}
 
 # init
 camera_init
@@ -35,11 +35,13 @@ say "starting exposure !"
 for (( i=$camera_framePerCaptation; i>0; i--)); do
 
 	printf "# $i \n"
-
-	#gphoto2 \
- 	#--capture-image-and-download \
-  #	--hook-script $app/capture/camera_hook.sh \
-  #	--filename $exp/%y.%m.%d_%H.%M.%S.%C
+	
+	
+	gphoto2 \
+ 	--capture-image-and-download \
+  --hook-script $app/capture/camera_hook.sh \
+  --filename $exp/%y.%m.%d_%H.%M.%S.%C &
+	sleep 5
 done
 
 timelaps_render
