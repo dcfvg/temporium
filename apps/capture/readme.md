@@ -1,6 +1,8 @@
-# captation de la formation de l'image 
+# lancer une capture
 
-- piloter l'appareil photo 
-- projeter un négatif
-- compiler le timelapse en MP4
+_dans le terminal_
+ 
+- aller dans le dossier `/apps/capture/`
+- lancer la capture `bash capture.sh``
 
+Le nombre d’images par défaut est de `650`, il est possible d’en changer en lançant `bash capture.sh 195` ou 195 représente le nombre d’images. 
