@@ -57,6 +57,12 @@ _depuis le vivant_
 - envoyer le message `seance_start`
 - envoyer le taux de formation en réponse à `/image_capture/public/000XX.jpg`
 
+## démarrage exposer-flasher uniquement
+
+_depuis le terminal_
+- aller dans le dossier `cd ~/temporim/apps/interface/`
+- démarrer le script `bash bin/capture.sh`
+- quitter le script `ctrl` + `c`
 
 ## utilisation
 
