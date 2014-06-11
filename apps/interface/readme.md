@@ -8,7 +8,7 @@ _depuis le terminal_
 - création les dossiers pour les médias dans le dossier `interface/public/` 
 	- `exposure`, l’emplacement des images capturées par l’appareil
 	- `images`, l’emplacement pour l’image à exposer `nega.png` et du flash gris `flash.png`
-	- 
+
 - ajouter le film dans `/video/immersion.mov`
 
 ### configuration du montage dynamique
