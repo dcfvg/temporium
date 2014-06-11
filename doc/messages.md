@@ -47,7 +47,8 @@ description                               |  patern               | message     
 taux de formation de l'image              | /image_formation      | 0-255         | 3333 |
 
 
-Seance_controller interne : 
+Seance_controller interne :
+
 description                               |  patern               | message       | port |
 ----------------------------------------- | --------------------- | ------------- | ---- |
 afficher le negatif                       | /EF                   | expose        | 3333 |
@@ -59,6 +60,7 @@ remise à zéro du chrono                   | /EF                   | resetTime 
 
 Rq : 
 Supprimé : 
+
 description                               |  patern               | message       | port |
 ----------------------------------------- | --------------------- | ------------- | ---- |
 info :  premiere image capturée           | /first_photo          | 1             | 3334 |
