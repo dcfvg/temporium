@@ -83,8 +83,3 @@ _raccourcits clavier_
 
 La page `/exposure` peut être déporté sur un autre poste en consultant `xxx.xxx.xxx.xxx:8080/exposure/` avec `xxx.xxx.xxx.xxx` l'ip du serveur sur le réseau local. .
 
-## TODO
-
-- interface de gestion du montage `/monitor`
-- mise en place du lancement plein écran automatique
-- mode debug qui affiche l'état du film
