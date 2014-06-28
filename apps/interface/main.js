@@ -81,6 +81,7 @@ module.exports = function(app, io, oscServer){
   };
   function onCaptureInit(){
     capt = spawn('bash',['bin/capture.sh']);
+    console.log("Lancé");
     capt.stdout.on('data', function (data) {
       console.log('stdout: ' + data);
     });
@@ -101,7 +102,7 @@ module.exports = function(app, io, oscServer){
   }; 
   function onMessage(msg){
     oscClient.send(msg);
-  }
+  };
 
   //////////////////////////////
   //  communication 
@@ -114,10 +115,10 @@ module.exports = function(app, io, oscServer){
       case "refreshTimelaps":
         refreshTimelaps();
       break;
-      case "seance_start":
-        //onCaptureInit(); // lanch from client
+      case "/seance_start":
+        onCaptureInit(); // lanch from client
       break;
-      case "captureStop":
+      case "/capture_stop":
         onCaptureStop();
       break;
     };
