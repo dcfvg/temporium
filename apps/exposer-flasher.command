@@ -2,4 +2,4 @@
 # set -x
 
 cd /Users/immersion/temporium/apps/capture/
-bash capture.sh
+bash capture.sh 450
