@@ -17,7 +17,7 @@ if __name__ == "__main__": # Permet de rentrer dans la boucle seulement si le sc
     client = udp_client.UDPClient(args.ip, args.port)
 
     while True : 
-        a = input("msg to send : 1 = seance_start, 2 = image_formation : \n, 3 = debug")
+        a = input("msg to send : 1 = seance_start, 2 = image_formation : \n, 3 = capture_stop, 4= debug")
 
         if a =="1" : 
             msg = osc_message_builder.OscMessageBuilder(address = "/seance_start")
@@ -29,6 +29,16 @@ if __name__ == "__main__": # Permet de rentrer dans la boucle seulement si le sc
             b = input("value to send : ")
             msg = osc_message_builder.OscMessageBuilder(address = "/image_formation")
             msg.add_arg(b)
+            msg = msg.build()
+            client.send(msg) 
+        if a =="3" : 
+            msg = osc_message_builder.OscMessageBuilder(address = "/capture_stop")
+            msg.add_arg(1)
+            msg = msg.build()
+            client.send(msg) 
+        if a =="4" : 
+            msg = osc_message_builder.OscMessageBuilder(address = "/debug")
+            msg.add_arg(1)
             msg = msg.build()
             client.send(msg) 
     print ("End client_seance_simu")
