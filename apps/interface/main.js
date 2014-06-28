@@ -99,6 +99,7 @@ module.exports = function(app, io, oscServer){
       capt.stdin.pause();
       capt.kill();
     }, 2000);
+
   }; 
   function onMessage(msg){
     oscClient.send(msg);
@@ -115,10 +116,10 @@ module.exports = function(app, io, oscServer){
       case "refreshTimelaps":
         refreshTimelaps();
       break;
-      case "/seance_start":
-        onCaptureInit(); // lanch from client
+      case "seance_start":
+        //onCaptureInit(); // lanch from client
       break;
-      case "/capture_stop":
+      case "capture_stop":
         onCaptureStop();
       break;
     };
