@@ -21,7 +21,7 @@ if __name__ == "__main__":
 
     dispatcher = dispatcher.Dispatcher()
     dispatcher.map("/image_capture", image_capture)
-    dispatcher.map("/seance_end", seance_end )
+    dispatcher.map("seance_end", seance_end )
 
 
     """test"""
