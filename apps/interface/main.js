@@ -16,6 +16,10 @@ module.exports = function(app, io, oscServer){
   // server side
   //////////////////////////////
   function initClientWindows(){
+
+    // lancement du script qui lance chrome et chrome canary en FS sur chacun des écrans
+    // cf. bin/initClientWindows.sh
+
     clientWindows = spawn('bash',['bin/initClientWindows.sh']);
 
     clientWindows.stdout.on('data', function (data) {
@@ -29,6 +33,10 @@ module.exports = function(app, io, oscServer){
     });
   };
   function loadScore(){
+
+    // charge les moments clefs du montage et les actions associés 
+    // cf. /public/score.csv
+
     var Converter=require("csvtojson").core.Converter;
     var fs=require("fs");
 
@@ -47,6 +55,8 @@ module.exports = function(app, io, oscServer){
   //  movies Management
   //////////////////////////////
   function refreshTimelaps( speed, zoom){
+
+    // compilation de la video "live" à partir des JPEG pris par l'appareil photo
 
     speed = typeof speed !== 'undefined' ? speed : 1;
     zoom  = typeof zoom  !== 'undefined' ? zoom  : 1;
@@ -93,6 +103,10 @@ module.exports = function(app, io, oscServer){
     });
   };
   function onCaptureStop (){
+
+    // quitter node ne quite pas les processus qui ont été "spawné"
+    // cette commande permet de killer la capture.
+
     console.log('kill capture in 2 s');
 
     setTimeout(function() {
