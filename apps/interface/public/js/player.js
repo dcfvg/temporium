@@ -87,9 +87,11 @@ function init() {
   };
   function onSocketOscMessage(obj){
     //console.log(obj);
+    // conversion d'un event OSC -> IO en javascript chez le client 
     $d.trigger(obj[0],[ obj[1] ]);
   };
   function onSocketScore(obj){
+    // le "score" à été rechargé
     score = obj;
     console.log(obj);
   };

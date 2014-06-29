@@ -34,7 +34,7 @@ module.exports = function(app, io, oscServer){
   };
   function loadScore(){
 
-    // charge les moments clefs du montage et les actions associés 
+    // le "score" contiens les moments clefs du montage et les actions associés 
     // cf. /public/score.csv
 
     var Converter=require("csvtojson").core.Converter;
