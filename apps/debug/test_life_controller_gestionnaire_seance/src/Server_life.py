@@ -20,7 +20,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     dispatcher = dispatcher.Dispatcher()
-    dispatcher.map("/image_capture", image_capture)
+    dispatcher.map("image_capture", image_capture)
     dispatcher.map("seance_end", seance_end )
 
 

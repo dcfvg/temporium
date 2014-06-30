@@ -3,27 +3,24 @@ function init() {
   //////////////////////////////
   // vars
   //////////////////////////////
-  var socket = io.connect("http://localhost:8080"),
+
+  var serverBaseUrl = "http://localhost:8080",
+      socket = io.connect(serverBaseUrl),
+      sessionId = '',
       $d = $(document)
       ;
 
   var $movie            = $("#movie"),                  // container
-      movieUrl          = "/video/immersion.mov",
+      movieUrl          = "/video/immersion.mov",       // video file url
       movieWidth        = 1920, movieHeight = 1036,     // size to display
       movieGoesOn       = false,                        // 
       movieCurentStep   = 0,                            // current event step
       movieWatchInteval = 500,                          // timecode events refresh frequency
+      movieTimeScale    = 25,                           // qt property
+      movieDuration     = 1935,                         // duration of the movie
       movieStartMargin  = 44,
-      movieVolume       = 0.5,
-      $pop_movie	= Popcorn("#movie")
+      movieVolume       = 255
       ;
-
-  $pop_movie.on('error'         , onPlayerEvent);
-  $pop_movie.on('pause'         , onPlayerEvent);
-  $pop_movie.on('suspend'       , onPlayerEvent);
-  $pop_movie.on('ended'         , onMovieEnded);
-  $pop_movie.on('canplay'       , onPlayerEvent);
-  $pop_movie.on('canplaythrough', onCanPlayThrough);
 
   var $life             = $("#life"),
       lifeUrl           = "/video/live.mp4",
@@ -43,7 +40,7 @@ function init() {
   socket.on('connect', onSocketConnect);
   socket.on('oscMessage', onSocketOscMessage);
   socket.on('score', onSocketScore);
-  socket.on('refreshTimelapsEnd', onRefreshTimelapsEnd); 
+  socket.on('refreshTimelapsEnd', onRefreshTimelapsEnd);
   
   $d // on
     .on( "seance_start"     , onSeanceStart)
@@ -53,6 +50,7 @@ function init() {
     .on( "showMovie"        , onShowMovie)
     .on( "showLife"         , onShowLife)
     .on( "projectionStart"  , onProjectionStart)
+    .on( "qtSeekTo"         , onQtSeekTo) 
   ;
   
   $pop_life.on("ended",onLifeEnded);
@@ -64,23 +62,19 @@ function init() {
     if ( event.which == 108 ) $d.trigger("showLife");   // l
     if ( event.which == 114 ) $d.trigger("reloadLife"); // r
     if ( event.which == 104 ) { // h
-      var time = getCurrentTime();
-      $pop_movie.currentTime(time + 30);
-      console.log("jump +30s -> "+getCurrentTime());
+      var time  = (getQtCurrentTime()+30) * movieTimeScale;
+      document.qtF.SetTime(time);
+      console.log("jump +30s -> "+time/movieTimeScale);
     };
     if ( event.which == 106 ) { // j
-      var time = getCurrentTime();
-      $pop_movie.currentTime(time + 30);
-      console.log("jump +30s -> "+getCurrentTime());
+      var time  = (getQtCurrentTime()+10) * movieTimeScale;
+      document.qtF.SetTime(time);
+      console.log("jump +10s -> "+time/movieTimeScale);
     };
 
-    if ( event.which == 107 ) { console.log("t :",getCurrentTime());}// k
-    if(event.which == 103){
-      $pop_movie.play(0); //g
-    };
-    if(event.which == 102){
-      $pop_movie.pause(); //f
-    };
+    if ( event.which == 107 ) { console.log("t :",getQtCurrentTime());}// k
+
+    if ( event.which == 103 ) $d.trigger("projectionStart"); //g
   });
 
   //////////////////////////////
@@ -89,16 +83,15 @@ function init() {
 
   // messages events
   function onSocketConnect() {
-    console.log('Connected ');
+    sessionId = socket.socket.sessionid;
+    console.log('Connected ' + sessionId);
     //socket.emit('newUser', {id: sessionId, name: $('#name').val()});
   };
   function onSocketOscMessage(obj){
-    //console.log(obj);
-    // conversion d'un event OSC -> IO en javascript chez le client 
+    console.log(obj);
     $d.trigger(obj[0],[ obj[1] ]);
   };
   function onSocketScore(obj){
-    // le "score" à été rechargé
     score = obj;
     console.log(obj);
   };
@@ -115,14 +108,14 @@ function init() {
     
     console.log("# projection !");
  
-    $pop_movie.play(0);
+    document.qtF.Play();
     $d.trigger("showMovie");
     
     movieGoesOn = true;
 
     movieCurentStep = 0;
     setNextStep();
-    setVolume(movieVolume);
+    setQtVolume(movieVolume);
   }
 
   // player events
@@ -151,7 +144,7 @@ function init() {
     $d.trigger("lifeRefreshMovie");
   };
   function onShowLife(){
-    $pop_life.play(0);
+    $pop_life.play();
     $life.removeClass("off");
     $movie.addClass("off");
   };
@@ -164,8 +157,7 @@ function init() {
   // Helpers
   //////////////////////////////
 
-  function getScore(){
-    socket.emit('getScore',true);
+  function getScore(){socket.emit('getScore',true);
   };
   function getAt(l){
     return (parseInt(l.at_min)*60 + parseInt(l.at_sec) + movieStartMargin); 
@@ -174,27 +166,72 @@ function init() {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   };
 
-  function setVolume(v){
-    $pop_movie.volume(v);
-  };
-  function getCurrentTime(){
-    return $pop_movie.currentTime();
-  };
+  // QT plugin manipulation
+  function createQt(qtsrc, container, name){
+    container.html(QT_GenerateOBJECTText(
+      qtsrc, movieWidth, movieHeight, 'sff',
+      'obj#id'  , name,
+      'emb#NAME', name,
+      'emb#id'  , name,
+      'scale' , 'tofit' , 'AUTOPLAY', 'false', 'CONTROLLER', 'false',
+      'EnableJavaScript', 'True', 'postdomevents', 'True',
+      'STARTTIME',"00:00:00:00",
+      'qtsrc', qtsrc));
 
-  function onPlayerEvent(ev){
-    //console.log("Event :: " + ev.type);    
+    initQtCallback();
   };
-  function onCanPlayThrough(){
+  function initQtCallback(){
+    console.log("Register Qt player Event");
+
+    var obj = document.qtF;
+    obj.addEventListener('qt_error'         , onQtPlayerEvent, false);
+    obj.addEventListener('qt_pause'         , onQtPlayerEvent, false);
+    obj.addEventListener('qt_stalled'       , onQtPlayerEvent, false);
+    obj.addEventListener('qt_ended'         , onQtEnded, false);
+    obj.addEventListener('qt_begin'         , onQtPlayerEvent, false);
+    obj.addEventListener('qt_validated'     , onQtPlayerEvent, false);
+    obj.addEventListener('qt_canplay'       , onQtPlayerEvent, false);
+    obj.addEventListener('qt_canplaythrough', onQtCanPlayThrough, false);
+  };
+  function sToQtTimecode(sTc){
+    // second timecode to QuickTime timecode
+
+    var hours = parseInt( sTc / 3600 ) % 24;
+    var minutes = parseInt( sTc / 60 ) % 60;
+    var seconds = sTc % 60; 
+
+    return (hours < 10 ? "0" + hours : hours) + ":" 
+      + (minutes  < 10 ? "0" + minutes : minutes) + ":" 
+      + (seconds  < 10 ? "0" + seconds : seconds) + ":00"; // add image count
+  };
+  function setQtVolume(v){
+    document.qtF.SetVolume(v);
+  };
+  function getQtCurrentTime(){
+    return Math.round(document.qtF.GetTime()/movieTimeScale * 100)/100;
+  };
+  function onQtSeekTo(e, obj){
+    console.log("seek -> "+ obj);
+    // createQt(movieUrl, sToQtTimecode(t), $movie); // brute force
+    document.qtF.SetTime(parseInt(obj));
+  };
+  function onQtPlayerEvent(ev){
+    console.log("QtEvent :: " + ev.type);    
+  };
+  function onQtCanPlayThrough(){
     $("#wait").addClass('off');
 
-    movieDuration  = $pop_movie.duration();
+    movieTimeScale = document.qtF.GetTimeScale();
+    movieDuration  = document.qtF.GetDuration() / movieTimeScale;
 
     //emulateImageFormation(60);
 
-    console.log("movie is ready !", movieDuration);
+    console.log("movie is ready !", movieTimeScale, movieDuration);
   };
-  function onMovieEnded(){
-
+  function onQtEnded(){
+    io.sockets.emit("message", "seance_end");
+    
+    socket.on("captureStop", onCaptureStop);
     socket.emit('message', "seance_end" , true);
 
     reset();
@@ -212,11 +249,13 @@ function init() {
 
     //socket.emit('refreshTimelaps');
 
+    createQt(movieUrl, $movie, "qtF");
     movieGoesOn = false;
 
     // seek to beginning 
 
-    $pop_movie.pause().currentTime(0);
+    document.qtF.Stop(0);
+    document.qtF.SetTime(0);
   
     $pop_life.pause().currentTime(0);
 
@@ -224,7 +263,7 @@ function init() {
   };
   function getJump(step){
     var jump_max = step.jump_max;
-    var movieProgress  = Math.round((getCurrentTime()/movieDuration)*100);
+    var movieProgress  = Math.round((getQtCurrentTime()/movieDuration)*100);
     var lifeProgress = image_formation; //Math.round((image_formation/255)*100);
     var jump = (jump_max/2)-(((lifeProgress - movieProgress)/100)*jump_max);
 
@@ -246,7 +285,7 @@ function init() {
 
     var inter = setInterval(function(){
 
-      t = getCurrentTime();
+      t = getQtCurrentTime();
 
       // TIMELAPS COMPILATION
       if(t > (at - compileDelay) && !renderStarted){
@@ -275,8 +314,7 @@ function init() {
           movieCurentStep++;
 
           $d.trigger("showLife"); // show life 
-          $pop_movie.pause();
-          // stop movie
+          document.qtF.Stop();   // stop movie
 
         },jump*1000);
       };
@@ -290,7 +328,8 @@ function init() {
     console.log("~ cut",step.id,step.title,'(',step.type,')',"@", at);
     console.log("restarting life at", jump,'/',step.jump_max);
 
-    $pop_movie.play(at + jump);
+    document.qtF.SetTime((at + jump) * movieTimeScale);
+    document.qtF.Play();
 
     $d.trigger("showMovie");
 
