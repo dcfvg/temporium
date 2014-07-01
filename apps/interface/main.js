@@ -10,7 +10,7 @@ module.exports = function(app, io, oscServer){
   var capt; // capture programme (bash)
   var spawn = require('child_process').spawn;
 
-  initClientWindows(); // lauch chrome at launch
+  //initClientWindows(); // lauch chrome at launch
 
   //////////////////////////////
   // server side
@@ -140,6 +140,6 @@ module.exports = function(app, io, oscServer){
     socket.on("getScore", loadScore);
     socket.on("refreshTimelaps", onRefreshTimelaps);
     socket.on("captureStop", onCaptureStop);
-    socket.on("captureInit", onCaptureInit);
+    //socket.on("captureInit", onCaptureInit);
   });
 };
