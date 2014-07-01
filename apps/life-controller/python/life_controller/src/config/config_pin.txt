@@ -4,10 +4,6 @@ comments : To add an arduino, put "arduino :" at the beginiing of the ligne, the
 comments : after an arduino, put the right function and the coresponding pin connected to it, separated by ":", if function is not connected, put "NULL" as a pin
 comments : list all pin output in the pin_array_output that are connected to the last arduino declared 
 comments : list arduino terminal "python -m serial.tools.list_ports" ou "ls /dev/cu.usbmodem*"
-<<<<<<< HEAD
-arduino : arduino_lift : /dev/cu.usbmodem411
-pin_array_output : 2
-=======
 arduino : arduino_pump :  /dev/cu.usbmodem14111
 PUMP : P_SPECTRO : 28
 PUMP : P_FI_S : 29
@@ -45,4 +41,3 @@ EL : AQ : MIDDLE : 45 : 52
 EL : AQ : MIN : 47 : 52
 comments : arduino_lift : /dev/cu.usbmodem14221
 comments : pin_array_output : 2, 3, 4 , 5, 10, 12
->>>>>>> FETCH_HEAD
