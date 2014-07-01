@@ -9,8 +9,8 @@ from client_OSC import *
 from server_OSC import *
 import random
 import numpy
-import matplotlib
-import matplotlib.pyplot as plt
+"""import matplotlib
+import matplotlib.pyplot as plt"""
 import io
 #import matplotlib.cm as cm
 
@@ -223,9 +223,10 @@ class formation_rate(threading.Thread):
         file.flush()
 
     def show_steadily_curve(self) :
-        plt.plot(self.formation_rate)
+        """plt.plot(self.formation_rate)
         plt.plot(self.formation_rate_smoothed)
-        plt.savefig("current_formation_rate_fig/current_fig_2")
+        plt.savefig("current_formation_rate_fig/current_fig_2")"""
+        pass
 
     """return the value of the image asked"""
     def formation_rate_mesure_percent(self, url) :
