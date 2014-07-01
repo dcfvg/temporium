@@ -66,7 +66,7 @@ do
   	--force-overwrite \
   	--filename "public/exposure/"$photoName".jpg"
 
-  	python $oscScript 127.0.0.1 3333 /image_capture $exp/$photoName.jpg
+  	python $oscScript 127.0.0.1 3335 image_capture $exp/$photoName.jpg
 
   sleep 2
 done
