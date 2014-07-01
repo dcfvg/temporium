@@ -32,8 +32,10 @@ class manual_action(Frame):
         """current_action_lift_screen"""
         self.button_action_lift_screen = {"lift_down" : [0],\
                                         "lift_up" : [1],\
-                                        "screen_down" : [2],\
-                                        "screen_up" : [3],\
+                                        "screen_down_outside" : [2],\
+                                        "screen_up_outside" : [3],\
+                                        "screen_down_inside" : [4],\
+                                        "screen_up_inside" : [5],\
                                         }
         """current_spectro"""
         self.button_spectro = {"spectro" : [0]}
@@ -48,10 +50,18 @@ class manual_action(Frame):
                                         "renew_light_AQ_BU3" : [3],\
                                  }
         
+        self.button_current_action_aquarium = {"AQ_emptying_EL_HIGH": [0],\
+                                               "AQ_emptying_EL_MIDDLE": [1],\
+                                               "AQ_emptying_EL_LOW": [2],\
+                                               
+                                               }
+        
         """list of information asked : name : [lock, state, name_server] """
         self.button_information_asked = {"formation_rate" : [0],\
                                          "level" : [1],\
                                          "concentration" : [2]}
+        
+        self.button_current_film_state = {"film" : [0]}
         
         
 
@@ -61,6 +71,8 @@ class manual_action(Frame):
         self._build_button_light()
         self._build_button_action_evolved()
         self._build_button_information_asked()
+        self._build_button_current_film_state()
+        self._build_button_current_action_aquarium()
         self._build_state_label()
         self._add_to_frame()
         
@@ -82,7 +94,17 @@ class manual_action(Frame):
             self.button_action_evolved[item].append(tkinter.Label(self,bg ='red', text = "FALSE")) 
         
         for item in self.button_information_asked : 
-            self.button_information_asked[item].append(tkinter.Label(self,bg ='red', text = "FALSE"))   
+            self.button_information_asked[item].append(tkinter.Label(self,bg ='red', text = "FALSE")) 
+        for item in self.button_current_film_state : 
+            self.button_current_film_state[item].append(tkinter.Label(self,bg ='red', text = "FALSE"))  
+        for item in self.button_current_film_state : 
+            self.button_current_film_state[item].append(tkinter.Label(self,bg ='red', text = "FALSE"))
+        for item in self.button_current_action_aquarium : 
+            self.button_current_action_aquarium[item].append(tkinter.Label(self,bg ='red', text = "FALSE"))
+           
+              
+        
+             
             
         
     
@@ -155,6 +177,28 @@ class manual_action(Frame):
             self.button_information_asked[item][1].grid(sticky=W, row= self.button_information_asked[item][0]+compt_right, column=2)
             self.button_information_asked[item][2].grid(sticky=E, row=self.button_information_asked[item][0]+compt_right, column=3)
         compt_right = compt_right+internal_compt
+        
+        Label(self, text = "Film : ",fg = "white", bg = "black").grid(sticky = W,row=compt_right, column = 2, columnspan = 2)
+        compt_right = compt_right+1
+        
+        internal_compt = 0
+        for item in self.button_current_film_state :
+            internal_compt = internal_compt +1
+            self.button_current_film_state[item][1].grid(sticky=W, row= self.button_current_film_state[item][0]+compt_right, column=2)
+            self.button_current_film_state[item][2].grid(sticky=E, row=self.button_current_film_state[item][0]+compt_right, column=3)
+        compt_right = compt_right+internal_compt
+        
+        Label(self, text = "Film : ",fg = "white", bg = "black").grid(sticky = W,row=compt_right, column = 2, columnspan = 2)
+        compt_right = compt_right+1
+        
+        internal_compt = 0
+        for item in self.button_current_action_aquarium :
+            internal_compt = internal_compt +1
+            self.button_current_action_aquarium[item][1].grid(sticky=W, row= self.button_current_action_aquarium[item][0]+compt_right, column=2)
+            self.button_current_action_aquarium[item][2].grid(sticky=E, row=self.button_current_action_aquarium[item][0]+compt_right, column=3)
+        compt_right = compt_right+internal_compt
+        
+        
 
     """BUILD BUTTON"""
     """build the button associated to the action"""
@@ -181,10 +225,14 @@ class manual_action(Frame):
                 self.button_action_lift_screen[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_action_lift_screen("lift_down"))) 
             elif item =="lift_up" : 
                 self.button_action_lift_screen[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_action_lift_screen("lift_up")))
-            elif item =="screen_down" : 
-                self.button_action_lift_screen[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_action_lift_screen("screen_down")))
-            elif item =="screen_up" : 
-                self.button_action_lift_screen[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_action_lift_screen("screen_up")))
+            elif item =="screen_down_outside" : 
+                self.button_action_lift_screen[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_action_lift_screen("screen_down_outside")))
+            elif item =="screen_up_outside" : 
+                self.button_action_lift_screen[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_action_lift_screen("screen_up_outside")))
+            elif item =="screen_down_inside" : 
+                self.button_action_lift_screen[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_action_lift_screen("screen_down_inside")))
+            elif item =="screen_up_inside" : 
+                self.button_action_lift_screen[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_action_lift_screen("screen_up_inside")))
     
     def _build_button_spectro(self):
         for item in self.button_spectro : 
@@ -218,6 +266,21 @@ class manual_action(Frame):
             elif item =="concentration" : 
                 self.button_information_asked[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_information_asked("concentration")))
            
+    def _build_button_current_film_state(self):
+        for item in self.button_current_film_state : 
+            if item =="film" : 
+                self.button_current_film_state[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_current_film_state("film"))) 
+    
+    def _build_button_current_action_aquarium(self):
+        for item in self.button_current_action_aquarium : 
+            if item =="AQ_emptying_EL_HIGH" : 
+                self.button_current_action_aquarium[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_current_action_aquarium(item))) 
+            elif item =="AQ_emptying_EL_MIDDLE" : 
+                self.button_current_action_aquarium[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_current_action_aquarium(item))) 
+            elif item =="AQ_emptying_EL_LOW" : 
+                self.button_current_action_aquarium[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_current_action_aquarium(item))) 
+    
+    
     def refresh_state(self):
         for item in self.button_biological_actions :  
             if self.current_state.get_current_action(item) : 
@@ -281,5 +344,24 @@ class manual_action(Frame):
                 color = "red"
                 t = "FALSE"
             self.button_information_asked[item][2].config (bg = color, text = t)
+        
+        for item in self.button_current_film_state :  
+            if self.current_state.get_current_film_state(item) : 
+                color = "green"
+                t = "TRUE"
+            else : 
+                color = "red"
+                t = "FALSE"
+            self.button_current_film_state[item][2].config (bg = color, text = t)
+       
+        for item in self.button_current_action_aquarium :  
+            if self.current_state.get_current_action_aquarium(item) : 
+                color = "green"
+                t = "TRUE"
+            else : 
+                color = "red"
+                t = "FALSE"
+            self.button_current_action_aquarium[item][2].config (bg = color, text = t)
+            
         
         

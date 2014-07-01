@@ -56,20 +56,21 @@ class server_formation_rate(threading.Thread):
             else :        
                 """information like 'AQ : 100 \n ' """
                 #print (self.name + " received : "+ data)
-                print (self.name + " received " + data )
                 data = data.split("\n")
                 
-                for msg in data : 
-                    data_list = msg.split(":")
-                    container_name = data_list[0].strip()
-                    value = data_list[1].strip()
-                    try:
+                try:
+                    for msg in data : 
+                        data_list = msg.split(":")
+                        print(data_list)
+                        container_name = data_list[0].strip()
+                        value = data_list[1].strip()
+                        
                         self.current_state.set_formation_rate( float(value))
                     
-                    except Exception:
-                        """Sprint what is wrong"""
-                        print(self.name +" Message does not fit the protocol")
-                        
+                except Exception as e:
+                    """print what is wrong"""
+                    print(self.name +" Message does not fit the protocol")
+                    """print (e)"""
 
     
             

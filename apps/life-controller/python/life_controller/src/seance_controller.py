@@ -44,36 +44,53 @@ class seance_controller(threading.Thread):
         """order to send or not information about rate of image formation"""
         self._send_formation_rate_state = [threading.Lock(), False]
         
+        """time_out for the film"""
+        self._time_out = None
+        
+        self._start_lock = threading.Lock()
+        self._start_lock.acquire()
+        """emergency stop"""
+
+        self.start()
+        
+    def start_film(self):
+        self._stop_film = False
+        self._start_lock.release()
+
+    def run(self):
+        while True : 
+            self._start_lock.acquire()
+            self.film_begin()
         
     def film_begin(self):
-        print("film time begin in 5 sec")
-        time.sleep(5)
+        self._time_out = self.current_state.config_manager.get_film("TIME_OUT")
+        self.current_state._set_current_film_state("film",True)
+        print("film time begin")
+        #time.sleep(5)
         
         """send seance begin"""
         self.client_seance.send_seance_begin()
         
-        """
-        print("starting exposure")
-        capture = starting_capture()
-        capture.start()
-        """
+        """start ask information formation """
+        self.current_state.set_information_asked("formation_rate", True)
+
         """server_OSC_seance is waiting for first photo to begin analysing image and send it """
         
         compt = 0 
         
-        """while film not end or timeout = 40 min """
-        self.set_end_film(False)
         
-        while not self.get_end_film() or compt > 1200:
+        start_time = time.time()
+        while  (time.time()-start_time) < (self._time_out*60) and self.current_state.get_current_film_state("film"):
             time.sleep(2)
             compt= compt + 1
         
-        """stop sending image_information"""
-        self.set_send_formation_rate_state(False)
         
-        print("film time end")
-        return True
+        """stop ask information formation """
+        self.current_state.set_information_asked("formation_rate", False)
         
+        self.current_state._set_current_film_state("film",False)
+        self.client_seance.sent_seance_stop()
+        print("film time end")    
         
     def _create_client(self, ip, port):
         """create an UDP client on port and ip"""
@@ -82,19 +99,7 @@ class seance_controller(threading.Thread):
     def _create_server(self, ip, port):
         """create an UDP client on port and ip"""
         self.server_seance = server_OSC_seance(self, ip, port)
-    
-    def get_send_formation_rate_state(self):
-        """return send_formation_rate_state"""
-        self._send_formation_rate_state[0].acquire()
-        state = self._send_formation_rate_state[1]
-        self._send_formation_rate_state[0].release()
-        return state
-    
-    def set_send_formation_rate_state(self, state):
-        """set send_formation_rate_state"""
-        self._send_formation_rate_state[0].acquire()
-        self._send_formation_rate_state[1] = state
-        self._send_formation_rate_state[0].release()
+
     
     def get_end_film(self):
         """return en_received"""
@@ -109,67 +114,5 @@ class seance_controller(threading.Thread):
         self._end_film[1] = state
         self._end_film[0].release()
         
-    
 
-    
-    def run(self):
-        if True : 
-            """if client_formation_rate connected"""
-            """ask client_formation_rate to begin to analyse photo"""
-            print ("begin formation rate asked")
-            
-            """start sending image information, once every 10 sec"""
-            self.set_send_formation_rate_state(True)
-            fake_comp = 0
-            print('start sending formation information')
-            while self.get_send_formation_rate_state() : 
-                print('sending formation information')
-                
-                """real function to call"""
-                #self.client.send_seance_formation_rate(self.current_state.get_formation_rate())
-                
-                """for testing"""
-                self.client_seance.send_seance_formation_rate(fake_comp)
-                fake_comp = fake_comp +1
-                time.sleep(3)
-                
-            """stop asking information"""
-            print ("end formation rate asked")
-        else : 
-            print ("client_formation_rate not connected")
-        if False : 
-            """if client_formation_rate connected"""
-            if self.current_state.server.client_connected["server_formation_rate"][1] : 
-                """ask client_formation_rate to begin to analyse photo"""
-                self.current_state.server.client_connected["server_formation_rate"][0].start_information()
-                
-                """start sending image information, once every 10 sec"""
-                self.set_send_formation_rate_state(True)
-                fake_comp = 0
-                print('start sending formation information')
-                while self.get_send_formation_rate_state() : 
-                    print('sending formation information')
-                    
-                    """real function to call"""
-                    #self.client.send_seance_formation_rate(self.current_state.get_formation_rate())
-                    
-                    """for testing"""
-                    self.client_seance.send_seance_formation_rate(fake_comp)
-                    fake_comp = fake_comp +1
-                    time.sleep(3)
-                    
-                """stop asking information"""
-                self.current_state.server.client_connected["server_formation_rate"][0].stop_information()
-            else : 
-                print ("client_formation_rate not connected")
-           
-        
-     
-        
-if __name__ == "__main__":
-    com_ard = com_arduino()
-    cu_state = current_state(com_ard)
-    seance_cont = seance_controller(cu_state)
-    
-    seance_cont.film_begin()
     

@@ -1,9 +1,19 @@
 Temporium
-CONFIGURATION REAL TIME : file is read, every morning, and can be read on asked
+CONFIGURATION REAL TIME : file is read, every morning, and can be read on ask
+comments : time of emptying AQ when renew_light is called. AQ will be filled with BU only.
 renew_light_AQ : TIME : 12
+comments : filtration time for automatique AQ filtration in seconds
 auto_AQ_filtration : TIME : 300
 BRBU_controller : BR_FULL : 0.9
 BRBU_controller : BU_FULL : 0.9
 BRBU_controller : BU_EMPTY : 0.1
 BRBU_controller : FILLING_BR_BU : 0.66
+comments : time_out in minutes when the film starts
+film : TIME_OUT : 30000
+comments : time of the beginning of the exposure/time of the end of the exposure (format : 0-23h0-59)
+time_controller : START_DAY : 8
+time_controller : END_DAY : 7
+comments : time to wait after having turned on the spectro light and pump to mesure concentration // will change
+spectro : WAIT : 20
+comments : 
 AQ : CONCENTRAION_OPT : 50

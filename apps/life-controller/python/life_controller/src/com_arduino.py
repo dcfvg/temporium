@@ -211,13 +211,13 @@ class com_arduino(object):
             #return False
      
     """Order to liftDown and liftUp, screenDown and screenUp"""
-    def liftDown(self):
+    def lift_down(self):
         """answer : True if order send to the arduino, false otherwise"""
         answer = False
         if not self.test : 
             if "arduino_lift" in self.the_arduino : 
                 """send the order to liftdown the lift"""
-                answer = self.the_arduino["arduino_lift"].liftDown()
+                answer = self.the_arduino["arduino_lift"].lift_down()
             else : 
                 print ("arduino_lift not declared/connected")   
         
@@ -225,38 +225,63 @@ class com_arduino(object):
             
         return answer
 
-    def liftUp(self):
+    def lift_up(self):
         """answer : True if order send to the arduino, false otherwise"""
         answer = False
         if not self.test : 
             if "arduino_lift" in self.the_arduino :
                 """send the order to liftUp the lift"""
-                answer = self.the_arduino["arduino_lift"].liftUp()
+                answer = self.the_arduino["arduino_lift"].lift_up()
             else : 
                 print ("arduino_lift not declared/connected")      
         print("LiftUp asked")
         
         return answer
 
-    def screenDown(self):
+    def screen_down_outside(self):
         """answer : True if order send to the arduino, false otherwise"""
         answer = False
         if not self.test : 
             if "arduino_lift" in self.the_arduino :
                 """send the order to screenDown"""
-                answer = self.the_arduino["arduino_lift"].screenDown()
+                answer = self.the_arduino["arduino_lift"].screen_down_outside()
             else : 
                 print ("arduino_lift not declared/connected")
         print("screenDown asked")
         return answer 
 
-    def screenUp(self):
+    def screen_up_outside(self):
         """answer : True if order send to the arduino, false otherwise"""
         answer = False
         if not self.test : 
             if "arduino_lift" in self.the_arduino :
                 """send the order to screenDown"""
-                answer = self.the_arduino["arduino_lift"].screenUp()
+                answer = self.the_arduino["arduino_lift"].screen_up_outside()
+            else : 
+                print ("arduino_lift not declared/connected")  
+        print("screenUp asked")
+        
+        return answer
+    
+    def screen_down_inside(self):
+        """answer : True if order send to the arduino, false otherwise"""
+        answer = False
+        if not self.test : 
+            if "arduino_lift" in self.the_arduino :
+                """send the order to screenDown"""
+                answer = self.the_arduino["arduino_lift"].screen_down_inside()
+            else : 
+                print ("arduino_lift not declared/connected")
+        print("screenDown asked")
+        return answer 
+
+    def screen_up_inside(self):
+        """answer : True if order send to the arduino, false otherwise"""
+        answer = False
+        if not self.test : 
+            if "arduino_lift" in self.the_arduino :
+                """send the order to screenDown"""
+                answer = self.the_arduino["arduino_lift"].screen_up_inside()
             else : 
                 print ("arduino_lift not declared/connected")  
         print("screenUp asked")

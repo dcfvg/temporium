@@ -34,16 +34,16 @@ class arduino_lift_thread(threading.Thread):
         while True : 
             """release by arduino_lift when starting an action"""
             self._start_busy.acquire()
-            print("sart trehad")
+            #print("start thread")
             self.current_state._set_current_action_lift_screen(self.action_name,True )
             """set arduino_lift_busy_state to True"""
             self.arduino_lift.set_busy_state(True)
             
-            q#self.arduino_lift._is_occupied()
+            self.arduino_lift._is_occupied()
             
             self.arduino_lift.set_busy_state(False)
             self.current_state._set_current_action_lift_screen(self.action_name,False )
-            print("end trehad")
+            #print("end thread")
         
         
     """launch the busy state"""

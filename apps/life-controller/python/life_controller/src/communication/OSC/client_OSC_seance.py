@@ -30,6 +30,7 @@ class client_OSC_seance(object):
         self.client.send(msg)
         print("film begin send")
     
+    """not used, directly in the formation_rate programme"""
     def send_seance_formation_rate (self, value):
         """order are :   
             - rate of image_foramtion : /image_formation, value """
@@ -37,4 +38,12 @@ class client_OSC_seance(object):
         msg.add_arg(value)
         msg = msg.build()
         self.client.send(msg)
+    def sent_seance_stop (self):
+        """order are :   
+            - rate of image_foramtion : /image_formation, value """
+        msg = osc_message_builder.OscMessageBuilder(address = "/seance_stop")
+        msg.add_arg(1)
+        msg = msg.build()
+        self.client.send(msg)
+
         

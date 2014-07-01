@@ -16,7 +16,7 @@ class visual_feedback(Canvas):
     
     def __init__(self, parent, current_state):
         
-        Canvas.__init__(self, parent, width=500, height=600)
+        Canvas.__init__(self, parent, width=300, height=500)
         self.parent = parent
         self.pack(side=RIGHT,  fill=NONE, expand=1)
         self.update()

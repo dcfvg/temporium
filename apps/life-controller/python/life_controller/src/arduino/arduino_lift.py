@@ -48,7 +48,7 @@ class arduino_lift(object):
         print("end output")
         return answer
 
-    def liftDown(self):
+    def lift_down(self):
        
         """if busy"""
         if self.get_busy_state() : 
@@ -67,7 +67,7 @@ class arduino_lift(object):
             
         return answer
 
-    def liftUp(self):
+    def lift_up(self):
         """if busy"""
         if self.get_busy_state() : 
             print ("Arduino lift busy")
@@ -83,7 +83,7 @@ class arduino_lift(object):
             
         return answer
 
-    def screenDown(self):
+    def screen_down_outside(self):
         """if busy"""
         if self.get_busy_state() : 
             print ("Arduino lift busy")
@@ -94,12 +94,12 @@ class arduino_lift(object):
             self.lock.acquire()
             self.__sendData('2')
             self.lock.release()
-            self.start_busy("screen_down")
+            self.start_busy("screen_down_outside")
             answer = True
             
         return answer
 
-    def screenUp(self):
+    def screen_up_outside(self):
         """if busy"""
         if self.get_busy_state() : 
             print ("Arduino lift busy")
@@ -110,7 +110,39 @@ class arduino_lift(object):
             self.lock.acquire()
             self.__sendData('3')
             self.lock.release()
-            self.start_busy("screen_up")
+            self.start_busy("screen_up_outside")
+            answer = True
+            
+        return answer
+    
+    def screen_down_inside(self):
+        """if busy"""
+        if self.get_busy_state() : 
+            print ("Arduino lift busy")
+            answer = False
+            """if free"""
+        else : 
+            
+            self.lock.acquire()
+            self.__sendData('4')
+            self.lock.release()
+            self.start_busy("screen_down_inside")
+            answer = True
+            
+        return answer
+
+    def screen_up_inside(self):
+        """if busy"""
+        if self.get_busy_state() : 
+            print ("Arduino lift busy")
+            answer = False
+            """if free"""
+        else : 
+            
+            self.lock.acquire()
+            self.__sendData('5')
+            self.lock.release()
+            self.start_busy("screen_up_inside")
             answer = True
             
         return answer
@@ -119,7 +151,7 @@ class arduino_lift(object):
     will stay in this function until the arduin is free again"""
     def _is_occupied(self):
         self.lock.acquire()
-        self.__sendData('4')
+        self.__sendData('6')
         self.lock.release()
         return True
 

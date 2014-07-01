@@ -11,6 +11,7 @@ from action_thread.fill_BU_AQ import *
 from action_thread.auto_AQ_filtration import *
 from action_thread.renew_light_AQ_BU import *
 from action_thread.empty_BU_S import *
+from action_thread.AQ_emptying import *
 
 class current_state(object):
     """ Gather all the informations about the state of the installation"""
@@ -65,9 +66,24 @@ class current_state(object):
         """current_action_lift_screen"""
         self._current_action_lift_screen = {"lift_down" : [threading.Lock(),False],\
                                             "lift_up" : [threading.Lock(),False],\
-                                            "screen_down" : [threading.Lock(),False],\
-                                            "screen_up" : [threading.Lock(),False],\
+                                            "screen_down_outside" : [threading.Lock(),False],\
+                                            "screen_up_outside" : [threading.Lock(),False],\
+                                            "screen_down_inside" : [threading.Lock(),False],\
+                                            "screen_up_inside" : [threading.Lock(),False],\
                                             }
+        
+        """action on the aquarium"""
+        self._current_action_aquarium_evolved = {"aquarium_cycle_light": [threading.Lock(),False],\
+                                                 "aquarium_cycle_heavy": [threading.Lock(),False],\
+                                                 }
+        """action on the aquarium"""
+        self._current_action_aquarium = {"AQ_emptying_EL_HIGH": [threading.Lock(),False],\
+                                         "AQ_emptying_EL_MIDDLE": [threading.Lock(),False],\
+                                         "AQ_emptying_EL_LOW": [threading.Lock(),False],\
+                                         }
+        
+        
+        
         
         """current_spectro_state"""
         self._current_spectro_state = {"spectro" : [threading.Lock(),False]}
@@ -84,6 +100,9 @@ class current_state(object):
         """AQ_concentration"""
         self._concentration = {"AQ" :[threading.Lock(), 0]}
         
+        """film_state"""
+        self._current_film_state = {"film" :[threading.Lock(), False]}
+        
         """time since last resfresh of the GUI"""
         self._GUI_last_time = time.time()
         
@@ -97,8 +116,8 @@ class current_state(object):
         
         """list of information asked : name : [lock, state, name_server] """
         self._information_asked = {"formation_rate" : [threading.Lock(), False,"server_formation_rate" ],\
-                                 "level" : [threading.Lock(), False, "server_level"],\
-                                 "concentration" : [threading.Lock(), False,"server_concentration"]}
+                                   "level" : [threading.Lock(), False, "server_level"],\
+                                   "concentration" : [threading.Lock(), False,"server_concentration"]}
       
         
         """if there is a GUI or not"""
@@ -356,21 +375,37 @@ class current_state(object):
     """LIFT ORDERS"""   
     """Order to liftDown and liftUp, screenDown and screenUp"""
     
-    def liftDown(self):
+    def lift_down(self):
         print("lift_down")
         self.set_current_action_lift_screen("lift_down")
 
-    def liftUp(self):
+    def lift_up(self):
         print("lift_up")
         self.set_current_action_lift_screen("lift_up")
 
-    def screenDown(self):
-        print("screen_down")
-        self.set_current_action_lift_screen("screen_down")
+    def screen_down_outside(self):
+        print("screen_down_outside")
+        self.set_current_action_lift_screen("screen_down_outside")
 
-    def screenUp(self):
-        print("screen_up")
-        self.set_current_action_lift_screen("screen_up")
+    def screen_up_outside(self):
+        print("screen_up_outside")
+        self.set_current_action_lift_screen("screen_up_outside")
+    
+    def screen_down_inside(self):
+        print("screen_down_inside")
+        self.set_current_action_lift_screen("screen_down_inside")
+
+    def screen_up_inside(self):
+        print("screen_up_inside")
+        self.set_current_action_lift_screen("screen_up_inside")
+        
+        """checking if there is not already a task runnig on this arduino"""
+    def get_lift_busy(self):
+        b = False
+        for item in self._current_action_lift_screen :   
+            if self.get_current_action_lift_screen(item) : 
+                b = True
+        return b
     
     def set_current_action_lift_screen(self, name):
         """checking if there is not already a task runnig on this arduino"""
@@ -382,13 +417,17 @@ class current_state(object):
         """if there is no action running"""
         if b : 
             if name == "lift_down": 
-                answer = self.com_arduino.liftDown()
+                answer = self.com_arduino.lift_down()
             elif name == "lift_up": 
-                answer = self.com_arduino.liftUp()  
-            elif name == "screen_down": 
-                answer = self.com_arduino.screenDown() 
-            elif name == "screen_up": 
-                answer = self.com_arduino.screenUp() 
+                answer = self.com_arduino.lift_up()  
+            elif name == "screen_down_outside": 
+                answer = self.com_arduino.screen_down_outside() 
+            elif name == "screen_up_outside": 
+                answer = self.com_arduino.screen_up_outside()
+            elif name == "screen_down_inside": 
+                answer = self.com_arduino.screen_down_inside() 
+            elif name == "screen_up_inside": 
+                answer = self.com_arduino.screen_up_inside() 
                 
         """value in _current_action_lift_screen is set to Tru by arduino_lift_thread"""
             
@@ -404,6 +443,99 @@ class current_state(object):
         self._current_action_lift_screen[name][0].acquire()
         state = self._current_action_lift_screen[name][1]
         self._current_action_lift_screen[name][0].release()
+        return state   
+    
+    """EVOLVED ACTION AQ"""
+    def set_current_action_aquarium_evolved(self, name, state):
+        if not self.get_current_action_aquarium_evolved(name) == state : 
+            """check if there is no action running"""
+            b = True
+            for item in self._current_action_evolved : 
+                if not item == name :
+                    if self.get_current_action_evolved(item) : 
+                        b = False
+            """if there is no action running"""
+            if b : 
+                if state : 
+                    self.aquarium_controller.start_aquarium_controller_action_name(name)
+                else : 
+                    #self._set_current_action_aquarium_evolved(name, False)
+                    pass
+        
+    def _set_current_action_aquarium_evolved(self, name, state):
+        self._current_action_aquarium_evolved[name][0].acquire()
+        self._current_action_aquarium_evolved[name][1] = state
+        self._current_action_aquarium_evolved[name][0].release()
+
+        
+    def get_current_action_aquarium_evolved(self, name):    
+        self._current_action_aquarium_evolved[name][0].acquire()
+        state = self._current_action_aquarium_evolved[name][1]
+        self._current_action_aquarium_evolved[name][0].release()
+        return state
+    
+    """ ACTION AQ:
+    'AQ_emptying_EL_MIDDLE'
+    'AQ_emptying_EL_LOW' """
+    def set_current_action_aquarium(self, name, state):
+        if not self.get_current_action_aquarium(name) == state : 
+            if not self.get_current_action_aquarium_evolved(name) == state : 
+                """check if there is no action running"""
+                b = True
+                for item in self._current_action_evolved : 
+                    if not item == name :
+                        if self.get_current_action_evolved(item) : 
+                            b = False
+                """if there is no action running"""
+                if b :  
+                    if state :
+                        if name == "AQ_emptying_EL_MIDDLE" : 
+                            action =  AQ_emptying("MIDDLE")
+                            action.start()
+                        elif name == "AQ_emptying_EL_LOW" : 
+                            action =  AQ_emptying("LOW")
+                            action.start()
+                        elif name == "AQ_emptying_EL_HIGH" : 
+                            action =  AQ_emptying("HIGH")
+                            action.start()
+                    else : 
+                        self._set_current_action_aquarium(name, False)
+                    
+    def _set_current_action_aquarium(self, name, state):
+        self._current_action_aquarium[name][0].acquire()
+        self._current_action_aquarium[name][1] = state
+        self._current_action_aquarium[name][0].release()
+
+        
+    def get_current_action_aquarium(self, name):    
+        self._current_action_aquarium[name][0].acquire()
+        state = self._current_action_aquarium[name][1]
+        self._current_action_aquarium[name][0].release()
+        return state
+        
+    """FILM STATE"""
+    
+    def set_current_film_state(self, name, state,):
+        """if different from current state"""
+        if not state : 
+            print ("Film stopped")
+            self._set_current_film_state(name, False)
+        else : 
+            if not self.get_current_film_state(name) == state : 
+                """checking if there is not already a task runnig on this arduino"""
+                self.seance_controller.start_film()
+                
+    
+    """do not use this function"""       
+    def _set_current_film_state(self, name, state):
+        self._current_film_state[name][0].acquire()
+        self._current_film_state[name][1] = state
+        self._current_film_state[name][0].release()
+    
+    def get_current_film_state(self, name):
+        self._current_film_state[name][0].acquire()
+        state = self._current_film_state[name][1]
+        self._current_film_state[name][0].release()
         return state   
     
     """LIGHT """
@@ -458,6 +590,19 @@ class current_state(object):
         return state
     
     """SPECTRO"""
+    
+    """function to cal to turn on the spectro, wait until the value is established and return it"""
+    def get_spectro_mesure(self):
+        """turn on the spectro"""
+        self.set_current_spectro_state("spectro",True)
+        """wait some time before"""
+        wait_spectro = self.config_manager.get_spectro("WAIT")
+        time.sleep(wait_spectro)
+        self.current_state.set_inforamtion_asked("concentration", True)
+        """wait until having information"""
+        while self.current_state.get_concentration() == -1 : 
+            time.sleep(2)
+        
     def set_current_spectro_state(self, name, state,):
         """if different from current state"""
         if not self.get_current_spectro_state(name) == state : 
@@ -486,7 +631,16 @@ class current_state(object):
     """EVOLVED ACTION""" 
     
     """use this function to launch an evolved action :    
-    action possible : ..."""
+    action possible : 
+    auto_AQ_filtration 
+    renew_light_AQ_BU1 
+    renew_light_AQ_BU2
+    renew_light_AQ_BU3 """
+    
+    def renew_light_AQ(self, name,name_BU, state):
+        name_action = "renew_light_AQ_"+name_BU
+        self.set_current_action_evolved(name_action)
+    
     def set_current_action_evolved(self, name, state):
         """check if there is no action running"""
         b = True
@@ -685,6 +839,11 @@ class current_state(object):
         return n
      
     """BU_STATE""" 
+    """get the BU in USE state"""
+    def get_BU_USE(self):
+        for item in self._BU_state : 
+            if self.get_BU_state(item) == "USE" : 
+                return item
     
     """set the state of each BU : WAIT, USE, EMPTY, or NULL if no status"""  
     def set_BU_state(self, BU, state):
@@ -942,9 +1101,15 @@ class current_state(object):
         
     def set_security_EL(self, un_security_EL):
         self.security_EL = un_security_EL
-        
+         
     def set_config_manager(self, a_config_manager):
         self.config_manager = a_config_manager
+        
+    def set_seance_controller(self, un_seance_controller):
+        self.seance_controller = un_seance_controller
+        
+    def set_aquarium_controller(self, un_aquarium_controller):
+        self.aquarium_controller = un_aquarium_controller
     
     """function to call each time something changes"""     
     def refresh_windows(self):

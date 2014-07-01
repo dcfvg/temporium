@@ -26,9 +26,14 @@ class cycle_automatique(Frame):
         
         self.button_security_checking = {"EL_max" : [0]}
         
+        self.button_current_action_aquarium_evolved = {"aquarium_cycle_light": [0],\
+                                               "aquarium_cycle_heavy": [1]}
+                                               
+        
 
         self._build_button_BRBU_controller()
         self._build_button_security_checking()
+        self._build_button_current_action_aquarium_evolved()
         self._build_state_label()
         self._add_to_frame()
         
@@ -41,7 +46,9 @@ class cycle_automatique(Frame):
         for item in self.button_BRBU_controller : 
             self.button_BRBU_controller[item].append(tkinter.Label(self,bg ='red', text = "FALSE")) 
         for item in self.button_security_checking : 
-            self.button_security_checking[item].append(tkinter.Label(self,bg ='red', text = "FALSE"))  
+            self.button_security_checking[item].append(tkinter.Label(self,bg ='red', text = "FALSE")) 
+        for item in self.button_current_action_aquarium_evolved : 
+            self.button_current_action_aquarium_evolved[item].append(tkinter.Label(self,bg ='red', text = "FALSE")) 
             
         
         
@@ -67,23 +74,43 @@ class cycle_automatique(Frame):
         for item in self.button_security_checking :
             internal_compt = internal_compt +1
             self.button_security_checking[item][1].grid(sticky=W, row= self.button_security_checking[item][0]+compt_left, column=0)
-            self.button_security_checking[item][2].grid(sticky=E, row=self.button_security_checking[item][0]+compt_left, column=1)
+            self.button_security_checking[item][2].grid(sticky=E, row= self.button_security_checking[item][0]+compt_left, column=1)
         compt_left = compt_left+internal_compt
+        
+        Label(self, text = "Aquarium controller: ",fg = "white", bg = "black").grid(sticky = W,row=compt_left, columnspan = 2)
+        compt_left = compt_left+1
+        
+        internal_compt = 0
+        for item in self.button_current_action_aquarium_evolved :
+            internal_compt = internal_compt +1
+            self.button_current_action_aquarium_evolved[item][1].grid(sticky=W, row= self.button_current_action_aquarium_evolved[item][0]+compt_left, column=0)
+            self.button_current_action_aquarium_evolved[item][2].grid(sticky=E, row= self.button_current_action_aquarium_evolved[item][0]+compt_left, column=1)
+        compt_left = compt_left+internal_compt
+        
+        
+        
         
 
 
     def _build_button_BRBU_controller(self):
         for item in self.button_BRBU_controller : 
             if item =="run" : 
-                self.button_BRBU_controller[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_BRBU_controller("run"))) 
+                self.button_BRBU_controller[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_BRBU_controller(item))) 
             elif item =="pause" : 
-                self.button_BRBU_controller[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_BRBU_controller("pause")))
+                self.button_BRBU_controller[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_BRBU_controller(item)))
             
     
     def _build_button_security_checking(self):
         for item in self.button_security_checking : 
             if item =="EL_max" : 
-                self.button_security_checking[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_security_checking("EL_max"))) 
+                self.button_security_checking[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_security_checking(item))) 
+    
+    def _build_button_current_action_aquarium_evolved(self):
+        for item in self.button_current_action_aquarium_evolved :
+            if item =="aquarium_cycle_light" : 
+                self.button_current_action_aquarium_evolved[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_current_action_aquarium_evolved(item))) 
+            elif item =="aquarium_cycle_heavy" : 
+                self.button_current_action_aquarium_evolved[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_current_action_aquarium_evolved(item))) 
 
             
     def refresh_state(self):
@@ -104,5 +131,14 @@ class cycle_automatique(Frame):
                 color = "red"
                 t = "FALSE"
             self.button_security_checking[item][2].config (bg = color, text = t)
+            
+        for item in self.button_current_action_aquarium_evolved :  
+            if self.current_state.get_current_action_aquarium_evolved(item) : 
+                color = "green"
+                t = "TRUE"
+            else : 
+                color = "red"
+                t = "FALSE"
+            self.button_current_action_aquarium_evolved[item][2].config (bg = color, text = t)
    
         

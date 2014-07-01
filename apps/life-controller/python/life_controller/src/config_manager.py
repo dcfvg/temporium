@@ -33,6 +33,14 @@ class config_manager(object):
                                        }
         self._AQ = {"CONCENTRATION_OPT" : 0}
         
+        self._film = {"TIME_OUT" : 0}
+        
+        """time for beginiing and ending the day : [hour : 0-23,minute : 0-59]"""
+        self._time_controller = {"START_DAY" : [0,0],\
+                                 "END_DAY" : [0,0]}
+        
+        self._spectro = {"WAIT" : 0}
+        
         
         
         """read the config at first"""
@@ -75,6 +83,21 @@ class config_manager(object):
                 name = list[1].strip()
                 value = float(list[2].strip())
                 self._set_BRBU_controller(name, value)  
+            
+            elif key  == "film" :
+                name = list[1].strip()
+                value = int(list[2].strip())
+                self._set_film(name, value)  
+                
+            elif key  == "time_controller" :
+                name = list[1].strip()
+                value = int(list[2].strip())
+                self._set_time_controller(name, value) 
+            elif key  == "spectro" :
+                name = list[1].strip()
+                value = int(list[2].strip())
+                self._set_spectro(name, value) 
+                
         
         """release the lock to enable access to the value"""
         self.lock.release()
@@ -92,6 +115,18 @@ class config_manager(object):
         self.lock.release()
         return value
     
+    """SPECTRO """
+    def _set_spectro(self, name, value):
+        self._spectro[name] = value      
+        
+    
+    """return the value corresponding to the name you asked : ex "TIME" here""" 
+    def get_spectro(self, name):
+        self.lock.acquire()
+        value = self._spectro[name]      
+        self.lock.release()
+        return value  
+    
     """AUTO FILTRATION AQ"""
     def _set_auto_AQ_filtration(self, name, value):
         self._auto_AQ_filtration_value[name] = value      
@@ -103,6 +138,30 @@ class config_manager(object):
         value = self._auto_AQ_filtration_value[name]      
         self.lock.release()
         return value      
+    
+    """FILM"""
+    def _set_film(self, name, value):
+        self._film[name] = value      
+        
+    
+    """return the value corresponding to the name you asked : ex "TIME" here""" 
+    def get_film(self, name):
+        self.lock.acquire()
+        value = self._film[name]      
+        self.lock.release()
+        return value   
+    
+    """time_controller"""
+    def _set_time_controller(self, name, value):
+        self._time_controller[name] = value      
+        
+    
+    """return the value corresponding to the name you asked : ex "TIME" here""" 
+    def get_time_controller(self, name):
+        self.lock.acquire()
+        value = self._time_controller[name]      
+        self.lock.release()
+        return value   
     
     """BRBU CONTROLLER"""
     def _set_BRBU_controller(self, name, value):

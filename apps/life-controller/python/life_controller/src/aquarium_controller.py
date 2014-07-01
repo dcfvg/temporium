@@ -7,7 +7,7 @@ import time
 from com_arduino import *
 from current_state import *
 
-class aquarium_controller(object):
+class aquarium_controller(threading.Thread):
     '''
     manage the aquarium
     '''
@@ -17,206 +17,114 @@ class aquarium_controller(object):
         '''
         Constructor
         '''
+        threading.Thread.__init__(self)
         self.current_state = un_current_state
-    
-    def aquarium_recycle_light(self, case):
-        """recycle less that 1% of the aquarium at the end of each film"""
         
-        if case == 1 :
-            """start filtration"""
-            print("Start Filtration")
-            self.current_state.filter_aquarium(True)
-            
-            print("Lift Down")
-            """lift Down"""
-            self.current_state.liftDown()
-            """test"""
+        self._action_asked = None
+        
+        self._start_lock = threading.Lock()
+        self._start_lock.acquire()
+    
+        self.start()
+        
+    def run(self):
+        while True : 
+            self._start_lock.acquire()
+            if self._action_asked == "aquarium_cycle_light" : 
+                self.aquarium_cycle_light()
+
+    """start the action"""
+    def start_aquarium_controller_action_name(self, action_name):
+            self._action_asked = action_name
+            self._start_lock.release()
+ 
+ 
+    def aquarium_cycle_light(self):
+        
+        self.current_state._set_current_action_aquarium_evolved("aquarium_cycle_light", True)
+        """cycle less that 1% of the aquarium at the end of each film"""
+        
+        """get the BU in use"""
+        BU_USE = self.current_state.get_BU_USE()
+        
+        """empty AQ for xx seconds, fill it until EL_HIGH with BU_USE"""
+        action_name = "renew_light_AQ_" + BU_USE
+        self.current_state.set_current_action_evolved(action_name, True)
+        
+        while self.current_state.get_current_action_evolved(action_name) : 
             time.sleep(1)
-            print("Lift Down end")
-            
-            """emptying AQ for 30 sec"""
-            self.emptying_AQ_sec(3)
-            
-            """get the BU in use"""
-            BU_use = self.get_BRBU_USE()
-            print("BU in use : "+ BU_use)
-            """Filling with BU in USE until AQ is full"""
-            self.filling_BU_EL_AQ(str(BU_use))
         
-            
-            print("Lift Up")
-            """lift Up"""
-            self.current_state.liftUp()
-            time.sleep(10)
-            print("Lift Up end")
-            
-            print("Stop Filtration")
-            """stop filtration"""
-            self.current_state.filter_aquarium(False)
         
-            
-        if case == 2 :
-            
-            """start filtration"""
-            print("Start Filtration")
-            self.current_state.filter_aquarium(True)
+        """start filtration"""
+        self.current_state.set_current_action("AQ_filtration", True)
+        """lift_down"""
+        self.current_state._current_action_lift_screen("lift_down")
+        """wait until lift_down is finished"""
+        while self.current_state.get_lift_busy() : 
+            time.sleep(2)
+        """lift_up"""
+        self.current_state._current_action_lift_screen("lift_up")
+        """wait until lift_up is finished"""
+        while self.current_state.get_lift_busy() : 
+            time.sleep(2)
+        
+        """end filtration"""
+        self.current_state.set_current_action("AQ_filtration", False)
+        
+        concentration = self.current_state.get_spectro_mesure()
+        
+        """function to call to save the state"""
+        #self.current_state.saving_state()
 
-            """emptying AQ for 30 sec"""
-            self.emptying_AQ_sec(30)
-            
-            """get the BU in use"""
-            BU_use = self.get_BRBU_USE()
-            
-            """Filling with BU in USE until AQ is full"""
-            self.filling_BU_EL_AQ( BU_use)
-            
-            print("Lift Down")
-            """lift Down"""
-            self.current_state.liftDown()
-            """test"""
-            time.sleep(10)
-            print("Lift Down end")
-            
-            print("Lift Up")
-            """lift Up"""
-            self.current_state.liftUp()
-            time.sleep(10)
-            print("Lift Up end")
-            
-            print("Stop Filtration")
-            """stop filtration"""
-            self.current_state.filter_aquarium(False)
+        self.current_state.set_inforamtion_asked("concentration", False)
         
-
+        self.current_state._set_current_action_aquarium_evolved("aquarium_cycle_light", False)
     
-    
-    def aquarium_recycle_normal(self, case):
+    def aquarium_cycle_heavy(self):
         """recycle 10% of the aquarium at the end of each film"""
+        action_name = "aquarium_cycle_heavy"
+        self.current_state._set_current_action_aquarium_evolved(action_name, True)
         
-        if case == 1 :
-            
-            """start filtration"""
-            print("Start Filtration")
-            self.current_state.filter_aquarium(True)
-            
-            print("Lift Down")
-            """lift Down"""
-            self.current_state.liftDown()
-            """test"""
-            time.sleep(1)
-            print("Lift Down end")
-            
-            """emptying AQ until EL_MEDIUM"""
-            self.emptying_AQ_EL()
-            
-            """get the BU in use"""
-            BU_use = self.get_BRBU_USE()
-            
-            """action to do depending on the formation rate of the image"""
-            self.filling_BU_concentration(BU_use, self.get_AQ_concentration())
-            
-            
-            print("Lift Up")
-            """lift Up"""
-            self.current_state.liftUp()
-            time.sleep(10)
-            print("Lift Up end")
-            
-            print("Stop Filtration")
-            """stop filtration"""
-            self.current_state.filter_aquarium(False)
-            
-        if case == 2 :
-            
-            """start filtration"""
-            print("Start Filtration")
-            self.current_state.filter_aquarium(True)
-            
-            
-            """emptying AQ until EL_MEDIUM"""
-            self.emptying_AQ_EL()
-            
-            """get the BU in use"""
-            BU_use = self.get_BRBU_USE()
-            
-            """action to do depending on the formation rate of the image"""
-            self.filling_BU_concentration(BU_use, self.get_AQ_concentration())
-            
-            
-            print("Lift Down")
-            """lift Down"""
-            self.current_state.liftDown()
-            """test"""
-            time.sleep(10)
-            print("Lift Down end")
-            
-            print("Lift Up")
-            """lift Up"""
-            self.current_state.liftUp()
-            time.sleep(10)
-            print("Lift Up end")
-            
-            print("Stop Filtration")
-            """stop filtration"""
-            self.current_state.filter_aquarium(False)
-    
-    def get_BRBU_USE(self):
-        """get the BU in USE state"""
-        for item in self.current_state._BRBU_state : 
-            if self.current_state.get_BRBU_state(item) == "USE" : 
-                return item
-    
-    def filling_BU_concentration(self, BU_use, AQ_concentration):
-        print("filling AQ with BU_USE depending on AQ_concentration")
-        pass
-    
-    def filling_BU_EL_AQ(self, BU_use):
-        """Filling with BU in USE until AQ is full"""
-        """be sure that EL is connected"""
-        if not self.current_state.get_state_EL("AQ","HIGH")=="NULL" : 
-            
-            print("Filling AQ with BU in USE until AQ is full")
-            self.current_state.fill_BU_AQ(BU_use, True)
-            while not self.current_state.get_state_EL("AQ","HIGH") : 
-                time.sleep(0.05)
-                
-            self.current_state.fill_BU_AQ(BU_use, False)
-        else : 
-            print ("EL_AQ_MEDIUM not connected")
+        BU_USE = self.current_state.get_BU_USE()
+        """start filtration"""
+        self.current_state.set_current_action("AQ_filtration", True)
         
-    
-    def emptying_AQ_sec(self, sec):
-        """be sure that EL HIGH is connected, otherwise it will be impossible to fill the AQ"""
-        if not self.current_state.get_state_EL("AQ","HIGH")=="NULL" :  
+        """lift_down"""
+        self.current_state._current_action_lift_screen("lift_down")
         
-            """emptying AQ for sec secondes"""
-            print("emptying AQ for " + str(sec) + " secondes")
-            """emptying AQ 30sec"""
-            self.current_state.P_AQ_S(True)
-            time.sleep(sec)
-            self.current_state.P_AQ_S(False)
-            print("end emptying AQ")
-        else : 
-            print( "EL_AQ_HIGH not connected, it will be impossible to fill AQ after")
+        """wait until lift_down is finished"""
+        while self.current_state.get_lift_busy()  :  
+            time.sleep(2)
             
+        """stop filtration"""
+        self.current_state.set_current_action("AQ_filtration", False)
+            
+        concentration = self.current_state.get_concentration()
         
-    def emptying_AQ_EL(self):
-        """emptying AQ until EL_AQ_MEDIUM LOW"""
-        """be sure that EL is connected"""
-        if not self.current_state.get_state_EL("AQ", "MEDIUM" ) == "NULL" : 
-            print("emptying AQ until EL_AQ_MEDIUM")
-            self.current_state.P_AQ_S(True)
-            while self.current_state.get_state_EL("AQ", "MEDIUM" ) :
-                    time.sleep(0.05)    
-            self.current_state.P_AQ_S(False)
-        else : 
-            print( "EL_AQ_MEDIUM not connected")
+        self.emptying_AQ_EL("MIDDLE")
         
-       
-if __name__ == "__main__":
-    com_ard = com_arduino()
-    cu_state = current_state(com_ard)
-    aq_cont = aquarium_controller(cu_state)
-    
-    aq_cont.aquarium_recycle_light(1)
+        
+        """remplissage AQ ?"""
+        
+        """start filtration"""
+        self.current_state.set_current_action("AQ_filtration", True)
+        
+        """lift_up"""
+        self.current_state._current_action_lift_screen("lift_up")
+        """wait until lift_down is finished"""
+        while self.current_state.get_lift_busy() : 
+            time.sleep(2)
+            
+        """stop filtration"""
+        self.current_state.set_current_action("AQ_filtration", False)
+        
+        
+        concentration = self.current_state.get_spectro_mesure()
+
+        self.current_state._set_current_action_aquarium_evolved("aquarium_cycle_heavy", False)
+        
+
+         
+            
+
         

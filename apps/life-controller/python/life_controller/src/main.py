@@ -14,11 +14,12 @@ from BRBU_controller import *
 from security_EL import *
 from config_manager import *
 from current_state_order import *
+from aquarium_controller import *
 import sys
 
 if __name__ == "__main__":
     """test must be set to False when using with terminal mode"""
-    test = False
+    test = True
     for i in sys.argv : 
         if i.strip() == "test" : 
             test = True
@@ -29,14 +30,15 @@ if __name__ == "__main__":
     co_ard.__readPin__()
     le_server = server('',8000,cu_state)
     BRBU_cont = BRBU_controller(cu_state)
-    
+    seance_cont = seance_controller(cu_state)
+    aq_controller = aquarium_controller(cu_state)
     config_m = config_manager(cu_state)
     
-    
+    cu_state.set_seance_controller(seance_cont)
     cu_state.set_config_manager(config_m)
     cu_state.set_BRBU_controller(BRBU_cont)
     cu_state.set_server(le_server)
-    #se = seance_controller(cu_state)
+    cu_state.set_aquarium_controller(aq_controller)
     
     
 
