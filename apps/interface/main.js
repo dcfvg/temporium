@@ -127,11 +127,8 @@ module.exports = function(app, io, oscServer){
     console.log(msg);
     io.sockets.emit("oscMessage", msg);
     switch (msg[0]) {
-      case "refreshTimelaps":
+      case "/refreshTimelaps":
         refreshTimelaps();
-      break;
-      case "seance_start":
-        //onCaptureInit(); // lanch from client
       break;
       case "/capture_stop":
         onCaptureStop();
