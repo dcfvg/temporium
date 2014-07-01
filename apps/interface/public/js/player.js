@@ -47,6 +47,7 @@ function init() {
   
   $d // on
     .on( "seance_start"     , onSeanceStart)
+    .on( "seance_end"     , onSeanceStart)
     .on( "lifeRefreshMovie" , onReloadLife)
     .on( "image_formation"  , onImageFormation)
     .on( "player_reset"     , reset)
