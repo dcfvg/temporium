@@ -1,7 +1,6 @@
 function init() {
 
   var socket = io.connect("http://localhost:8080"),
-      sessionId = '',
       $nega = $("#nega");
 
   //sockets
@@ -18,9 +17,8 @@ function init() {
     $nega.addClass("off");
   }
   function onSocketConnect() {
-    sessionId = socket.socket.sessionid;
-    console.log('Connected ' + sessionId);
-    socket.emit('newUser', {id: sessionId, name: $('#name').val()});
+    console.log('Connected');
+    socket.emit('newUser', {name: $('#name').val()});
   };
   // OSC
   socket.on('oscMessage', function(obj){

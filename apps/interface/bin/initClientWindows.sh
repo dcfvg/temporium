@@ -1,11 +1,9 @@
 
 killall -9 "Google Chrome"
-killall -9 "Google Chrome Canary"
 
 sleep 3
 
 open '/Applications/Google Chrome.app'
-open '/Applications/Google Chrome Canary.app'
 
 osascript -e '
 tell application "Google Chrome"
@@ -21,8 +19,9 @@ tell application "Google Chrome"
 end tell
 
 
-tell application "Google Chrome Canary"
-	open location "http://localhost:8080/player"
+tell application "Google Chrome"
+	make new window
+	open location "http://localhost:8080/exposure"
 	activate
 	
 	delay 2
