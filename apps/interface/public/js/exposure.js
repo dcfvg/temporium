@@ -1,7 +1,6 @@
 function init() {
 
-  var serverBaseUrl = document.domain,
-      socket = io.connect(serverBaseUrl),
+  var socket = io.connect("http://localhost:8080"),
       sessionId = '',
       $nega = $("#nega");
 

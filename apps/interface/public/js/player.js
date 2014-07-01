@@ -93,9 +93,9 @@ function init() {
     //socket.emit('newUser', {id: sessionId, name: $('#name').val()});
   };
   function onSocketOscMessage(obj){
-    //console.log(obj);
+    console.log(obj[0].replace("/",""));
     // conversion d'un event OSC -> IO en javascript chez le client 
-    $d.trigger(obj[0],[ obj[1] ]);
+    $d.trigger(obj[0].replace("/",""),[ obj[1] ]);
   };
   function onSocketScore(obj){
     // le "score" à été rechargé

@@ -133,7 +133,7 @@ module.exports = function(app, io, oscServer){
       case "seance_start":
         //onCaptureInit(); // lanch from client
       break;
-      case "capture_stop":
+      case "/capture_stop":
         onCaptureStop();
       break;
     };
