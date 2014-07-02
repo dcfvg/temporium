@@ -20,17 +20,17 @@ module.exports = function(app, io, oscServer){
     //lancement du script qui lance chrome et chrome canary en FS sur chacun des écrans
     //cf. bin/initClientWindows.sh
 
-    clientWindows = spawn('bash',['bin/initClientWindows.sh']);
+    // clientWindows = spawn('bash',['bin/initClientWindows.sh']);
 
-    clientWindows.stdout.on('data', function (data) {
-      console.log('stdout: ' + data);
-    });
-    clientWindows.stderr.on('data', function (data) {
-      console.log('stderr: ' + data);
-    });
-    clientWindows.on('exit', function (code) {
-      console.log('child process exited with code ' + code);
-    });
+    // clientWindows.stdout.on('data', function (data) {
+    //   console.log('stdout: ' + data);
+    // });
+    // clientWindows.stderr.on('data', function (data) {
+    //   console.log('stderr: ' + data);
+    // });
+    // clientWindows.on('exit', function (code) {
+    //   console.log('child process exited with code ' + code);
+    // });
   };
   function loadScore(){
 
@@ -71,7 +71,7 @@ module.exports = function(app, io, oscServer){
 
         proc = new ffmpeg({ source: 'public/exposure/%04d.jpg' })
 
-        .withFps(25)
+        .withFps(20)
         .addOptions(['-pix_fmt yuv420p','-c:v libx264', '-preset ultrafast', '-crf 1'])
         .addOptions(['-r 25'])
         .withVideoFilter('scale='+crop_w+':-1')
@@ -79,7 +79,7 @@ module.exports = function(app, io, oscServer){
         .withVideoFilter('setpts=('+speed+'/1)*PTS')
         .on('end', onRefreshTimelapsEnd)
         .on('error', function(err) { console.log('an error happened: ' + err.message);})
-        .saveToFile('public/video/live.mp4');
+        .saveToFile('public/video/live.mov');
   };
   function onRefreshTimelapsEnd(){
     console.log('timelapse updated');
@@ -116,7 +116,9 @@ module.exports = function(app, io, oscServer){
 
   }; 
   function onMessage(msg){
+    //adding "/" here for all osc messages
     oscClient.send("/"+ msg);
+
   };
 
   //////////////////////////////
@@ -131,7 +133,7 @@ module.exports = function(app, io, oscServer){
         refreshTimelaps();
       break;
       //function to stop the film :
-      case "/seance_end":
+      case "/seance_stop":
         onCaptureStop();
       case "/capture_stop":
         onCaptureStop();

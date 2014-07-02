@@ -11,10 +11,10 @@
 # ===============
 
 #set -x
-pwd
+path=`pwd`
 
-nodebin="bin/"
-public="public/" 	                          # main public folder
+nodebin=$path"/bin/"
+public=$path"/public/" 	                          # main public folder
 archive="$public/archive"                   # media archives
 
 exposures=$archive"/exposures"              # exposures archives
@@ -32,8 +32,10 @@ function camera_init {
 function timelaps_archive {
 
   now=$(date +"%y.%m.%d-%H.%M.%S")
+  echo $now
 
-  archiveDir="$exposures/exp-"$now"/"
+  archiveDir=$exposures"/exp-"$now"/"
+  echo $archiveDir
   
   # mouv previous exposures to archive
   mkdir $archiveDir
@@ -64,7 +66,7 @@ do
  	--capture-image-and-download \
   	--hook-script $nodebin/camera_hook.sh \
   	--force-overwrite \
-  	--filename "public/exposure/"$photoName".jpg"
+  	--filename $exp"/"$photoName".jpg"
 
   	python $oscScript 127.0.0.1 3335 /image_capture $exp/$photoName.jpg
 

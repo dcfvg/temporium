@@ -30,10 +30,11 @@ function init() {
       $pop_life         = Popcorn("#life")
       ;
 
-  var image_formation = 50,
+  var image_formation = 70,
       formationStartLevel = 20,
-      compileDelay = 120,
+      compileDelay = 200,
       decideDelay = 2
+
       ;
  
   //////////////////////////////
@@ -47,7 +48,7 @@ function init() {
   
   $d // on
     .on( "seance_start"     , onSeanceStart)
-    .on( "seance_end"     , onSeanceStart)
+    .on( "seance_stop"       , onMovieEnded)
     .on( "lifeRefreshMovie" , onReloadLife)
     .on( "image_formation"  , onImageFormation)
     .on( "player_reset"     , reset)
@@ -137,7 +138,7 @@ function init() {
   };
   function onReloadLife(){
     // add reload argument to avoid cache
-    if($life.hasClass("off")) $life.attr("src",lifeUrl + "?reload="+Math.round((new Date()).getTime() / 1000)).load();
+    if($life.hasClass("off"))  $life.attr("src",lifeUrl + "?reload="+Math.round((new Date()).getTime() / 1000)).load();
   };
   function onRefreshTimelapsEnd (obj) {
     console.log('~ life render finished !');
