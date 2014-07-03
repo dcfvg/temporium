@@ -71,7 +71,7 @@ module.exports = function(app, io, oscServer){
 
         proc = new ffmpeg({ source: 'public/exposure/%04d.jpg' })
 
-        .withFps(20)
+        .withFps(15)
         .addOptions(['-pix_fmt yuv420p','-c:v libx264', '-preset ultrafast', '-crf 1'])
         .addOptions(['-r 25'])
         .withVideoFilter('scale='+crop_w+':-1')
@@ -90,17 +90,17 @@ module.exports = function(app, io, oscServer){
     refreshTimelaps(param[0],param[1]);
   };
   function onCaptureInit(){
-    capt = spawn('bash',['bin/capture.sh']);
-    console.log("Lancé");
-    capt.stdout.on('data', function (data) {
-      console.log('stdout: ' + data);
-    });
-    capt.stderr.on('data', function (data) {
-      console.log('stderr: ' + data);
-    });
-    capt.on('exit', function (code) {
-      console.log('child process exited with code ' + code);
-    });
+    // capt = spawn('bash',['bin/capture.sh']);
+    // console.log("Lancé");
+    // capt.stdout.on('data', function (data) {
+    //   console.log('stdout: ' + data);
+    // });
+    // capt.stderr.on('data', function (data) {
+    //   console.log('stderr: ' + data);
+    // });
+    // capt.on('exit', function (code) {
+    //   console.log('child process exited with code ' + code);
+    // });
   };
   function onCaptureStop (){
     //use ps in terminal for idetifying the process
@@ -117,7 +117,7 @@ module.exports = function(app, io, oscServer){
   }; 
   function onMessage(msg){
     //adding "/" here for all osc messages
-    oscClient.send("/"+ msg);
+    oscClient.send("/"+ msg, "1");
 
   };
 

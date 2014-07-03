@@ -26,14 +26,15 @@ function init() {
   $pop_movie.on('canplaythrough', onCanPlayThrough);
 
   var $life             = $("#life"),
-      lifeUrl           = "/video/live.mp4",
+      lifeUrl           = "/video/live.mov",
       $pop_life         = Popcorn("#life")
       ;
 
   var image_formation = 70,
       formationStartLevel = 20,
       compileDelay = 200,
-      decideDelay = 2
+      decideDelay = 2,
+      canPlay = false;
 
       ;
  
@@ -58,6 +59,7 @@ function init() {
   ;
   
   $pop_life.on("ended",onLifeEnded);
+  $pop_life.on("canplaythrough", onCanPlayLife);
 
   // dev shortcuts
   $d.keypress(function( event ){
@@ -136,9 +138,16 @@ function init() {
       $d.trigger("projectionStart");
     };
   };
+  function onCanPlayLife(){
+    canPlay = true;
+  };
   function onReloadLife(){
     // add reload argument to avoid cache
-    if($life.hasClass("off"))  $life.attr("src",lifeUrl + "?reload="+Math.round((new Date()).getTime() / 1000)).load();
+    if($life.hasClass("off")){
+
+      $life.attr("src",lifeUrl + "?reload="+Math.round((new Date()).getTime() / 1000)).load();
+      $pop_life.load();
+    };
   };
   function onRefreshTimelapsEnd (obj) {
     console.log('~ life render finished !');
@@ -152,6 +161,8 @@ function init() {
     $d.trigger("lifeRefreshMovie");
   };
   function onShowLife(){
+    while(!canPlay){
+    };
     $pop_life.play(0);
     $life.removeClass("off");
     $movie.addClass("off");

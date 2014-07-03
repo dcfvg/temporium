@@ -20,6 +20,9 @@ function init() {
     console.log('Connected');
     socket.emit('newUser', {name: $('#name').val()});
   };
+  function onSeanceEnd(){
+    flash();
+  };
   // OSC
   socket.on('oscMessage', function(obj){
     switch (obj[0]){
@@ -37,6 +40,9 @@ function init() {
             reloadNega();
           break;
         };
+      break;
+      case "/seance_end":
+        onSeanceEnd();
       break;
     }
   });
