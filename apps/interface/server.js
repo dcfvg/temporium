@@ -1,7 +1,7 @@
 var express = require("express");
 var app     = express();
 app.use(express.static(__dirname + '/public'));
-app.use(express.static('/Volumes/IMMERSION_1B'));
+app.use(express.static('/Volumes/pano16_backup'));
 var http    = require("http").createServer(app);
 var io      = require("socket.io").listen(http);
 // var readDir = require('readdir');

@@ -71,22 +71,22 @@ module.exports = function(app, io, oscServer){
 
         proc = new ffmpeg({ source: 'public/exposure/%04d.jpg' })
 
-        .withFps(15)
-        .addOptions(['-pix_fmt yuv420p','-c:v libx264', '-preset ultrafast', '-crf 1'])
+        .withFps(25)
+        .addOptions(['-pix_fmt yuv420p','-c:v libx264', '-preset ultrafast', '-crf 20'])
         .addOptions(['-r 25'])
         .withVideoFilter('scale='+crop_w+':-1')
         .withVideoFilter('crop='+mov_w+':'+mov_h+':'+crop_x+':'+crop_y+'')
-        .withVideoFilter('setpts=('+speed+'/1)*PTS')
+        .withVideoFilter('setpts=(1/'+speed+')*PTS')
         .on('end', onRefreshTimelapsEnd)
         .on('error', function(err) { console.log('an error happened: ' + err.message);})
-        .saveToFile('public/video/live.mov');
+        .saveToFile('public/video/live.mp4');
   };
   function onRefreshTimelapsEnd(){
     console.log('timelapse updated');
     io.sockets.emit("refreshTimelapsEnd");
   };
   function onRefreshTimelaps(param){
-    console.log("refreshTimelaps zoom",param[0],"speed",param[1]);
+    console.log("refreshTimelaps zoom",param[1],"speed",param[0]);
     refreshTimelaps(param[0],param[1]);
   };
   function onCaptureInit(){
@@ -109,10 +109,10 @@ module.exports = function(app, io, oscServer){
 
     console.log('kill capture in 2 s');
 
-    setTimeout(function() {
-      capt.stdin.pause();
-      capt.kill();
-    }, 2000);
+    // setTimeout(function() {
+    //   capt.stdin.pause();
+    //   capt.kill();
+    // }, 2000);
 
   }; 
   function onMessage(msg){

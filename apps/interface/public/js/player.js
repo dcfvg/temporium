@@ -26,7 +26,7 @@ function init() {
   $pop_movie.on('canplaythrough', onCanPlayThrough);
 
   var $life             = $("#life"),
-      lifeUrl           = "/video/live.mov",
+      lifeUrl           = "/video/live.mp4",
       $pop_life         = Popcorn("#life")
       ;
 
@@ -59,7 +59,6 @@ function init() {
   ;
   
   $pop_life.on("ended",onLifeEnded);
-  $pop_life.on("canplaythrough", onCanPlayLife);
 
   // dev shortcuts
   $d.keypress(function( event ){
@@ -69,8 +68,8 @@ function init() {
     if ( event.which == 114 ) $d.trigger("reloadLife"); // r
     if ( event.which == 104 ) { // h
       var time = getCurrentTime();
-      $pop_movie.currentTime(time + 30);
-      console.log("jump +30s -> "+getCurrentTime());
+      $pop_movie.currentTime(time + 10);
+      console.log("jump +10s -> "+getCurrentTime());
     };
     if ( event.which == 106 ) { // j
       var time = getCurrentTime();
@@ -138,15 +137,11 @@ function init() {
       $d.trigger("projectionStart");
     };
   };
-  function onCanPlayLife(){
-    canPlay = true;
-  };
   function onReloadLife(){
     // add reload argument to avoid cache
     if($life.hasClass("off")){
-
-      $life.attr("src",lifeUrl + "?reload="+Math.round((new Date()).getTime() / 1000)).load();
-      $pop_life.load();
+      //$pop_life.load();
+      $life.attr("src",lifeUrl+ "?" + Math.round((new Date()).getTime() / 1000)).load();
     };
   };
   function onRefreshTimelapsEnd (obj) {
@@ -159,13 +154,15 @@ function init() {
     $movie.removeClass("off");
     $life.addClass("off");
     $d.trigger("lifeRefreshMovie");
+
+    console.log("Movie !!!");
   };
   function onShowLife(){
-    while(!canPlay){
-    };
     $pop_life.play(0);
     $life.removeClass("off");
     $movie.addClass("off");
+    
+    console.log("Life !!!");    
   };
   function onBlackScreen(){
     $life.addClass("off");
@@ -240,7 +237,9 @@ function init() {
     var lifeProgress = image_formation; //Math.round((image_formation/255)*100);
     var jump = (jump_max/2)-(((lifeProgress - movieProgress)/100)*jump_max);
 
-    if(jump > jump_max) jump = jump_max; // to FIX 
+    if(jump > jump_max) {
+      jump = jump_max - 0,01;
+    }; // to FIX 
 
     console.log(step.type,'jump = ',jump,'/',jump_max,' (film :',movieProgress,'% ',' life :',lifeProgress,'%)');
     return jump;
@@ -285,10 +284,9 @@ function init() {
           console.log('~ top !');
 
           movieCurentStep++;
-
-          $d.trigger("showLife"); // show life 
+          
+          $d.trigger("showLife");
           $pop_movie.pause();
-          // stop movie
 
         },jump*1000);
       };
