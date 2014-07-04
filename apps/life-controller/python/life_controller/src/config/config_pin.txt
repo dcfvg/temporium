@@ -24,7 +24,7 @@ PUMP : P_M1_BR3 : 47
 PUMP : P_M2_BU3 : 49
 PUMP : P_M2_BU1 :51
 PUMP : P_M2_BU2 : 48
-SPECTRO : SPECTRO :  50
+SPECTRO : SPECTRO_LIGHT :  50
 pin_array_output : 28, 29, 30, 31, 32, 33, 34, 35, 38, 39, 41, 40, 44, 45, 46, 47, 48, 49, 50, 51
 comments : Arduino pour EL, indiquer les pins (MAX : niveau de securite alarme , HIGH : niveau haut normal, Middle : 10pourcent de l'aq ...) 
 arduino : arduino_EL : /dev/cu.usbmodem1a13121
