@@ -66,7 +66,8 @@ class manual_action(Frame):
         """list of information asked : name : [lock, state, name_server] """
         self.button_information_asked = {"formation_rate" : [0],\
                                          "level" : [1],\
-                                         "concentration" : [2]}
+                                         "level_AQ" : [2],\
+                                         "concentration" : [3]}
         
         self.button_current_film_state = {"film" : [0]}
         
@@ -300,6 +301,8 @@ class manual_action(Frame):
                 self.button_information_asked[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_information_asked("formation_rate"))) 
             elif item =="level" : 
                 self.button_information_asked[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_information_asked("level")))
+            elif item =="level_AQ" : 
+                self.button_information_asked[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_information_asked("level_AQ")))
             elif item =="concentration" : 
                 self.button_information_asked[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_information_asked("concentration")))
            
