@@ -118,6 +118,7 @@ function init() {
     console.log("# projection !");
  
     $pop_movie.play(0);
+    sleep(0);
     $d.trigger("showMovie");
     
     movieGoesOn = true;
@@ -151,7 +152,9 @@ function init() {
  
   // movies action
   function onShowMovie(){
+    
     $movie.removeClass("off");
+    sleep(0);
     $life.addClass("off");
     $d.trigger("lifeRefreshMovie");
 
@@ -159,7 +162,9 @@ function init() {
   };
   function onShowLife(){
     $pop_life.play(0);
+    
     $life.removeClass("off");
+    sleep(0);
     $movie.addClass("off");
     
     console.log("Life !!!");    
@@ -322,6 +327,15 @@ function init() {
       //console.log("f="+image_formation);s
     }, freq*1000); 
   }
+
+  function sleep(milliseconds){
+    var start = new Date().getTime();
+    for(var i = 0 ; i < 10000000 ; i++){
+      if((new Date().getTime() - start) > milliseconds){
+        break;
+      };
+    };
+  };
 
   reset();
 

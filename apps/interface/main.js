@@ -90,17 +90,17 @@ module.exports = function(app, io, oscServer){
     refreshTimelaps(param[0],param[1]);
   };
   function onCaptureInit(){
-    // capt = spawn('bash',['bin/capture.sh']);
-    // console.log("Lancé");
-    // capt.stdout.on('data', function (data) {
-    //   console.log('stdout: ' + data);
-    // });
-    // capt.stderr.on('data', function (data) {
-    //   console.log('stderr: ' + data);
-    // });
-    // capt.on('exit', function (code) {
-    //   console.log('child process exited with code ' + code);
-    // });
+    capt = spawn('bash',['bin/capture.sh']);
+    console.log("Lancé");
+    capt.stdout.on('data', function (data) {
+      console.log('stdout: ' + data);
+    });
+    capt.stderr.on('data', function (data) {
+      console.log('stderr: ' + data);
+    });
+    capt.on('exit', function (code) {
+      console.log('child process exited with code ' + code);
+    });
   };
   function onCaptureStop (){
     //use ps in terminal for idetifying the process
@@ -109,10 +109,10 @@ module.exports = function(app, io, oscServer){
 
     console.log('kill capture in 2 s');
 
-    // setTimeout(function() {
-    //   capt.stdin.pause();
-    //   capt.kill();
-    // }, 2000);
+    setTimeout(function() {
+      capt.stdin.pause();
+      capt.kill();
+    }, 2000);
 
   }; 
   function onMessage(msg){
