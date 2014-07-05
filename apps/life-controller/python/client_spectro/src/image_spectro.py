@@ -40,6 +40,7 @@ class image_spectro(threading.Thread):
 		
 		"""Initialzation of values"""
 		self.values = []
+		self.values_mean = []
 		self.number_value_mean = 10
 		
 		
@@ -138,7 +139,8 @@ class image_spectro(threading.Thread):
 			else :
 				new_value = (self.concentration_value + sum(self.values[(len(self.values)-self.number_value_mean)+1:]))/self.number_value_mean
 				new_value = round(new_value,2)
-				self.values.append(new_value)
+				self.values = self.values.append(self.concentration_value)
+				self.values_mean.append(new_value)
 				self.concentration_value = new_value
 			
 			
@@ -146,12 +148,12 @@ class image_spectro(threading.Thread):
 			"""for testing if self.concentration_value is stabilised"""
 			"""test on 10 previous values""" 
 			stabilised = False
-			if len(self.values) > self.number_previous_values :
+			if len(self.values_mean) > self.number_previous_values :
 				"""rank of the last values"""
-				rank = len(self.values)-1
+				rank = len(self.values_mean)-1
 				stabilised_until = True
 				for i in range(self.number_previous_values + 1) : 
-					if abs(self.values[rank-i]- self.values[rank]) > self.stabilised_value_minimum : 
+					if abs(self.values_mean[rank-i]- self.values_mean[rank]) > self.stabilised_value_minimum : 
 						stabilised_until = False 
 				
 				stabilised = stabilised_until
@@ -181,6 +183,7 @@ class image_spectro(threading.Thread):
 	"""to start analysis"""
 	def start_concentration(self):
 		self.values = []
+		self.values_mean = []
 		self._stop = False
 		self.lock.release()
 	"""to stop analysis"""
