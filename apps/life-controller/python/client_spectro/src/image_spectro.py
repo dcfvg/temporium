@@ -36,11 +36,11 @@ class image_spectro(threading.Thread):
 		"""number of previous values for stabilisation"""
 		self.number_previous_values = 10
 		"""value of the maximum difference of the values to be considered as stabilised"""
-		self.stabilised_value_minimum = 3
+		self.stabilised_value_minimum = 5
 		
 		"""Initialzation of values"""
 		self.values = []
-		self.number_value_mean = 5
+		self.number_value_mean = 10
 		
 		
 		"""initialization of cropping values"""
@@ -137,6 +137,7 @@ class image_spectro(threading.Thread):
 				self.values.append(self.concentration_value)
 			else :
 				new_value = (self.concentration_value + sum(self.values[(len(self.values)-self.number_value_mean)+1:]))/self.number_value_mean
+				new_value = round(new_value,2)
 				self.values.append(new_value)
 				self.concentration_value = new_value
 			
