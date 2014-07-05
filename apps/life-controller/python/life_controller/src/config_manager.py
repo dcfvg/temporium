@@ -31,7 +31,7 @@ class config_manager(object):
                                        "BU_EMPTY" :0,\
                                        "FILLING_BR_BU" :0,\
                                        }
-        self._AQ = {"CONCENTRATION_OPT" : 0}
+        self._AQ = {"CONCENTRATION_OPT" : 0, "AQ_FULL" : 0, "AQ_EMPTY" : 0}
         
         self._film = {"TIME_OUT" : 0}
         
@@ -81,8 +81,26 @@ class config_manager(object):
             
             elif key  == "AQ" :
                 name = list[1].strip()
-                value = float(list[2].strip())
-                self._set_BRBU_controller(name, value)  
+                if name == "INSTRUCTION_FILLING" :
+                    """ "INSTRUCTION_FILLING" : [[borne_inf, borne_sup, action], [-5.0, 0.0, 0.7]] """
+                    interval = list[2].strip()
+                    interval = interval.replace("[","")
+                    interval = interval.replace("]","")
+                    borne = interval.split(",")
+                    b1 = float(borne[0].strip())
+                    b2 = float(borne[1].strip())
+                    action = float(list[3].strip())
+                    
+                    value = [min(b1,b2), max(b1,b2), action ]
+                    
+                    if not (name in self._AQ ): 
+                        self._AQ[name]= []
+                     
+                    self._AQ[name].append(value)
+                
+                else : 
+                    value = float(list[2].strip())
+                    self._set_AQ(name, value)  
             
             elif key  == "film" :
                 name = list[1].strip()
@@ -102,6 +120,8 @@ class config_manager(object):
         """release the lock to enable access to the value"""
         self.lock.release()
         file.close()
+        
+        print( self._AQ)
                 
     """RENEW LIGHT AQ"""           
     def _set_renew_light_AQ(self, name, value):

@@ -10,6 +10,7 @@ from action_thread.AQ_filtration import *
 from action_thread.fill_BU_AQ import *
 from action_thread.auto_AQ_filtration import *
 from action_thread.renew_light_AQ_BU import *
+from action_thread.renew_heavy_AQ_BU import *
 from action_thread.empty_BU_S import *
 from action_thread.AQ_emptying import *
 
@@ -45,7 +46,7 @@ class current_state(object):
         self.number_usage = dict()
         
         """BRBU_controller state"""
-        self._BU_state = {"BU1" : [threading.Lock(), "NULL"],"BU2" : [threading.Lock(), "NULL"],"BU3" : [threading.Lock(), "NULL"] }
+        self._BU_state = {"BU1" : [threading.Lock(), "USE"],"BU2" : [threading.Lock(), "NULL"],"BU3" : [threading.Lock(), "NULL"] }
         
         """current_action"""
         self._current_action = {"AQ_filtration" : [threading.Lock(),False],\
@@ -62,6 +63,9 @@ class current_state(object):
                                         "renew_light_AQ_BU1" : [threading.Lock(),False],\
                                         "renew_light_AQ_BU2" : [threading.Lock(),False],\
                                         "renew_light_AQ_BU3" : [threading.Lock(),False],\
+                                        "renew_heavy_AQ_BU1" : [threading.Lock(),False],\
+                                        "renew_heavy_AQ_BU2" : [threading.Lock(),False],\
+                                        "renew_heavy_AQ_BU3" : [threading.Lock(),False],\
                                  }
         """current_action_lift_screen"""
         self._current_action_lift_screen = {"lift_down" : [threading.Lock(),False],\
@@ -699,40 +703,57 @@ class current_state(object):
             if not self.get_current_action_evolved(name) == state : 
                 if name == "auto_AQ_filtration" : 
                     if state : 
-                        """start the thread to for a filtration, only if there is no filtration at the same time"""
-                        if not self.get_current_action_evolved("auto_AQ_filtration") :
-                            action = auto_AQ_filtration(self)
-                            action.start()
+                        action = auto_AQ_filtration(self)
+                        action.start()
+                            
                     else : 
                         """set the action to end, and will stop the current action""" 
                         self._set_current_action_evolved("auto_AQ_filtration",False)
                 if name == "renew_light_AQ_BU1" : 
                     if state : 
-                        """start the thread to for a filtration, only if there is no filtration at the same time"""
-                        if not self.get_current_action_evolved("renew_light_AQ_BU1") :
-                            action = renew_light_AQ_BU(self,"BU1")
-                            action.start()
+                        action = renew_light_AQ_BU(self,"BU1")
+                        action.start()
                     else : 
                         """set the action to end, and will stop the current action""" 
                         self._set_current_action_evolved("renew_light_AQ_BU1",False)
                 if name == "renew_light_AQ_BU2" : 
                     if state : 
-                        """start the thread to for a filtration, only if there is no filtration at the same time"""
-                        if not self.get_current_action_evolved("renew_light_AQ_BU2") :
-                            action = renew_light_AQ_BU(self,"BU2")
-                            action.start()
+                        action = renew_light_AQ_BU(self,"BU2")
+                        action.start() 
                     else : 
                         """set the action to end, and will stop the current action""" 
                         self._set_current_action_evolved("renew_light_AQ_BU2",False)
                 if name == "renew_light_AQ_BU3" : 
                     if state : 
-                        """start the thread to for a filtration, only if there is no filtration at the same time"""
-                        if not self.get_current_action_evolved("renew_light_AQ_BU3") :
-                            action = renew_light_AQ_BU(self,"BU3")
-                            action.start()
+                        action = renew_light_AQ_BU(self,"BU3")
+                        action.start()  
                     else : 
                         """set the action to end, and will stop the current action""" 
                         self._set_current_action_evolved("renew_light_AQ_BU3",False)
+                if name == "renew_heavy_AQ_BU1" : 
+                    if state : 
+                        action = renew_heavy_AQ_BU(self,"BU1")
+                        action.start()
+                            
+                    else : 
+                        """set the action to end, and will stop the current action""" 
+                        self._set_current_action_evolved("renew_heavy_AQ_BU1",False)
+                if name == "renew_heavy_AQ_BU2" : 
+                    if state : 
+                        action = renew_heavy_AQ_BU(self,"BU2")
+                        action.start()
+                            
+                    else : 
+                        """set the action to end, and will stop the current action""" 
+                        self._set_current_action_evolved("renew_heavy_AQ_BU2",False)
+                if name == "renew_heavy_AQ_BU3" : 
+                    if state : 
+                        action = renew_heavy_AQ_BU(self,"BU3")
+                        action.start()
+                            
+                    else : 
+                        """set the action to end, and will stop the current action""" 
+                        self._set_current_action_evolved("renew_heavy_AQ_BU3",False)
             
         else : 
             print("already a evolved task running")   
@@ -859,6 +880,9 @@ class current_state(object):
                 """if OK"""
                 self.get_client_connected(server_name).ask_information(state)
                 self._set_information_asked(name, state)
+                """set concentration to NULL each time we ask information about concentrtion"""
+                if name =="concentration" and state : 
+                    self.set_concentration("AQ", "NULL")
             else : 
                 print("information asked : " + name + " " + str(state) + " failed : " +  server_name + " not connected") 
             

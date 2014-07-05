@@ -63,14 +63,14 @@ class server_concentration(threading.Thread):
                 
                 for msg in data : 
                     try : 
-                        """information in shape AQ : %,realvalue"""
+                        """information in shape AQ : realvalue"""
                         data_list = msg.split(":")
                         
                         container_name = data_list[0].strip()
                         """value = [%,real_value]"""
-                        value = data_list[1].split(",")
-                        percent = float(value[0].strip())
-                        real_value = float(value[1].strip())
+                        #value = data_list[1].split(",")
+                        percent = float(data_list[1].strip())
+                        #real_value = float(value[1].strip())
                     
                     
                         self.current_state.set_concentration(container_name, percent)

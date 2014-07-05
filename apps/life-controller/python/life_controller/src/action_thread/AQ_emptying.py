@@ -8,7 +8,8 @@ import time
 
 class AQ_emptying(threading.Thread):
     '''
-    thread to run to start a filling AQ with BU, but do not call it directly, use current_state.set_current_action
+    thread to run to start a emptying AQ until the EL, but do not call it directly, use current_state.set_current_action
+    not used since no EL in AQ
     '''
     def __init__(self,a_current_state, EL_name):
         '''

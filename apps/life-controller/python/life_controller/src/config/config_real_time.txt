@@ -12,8 +12,24 @@ comments : time_out in minutes when the film starts
 film : TIME_OUT : 30000
 comments : time of the beginning of the exposure/time of the end of the exposure (format : 0-23h0-59)
 time_controller : START_DAY : 8
-time_controller : END_DAY : 7
-comments : time to wait after having turned on the spectro light and pump to mesure concentration // will change
-spectro : WAIT : 20
-comments : 
+time_controller : END_DAY : 7 
+comments : AQ management
+AQ : FULL : 0.9
+AQ : EMPTY : 0.1
+AQ : VOLUME_TO_EMPTY_HEAVY : 0.8
 AQ : CONCENTRAION_OPT : 50
+comments : "AQ : [x,x] : y"  if the difference between current concentration and optimal concentration is between [x,x], add y% of BU (relitve to the volume of AQ emptyied before)
+comments : for an optimal concentration : 2/3 alguae, 1/3 M2 
+AQ : INSTRUCTION_FILLING : [0,5] : 0.6
+AQ : INSTRUCTION_FILLING : [0,-5] : 0.7
+AQ : INSTRUCTION_FILLING : [5,10] : 0.6
+AQ : INSTRUCTION_FILLING : [-5,-10] : 0.7
+AQ : INSTRUCTION_FILLING : [10,20] : 0.5
+AQ : INSTRUCTION_FILLING : [-10,-20] : 0.8
+AQ : INSTRUCTION_FILLING : [20,30] : 0.4
+AQ : INSTRUCTION_FILLING : [-20,-30] :0.9
+AQ : INSTRUCTION_FILLING : [30,40] : 0.3
+AQ : INSTRUCTION_FILLING : [-30,-40] : 1
+AQ : INSTRUCTION_FILLING : [40,50] : 0.3
+AQ : INSTRUCTION_FILLING : [-40,-50] : 1
+

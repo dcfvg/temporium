@@ -29,7 +29,7 @@ class window(Tk):
         
     def open_file(self):
         try : 
-            file = filedialog.askopenfilename(parent = self, title="Choisir Image BU")
+            file = filedialog.askopenfilename(parent = self, title="Choisir Image SPECTRO")
       
             self.visual_feedback  = visual_feedback(self, file)
             

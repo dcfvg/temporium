@@ -27,7 +27,7 @@ class auto_AQ_filtration(threading.Thread):
         self.current_state._set_current_action_evolved("auto_AQ_filtration",True)
         """start filtration"""
         self.current_state.set_current_action("AQ_filtration",True)
-        print("Filtration automatique : " + self.time_filtration + " seconds")
+        print("Filtration automatique : " + str(self.time_filtration) + " seconds")
         compt = 0 
         while compt <self.time_filtration and self.current_state.get_current_action_evolved("auto_AQ_filtration"): 
             time.sleep(1)

@@ -55,6 +55,9 @@ class manual_action(Frame):
                                         "renew_light_AQ_BU1" : [1],\
                                         "renew_light_AQ_BU2" : [2],\
                                         "renew_light_AQ_BU3" : [3],\
+                                        "renew_heavy_AQ_BU1" : [4],\
+                                        "renew_heavy_AQ_BU2" : [5],\
+                                        "renew_heavy_AQ_BU3" : [6],\
                                  }
         
         self.button_current_action_aquarium = {"AQ_emptying_EL_HIGH": [0],\
@@ -80,7 +83,7 @@ class manual_action(Frame):
         self._build_button_action_evolved()
         self._build_button_information_asked()
         self._build_button_current_film_state()
-        self._build_button_current_action_aquarium()
+        """self._build_button_current_action_aquarium()"""
         self._build_state_label()
         self._add_to_frame()
         
@@ -107,8 +110,8 @@ class manual_action(Frame):
             self.button_current_film_state[item].append(tkinter.Label(self,bg ='red', text = "FALSE"))  
         for item in self.button_current_film_state : 
             self.button_current_film_state[item].append(tkinter.Label(self,bg ='red', text = "FALSE"))
-        for item in self.button_current_action_aquarium : 
-            self.button_current_action_aquarium[item].append(tkinter.Label(self,bg ='red', text = "FALSE"))
+#         for item in self.button_current_action_aquarium : 
+#             self.button_current_action_aquarium[item].append(tkinter.Label(self,bg ='red', text = "FALSE"))
            
               
         
@@ -214,7 +217,7 @@ class manual_action(Frame):
             self.button_current_film_state[item][2].grid(sticky=E, row=self.button_current_film_state[item][0]+compt_right, column=3)
         compt_right = compt_right+internal_compt
         
-        Label(self, text = "Film : ",fg = "white", bg = "black").grid(sticky = W,row=compt_right, column = 2, columnspan = 2)
+        """Label(self, text = "Film : ",fg = "white", bg = "black").grid(sticky = W,row=compt_right, column = 2, columnspan = 2)
         compt_right = compt_right+1
         
         internal_compt = 0
@@ -222,7 +225,7 @@ class manual_action(Frame):
             internal_compt = internal_compt +1
             self.button_current_action_aquarium[item][1].grid(sticky=W, row= self.button_current_action_aquarium[item][0]+compt_right, column=2)
             self.button_current_action_aquarium[item][2].grid(sticky=E, row=self.button_current_action_aquarium[item][0]+compt_right, column=3)
-        compt_right = compt_right+internal_compt
+        compt_right = compt_right+internal_compt"""
         
         
 
@@ -293,6 +296,12 @@ class manual_action(Frame):
                 self.button_action_evolved[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_action_evolved("renew_light_AQ_BU2")))
             elif item =="renew_light_AQ_BU3" : 
                 self.button_action_evolved[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_action_evolved("renew_light_AQ_BU3")))
+            elif item =="renew_heavy_AQ_BU1" : 
+                self.button_action_evolved[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_action_evolved("renew_heavy_AQ_BU1")))
+            elif item =="renew_heavy_AQ_BU2" : 
+                self.button_action_evolved[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_action_evolved("renew_heavy_AQ_BU2")))
+            elif item =="renew_heavy_AQ_BU3" : 
+                self.button_action_evolved[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_action_evolved("renew_heavy_AQ_BU3")))
     
    
     def _build_button_information_asked(self):
@@ -311,7 +320,7 @@ class manual_action(Frame):
             if item =="film" : 
                 self.button_current_film_state[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_current_film_state("film"))) 
     
-    def _build_button_current_action_aquarium(self):
+    """def _build_button_current_action_aquarium(self):
         for item in self.button_current_action_aquarium : 
             if item =="AQ_emptying_EL_HIGH" : 
                 self.button_current_action_aquarium[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_current_action_aquarium(item))) 
@@ -319,7 +328,7 @@ class manual_action(Frame):
                 self.button_current_action_aquarium[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_current_action_aquarium(item))) 
             elif item =="AQ_emptying_EL_LOW" : 
                 self.button_current_action_aquarium[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_current_action_aquarium(item))) 
-    
+    """
     
     def refresh_state(self):
         for item in self.button_biological_actions :  
@@ -394,14 +403,14 @@ class manual_action(Frame):
                 t = "FALSE"
             self.button_current_film_state[item][2].config (bg = color, text = t)
        
-        for item in self.button_current_action_aquarium :  
+        """for item in self.button_current_action_aquarium :  
             if self.current_state.get_current_action_aquarium(item) : 
                 color = "green"
                 t = "TRUE"
             else : 
                 color = "red"
                 t = "FALSE"
-            self.button_current_action_aquarium[item][2].config (bg = color, text = t)
+            self.button_current_action_aquarium[item][2].config (bg = color, text = t)"""
             
         
         
