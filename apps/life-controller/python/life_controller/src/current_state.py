@@ -304,71 +304,111 @@ class current_state(object):
                     b = False
         
         """if there is no action running"""
+        # if b :
+        #     if not self.get_current_action(name) == state : 
+        #         if name == "AQ_filtration" : 
+        #             if state : 
+        #                 """start the thread to for a filtration, only if there is no filtration at the same time"""
+        #                 if not self.get_current_action("AQ_filtration") :
+        #                     action = AQ_filtration(self)
+        #                     action.start()
+        #             else : 
+        #                 """set the action to end, and will stop the current action""" 
+        #                 self._set_current_action("AQ_filtration",False)
+                        
+        #         elif name == "fill_BU1_AQ" : 
+        #             if state : 
+        #                 """start the thread to for a filtration, only if there is no filtration at the same time"""
+        #                 if not self.get_current_action("fill_BU1_AQ") :
+        #                     action = fill_BU_AQ(self,"BU1")
+        #                     action.start()
+                        
+        #             else : 
+        #                 self._set_current_action("fill_BU1_AQ",False)
+        #         elif name == "fill_BU2_AQ" : 
+        #             if state : 
+        #                 """start the thread to for a filtration, only if there is no filtration at the same time"""
+        #                 if not self.get_current_action("fill_BU2_AQ") :
+        #                     action = fill_BU_AQ(self,"BU2")
+        #                     action.start()
+                        
+        #             else : 
+        #                 self._set_current_action("fill_BU2_AQ",False)
+        #         elif name == "fill_BU3_AQ" :
+        #             if state : 
+        #                 """start the thread to for a filtration, only if there is no filtration at the same time"""
+        #                 if not self.get_current_action("fill_BU3_AQ") :
+        #                     action = fill_BU_AQ(self,"BU3")
+        #                     action.start()
+        #             else : 
+        #                 self._set_current_action("fill_BU3_AQ",False)
+                
+        #         elif name == "empty_BU1_S" :
+        #             if state : 
+        #                 """start the thread for a emptying, only if there is no filtration at the same time"""
+        #                 if not self.get_current_action("empty_BU1_S") :
+        #                     action = empty_BU_S(self,"BU1")
+        #                     action.start()
+        #             else : 
+        #                 self._set_current_action("empty_BU1_S",False)
+                
+        #         elif name == "empty_BU2_S" :
+        #             if state : 
+        #                 """start the thread to for a filtration, only if there is no filtration at the same time"""
+        #                 if not self.get_current_action("empty_BU2_S") :
+        #                     action = empty_BU_S(self,"BU2")
+        #                     action.start()
+        #             else : 
+        #                 self._set_current_action("empty_BU2_S",False)
+                
+        #         elif name == "empty_BU3_S" :
+        #             if state : 
+        #                 """start the thread to for a filtration, only if there is no filtration at the same time"""
+        #                 if not self.get_current_action("empty_BU3_S") :
+        #                     action = empty_BU_S(self,"BU3")
+        #                     action.start()
+        #             else : 
+        #                 self._set_current_action("empty_BU3_S",False)
         if b :
             if not self.get_current_action(name) == state : 
                 if name == "AQ_filtration" : 
-                    if state : 
-                        """start the thread to for a filtration, only if there is no filtration at the same time"""
-                        if not self.get_current_action("AQ_filtration") :
-                            action = AQ_filtration(self)
-                            action.start()
-                    else : 
-                        """set the action to end, and will stop the current action""" 
-                        self._set_current_action("AQ_filtration",False)
+                     
+                    self.set_state_pump("P_AQ_FI", state)
+                    self.set_state_pump("P_FI_AQ_1", state)
+                    self.set_state_pump("P_FI_AQ_3", state)
+                    self._set_current_action("AQ_filtration",state)
+                    
+                 
                         
                 elif name == "fill_BU1_AQ" : 
-                    if state : 
-                        """start the thread to for a filtration, only if there is no filtration at the same time"""
-                        if not self.get_current_action("fill_BU1_AQ") :
-                            action = fill_BU_AQ(self,"BU1")
-                            action.start()
-                        
-                    else : 
-                        self._set_current_action("fill_BU1_AQ",False)
+                    self.set_state_pump("P_BU1_FI", state)
+                    self.set_state_pump("P_FI_AQ_1", state)
+                    self._set_current_action("fill_BU1_AQ",state)
+
                 elif name == "fill_BU2_AQ" : 
-                    if state : 
-                        """start the thread to for a filtration, only if there is no filtration at the same time"""
-                        if not self.get_current_action("fill_BU2_AQ") :
-                            action = fill_BU_AQ(self,"BU2")
-                            action.start()
-                        
-                    else : 
-                        self._set_current_action("fill_BU2_AQ",False)
+                    self.set_state_pump("P_BU2_FI", state)
+                    self.set_state_pump("P_FI_AQ_1", state)
+                    self._set_current_action("fill_BU2_AQ",state)
+               
                 elif name == "fill_BU3_AQ" :
-                    if state : 
-                        """start the thread to for a filtration, only if there is no filtration at the same time"""
-                        if not self.get_current_action("fill_BU3_AQ") :
-                            action = fill_BU_AQ(self,"BU3")
-                            action.start()
-                    else : 
-                        self._set_current_action("fill_BU3_AQ",False)
-                
+                    self.set_state_pump("P_BU3_FI", state)
+                    self.set_state_pump("P_FI_AQ_1", state)
+                    self._set_current_action("fill_BU3_AQ",state)
+
                 elif name == "empty_BU1_S" :
-                    if state : 
-                        """start the thread for a emptying, only if there is no filtration at the same time"""
-                        if not self.get_current_action("empty_BU1_S") :
-                            action = empty_BU_S(self,"BU1")
-                            action.start()
-                    else : 
-                        self._set_current_action("empty_BU1_S",False)
+                    self.set_state_pump("P_BU1_FI", state)
+                    self.set_state_pump("P_FI_S", state)
+                    self._set_current_action("empty_BU1_S",state)
                 
                 elif name == "empty_BU2_S" :
-                    if state : 
-                        """start the thread to for a filtration, only if there is no filtration at the same time"""
-                        if not self.get_current_action("empty_BU2_S") :
-                            action = empty_BU_S(self,"BU2")
-                            action.start()
-                    else : 
-                        self._set_current_action("empty_BU2_S",False)
+                    self.set_state_pump("P_BU2_FI", state)
+                    self.set_state_pump("P_FI_S", state)
+                    self._set_current_action("empty_BU2_S",state)
                 
                 elif name == "empty_BU3_S" :
-                    if state : 
-                        """start the thread to for a filtration, only if there is no filtration at the same time"""
-                        if not self.get_current_action("empty_BU3_S") :
-                            action = empty_BU_S(self,"BU3")
-                            action.start()
-                    else : 
-                        self._set_current_action("empty_BU3_S",False)
+                    self.set_state_pump("P_BU3_FI", state)
+                    self.set_state_pump("P_FI_S", state)
+                    self._set_current_action("empty_BU3_S",state)
         else : 
             print(name + " to "+ str(state) + " impossible : already a task running")                
     
@@ -960,7 +1000,7 @@ class current_state(object):
                     
                     if state == True : 
                         """get in the mode pause"""
-                        self.BRBU_controller._lock_pause.acquire()
+                        self.BRBU_controller._losetck_pause.acquire()
                         self._set_BRBU_controller_state("pause",True)
                     
                         """if False : get out from the pause"""
