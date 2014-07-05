@@ -134,7 +134,7 @@ class image_spectro(threading.Thread):
 			
 			self.concentration_value = self.get_level(path_image_to_treat, path_destination_name, self.coordinates_crop)[0]
 			
-			print (self.values)
+			
 			if len(self.values) < self.number_value_mean :
 				self.values.append(self.concentration_value)
 			else :
