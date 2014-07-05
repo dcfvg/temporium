@@ -122,7 +122,7 @@ class image_spectro(threading.Thread):
 			
 			stabilised = False
 			values = []
-			while not stabilised : 
+			while not stabilised and not self._stop : 
 				#print ("capture")
 				os.system("imagesnap -d " + self.camera_SPECTRO + " " + PathToFile + "im_spectro.jpeg")
 				time.sleep(2)
