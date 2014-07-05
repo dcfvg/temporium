@@ -1,0 +1,3 @@
+Temporium
+CONFIGURATION_CROP  : AQ 
+AQ : 276, 77, 318, 280

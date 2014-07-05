@@ -1,40 +1,31 @@
 '''
 Created on Apr 28, 2014
- 
+
 @author: Cactus
 '''
 import socket
-import time
+import time 
 import threading
-from image_level import *
 
 
- 
-class client_level(threading.Thread):
- 
-    def __init__(self, adress, port):
+class client_arduino_order(threading.Thread):
+
+    def __init__(self, an_adress, a_port, f_analyse_image):
         threading.Thread.__init__(self)
-         
-        self.name = "client_level"
-         
+        
+        self.name = "client_arduino_order"
+        
+        self.fake_analyse_image = f_analyse_image
+        
+        """adress and port to ask connection"""
+        self.adress = an_adress
+        self.port = a_port
+        
         self.connected = False
         self.terminated = False
-        
-        self.adress = adress
-        self.port = port
-
-        """Creation of the object image_spectro"""
-         
-
-        self.image_level = image_level(self)
-
-        
-
-        
-        
+     
         self.start()
-
-    
+        
     def run(self): 
         """start to listen"""
         print(self.name +" start")
@@ -46,41 +37,45 @@ class client_level(threading.Thread):
                 self.ask_connection(self.adress, self.port)
                 time.sleep(5)
             
-            
             try:
                 
-                while not self.terminated : 
+                while self.connected : 
                     
                     """block until data comes"""
                     data = self._recv()
                     
                     """signal that the server is deconnected, so end the connexion"""
                     if data =="" :
-                        self.stop()
-                    else :   
-                             
-                        data = data.split("\n")
+                        self.stop_until()
+                    else :        
+                        print (self.name + " received : "+ data)
+                        """do whatever you want"""
+                        """receive data like "P_M1_BR1 : HIGH"""
+                    data = data.split("\n")
                     
-                        for item in data :
-                            #print(self.name + " received" + item)
-                            try : 
-                                if item.strip() == "level_start" :
-                                    print("Ask for starting image analysis")
-                                    self.image_level.start_level()
+                    for item in data : 
+                        data_split = item.split(":")
+                        try : 
+                            if data_split[0].strip() == 'PUMP' :
                                 
-                                elif item.strip() == "level_stop" :
-                                    print("Ask for stoping image analysis")
-                                    self.image_level.stop_level()
+                                if data_split[2].strip() == 'HIGH' :
+                                    self.fake_analyse_image.set_state_pump(data_split[1].strip(), True)
                                 
+                                elif data_split[2].strip() == 'LOW' : 
+                                    self.fake_analyse_image.set_state_pump(data_split[1].strip(), False)
                                 else : 
-    
-                                    """Print something is wrong"""
-                                    #print(self.name + " Message unknown " + item)
+                                    #print("daz1 " + item)
                                     pass
-                            except Exception:
-                                """Sprint what is wrong"""
-                                print(self.name + " Message does not fit the protocol")
-            
+                            
+                                """send a answer to the EL aksing"""
+                            elif data_split[0].strip() == 'EL' :
+                
+                                status = self.fake_analyse_image.ask_EL(data_split[1].strip(), data_split[2].strip())
+                                self._send(data_split[0].strip() +" : " + data_split[1].strip() +" : " + data_split[2].strip() +" : " + str(status) )
+                               
+                        except Exception:
+                            """Sprint what is wrong"""
+                            print(self.name + " Message does not fit the protocol" + item)
             except IOError:
                 print("not ready")
                 
@@ -116,10 +111,8 @@ class client_level(threading.Thread):
                 state = False
                 return state
         return state
-            
        
     
-       
     def _send(self, msg):
         """verify that the connection is available"""
         if self.connected : 
@@ -132,16 +125,17 @@ class client_level(threading.Thread):
         
     def _recv(self):
         return self.client_socket.recv(1024).decode()
-     
+    
     def _close(self) :
         #self.client_socket.shutdown(2)
         self.client_socket.close()
-     
+    
+    def stop_until(self) :
+        self.connected = False
+        print(self.name + "finish") 
+        
     def stop(self) :
         self.terminated = True
         self._close()
         self.connected = False
-        print (self.name + "finish")
- 
- 
-
+        print(self.name + "finish") 

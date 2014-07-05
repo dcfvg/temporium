@@ -43,14 +43,14 @@ class client_formation_rate(threading.Thread):
             
             try:
                 
-                while not self.terminated : 
+                while self.connected : 
                     
                     """block until data comes"""
                     data = self._recv()
                     
                     """signal that the server is deconnected, so end the connexion"""
                     if data =="" :
-                        self.stop()
+                        self.stop_until()
                     else :   
                              
                         data = data.split("\n")
@@ -132,10 +132,17 @@ class client_formation_rate(threading.Thread):
         #self.client_socket.shutdown(2)
         self.client_socket.close()
      
+    def stop_until(self):
+        self.connected = False
+        self.formation_rate.stop_formation_rate()
+        print (self.name + "connection lost")
+        
     def stop(self) :
         self.terminated = True
         self._close()
         self.connected = False
+        self.formation_rate.stop_formation_rate()
+        
         print (self.name + "finish")
  
  
