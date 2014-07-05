@@ -38,6 +38,10 @@ class image_spectro(threading.Thread):
 		"""value of the maximum difference of the values to be considered as stabilised"""
 		self.stabilised_value_minimum = 3
 		
+		"""Initialzation of values"""
+		self.values = []
+		self.number_value_mean = 5
+		
 		
 		"""initialization of cropping values"""
 		self.read_config_crop()
@@ -119,50 +123,53 @@ class image_spectro(threading.Thread):
 			# Ecrire le nom du path ou seront enregistrees les photos
 			PathToFile = "image/"
 
+			#print ("capture")
+			os.system("imagesnap -d " + self.camera_SPECTRO + " " + PathToFile + "im_spectro.jpeg")
+			time.sleep(2)
 			
+			path_image_to_treat = PathToFile + "im_spectro.jpeg"
+			path_destination_name =PathToFile +"croppedImage_.jpeg"
+			
+			
+			self.concentration_value = self.get_level(path_image_to_treat, path_destination_name, self.coordinates_crop)[0]
+			
+			if len(self.values) < self.number_value_mean :
+				self.values.append(self.concentration_value)
+			else :
+				new_value = (self.concentration_value + sum(self.values[(len(self.values)-self.number_value_mean)+1:]))/self.number_value_mean
+				self.values.append(new_value)
+				self.concentration_value = new_value
+			
+			
+			
+			"""for testing if self.concentration_value is stabilised"""
+			"""test on 10 previous values""" 
 			stabilised = False
-			values = []
-			while not stabilised and not self._stop : 
-				#print ("capture")
-				os.system("imagesnap -d " + self.camera_SPECTRO + " " + PathToFile + "im_spectro.jpeg")
-				time.sleep(2)
+			if len(self.values) > self.number_previous_values :
+				"""rank of the last values"""
+				rank = len(self.values)-1
+				stabilised_until = True
+				for i in range(self.number_previous_values + 1) : 
+					if abs(self.values[rank-i]- self.values[rank]) > self.stabilised_value_minimum : 
+						stabilised_until = False 
 				
-				path_image_to_treat = PathToFile + "im_spectro.jpeg"
-				path_destination_name =PathToFile +"croppedImage_.jpeg"
+				stabilised = stabilised_until
 				
 				
-				self.concentration_value = self.get_level(path_image_to_treat, path_destination_name, self.coordinates_crop)[0]
-				
-				values.append(self.concentration_value)
-				
-				"""for testing if self.concentration_value is stailised"""
-				"""test on 10 previous values""" 
-				if len(values) > self.number_previous_values :
-					"""rank of the last values"""
-					rank = len(values)-1
-					stabilised_until = True
-					for i in range(self.number_previous_values + 1) : 
-						if abs(values[rank-i]- values[rank]) > self.stabilised_value_minimum : 
-							stabilised_until = False 
-					
-					stabilised = stabilised_until
-					
-					
-				
-				print ("current value : " + str(self.concentration_value))
-				
-			print ("stabilised value " + str(self.concentration_value))
+			
+			print ("current value : " + str(self.concentration_value))
 			"""in the shape : "AQ : 50,72"""
 			value = str(self.concentration_value)
 			#value = value.replace("[","")
 			#value = value.replace("]","")
-			
-			msg_to_send = "AQ :" +  value
-			
-			print(msg_to_send)
-			
-
-			self.client._send(msg_to_send)
+			if stabilised :
+				msg_to_send = "AQ :" +  value
+				
+				print(msg_to_send)
+				
+				self.client._send(msg_to_send)
+				
+				print("stabilised value :" + str(self.concentration_value))
 
 			self.lock.release()
 			
@@ -172,6 +179,7 @@ class image_spectro(threading.Thread):
 			#print("End concentration analysis")
 	"""to start analysis"""
 	def start_concentration(self):
+		self.values = []
 		self._stop = False
 		self.lock.release()
 	"""to stop analysis"""
