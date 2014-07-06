@@ -62,7 +62,7 @@ class image_level():
 						
 		except Exception as e : 
 			print(str(e))
-			print ("no file : config_crop_BU.txt in the directory")
+			print ("no file : config_detection.txt in the directory")
 		
 
 			#ce sont les limites le limage
