@@ -196,6 +196,7 @@ class image_spectro(threading.Thread):
 	def start_concentration(self):
 		self.values = []
 		self.values_mean = []
+		self.pb_previous = False
 		self._stop = False
 		self.lock.release()
 	"""to stop analysis"""
