@@ -235,7 +235,7 @@ class visual_feedback(Canvas):
         
         except Exception as e : 
             print(str(e))
-            print ("no file : config_crop_BU.txt in the directory")
+            print ("no file : config_crop_BR.txt in the directory")
         
     def enter(self, event):
         self._in_canvas = True
