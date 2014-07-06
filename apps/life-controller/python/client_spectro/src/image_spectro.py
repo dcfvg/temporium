@@ -38,6 +38,8 @@ class image_spectro(threading.Thread):
 		"""value of the maximum difference of the values to be considered as stabilised"""
 		self.stabilised_value_minimum = 5
 		
+		self.diff_max = 40
+		
 		"""Initialzation of values"""
 		self.values = []
 		self.values_mean = []
@@ -115,6 +117,7 @@ class image_spectro(threading.Thread):
 		
 		return result
 	
+	
 	def run(self):
 
 		while True:
@@ -126,14 +129,16 @@ class image_spectro(threading.Thread):
 
 			#print ("capture")
 			os.system("imagesnap -d " + self.camera_SPECTRO + " " + PathToFile + "im_spectro.jpeg")
-			time.sleep(2)
+			#time.sleep(2)
 			
 			path_image_to_treat = PathToFile + "im_spectro.jpeg"
 			path_destination_name =PathToFile +"croppedImage_.jpeg"
 			
 			
 			self.concentration_value = self.get_level(path_image_to_treat, path_destination_name, self.coordinates_crop)[0]
-			
+			if len(self.values) >0 :
+				if not abs( self.concentration_value - self.values[len(self.values)-1]) > self.diff_max :
+					 self.concentration_value = self.values[len(self.values)-1]
 			
 			if len(self.values) < self.number_value_mean :
 				self.values.append(self.concentration_value)
