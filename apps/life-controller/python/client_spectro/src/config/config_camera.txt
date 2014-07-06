@@ -1,4 +1,4 @@
 Temporium
 CONFIGURATION_CAMERA  : SPECTRO
 comments : use "imagesnap -l" to have the list of all the connected webcam
-SPECTRO : HD Pro Webcam C920
+SPECTRO : HD Pro Webcam C920 #2

@@ -79,11 +79,11 @@ class image_spectro(threading.Thread):
 	
 	
 	"""take a path of the image to crop, return the image cropped"""
-	def image_cropping(self,path_image_to_treat,path_destination_name, coordinates_crop):
+	def image_cropping(self,image_to_treat,path_destination_name, coordinates_crop):
 
-		im = Image.open(path_image_to_treat)
+		
 
-		an_image = im.crop(coordinates_crop)
+		an_image = image_to_treat.crop(coordinates_crop)
 
 		an_image.save(path_destination_name,"jpeg")
 		
@@ -131,11 +131,12 @@ class image_spectro(threading.Thread):
 			os.system("imagesnap -d " + self.camera_SPECTRO + " " + PathToFile + "im_spectro.jpeg")
 			#time.sleep(2)
 			
-			path_image_to_treat = PathToFile + "im_spectro.jpeg"
+			image_to_treat = Image.opent(PathToFile + "im_spectro.jpeg")
+			
 			path_destination_name =PathToFile +"croppedImage_.jpeg"
 			
 			
-			self.concentration_value = self.get_level(path_image_to_treat, path_destination_name, self.coordinates_crop)[0]
+			self.concentration_value = self.get_level(image_to_treat, path_destination_name, self.coordinates_crop)[0]
 			if len(self.values) >0 :
 				if abs( self.concentration_value - self.values[len(self.values)-1]) > self.diff_max :
 					if not self.pb_previous : 
@@ -174,9 +175,14 @@ class image_spectro(threading.Thread):
 			
 			print ("current value : " + str(self.concentration_value))
 			"""in the shape : "AQ : 50,72"""
+			"""pour tester""" 
+			
 			value = str(self.concentration_value)
+			value = str(55)
 			#value = value.replace("[","")
 			#value = value.replace("]","")
+			
+			
 			if stabilised :
 				msg_to_send = "AQ :" +  value
 				
