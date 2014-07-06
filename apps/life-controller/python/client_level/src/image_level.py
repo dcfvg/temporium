@@ -606,19 +606,19 @@ class image_level(threading.Thread):
 				time.sleep(2)
 				
 
-				image_BU = PathToFile + "im_B_level.jpeg"
-				image_BR = PathToFile + "im_B_level.jpeg"
+				image_BU = Image.open(PathToFile + "im_B_level.jpeg")
+				image_BR = Image.open(PathToFile + "im_B_level.jpeg")
 				
 			#Path jusqu'au dossier ou les sous-images seront sauvegardees
 			PathToFile_croppedImages = PathToFile
 
 
-			outfile_BR1 = Image.open(PathToFile_croppedImages + "BR1.jpeg")
-			outfile_BR2 = Image.open(PathToFile_croppedImages + "BR2.jpeg")
-			outfile_BR3 = Image.open(PathToFile_croppedImages + "BR3.jpeg")
-			outfile_BU1 = Image.open(PathToFile_croppedImages + "BU1.jpeg")
-			outfile_BU2 = Image.open(PathToFile_croppedImages + "BU2.jpeg")
-			outfile_BU3 = Image.open(PathToFile_croppedImages + "BU3.jpeg")
+			outfile_BR1 = PathToFile_croppedImages + "BR1.jpeg"
+			outfile_BR2 = PathToFile_croppedImages + "BR2.jpeg"
+			outfile_BR3 = PathToFile_croppedImages + "BR3.jpeg"
+			outfile_BU1 = PathToFile_croppedImages + "BU1.jpeg"
+			outfile_BU2 = PathToFile_croppedImages + "BU2.jpeg"
+			outfile_BU3 = PathToFile_croppedImages + "BU3.jpeg"
 	
 
 			im_cropped_BR1 = self.image_cropping(image_BR,outfile_BR1,self.coordinates_crop["BR1"])

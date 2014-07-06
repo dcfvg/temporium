@@ -178,7 +178,6 @@ class image_spectro(threading.Thread):
 			"""pour tester""" 
 			
 			value = str(self.concentration_value)
-			value = str(55)
 			#value = value.replace("[","")
 			#value = value.replace("]","")
 			
