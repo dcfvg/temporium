@@ -6,10 +6,10 @@ comments : list all pin output in the pin_array_output that are connected to the
 comments : list arduino terminal "python -m serial.tools.list_ports" ou "ls /dev/cu.usbmodem*"
 arduino : arduino_pump :  /dev/cu.usbmodem1a13141
 PUMP : P_SPECTRO : 28
-PUMP : P_FI_S : 32
+PUMP : P_FI_S : 29
 PUMP : P_AQ_FI : 30
 PUMP : P_FI_AQ_1 : 31
-PUMP : P_AQ_S : 29
+PUMP : P_AQ_S : 32
 PUMP : P_BR3_BU3 : 33
 PUMP : P_FI_AQ_3 : 34
 PUMP : P_BR2_BU2 : 35
@@ -17,10 +17,10 @@ PUMP : P_BR1_BU1 : 40
 PUMP : P_BU2_FI : 39
 PUMP : P_BU1_FI : 41
 PUMP : P_BU3_FI : 38
-PUMP : P_M1_BR1 : 47
+PUMP : P_M1_BR1 : 44
 PUMP : P_M2_AQ : 45
 PUMP : P_M1_BR2 : 46
-PUMP : P_M1_BR3 : 44
+PUMP : P_M1_BR3 : 47
 PUMP : P_M2_BU3 : 49
 PUMP : P_M2_BU1 :51
 PUMP : P_M2_BU2 : 48
@@ -39,5 +39,5 @@ EL : AQ : MAX : 41 : 52
 EL : AQ : HIGH : 43 : 52
 EL : AQ : MIDDLE : 45 : 52
 EL : AQ : MIN : 47 : 52
-arduino : arduino_lift : /dev/cu.usbmodem1a13111
-pin_array_output : 2, 3, 4 , 5, 10, 12
+comments : arduino_lift : /dev/cu.usbmodem1a13131
+comments : pin_array_output : 2, 3, 4 , 5, 10, 12
