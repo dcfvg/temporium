@@ -15,10 +15,12 @@ class image_level(threading.Thread):
 
 	def __init__(self,un_client):
 		# define parameters for the level_mesure function. To know their role, go and check the comments of that function.
-		self.k = 3
-		self.diff = 30
-		self.gaussian_radius = 10
-		self.nb_pixel_level_line = 3
+		self.jump_pixel = dict()
+		self.diff = dict()
+		self.gaussian_radius = dict()
+		self.nb_pixel_level_line = dict()
+		
+		self.config_detection_read_for = ["BR1", "BR2", "BR3", "BU1", "BU2", "BU3"]
 		
 		threading.Thread.__init__(self)
 		self.client = un_client
@@ -77,12 +79,53 @@ class image_level(threading.Thread):
 		self.read_calibration_BU()
 		self.read_calibration_BR()
 		self.read_config_camera()
+		self.read_config_detection()
 		
-		print ("Cropping coordinates : " + str(self.calibration_values))
+		#print ("Cropping coordinates : " + str(self.calibration_values))
 		
 		self.start()
 
+	def read_config_detection(self):
+		print("read config detection")
+		try : 
+			file = open("config/config_detection.txt", "r")
+			
+	
+			for ligne in file :
+				"""Take out the end symbols (\n)"""
+				ligne = ligne.strip()
+				"""split on  ':' """
+				list = ligne.split(":")	
+				
+				name_container = list[0].strip()
+				for name in self.config_detection_read_for:
+					if name_container == name :
+						name_parameter = list[1].strip()
+						value = int(list[2].strip())
+						
+						if name_parameter == "JUMP_PIXEL" : 
+							self.jump_pixel[name_container] = value
+						
+						elif name_parameter == "DIFF" : 
+							self.diff[name_container] = value
+						
+						elif name_parameter == "GAUSSIAN_RADIUS" :
+							self.gaussian_radius[name_container] = value
+							
+						elif name_parameter == "NB_PIXEL_LEVEL_LINE" :
+							self.nb_pixel_level_line[name_container] = value
+					
+						
+		except Exception as e : 
+			print(str(e))
+			print ("no file : config_crop_BU.txt in the directory")
+		
 
+			#ce sont les limites le limage
+
+			"""image full : the whole image, name : BR1 or BR2 ... crop :  where to crop = [x0, y0, x1, y1]"""
+	
+	
 	def read_config_camera(self):
 		print("read config camera")
 		try : 
@@ -107,7 +150,7 @@ class image_level(threading.Thread):
 			
 	# Read the values of TOP level and LOW level for each BU
 	def read_config_crop_BR(self):
-		print("read crop values")
+		print("read crop values BR")
 		try : 
 			file = open("config/config_crop_BR.txt", "r")
 			
@@ -157,7 +200,7 @@ class image_level(threading.Thread):
 			
 	
 	def read_config_crop_BU(self):
-		print("read crop values")
+		print("read crop values BU")
 		try : 
 			file = open("config/config_crop_BU.txt", "r")
 			
@@ -208,6 +251,7 @@ class image_level(threading.Thread):
 
 	# Read the coordinates for the image cropping of each BU 
 	def read_calibration_BU(self):
+		print ("read calibration BU")
 
 		the_file = open("config/config_calibration_BU_HIGH.txt", "r")
 
@@ -264,6 +308,8 @@ class image_level(threading.Thread):
 
 	# Read the coordinates for the image cropping of each BU 
 	def read_calibration_BR(self):
+		print ("read calibration BR")
+
 
 		the_file = open("config/config_calibration_BR_HIGH.txt", "r")
 
@@ -381,17 +427,23 @@ class image_level(threading.Thread):
 
 
 		if self.method_pao : 
+			gaussian_radius = self.gaussian_radius[conteneur_name]
+			diff = self.diff[conteneur_name]
+			jump_pixel = self.jump_pixel[conteneur_name]
+			nb_pixel_level_line = self.nb_pixel_level_line[conteneur_name]
+			
+			
 			im = im.convert('L')
-			im  = im.filter(ImageFilter.GaussianBlur(radius = self.gaussian_radius))
-			im = self.get_edges(im,self.k,self.diff)
+			im  = im.filter(ImageFilter.GaussianBlur(radius = gaussian_radius))
+			im = self.get_edges(im,jump_pixel, diff)
 
 			level = []
 			im = im.rotate(90)
 			data = self.data_to_image(im)
 			for j in range(width) :
-				for i in range(height - self.nb_pixel_level_line) :
-					if sum(data[j][i:i+self.nb_pixel_level_line]) == 0 :
-						level.append(i+int(self.nb_pixel_level_line/2))
+				for i in range(height - nb_pixel_level_line) :
+					if sum(data[j][i:i+nb_pixel_level_line]) == 0 :
+						level.append(i+int(nb_pixel_level_line/2))
 
 			if len(level) != 0 :
 
@@ -549,7 +601,7 @@ class image_level(threading.Thread):
 			
 			else : 
 				try : 
-					os.system("imagesnap -d " + self.camera_BR_BU + " " + PathToFile + "im_BU_level.jpeg")
+					os.system("imagesnap -d " + self.camera_BR_BU + " " + PathToFile + "im_B_level.jpeg")
 				except Exception as e : 
 					print(e)				
 				

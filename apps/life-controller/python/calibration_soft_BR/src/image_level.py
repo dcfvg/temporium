@@ -10,26 +10,70 @@ class image_level():
 
 	def __init__(self,un_window):
 		# define parameters for the level_mesure function. To know their role, go and check the comments of that function.
-		self.k = 3
-		self.diff = 30
-		self.gaussian_radius = 10
-		self.nb_pixel_level_line = 3
+		self.jump_pixel = dict()
+		self.diff = dict()
+		self.gaussian_radius = dict()
+		self.nb_pixel_level_line = dict()
 
 		"""for pao method"""
 		self.method_pao = True
 
 		self.window = un_window
+		
+		self.config_detection_read_for = ["BR1", "BR2", "BR3"]
+		
+		self.read_config_detection()
 	
 		
 
 #ce sont les limites le limage
 
 	"""image full : the whole image, name : BR1 or BR2 ... crop :  where to crop = [x0, y0, x1, y1]"""
+	def read_config_detection(self):
+		print("read")
+		try : 
+			file = open("config/config_detection.txt", "r")
+			
 	
-	def get_level(self,image_full, name,  crop):
-		self.image_cropping(image_full, name,crop[0], crop[1], crop[2], crop[3] )
+			for ligne in file :
+				"""Take out the end symbols (\n)"""
+				ligne = ligne.strip()
+				"""split on  ':' """
+				list = ligne.split(":")	
+				
+				name_container = list[0].strip()
+				for name in self.config_detection_read_for:
+					if name_container == name :
+						name_parameter = list[1].strip()
+						value = int(list[2].strip())
+						
+						if name_parameter == "JUMP_PIXEL" : 
+							self.jump_pixel[name_container] = value
+						
+						elif name_parameter == "DIFF" : 
+							self.diff[name_container] = value
+						
+						elif name_parameter == "GAUSSIAN_RADIUS" :
+							self.gaussian_radius[name_container] = value
+							
+						elif name_parameter == "NB_PIXEL_LEVEL_LINE" :
+							self.nb_pixel_level_line[name_container] = value
+					
+						
+		except Exception as e : 
+			print(str(e))
+			print ("no file : config_crop_BU.txt in the directory")
 		
-		return self.level_mesure(name+".jpg")
+
+			#ce sont les limites le limage
+
+			"""image full : the whole image, name : BR1 or BR2 ... crop :  where to crop = [x0, y0, x1, y1]"""
+	
+	
+	def get_level(self,image_full, name_container,  crop):
+		self.image_cropping(image_full, name_container,crop[0], crop[1], crop[2], crop[3] )
+		
+		return self.level_mesure(name_container+".jpg", name_container)
 		
 		
 	def image_cropping(self, image_a_traiter,outfile,a,b,c,d):
@@ -83,28 +127,36 @@ class image_level():
 	# nb_pixel_level_line is the threshold after which a black line in an image wit edges will be considered a level
 
 
-	def level_mesure(self,image_a_tester):
+	def level_mesure(self,image_a_tester, name_container):
 
 		#Detecte le niveau de rouge d'une image pour sortir le niveau de liquide
 		im = Image.open(image_a_tester)  #Import the image 
 		width,height = im.size
 
 		if self.method_pao : 
+			
+			
+			gaussian_radius = self.gaussian_radius[name_container]
+			diff = self.diff[name_container]
+			jump_pixel = self.jump_pixel[name_container]
+			nb_pixel_level_line = self.nb_pixel_level_line[name_container]
+			#print (name_container + "gaussian_radius :  " + str(gaussian_radius))
+			
 			im = im.convert('L')
-			im  = im.filter(ImageFilter.GaussianBlur(radius = self.gaussian_radius))
-			im = self.get_edges(im,self.k,self.diff)
+			im  = im.filter(ImageFilter.GaussianBlur(radius = gaussian_radius ))
+			im = self.get_edges(im,jump_pixel,diff)
 
 			level = []
 			im = im.rotate(90)
 			data = self.data_to_image(im)
 			for j in range(width) :
-				for i in range(height - self.nb_pixel_level_line) :
-					if sum(data[j][i:i+self.nb_pixel_level_line]) == 0 :
-					   level.append(i+int(self.nb_pixel_level_line/2))
+				for i in range(height - nb_pixel_level_line) :
+					if sum(data[j][i:i+nb_pixel_level_line]) == 0 :
+						level.append(i+int(nb_pixel_level_line/2))
 
 			if len(level) != 0 :
 
-	 
+
 				#pourcentage_niveau = int(100*random.random())
 				return float(numpy.mean(level))
 			else:
