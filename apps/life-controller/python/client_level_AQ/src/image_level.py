@@ -30,6 +30,9 @@ class image_level(threading.Thread):
 		self.lock = threading.Lock()
 		self.lock.acquire()
 
+		"""if image is upside down"""
+		self.image_upside_down = True
+		
 		self.msg = None
 
 		self.archives = False
@@ -187,11 +190,10 @@ class image_level(threading.Thread):
 
 	# Crop an image with the coordinates a,b,c,d and save it in the outfile in argument 	
 
-	def image_cropping(self,path_image_to_treat,path_destination_name, coordinates_crop):
+	def image_cropping(self,image_to_treat,path_destination_name, coordinates_crop):
 
-		im = Image.open(path_image_to_treat)
 
-		an_image = im.crop(coordinates_crop)
+		an_image = image_to_treat.crop(coordinates_crop)
 
 		an_image.save(path_destination_name,"jpeg")
 
@@ -314,7 +316,10 @@ class image_level(threading.Thread):
 
 
 			#Path jusqu'a l'image a cropper 
-			image_AQ = PathToFile + "im_AQ_level.jpeg"
+			image_AQ = Image.open(PathToFile + "im_AQ_level.jpeg")
+			
+			if self.image_upside_down : 
+				image_AQ = image_AQ.rotate(180)
 
 			#Path jusqu'au dossier ou les sous-images seront sauvegardees
 			PathToFile_croppedImages = PathToFile

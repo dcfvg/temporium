@@ -28,6 +28,12 @@ class visual_feedback(Canvas):
     def __init__(self, parent, file):
         
         self.image = Image.open(file)
+        
+        self.image_upside_down = True
+        """because webcam AQ is upside down"""
+        if self.image_upside_down : 
+            self.image = self.image.rotate(180)
+        
         """coeef od reduction for the image"""
         self.image_size_x = self.image.size[0]
         self.image_size_y = self.image.size[1]
