@@ -1,3 +1,3 @@
 Temporium
 CONFIGURATION_CROP  : AQ 
-AQ : 561, 206, 594, 413
+AQ : 790, 133, 804, 910
