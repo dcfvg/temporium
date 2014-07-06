@@ -6,10 +6,10 @@ comments : list all pin output in the pin_array_output that are connected to the
 comments : list arduino terminal "python -m serial.tools.list_ports" ou "ls /dev/cu.usbmodem*"
 arduino : arduino_pump :  /dev/cu.usbmodem1a13141
 PUMP : P_SPECTRO : 28
-PUMP : P_FI_S : 32
+PUMP : P_FI_S : 29
 PUMP : P_AQ_FI : 30
 PUMP : P_FI_AQ_1 : 31
-PUMP : P_AQ_S : 29
+PUMP : P_AQ_S : 32
 PUMP : P_BR3_BU3 : 33
 PUMP : P_FI_AQ_3 : 34
 PUMP : P_BR2_BU2 : 35
