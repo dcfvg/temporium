@@ -137,7 +137,7 @@ class image_spectro(threading.Thread):
 			
 			self.concentration_value = self.get_level(path_image_to_treat, path_destination_name, self.coordinates_crop)[0]
 			if len(self.values) >0 :
-				if not abs( self.concentration_value - self.values[len(self.values)-1]) > self.diff_max :
+				if abs( self.concentration_value - self.values[len(self.values)-1]) > self.diff_max :
 					 self.concentration_value = self.values[len(self.values)-1]
 			
 			if len(self.values) < self.number_value_mean :
