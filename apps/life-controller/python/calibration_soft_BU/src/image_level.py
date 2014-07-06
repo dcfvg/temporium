@@ -10,9 +10,9 @@ class image_level():
 
 	def __init__(self,un_window):
 		# define parameters for the level_mesure function. To know their role, go and check the comments of that function.
-		self.k = 1
-		self.diff = 5
-		self.gaussian_radius = 2
+		self.k = 8
+		self.diff = 30
+		self.gaussian_radius = 10
 		self.nb_pixel_level_line = 5
 
 		"""for pao method"""
@@ -97,7 +97,7 @@ class image_level():
 			im = im.rotate(90)
 			data = self.data_to_image(im)
 			for j in range(width) :
-				for i in range(height - 5*self.nb_pixel_level_line) :
+				for i in range(height - self.nb_pixel_level_line) :
 					if sum(data[j][i:i+self.nb_pixel_level_line]) == 0 :
 					   level.append(i+int(self.nb_pixel_level_line/2))
 

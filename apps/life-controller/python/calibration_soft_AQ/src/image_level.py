@@ -90,7 +90,7 @@ class image_level():
 		im = im.rotate(90)
 		data = self.data_to_image(im)
 		for j in range(width) :
-			for i in range(height - 5*self.nb_pixel_level_line) :
+			for i in range(height - self.nb_pixel_level_line) :
 				if sum(data[j][i:i+self.nb_pixel_level_line]) == 0 :
 				    level.append(i+int(self.nb_pixel_level_line/2))
 
