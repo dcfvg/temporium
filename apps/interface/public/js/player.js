@@ -120,7 +120,9 @@ function init() {
     $pop_movie.play(0);
     sleep(0);
     $d.trigger("showMovie");
-    
+    var film = $d.getElementById("movie");
+    film.webkitRequestFullScreen(0);
+
     movieGoesOn = true;
 
     movieCurentStep = 0;
