@@ -324,7 +324,8 @@ class image_level(threading.Thread):
 			#Path jusqu'au dossier ou les sous-images seront sauvegardees
 			PathToFile_croppedImages = PathToFile
 
-			outfile_AQ = PathToFile_croppedImages + "AQ.jpeg"
+			outfile_AQ = Image.open(PathToFile_croppedImages + "AQ.jpeg")
+			
 
 			im_cropped_AQ = self.image_cropping(image_AQ,outfile_AQ,self.coordinates_crop["AQ"])
 

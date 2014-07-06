@@ -70,16 +70,18 @@ class image_level():
 			"""image full : the whole image, name : BR1 or BR2 ... crop :  where to crop = [x0, y0, x1, y1]"""
 	
 	
-	def get_level(self,image_full, name_container,  crop):
+	def get_level(self,image_full_name, name_container,  crop):
+		
+		image_full = Image.open(image_full_name)
 		self.image_cropping(image_full, name_container,crop[0], crop[1], crop[2], crop[3] )
 		
 		return self.level_mesure(name_container+".jpg", name_container)
 		
 		
 	def image_cropping(self, image_a_traiter,outfile,a,b,c,d):
-		im = Image.open(image_a_traiter)
+		
 
-		uneImage = im.crop((a,b,c,d))
+		uneImage = image_a_traiter.crop((a,b,c,d))
 		
 		uneImage.save(outfile+".jpg","jpeg")
 

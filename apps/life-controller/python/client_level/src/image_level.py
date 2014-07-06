@@ -364,8 +364,6 @@ class image_level(threading.Thread):
 	
 	def image_cropping(self,image_to_treat,path_destination_name, coordinates_crop):
 
-		
-
 		an_image = image_to_treat.crop(coordinates_crop)
 
 		an_image.save(path_destination_name,"jpeg")
