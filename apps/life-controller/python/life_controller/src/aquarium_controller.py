@@ -76,9 +76,6 @@ class aquarium_controller(threading.Thread):
         
         
         """start the spectro and wait for a value"""
-        self.current_state.set_information_asked("concentration", True)
-        while self.current_state.get_spectro_mesure()=="NULL" : 
-            time.sleep(1)
         current_concentration = self.current_state.get_spectro_mesure()
         
         print("current concentration AQ : " + str(current_concentration))
@@ -131,9 +128,6 @@ class aquarium_controller(threading.Thread):
         
         
         """start the spectro and wait for a value"""
-        self.current_state.set_information_asked("concentration", True)
-        while self.current_state.get_spectro_mesure()=="NULL" : 
-            time.sleep(1)
         current_concentration = self.current_state.get_spectro_mesure()
         print("current concentration AQ : " + str(current_concentration))
 

@@ -2,7 +2,7 @@ Temporium
 CONFIGURATION REAL TIME : file is read, every morning, and can be read on ask
 comments : time of emptying AQ when renew_light is called. AQ will be filled with BU only.
 renew_light_AQ : TIME : 12
-comments : filtration time for automatique AQ filtration in seconds
+comments : filtration time for automatique AQ filtration in seconds : FILLING_BR_BU : 0.66 of BR go to BU
 auto_AQ_filtration : TIME : 300
 BRBU_controller : BR_FULL : 0.9
 BRBU_controller : BU_FULL : 0.9

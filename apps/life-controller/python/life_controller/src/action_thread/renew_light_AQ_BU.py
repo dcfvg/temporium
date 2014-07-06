@@ -25,6 +25,8 @@ class renew_light_AQ_BU(threading.Thread):
         
         """time in second for emptying AQ, load the value at the beginning"""
         self.time_emptying_AQ = self.current_state.config_manager.get_renew_light_AQ("TIME")
+        """ get value of BU_empty""" 
+        self.BU_empty =  self.current_state.config_manager.get_BRBU_controller("BU_EMPTY")
         
     def run(self):
         
@@ -47,12 +49,12 @@ class renew_light_AQ_BU(threading.Thread):
             """emptying AQ for sec secondes"""
             print("emptying AQ for " + str(sec) + " secondes")
             """emptying AQ 30sec"""
-            self.current_state.P_AQ_S(True)
+            self.current_state.set_state_pump("P_AQ_S",True)
             compt = 0 
             while self.current_state.get_current_action_evolved("renew_light_AQ_"+self.BU_use) and compt <sec : 
                 time.sleep(1)
                 compt = compt + 1
-            self.current_state.P_AQ_S(False)
+            self.current_state.set_state_pump("P_AQ_S",False)
             print("end emptying AQ")
         
     
@@ -72,7 +74,10 @@ class renew_light_AQ_BU(threading.Thread):
             print("Filling AQ with BU in USE until AQ is full or until a Stop ")
             self.current_state.fill_BU_AQ(BU_use, True)
             """fill until AQ full or stop"""
-            while self.current_state.get_occupied_volume("AQ")< self.AQ_FULL and self.current_state.get_current_action_evolved("renew_light_AQ_"+self.BU_use): 
+            while self.current_state.get_occupied_volume("AQ")< self.AQ_FULL and \
+                  self.current_state.get_current_action_evolved("renew_light_AQ_"+self.BU_use) and \
+                  self.current_state.get_occupied_volume (self.BU_use) > self.BU_empty :
+                 
                 time.sleep(0.05)
             self.current_state.fill_BU_AQ(BU_use, False)
             self.current_state.set_information_asked("level_AQ", False)

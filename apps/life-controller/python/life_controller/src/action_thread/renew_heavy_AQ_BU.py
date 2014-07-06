@@ -27,10 +27,13 @@ class renew_heavy_AQ_BU(threading.Thread):
         self.instruction_filling = self.current_state.config_manager.get_AQ("INSTRUCTION_FILLING")
         self.optimal_concentration= self.current_state.config_manager.get_AQ("CONCENTRAION_OPT")
         
+        """ get value of BU_empty""" 
+        self.BU_empty =  self.current_state.config_manager.get_BRBU_controller("BU_EMPTY")
+        
         
     def run(self):
         
-        if self.current_state.get_client_connected("server_level_AQ") :
+        if self.current_state.get_client_connected("server_level_AQ") and self.current_state.get_client_connected("server_concentration")  :
             self.current_state.set_information_asked("level_AQ", True) 
             
             self.current_state._set_current_action_evolved("renew_heavy_AQ_" + self.BU_use, True)
@@ -52,11 +55,9 @@ class renew_heavy_AQ_BU(threading.Thread):
             self.current_state._set_current_action_evolved("renew_heavy_AQ_" + self.BU_use, False)
             
             self.current_state.set_information_asked("level_AQ", False)
-            
-            
         else : 
-            print( "server_level_AQ not connected, it will be impossible to fill AQ after")
-            
+            print ("server_level_AQ or server_concentration not connected")
+                                        
     
     
     def emptying_AQ(self, volume):
@@ -64,12 +65,12 @@ class renew_heavy_AQ_BU(threading.Thread):
             """emptying AQ for sec secondes"""
             print("emptying AQ until " + str(volume))
             
-            self.current_state.P_AQ_S(True)
+            self.current_state.set_state_pump("P_AQ_S",True)
              
             while self.current_state.get_occupied_volume("AQ") > volume and self.current_state.get_current_action_evolved("renew_heavy_AQ_"+self.BU_use): 
                 time.sleep(1)
                 
-            self.current_state.P_AQ_S(False)
+            self.current_state.set_state_pump("P_AQ_S",False)
             print("end emptying AQ")
         
     
@@ -79,10 +80,6 @@ class renew_heavy_AQ_BU(threading.Thread):
         if self.current_state.get_client_connected("server_level_AQ") :
             
             """start the spectro and wait for a value"""
-            self.current_state.set_information_asked("concentration", True)
-            while self.current_state.get_spectro_mesure()=="NULL" : 
-                time.sleep(1)
-                
             current_concentration = self.current_state.get_spectro_mesure()
             
             """determine volume to fill with BU"""
@@ -91,16 +88,19 @@ class renew_heavy_AQ_BU(threading.Thread):
             print("Filling AQ with BU in USE until AQ is full or until a Stop ")
             self.current_state.fill_BU_AQ(BU_use, True)
             """fill until AQ full or stop"""
-            while self.current_state.get_occupied_volume("AQ")< volume_to_reach_with_BU and self.current_state.get_current_action_evolved("renew_heavy_AQ_"+self.BU_use): 
+            while self.current_state.get_occupied_volume("AQ")< volume_to_reach_with_BU and \
+                  self.current_state.get_current_action_evolved("renew_heavy_AQ_"+self.BU_use) and \
+                  self.current_state.get_occupied_volume (self.BU_use) > self.BU_empty :
+
                 time.sleep(0.05)
             self.current_state.fill_BU_AQ(BU_use, False)
             
             
             """completion with M2"""
-            self.current_state._state_pumps("P_M2_AQ", True)
+            self.current_state.set_state_pump("P_M2_AQ", True)
             while self.current_state.get_occupied_volume("AQ")< self.AQ_FULL and self.current_state.get_current_action_evolved("renew_heavy_AQ_"+self.BU_use): 
                 time.sleep(0.05)
-            self.current_state._state_pumps("P_M2_AQ", False)
+            self.current_state.set_state_pump("P_M2_AQ", False)
             
             
         else : 

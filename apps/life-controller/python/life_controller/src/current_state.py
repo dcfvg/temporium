@@ -686,12 +686,14 @@ class current_state(object):
         """turn on the spectro"""
         self.set_current_spectro_state("spectro",True)
         """wait some time before"""
-        wait_spectro = self.config_manager.get_spectro("WAIT")
-        time.sleep(wait_spectro)
-        self.current_state.set_inforamtion_asked("concentration", True)
-        """wait until having information"""
-        while self.current_state.get_concentration() == -1 : 
-            time.sleep(2)
+        while self.get_concentration("AQ")=="NULL" : 
+                time.sleep(1)
+                print("spectro wait")
+        value = self.get_information_asked("concentration")
+        self.set_current_spectro_state("spectro",False)
+        return value 
+       
+        
         
     def set_current_spectro_state(self, name, state,):
         """if different from current state"""
@@ -701,6 +703,7 @@ class current_state(object):
             if name == "spectro": 
                 self.set_current_light_state("spectro_light", state)
                 self.set_state_pump("P_SPECTRO", state)
+                self.set_information_asked("concentration", state)
                 self._set_current_spectro_state(name, state)
     
     
