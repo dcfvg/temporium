@@ -8,6 +8,7 @@ from time import localtime, strftime
 from com_arduino import*
 from current_state import*
 from fake_clock import *
+from action_thread.thread_BRBU_controller_unpaused import*
 
 import threading
 
@@ -254,10 +255,13 @@ class BRBU_controller (threading.Thread):
     """ACTION TAKEN BY BRBU_CONTROLLER"""          
     """fill container_name, with pump_name unti volume_order in conatainer_name"""
     def fill_BRBU(self, pump_name, container_name, volume_order):
-        if self.current_state.get_client_connected_state("server_level") : 
-            self.current_state.set_information_asked("level", True)
             
             while self.current_state.get_occupied_volume(container_name) < volume_order and self.current_state.get_BRBU_controller_state("run") :
+                self.current_state.set_information_asked("level", True)
+                if not self.current_state.get_information_asked("level") : 
+                    print ("no information about level : BR_BU cycle in pause")
+                    self.current_state.set_BRBU_controller_state("pause", True)
+                    self.try_to_unpaused()
                 self.current_state.set_state_pump(pump_name, True)
                 self._get_pause(pump_name,0)
                 time.sleep(0.2)
@@ -265,32 +269,30 @@ class BRBU_controller (threading.Thread):
             self.current_state.set_state_pump(pump_name, False)
             
             self.current_state.set_information_asked("level", False)
-        else : 
-            print ("no server_level connected : BR_BU cycle probleme")
-            self.current_state.set_BRBU_controller_state("run", False)
+        
     
     """empty container_name with action_name until volume_order in container_name"""   
     def empty_BU(self, action_name, container_name, volume_order):
 
-        if self.current_state.get_client_connected_state("server_level") : 
-            
-            """to avoid wasting BU"""
-            if False : 
+        
+        """to avoid wasting BU"""
+        if False : 
+            self.current_state.set_information_asked("level", True)
+            while self.current_state.get_occupied_volume(container_name) > volume_order and self.current_state.get_BRBU_controller_state("run")  :
                 self.current_state.set_information_asked("level", True)
-                while self.current_state.get_occupied_volume(container_name) > volume_order and self.current_state.get_BRBU_controller_state("run")  :
-                    self.current_state.set_current_action(action_name, True)
-                    self._get_pause(action_name, 1)
-                    time.sleep(0.2)
-                self.current_state.set_current_action(action_name, False)
-            
-                self.current_state.set_information_asked("level", False)
-            self.BU_empty[container_name] = True 
+                if not self.current_state.get_information_asked("level") : 
+                    print ("no information about level : BR_BU cycle in pause")
+                    self.current_state.set_BRBU_controller_state("pause", True)
+                    self.try_to_unpaused()
+                self.current_state.set_current_action(action_name, True)
+                self._get_pause(action_name, 1)
+                time.sleep(0.2)
+            self.current_state.set_current_action(action_name, False)
         
-        else : 
-            print ("no server_level connected : BR_BU cycle probleme")
-            self.current_state.set_BRBU_controller_state("run", False)
+            self.current_state.set_information_asked("level", False)
+        self.BU_empty[container_name] = True 
     
-        
+    
 
     def reset(self):
         """function to call to reset BU_empty et BRBU_ready, to do the filling at the right time"""
@@ -304,7 +306,9 @@ class BRBU_controller (threading.Thread):
     """CYCLE MANAGEMENT"""
         
     
-  
+    def try_to_unpaused(self):
+        self.thread_BRBU_controller_unpaused = thread_BRBU_controller_unpaused(self.current_state)
+        self.thread_BRBU_controller_unpaused.start()
     """reset cycle's time"""
     def _reset_time(self):
         if self.fake :
