@@ -613,7 +613,7 @@ class image_level(threading.Thread):
 						time.sleep(1)
 					else : 
 						succed = True
-						print ("")
+						print ("OK")
 				
 			except Exception as e : 
 				print(e)				
