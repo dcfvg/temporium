@@ -1,9 +1,9 @@
 Temporium : BRBU_controller  
 auto_start : True 
-time_save_second : 1404751760 
-time_save_second : Mon, 07 Jul 2014 18:49:20 +0000
-time_cycle_second : 2149 
-time_cycle : 0h35m49 
+time_save_second : 1404751781 
+time_save_second : Mon, 07 Jul 2014 18:49:41 +0000
+time_cycle_second : 2170 
+time_cycle : 0h36m10 
 BU1 : READY : True 
 BU2 : READY : False 
 BU3 : READY : False 
