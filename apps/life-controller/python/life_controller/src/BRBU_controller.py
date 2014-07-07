@@ -264,11 +264,13 @@ class BRBU_controller (threading.Thread):
     """empty container_name with action_name until volume_order in container_name"""   
     def empty_BU(self, action_name, container_name, volume_order):
 
-        while self.current_state.get_occupied_volume(container_name) > volume_order and self.current_state.get_BRBU_controller_state("run")  :
-            self.current_state.set_current_action(action_name, True)
-            self._get_pause(action_name, 1)
-            time.sleep(0.2)
-        self.current_state.set_current_action(action_name, False)
+        """to avoid wasting BU"""
+        if False : 
+            while self.current_state.get_occupied_volume(container_name) > volume_order and self.current_state.get_BRBU_controller_state("run")  :
+                self.current_state.set_current_action(action_name, True)
+                self._get_pause(action_name, 1)
+                time.sleep(0.2)
+            self.current_state.set_current_action(action_name, False)
         
         self.BU_empty[container_name] = True 
         
