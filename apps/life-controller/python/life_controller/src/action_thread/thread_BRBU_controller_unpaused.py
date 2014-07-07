@@ -21,13 +21,13 @@ class thread_BRBU_controller_unpaused(threading.Thread):
         
     def run(self):
         print ("start trying to unpaused every " + str(self.wait_time_before_try) + " seconds")
-        while not self.current_state.get_information_asked("level") : 
+        while (not self.current_state.get_information_asked("level") )and self.current_state.get_BRBU_controller_state("run") :
             """try to unpaused"""
             time.sleep(self.wait_time_before_try)
             """wait x seconds"""
             self.current_state.set_information_asked("level", True)
-            
+              
         self.current_state.set_BRBU_controller_state("pause", False)
             
-        print ("BRBU_cycle unpaused every")
+        print ("BRBU_cycle unpaused")
         

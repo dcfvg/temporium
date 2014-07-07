@@ -389,7 +389,7 @@ class BRBU_controller (threading.Thread):
         print("read old situation")
         file = open("save_current_situation/BRBU_current_state.txt", "r")
         
-        auto_start = False
+        self.auto_start = False
         
         for ligne in file :
             
@@ -400,12 +400,12 @@ class BRBU_controller (threading.Thread):
         
             """if auto_start is yes, then set auto_start to True"""
             if list[0].strip() == "auto_start" :
-                auto_start = (list[1].strip() == "True" )
-        print ("BRBU_controller auto_start : "  + str(auto_start))
+                self.auto_start = (list[1].strip() == "True" )
+        print ("BRBU_controller auto_start : "  + str(self.auto_start))
         file.close()
         
         file = open("save_current_situation/BRBU_current_state.txt", "r")
-        if auto_start :
+        if self.auto_start :
              
             for ligne in file :
                 """Take out the end symbols (\n)"""

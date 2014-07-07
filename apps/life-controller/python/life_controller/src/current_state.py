@@ -988,7 +988,8 @@ class current_state(object):
                 if state : 
                     """set self.stop to False, in order to pursue """
                     self._set_BRBU_controller_state("run", True)
-                    self.BRBU_controller._reset_time()
+                    if not self.BRBU_controller.auto_start : 
+                        self.BRBU_controller._reset_time()
                     self.BRBU_controller.lock_start.release()
     
                     """Stop"""   
