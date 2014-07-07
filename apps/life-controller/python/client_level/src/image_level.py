@@ -8,6 +8,7 @@ from client_level import *
 import random
 import numpy
 from thread_image_level import *
+import subprocess
 
 
 
@@ -37,6 +38,7 @@ class image_level(threading.Thread):
 		"""camera1 and camera1 are used when two camera"""
 		self.camera1 = "\"HD Pro Webcam C920\""
 		self.camera2 = "\"HD Pro Webcam C920 #2\""
+		self.camera_mac = "Built-in iSight"
 		
 		"""camera_BR_BU is used when only one camera"""
 		self.camera_BR_BU =""
@@ -138,8 +140,8 @@ class image_level(threading.Thread):
 				list = ligne.split(":")	
 				
 				if list[0].strip() == "BR_BU" :
-					self.camera_BR_BU = "\"" + list[1].strip() +"\""
-					
+					#self.camera_BR_BU = "\"" + list[1].strip() +"\""
+					self.camera_BR_BU = list[1].strip()
 					
 			file.close()
 			
@@ -595,11 +597,28 @@ class image_level(threading.Thread):
 		
 		else : 
 			try : 
-				os.system("imagesnap -d " + self.camera_BR_BU + " " + PathToFile + "im_B_level.jpeg")
+				succed = False
+				while not succed : 
+					#a = subprocess.Popen(["imagesnap -d " + self.camera_BR_BU + " " + PathToFile + "im_B_level.jpeg"])
+					a = subprocess.Popen(["imagesnap", "-d", self.camera_BR_BU ,PathToFile + "im_B_level.jpeg"])
+
+					compt = 0
+					while compt < 4 :
+						time.sleep(1)
+						compt = compt +1
+						print ("wait" + str(compt))
+					if a.poll() == None :
+						print ("camera lost, new try") 
+						a.kill()
+						time.sleep(1)
+					else : 
+						succed = True
+						print ("")
+				
 			except Exception as e : 
 				print(e)				
 			
-			time.sleep(2)
+			#time.sleep(2)
 			
 
 			image_BU = Image.open(PathToFile + "im_B_level.jpeg")
