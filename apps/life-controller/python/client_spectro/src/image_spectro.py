@@ -7,6 +7,7 @@ import threading
 import numpy
 from client_spectro import *
 from thread_image_spectro import *
+import subprocess
 
 class image_spectro(threading.Thread):
 
@@ -144,7 +145,7 @@ class image_spectro(threading.Thread):
 				list = ligne.split(":")	
 				
 				if list[0].strip() == "SPECTRO" :
-					self.camera_SPECTRO = "\"" + list[1].strip() +"\""
+					self.camera_SPECTRO = list[1].strip()
 					
 					
 			file.close()
@@ -206,6 +207,27 @@ class image_spectro(threading.Thread):
 
 		#print ("capture")
 		os.system("imagesnap -d " + self.camera_SPECTRO + " " + PathToFile + "im_spectro.jpeg")
+		try : 
+			succed = False
+			while not succed : 
+				#a = subprocess.Popen(["imagesnap -d " + self.camera_BR_BU + " " + PathToFile + "im_B_level.jpeg"])
+				a = subprocess.Popen(["imagesnap", "-d", self.camera_SPECTRO ,PathToFile + "im_spectro.jpeg"])
+
+				compt = 0
+				while compt < 4 :
+					time.sleep(1)
+					compt = compt +1
+					#print ("wait" + str(compt))
+				if a.poll() == None :
+					print ("camera lost, new try") 
+					a.kill()
+					time.sleep(1)
+				else : 
+					succed = True
+					print ("Image taken")
+				
+		except Exception as e : 
+			print(e)
 		#time.sleep(2)
 		
 		image_to_treat = Image.open(PathToFile + "im_spectro.jpeg")

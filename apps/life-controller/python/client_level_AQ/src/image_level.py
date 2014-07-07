@@ -8,6 +8,7 @@ from client_level import *
 import random
 import numpy
 from thread_image_level import *
+import subprocess
 
 
 
@@ -119,7 +120,7 @@ class image_level(threading.Thread):
 				list = ligne.split(":")	
 				
 				if list[0].strip() == "AQ" :
-					self.camera_AQ = "\"" + list[1].strip() +"\""
+					self.camera_AQ = list[1].strip()
 					
 					
 			file.close()
@@ -307,7 +308,24 @@ class image_level(threading.Thread):
 		#camera3 = "\"Built-in iSight\""
 
 		try : 
-			os.system("imagesnap -d " + self.camera_AQ + " " + PathToFile + "im_AQ_level.jpeg")
+			#os.system("imagesnap -d " + self.camera_AQ + " " + PathToFile + "im_AQ_level.jpeg")
+			succed = False
+			while not succed : 
+				#a = subprocess.Popen(["imagesnap -d " + self.camera_BR_BU + " " + PathToFile + "im_B_level.jpeg"])
+				a = subprocess.Popen(["imagesnap", "-d", self.camera_BR_BU ,PathToFile + "im_AQ_level.jpeg"])
+
+				compt = 0
+				while compt < 4 :
+					time.sleep(1)
+					compt = compt +1
+					#print ("wait" + str(compt))
+				if a.poll() == None :
+					print ("camera lost, new try") 
+					a.kill()
+					time.sleep(1)
+				else : 
+					succed = True
+					print ("Image taken")
 		except Exception as e : 
 			print(e)
 

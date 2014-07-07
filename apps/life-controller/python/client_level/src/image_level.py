@@ -606,14 +606,14 @@ class image_level(threading.Thread):
 					while compt < 4 :
 						time.sleep(1)
 						compt = compt +1
-						print ("wait" + str(compt))
+						#print ("wait" + str(compt))
 					if a.poll() == None :
 						print ("camera lost, new try") 
 						a.kill()
 						time.sleep(1)
 					else : 
 						succed = True
-						print ("")
+						print ("Image taken")
 				
 			except Exception as e : 
 				print(e)				

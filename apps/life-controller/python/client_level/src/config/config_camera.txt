@@ -1,4 +1,4 @@
 Temporium
 CONFIGURATION_CAMERA  : BR_BU
 comments : use "imagesnap -l" to have the list of all the connected webcam
-BR_BU : HD Pro Webcam C920 #3
+BR_BU : HD Pro Webcam C920
