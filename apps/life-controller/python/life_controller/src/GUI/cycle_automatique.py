@@ -95,22 +95,22 @@ class cycle_automatique(Frame):
     def _build_button_BRBU_controller(self):
         for item in self.button_BRBU_controller : 
             if item =="run" : 
-                self.button_BRBU_controller[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_BRBU_controller(item))) 
+                self.button_BRBU_controller[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_BRBU_controller("run"))) 
             elif item =="pause" : 
-                self.button_BRBU_controller[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_BRBU_controller(item)))
+                self.button_BRBU_controller[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_BRBU_controller("pause")))
             
     
     def _build_button_security_checking(self):
         for item in self.button_security_checking : 
             if item =="EL_max" : 
-                self.button_security_checking[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_security_checking(item))) 
+                self.button_security_checking[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_security_checking("EL_max"))) 
     
     def _build_button_current_action_aquarium_evolved(self):
         for item in self.button_current_action_aquarium_evolved :
             if item =="aquarium_cycle_light" : 
-                self.button_current_action_aquarium_evolved[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_current_action_aquarium_evolved(item))) 
+                self.button_current_action_aquarium_evolved[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_current_action_aquarium_evolved("aquarium_cycle_light"))) 
             elif item =="aquarium_cycle_heavy" : 
-                self.button_current_action_aquarium_evolved[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_current_action_aquarium_evolved(item))) 
+                self.button_current_action_aquarium_evolved[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_current_action_aquarium_evolved("aquarium_cycle_heavy"))) 
 
             
     def refresh_state(self):

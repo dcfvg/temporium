@@ -254,25 +254,42 @@ class BRBU_controller (threading.Thread):
     """ACTION TAKEN BY BRBU_CONTROLLER"""          
     """fill container_name, with pump_name unti volume_order in conatainer_name"""
     def fill_BRBU(self, pump_name, container_name, volume_order):
-        while self.current_state.get_occupied_volume(container_name) < volume_order and self.current_state.get_BRBU_controller_state("run") :
-            self.current_state.set_state_pump(pump_name, True)
-            self._get_pause(pump_name,0)
-            time.sleep(0.2)
-            """maybe add : if pump is in manuel-mode, end the manuel mode"""
-        self.current_state.set_state_pump(pump_name, False)
+        if self.current_state.get_client_connected_state("server_level") : 
+            self.current_state.set_information_asked("level", True)
+            
+            while self.current_state.get_occupied_volume(container_name) < volume_order and self.current_state.get_BRBU_controller_state("run") :
+                self.current_state.set_state_pump(pump_name, True)
+                self._get_pause(pump_name,0)
+                time.sleep(0.2)
+                """maybe add : if pump is in manuel-mode, end the manuel mode"""
+            self.current_state.set_state_pump(pump_name, False)
+            
+            self.current_state.set_information_asked("level", False)
+        else : 
+            print ("no server_level connected : BR_BU cycle probleme")
+            self.current_state.set_BRBU_controller_state("run", False)
     
     """empty container_name with action_name until volume_order in container_name"""   
     def empty_BU(self, action_name, container_name, volume_order):
 
-        """to avoid wasting BU"""
-        if False : 
-            while self.current_state.get_occupied_volume(container_name) > volume_order and self.current_state.get_BRBU_controller_state("run")  :
-                self.current_state.set_current_action(action_name, True)
-                self._get_pause(action_name, 1)
-                time.sleep(0.2)
-            self.current_state.set_current_action(action_name, False)
+        if self.current_state.get_client_connected_state("server_level") : 
+            
+            """to avoid wasting BU"""
+            if False : 
+                self.current_state.set_information_asked("level", True)
+                while self.current_state.get_occupied_volume(container_name) > volume_order and self.current_state.get_BRBU_controller_state("run")  :
+                    self.current_state.set_current_action(action_name, True)
+                    self._get_pause(action_name, 1)
+                    time.sleep(0.2)
+                self.current_state.set_current_action(action_name, False)
+            
+                self.current_state.set_information_asked("level", False)
+            self.BU_empty[container_name] = True 
         
-        self.BU_empty[container_name] = True 
+        else : 
+            print ("no server_level connected : BR_BU cycle probleme")
+            self.current_state.set_BRBU_controller_state("run", False)
+    
         
 
     def reset(self):
@@ -427,7 +444,7 @@ class BRBU_controller (threading.Thread):
               
         
     def save_current_situation(self, auto_start_state):
-        print("saving BRBU_controller " + str(auto_start_state))
+        #print("saving BRBU_controller " + str(auto_start_state))
         """stock the current time of the cyle"""
         if self.fake : 
             current_time_cycle_save = int((self.current_time_cycle + (self.fake_clock.time() - self.old_time)))

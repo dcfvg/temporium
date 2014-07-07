@@ -1003,7 +1003,7 @@ class current_state(object):
                     
                     if state == True : 
                         """get in the mode pause"""
-                        self.BRBU_controller._losetck_pause.acquire()
+                        self.BRBU_controller._lock_pause.acquire()
                         self._set_BRBU_controller_state("pause",True)
                     
                         """if False : get out from the pause"""
