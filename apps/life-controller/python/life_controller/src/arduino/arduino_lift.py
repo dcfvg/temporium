@@ -93,7 +93,7 @@ class arduino_lift(object):
         else : 
             
             self.lock.acquire()
-            self.__sendData('2')
+            self.__sendData('4')
             self.lock.release()
             self.start_busy("screen_down_outside")
             answer = True
@@ -109,7 +109,7 @@ class arduino_lift(object):
         else : 
             
             self.lock.acquire()
-            self.__sendData('3')
+            self.__sendData('5')
             self.lock.release()
             self.start_busy("screen_up_outside")
             answer = True
@@ -125,7 +125,7 @@ class arduino_lift(object):
         else : 
             
             self.lock.acquire()
-            self.__sendData('4')
+            self.__sendData('2')
             self.lock.release()
             self.start_busy("screen_down_inside")
             answer = True
@@ -141,7 +141,7 @@ class arduino_lift(object):
         else : 
             
             self.lock.acquire()
-            self.__sendData('5')
+            self.__sendData('3')
             self.lock.release()
             self.start_busy("screen_up_inside")
             answer = True
@@ -193,7 +193,7 @@ class arduino_lift(object):
         else : 
             
             self.lock.acquire()
-            self.__sendData('8')
+            self.__sendData('10')
             self.lock.release()
             self.start_busy("screen_down_outside_manual")
             answer = True
@@ -209,7 +209,7 @@ class arduino_lift(object):
         else : 
             
             self.lock.acquire()
-            self.__sendData('9')
+            self.__sendData('11')
             self.lock.release()
             self.start_busy("screen_up_outside_manual")
             answer = True
@@ -225,7 +225,7 @@ class arduino_lift(object):
         else : 
             
             self.lock.acquire()
-            self.__sendData('10')
+            self.__sendData('8')
             self.lock.release()
             self.start_busy("screen_down_inside_manual")
             answer = True
@@ -241,7 +241,7 @@ class arduino_lift(object):
         else : 
             
             self.lock.acquire()
-            self.__sendData('11')
+            self.__sendData('9')
             self.lock.release()
             self.start_busy("screen_up_inside_manual")
             answer = True
