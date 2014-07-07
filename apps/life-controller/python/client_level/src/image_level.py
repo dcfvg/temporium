@@ -7,6 +7,7 @@ import threading
 from client_level import *
 import random
 import numpy
+from thread_image_level import *
 
 
 
@@ -22,13 +23,7 @@ class image_level(threading.Thread):
 		
 		self.config_detection_read_for = ["BR1", "BR2", "BR3", "BU1", "BU2", "BU3"]
 		
-		threading.Thread.__init__(self)
 		self.client = un_client
-
-		"""Lock for start and stop image analysis"""
-		
-		self.lock = threading.Lock()
-		self.lock.acquire()
 		
 		self.msg = None
 
@@ -74,16 +69,20 @@ class image_level(threading.Thread):
 						"BU2" :  0,\
 						"BU3" :  0}
 				
+		self._running_state = [threading.Lock(), False]
+		
+		self.read_all_config()
+		
+		#print ("Cropping coordinates : " + str(self.calibration_values))
+		
+	
+	def read_all_config (self):
 		self.read_config_crop_BU()
 		self.read_config_crop_BR()
 		self.read_calibration_BU()
 		self.read_calibration_BR()
 		self.read_config_camera()
 		self.read_config_detection()
-		
-		#print ("Cropping coordinates : " + str(self.calibration_values))
-		
-		self.start()
 
 	def read_config_detection(self):
 		print("read config detection")
@@ -561,124 +560,131 @@ class image_level(threading.Thread):
 				return 'null'"""
 
 
-	def run(self):
+	
+	def analyse_run(self):
 
 
 		#ne rentrer dans le while que si les coordonnees ne sont pas toutes nulles et si la calibration a ete faite?
 
-		while True:
+		print("Start image analysis")
 
+		# Ecrire le nom du path ou seront enregistrees les photos
+		PathToFile = ""
 
-			self.lock.acquire()
-			print("Start image analysis")
-
-			# Ecrire le nom du path ou seront enregistrees les photos
-			PathToFile = ""
-
-			#os.system("streamer -s 1920x1080 -f jpeg -c /dev/video2 -b 16 -o ~/python_ws/Scripts_WorkShop_Avril/Test_Niveau//im_BU_level.jpeg")
-			#os.system("streamer -s 1920x1080 -f jpeg -c /dev/video3 -b 16 -o ~/python_ws/Scripts_WorkShop_Avril/Test_Niveau/im_BR_level.jpeg")
-			
-			
-			
-			if self.webcam_each : 
+		#os.system("streamer -s 1920x1080 -f jpeg -c /dev/video2 -b 16 -o ~/python_ws/Scripts_WorkShop_Avril/Test_Niveau//im_BU_level.jpeg")
+		#os.system("streamer -s 1920x1080 -f jpeg -c /dev/video3 -b 16 -o ~/python_ws/Scripts_WorkShop_Avril/Test_Niveau/im_BR_level.jpeg")
 		
-				try : 
-					os.system("imagesnap -d " + self.camera1 + " " + PathToFile + "im_BU_level.jpeg")
-					os.system("imagesnap -d " + self.camera2 + " " + PathToFile + "im_BR_level.jpeg")
-				except Exception as e : 
-					print(e)
-				
-				time.sleep(2)
+		
+		
+		if self.webcam_each : 
 	
-				#time.sleep(1)
-	
-	
-				#Path jusqu'a l'image a cropper 
-				image_BU = PathToFile + "im_BU_level.jpeg"
-				image_BR = PathToFile + "im_BR_level.jpeg"
+			try : 
+				os.system("imagesnap -d " + self.camera1 + " " + PathToFile + "im_BU_level.jpeg")
+				os.system("imagesnap -d " + self.camera2 + " " + PathToFile + "im_BR_level.jpeg")
+			except Exception as e : 
+				print(e)
 			
-			else : 
-				try : 
-					os.system("imagesnap -d " + self.camera_BR_BU + " " + PathToFile + "im_B_level.jpeg")
-				except Exception as e : 
-					print(e)				
-				
-				time.sleep(2)
-				
+			time.sleep(2)
 
-				image_BU = Image.open(PathToFile + "im_B_level.jpeg")
-				image_BR = Image.open(PathToFile + "im_B_level.jpeg")
-				
-			#Path jusqu'au dossier ou les sous-images seront sauvegardees
-			PathToFile_croppedImages = PathToFile
+			#time.sleep(1)
 
 
-			outfile_BR1 = PathToFile_croppedImages + "BR1.jpeg"
-			outfile_BR2 = PathToFile_croppedImages + "BR2.jpeg"
-			outfile_BR3 = PathToFile_croppedImages + "BR3.jpeg"
-			outfile_BU1 = PathToFile_croppedImages + "BU1.jpeg"
-			outfile_BU2 = PathToFile_croppedImages + "BU2.jpeg"
-			outfile_BU3 = PathToFile_croppedImages + "BU3.jpeg"
-	
-
-			im_cropped_BR1 = self.image_cropping(image_BR,outfile_BR1,self.coordinates_crop["BR1"])
-			im_cropped_BR2 = self.image_cropping(image_BR,outfile_BR2,self.coordinates_crop["BR2"])
-			im_cropped_BR3 = self.image_cropping(image_BR,outfile_BR3,self.coordinates_crop["BR3"])
+			#Path jusqu'a l'image a cropper 
+			image_BU = PathToFile + "im_BU_level.jpeg"
+			image_BR = PathToFile + "im_BR_level.jpeg"
+		
+		else : 
+			try : 
+				os.system("imagesnap -d " + self.camera_BR_BU + " " + PathToFile + "im_B_level.jpeg")
+			except Exception as e : 
+				print(e)				
 			
-			im_cropped_BU1 = self.image_cropping(image_BU,outfile_BU1,self.coordinates_crop["BU1"])
-			im_cropped_BU2 = self.image_cropping(image_BU,outfile_BU2,self.coordinates_crop["BU2"])
-			im_cropped_BU3 = self.image_cropping(image_BU,outfile_BU3,self.coordinates_crop["BU3"])
-			
-			self._level["BR1"] = self.level_mesure(im_cropped_BR1, "BR1")
-			self._level["BR2"] = self.level_mesure(im_cropped_BR2, "BR2")
-			self._level["BR3"] = self.level_mesure(im_cropped_BR3, "BR3")
-			
-			self._level["BU1"] = self.level_mesure(im_cropped_BU1, "BU1")
-			self._level["BU2"] = self.level_mesure(im_cropped_BU2, "BU2")
-			self._level["BU3"] = self.level_mesure(im_cropped_BU3, "BU3")
-			
-			
-			self.msg = str(self._level)
-			self.msg = self.msg.replace("{", "")
-			self.msg = self.msg.replace("}", "")
-			self.msg = self.msg.replace("'", "")
+			time.sleep(2)
 			
 
+			image_BU = Image.open(PathToFile + "im_B_level.jpeg")
+			image_BR = Image.open(PathToFile + "im_B_level.jpeg")
 			
-			print("message envoye :" + self.msg)
-			self.client._send(self.msg)
-			#si l'on souhaite archiver les photos prises et les mesures effectuees, passer self.archives a True
-			#et definir dans les attributs le fichier dans lequel doivent etre ecrites les mesures
+		#Path jusqu'au dossier ou les sous-images seront sauvegardees
+		PathToFile_croppedImages = PathToFile
+
+
+		outfile_BR1 = PathToFile_croppedImages + "BR1.jpeg"
+		outfile_BR2 = PathToFile_croppedImages + "BR2.jpeg"
+		outfile_BR3 = PathToFile_croppedImages + "BR3.jpeg"
+		outfile_BU1 = PathToFile_croppedImages + "BU1.jpeg"
+		outfile_BU2 = PathToFile_croppedImages + "BU2.jpeg"
+		outfile_BU3 = PathToFile_croppedImages + "BU3.jpeg"
+
+
+		im_cropped_BR1 = self.image_cropping(image_BR,outfile_BR1,self.coordinates_crop["BR1"])
+		im_cropped_BR2 = self.image_cropping(image_BR,outfile_BR2,self.coordinates_crop["BR2"])
+		im_cropped_BR3 = self.image_cropping(image_BR,outfile_BR3,self.coordinates_crop["BR3"])
+		
+		im_cropped_BU1 = self.image_cropping(image_BU,outfile_BU1,self.coordinates_crop["BU1"])
+		im_cropped_BU2 = self.image_cropping(image_BU,outfile_BU2,self.coordinates_crop["BU2"])
+		im_cropped_BU3 = self.image_cropping(image_BU,outfile_BU3,self.coordinates_crop["BU3"])
+		
+		self._level["BR1"] = self.level_mesure(im_cropped_BR1, "BR1")
+		self._level["BR2"] = self.level_mesure(im_cropped_BR2, "BR2")
+		self._level["BR3"] = self.level_mesure(im_cropped_BR3, "BR3")
+		
+		self._level["BU1"] = self.level_mesure(im_cropped_BU1, "BU1")
+		self._level["BU2"] = self.level_mesure(im_cropped_BU2, "BU2")
+		self._level["BU3"] = self.level_mesure(im_cropped_BU3, "BU3")
+		
+		
+		self.msg = str(self._level)
+		self.msg = self.msg.replace("{", "")
+		self.msg = self.msg.replace("}", "")
+		self.msg = self.msg.replace("'", "")
+		
+
+		
+		print("message envoye :" + self.msg)
+		self.client._send(self.msg)
+		#si l'on souhaite archiver les photos prises et les mesures effectuees, passer self.archives a True
+		#et definir dans les attributs le fichier dans lequel doivent etre ecrites les mesures
+		
+		if self.archives :
 			
-			if self.archives :
-				
-				
-				self.Values.write("Valeurs des niveaux, " + time.strftime('%d/%m/%y %H:%M',time.localtime()) + " :" +"\n" + self.msg)
+			
+			self.Values.write("Valeurs des niveaux, " + time.strftime('%d/%m/%y %H:%M',time.localtime()) + " :" +"\n" + self.msg)
 
-				im_cropped_BU1.save("/home/edgar/python_ws/Scripts_WorkShop_Avril/Test_Niveau/Archives/BU1." + time.strftime('%H:%M:%S')  + ".jpeg")
-				im_cropped_BU2.save("/home/edgar/python_ws/Scripts_WorkShop_Avril/Test_Niveau/Archives/BU2." + time.strftime('%H:%M:%S')  + ".jpeg")
-				im_cropped_BU3.save("/home/edgar/python_ws/Scripts_WorkShop_Avril/Test_Niveau/Archives/BU3." + time.strftime('%H:%M:%S')  + ".jpeg")
-				im_cropped_BR1.save("/home/edgar/python_ws/Scripts_WorkShop_Avril/Test_Niveau/Archives/BR1." + time.strftime('%H:%M:%S')  + ".jpeg")
-				im_cropped_BR2.save("/home/edgar/python_ws/Scripts_WorkShop_Avril/Test_Niveau/Archives/BR2." + time.strftime('%H:%M:%S')  + ".jpeg")
-				im_cropped_BR3.save("/home/edgar/python_ws/Scripts_WorkShop_Avril/Test_Niveau/Archives/BR3." + time.strftime('%H:%M:%S')  + ".jpeg")
+			im_cropped_BU1.save("/home/edgar/python_ws/Scripts_WorkShop_Avril/Test_Niveau/Archives/BU1." + time.strftime('%H:%M:%S')  + ".jpeg")
+			im_cropped_BU2.save("/home/edgar/python_ws/Scripts_WorkShop_Avril/Test_Niveau/Archives/BU2." + time.strftime('%H:%M:%S')  + ".jpeg")
+			im_cropped_BU3.save("/home/edgar/python_ws/Scripts_WorkShop_Avril/Test_Niveau/Archives/BU3." + time.strftime('%H:%M:%S')  + ".jpeg")
+			im_cropped_BR1.save("/home/edgar/python_ws/Scripts_WorkShop_Avril/Test_Niveau/Archives/BR1." + time.strftime('%H:%M:%S')  + ".jpeg")
+			im_cropped_BR2.save("/home/edgar/python_ws/Scripts_WorkShop_Avril/Test_Niveau/Archives/BR2." + time.strftime('%H:%M:%S')  + ".jpeg")
+			im_cropped_BR3.save("/home/edgar/python_ws/Scripts_WorkShop_Avril/Test_Niveau/Archives/BR3." + time.strftime('%H:%M:%S')  + ".jpeg")
 
-				self.Values.flush()
+			self.Values.flush()
+
 
 			
-			self.lock.release()
-	
-			if self._stop :
-				self._stop_level()
-				
-			print("End image analysis")
+		print("End image analysis")
 
 	"""to start analysis"""
 	def start_level(self):
-		self._stop = False
-		self.lock.release()
+		if not self.get_running_state() : 
+			self.read_all_config()
+			self.set_running_state(True)
+			self.thread_image_level = thread_image_level(self)
+			self.thread_image_level.start()
+		else : 
+			print ("already level analysis running" )
+		
 	"""to stop analysis"""
 	def stop_level(self):
-		self._stop = True
+		self.set_running_state(False)
 	"""do not use this function"""
-	def _stop_level(self):
-		self.lock.acquire()
+	def get_running_state(self):
+		self._running_state[0].acquire()
+		state = self._running_state[1]
+		self._running_state[0].release()
+		return state
+		
+	def set_running_state(self, state):
+		self._running_state[0].acquire()
+		self._running_state[1]= state
+		self._running_state[0].release()

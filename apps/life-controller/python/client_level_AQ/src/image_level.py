@@ -7,6 +7,7 @@ import threading
 from client_level import *
 import random
 import numpy
+from thread_image_level import *
 
 
 
@@ -25,10 +26,6 @@ class image_level(threading.Thread):
 		threading.Thread.__init__(self)
 		self.client = un_client
 
-		"""Lock for start and stop image analysis"""
-
-		self.lock = threading.Lock()
-		self.lock.acquire()
 
 		"""if image is upside down"""
 		self.image_upside_down = True
@@ -51,16 +48,21 @@ class image_level(threading.Thread):
 		self.calibration_values = {'AQ':{'HIGH':0,'LOW':0}}
 
 		self._level= { 	"AQ" :  0}
-
-		self.read_config_crop_AQ()
-		self.read_calibration_AQ()
-		self.read_config_camera()
-		self.read_config_detection()
 		
 
 		#print ("Cropping coordinates : " + str(self.calibration_values))
 
-		self.start()
+		self._running_state = [threading.Lock(), False]
+		self.read_all_config()
+		
+		#print ("Cropping coordinates : " + str(self.calibration_values))
+		
+	
+	def read_all_config (self):
+		self.read_config_crop_AQ()
+		self.read_calibration_AQ()
+		self.read_config_camera()
+		self.read_config_detection()
 		
 	def read_config_detection(self):
 		print("read config detection")
@@ -287,85 +289,90 @@ class image_level(threading.Thread):
 			print("no edges have been detected")
 			return 'null'
 	
-	def run(self):
+	def analyse_run(self):
 
 
 		#ne rentrer dans le while que si les coordonnees ne sont pas toutes nulles et si la calibration a ete faite?
 
-		while True:
+	
+		print("Start image analysis")
+
+		# Ecrire le nom du path ou seront enregistrees les photos
+		PathToFile = ""
+
+		#os.system("streamer -s 1920x1080 -f jpeg -c /dev/video2 -b 16 -o ~/python_ws/Scripts_WorkShop_Avril/Test_Niveau//im_BU_level.jpeg")
+		#os.system("streamer -s 1920x1080 -f jpeg -c /dev/video3 -b 16 -o ~/python_ws/Scripts_WorkShop_Avril/Test_Niveau/im_BR_level.jpeg")
+
+		
+		#camera3 = "\"Built-in iSight\""
+
+		try : 
+			os.system("imagesnap -d " + self.camera_AQ + " " + PathToFile + "im_AQ_level.jpeg")
+		except Exception as e : 
+			print(e)
+
+		#time.sleep(1)
 
 
-			self.lock.acquire()
-			print("Start image analysis")
+		#Path jusqu'a l'image a cropper 
+		image_AQ = Image.open(PathToFile + "im_AQ_level.jpeg")
+		
+		if self.image_upside_down : 
+			image_AQ = image_AQ.rotate(180)
 
-			# Ecrire le nom du path ou seront enregistrees les photos
-			PathToFile = ""
+		#Path jusqu'au dossier ou les sous-images seront sauvegardees
+		PathToFile_croppedImages = PathToFile
 
-			#os.system("streamer -s 1920x1080 -f jpeg -c /dev/video2 -b 16 -o ~/python_ws/Scripts_WorkShop_Avril/Test_Niveau//im_BU_level.jpeg")
-			#os.system("streamer -s 1920x1080 -f jpeg -c /dev/video3 -b 16 -o ~/python_ws/Scripts_WorkShop_Avril/Test_Niveau/im_BR_level.jpeg")
+		outfile_AQ = PathToFile_croppedImages + "AQ.jpeg"
+		
 
-			
-			#camera3 = "\"Built-in iSight\""
+		im_cropped_AQ = self.image_cropping(image_AQ,outfile_AQ,self.coordinates_crop["AQ"])
 
-			try : 
-				os.system("imagesnap -d " + self.camera_AQ + " " + PathToFile + "im_AQ_level.jpeg")
-			except Exception as e : 
-				print(e)
+		self._level["AQ"] = self.level_mesure(im_cropped_AQ, "AQ")
 
-			#time.sleep(1)
-
-
-			#Path jusqu'a l'image a cropper 
-			image_AQ = Image.open(PathToFile + "im_AQ_level.jpeg")
-			
-			if self.image_upside_down : 
-				image_AQ = image_AQ.rotate(180)
-
-			#Path jusqu'au dossier ou les sous-images seront sauvegardees
-			PathToFile_croppedImages = PathToFile
-
-			outfile_AQ = PathToFile_croppedImages + "AQ.jpeg"
-			
-
-			im_cropped_AQ = self.image_cropping(image_AQ,outfile_AQ,self.coordinates_crop["AQ"])
-
-			self._level["AQ"] = self.level_mesure(im_cropped_AQ, "AQ")
-
-			self.msg = str(self._level)
-			self.msg = self.msg.replace("{", "")
-			self.msg = self.msg.replace("}", "")
-			self.msg = self.msg.replace("'", "")
+		self.msg = str(self._level)
+		self.msg = self.msg.replace("{", "")
+		self.msg = self.msg.replace("}", "")
+		self.msg = self.msg.replace("'", "")
 
 
-			print("message envoye :" + self.msg)
-			self.client._send(self.msg)
-			#si l'on souhaite archiver les photos prises et les mesures effectuees, passer self.archives a True
-			#et definir dans les attributs le fichier dans lequel doivent etre ecrites les mesures
+		print("message envoye :" + self.msg)
+		self.client._send(self.msg)
+		#si l'on souhaite archiver les photos prises et les mesures effectuees, passer self.archives a True
+		#et definir dans les attributs le fichier dans lequel doivent etre ecrites les mesures
 
-			if self.archives :
-
-
-				self.Values.write("Valeurs des niveaux, " + time.strftime('%d/%m/%y %H:%M',time.localtime()) + " :" +"\n" + self.msg)
-
-				im_cropped_AQ.save("archives/AQ." + time.strftime('%H:%M:%S')  + ".jpeg")
-
-				self.Values.flush()
+		if self.archives :
 
 
-			self.lock.release()
+			self.Values.write("Valeurs des niveaux, " + time.strftime('%d/%m/%y %H:%M',time.localtime()) + " :" +"\n" + self.msg)
 
-			if self._stop :
-				self._stop_level()
+			im_cropped_AQ.save("archives/AQ." + time.strftime('%H:%M:%S')  + ".jpeg")
 
-			print("End image analysis")
+			self.Values.flush()
+
+		print("End image analysis")
 
 	"""to start analysis"""
 	def start_level(self):
-		self._stop = False
-		self.lock.release()
+		if not self.get_running_state() : 
+			self.read_all_config()
+			self.set_running_state(True)
+			self.thread_image_level = thread_image_level(self)
+			self.thread_image_level.start()
+		else : 
+			print ("already level analysis running" )
+		
 	"""to stop analysis"""
 	def stop_level(self):
-		self._stop = True
+		self.set_running_state(False)
 	"""do not use this function"""
-	def _stop_level(self):
-		self.lock.acquire()
+	def get_running_state(self):
+		self._running_state[0].acquire()
+		state = self._running_state[1]
+		self._running_state[0].release()
+		return state
+		
+	def set_running_state(self, state):
+		self._running_state[0].acquire()
+		self._running_state[1]= state
+		self._running_state[0].release()
