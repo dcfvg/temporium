@@ -68,6 +68,12 @@ class seance_controller(threading.Thread):
         print("film time begin")
         #time.sleep(5)
         
+        print("screen outside down begin")
+        self.current_state.set_current_action_lift_screen("screen_down_outside")
+        while self.current_state.set_current_action_lift_screen("screen_down_outside") : 
+            time.sleep(2)
+        print("screen outside down finish")
+        
         """send seance begin"""
         self.client_seance.send_seance_begin()
         
@@ -90,6 +96,12 @@ class seance_controller(threading.Thread):
         
         self.client_seance.sent_seance_stop()
         print("film time end")    
+        
+        print("screen outside up begin")
+        self.current_state.set_current_action_lift_screen("screen_up_outside")
+        while self.current_state.set_current_action_lift_screen("screen_up_outside") : 
+            time.sleep(2)
+        print("screen outside up finish")
         
     def _create_client(self, ip, port):
         """create an UDP client on port and ip"""
