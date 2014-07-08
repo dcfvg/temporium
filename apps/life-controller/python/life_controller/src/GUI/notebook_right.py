@@ -24,12 +24,12 @@ class notebook_right(tkinter.ttk.Notebook):
         
         self.parent = parent
         self.global_state_frame = global_state_frame(self)
-        self.EL_state_frame = EL_state_frame(self)
+        #self.EL_state_frame = EL_state_frame(self)
         self.client_connected_frame = client_connected_frame(self)
 
         
         self.add(self.global_state_frame, text="Etat Global")
-        self.add(self.EL_state_frame, text="Electrodes")
+        #self.add(self.EL_state_frame, text="Electrodes")
         self.add(self.client_connected_frame, text="Client connected")
         
         

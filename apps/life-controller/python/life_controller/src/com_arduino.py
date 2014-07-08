@@ -48,7 +48,6 @@ class com_arduino(object):
         self.server_arduino_order_state = [threading.Lock() , False]
          
          
-         
     """Pump order"""  
     def P_BR1_BU1(self, state):
         
@@ -206,7 +205,8 @@ class com_arduino(object):
                         """boolean"""
                         return value
             else : 
-                print ("arduino_EL not declared/connected")
+                #print ("arduino_EL not declared/connected")
+                pass
                  
         else : 
             return self.ask_server_arduino_EL(name_container,name_EL)
@@ -430,18 +430,28 @@ class com_arduino(object):
                     """Make an arduino with the port from the log_pin.txt file, and put it in the dict() the_arduino
                     arduino_current to associate the pin to the right arduino (the last built arduino )"""
                     if  list[1].strip() == "arduino_pump" :
-                        self.the_arduino[list[1].strip()] = arduino_mega(list[2].strip(), self)
-                        arduino_current = self.the_arduino[list[1].strip()]
-                        print (list[1].strip() +" made on port :" + list[2].strip())
+                        try : 
+                            self.the_arduino[list[1].strip()] = arduino_mega(list[2].strip(), self)
+                            arduino_current = self.the_arduino[list[1].strip()]
+                            print (list[1].strip() +" made on port :" + list[2].strip())
+                        except serial.SerialException : 
+                            print ("/!\ WRONG PORT FOR " + list[1].strip() + " on " + list[2].strip())
                     elif  list[1].strip() == "arduino_lift" : 
-                        self.the_arduino[list[1].strip()] = arduino_lift(list[2].strip(), self)
-                        arduino_current = self.the_arduino[list[1].strip()]
+                        try : 
+                            self.the_arduino[list[1].strip()] = arduino_lift(list[2].strip(), self)
+                            arduino_current = self.the_arduino[list[1].strip()]
+                            print (list[1].strip() +" made on port :" + list[2].strip())
+                        except serial.SerialException : 
+                            print ("/!\ WRONG PORT FOR " + list[1].strip() + " on " + list[2].strip())
                     
                     elif  list[1].strip() == "arduino_EL" :
-                        self.the_arduino[list[1].strip()] = arduino_mega(list[2].strip(), self)
-                        arduino_current = self.the_arduino[list[1].strip()]
-                        print (list[1].strip() +" made on port :" + list[2].strip())
-                    
+                        try : 
+                            self.the_arduino[list[1].strip()] = arduino_mega(list[2].strip(), self)
+                            arduino_current = self.the_arduino[list[1].strip()]
+                            print (list[1].strip() +" made on port :" + list[2].strip())
+                        except serial.SerialException : 
+                            print ("/!\ WRONG PORT FOR " + list[1].strip() + " on " + list[2].strip())
+                        
                     else : 
                         print("/!\ Wrong name of Arduino : " + list[1].strip() )
                                     
@@ -450,10 +460,14 @@ class com_arduino(object):
                 elif list[0].strip() =="pin_array_output" :
                     """Make a dictionnary of the pin_array_output : {arduino_current : [pin, pin, ...], ...} """
                     list_pin = list[1].strip().split(",")
-                    self.pin_array_output[arduino_current] = []
-                    for item in list_pin :
-                        self.pin_array_output[arduino_current].append(int (item.strip()))
-                
+                    try : 
+                        self.pin_array_output[arduino_current] = []
+                    
+                        for item in list_pin :
+                            self.pin_array_output[arduino_current].append(int (item.strip()))
+                    except : 
+                        pass
+                    
                 elif list[0].strip() =="EL" :
                     
                     """Make a dictionnary of the EL for a container, then put it in the_EL : {"AQ" : {"HIGH" : [arduino, pin],"MEDIUM" : [arduino, pin], "LOW" : [arduino, pin] }, "BR1" :  {"HIGH" : [arduino, pin],"MEDIUM" : [arduino, pin], "LOW" : [arduino, pin] }} """
@@ -487,10 +501,13 @@ class com_arduino(object):
                          
             """def output Arduino"""
              
-            for ard in self.pin_array_output :
-                print(self.pin_array_output[ard])
-                ard.output(self.pin_array_output[ard])
-                
+            try:  
+                for ard in self.pin_array_output :
+                    #print(self.pin_array_output[ard])
+                    ard.output(self.pin_array_output[ard])
+            except Exception : 
+                pass
+                    
             
     
     """set the state of the serv_arduino_order"""  

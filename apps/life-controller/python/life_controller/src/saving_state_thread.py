@@ -21,7 +21,6 @@ class saving_state_thread (threading.Thread):
 
     def run(self):
         while True : 
-            
             self.write_curren_situation()
             time.sleep (2)
             

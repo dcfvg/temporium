@@ -108,11 +108,17 @@ class config_manager(object):
                 self._set_film(name, value)  
                 
             elif key  == "time_controller" :
-                name = list[1].strip()
-                value = list[2].strip().split("h")
-                hour = int(value[0].strip())
-                minute = int(value[1].strip())
-                self._set_time_controller(name, [hour, minute]) 
+                try : 
+                    name = list[1].strip()
+                    value = list[2].strip().split("h")
+                    hour = int(value[0].strip())
+                    minute = int(value[1].strip())
+                    self._set_time_controller(name, [hour, minute]) 
+                except Exception : 
+                    name = list[1].strip()
+                    print (name)
+                    #self.current_state.set_current_time_controller_state(name, list[2].strip() == "True") 
+                
             elif key  == "spectro" :
                 name = list[1].strip()
                 value = int(list[2].strip())
@@ -123,7 +129,7 @@ class config_manager(object):
         self.lock.release()
         file.close()
         
-        print( self._AQ)
+        #print( self._AQ)
                 
     """RENEW LIGHT AQ"""           
     def _set_renew_light_AQ(self, name, value):

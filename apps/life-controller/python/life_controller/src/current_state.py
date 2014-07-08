@@ -93,7 +93,12 @@ class current_state(object):
                                          "AQ_emptying_EL_LOW": [threading.Lock(),False],\
                                          }
         
+        """film_state"""
+        self._current_film_state = {"film" :[threading.Lock(), False]}
         
+        
+        
+        self._current_time_controller_state = {"exposition" : [threading.Lock(), False], "renew_heavy_AQ" : [threading.Lock(), False]}
         
         
         """current_spectro_state"""
@@ -111,8 +116,7 @@ class current_state(object):
         """AQ_concentration"""
         self._concentration = {"AQ" :[threading.Lock(), 0]}
         
-        """film_state"""
-        self._current_film_state = {"film" :[threading.Lock(), False]}
+        
         
         """time since last resfresh of the GUI"""
         self._GUI_last_time = time.time()
@@ -133,10 +137,7 @@ class current_state(object):
                                    "concentration" : [threading.Lock(), False,"server_concentration"]}
       
         
-        self._current_time_controller_state = {"exposition" : [threading.Lock(), False], "renew_heavy_AQ" : [threading.Lock(), False]}
-        
-        
-        """lock, state, day"""
+        """lock, state, day, in order to know if these action have been done yet"""
         self._daily_action = {"renew_heavy_AQ" : [threading.Lock(), False, 0]}
         
         """if there is a GUI or not"""
@@ -146,7 +147,7 @@ class current_state(object):
         self._keep_going = [threading.Lock(), True]
 
         
-        
+
         
         """initialize all values after a log_start.txt"""
         self.__setState__()
@@ -870,6 +871,7 @@ class current_state(object):
             self._set_state_EL(name_container, name_EL, state)
         
         return state
+    
      
     """do not use this function"""
     def _set_state_EL(self,name_container, name_EL, state):
@@ -1127,7 +1129,7 @@ class current_state(object):
     """kill all action running, st all pump to false"""          
     def kill_all(self):
         
-        self.set_BRBU_controller_state("run",False)
+        self.set_BRBU_controller_state("pause",False)
         
         for item in self._current_action_evolved : 
             self.set_current_action_evolved(item, False)
@@ -1144,6 +1146,33 @@ class current_state(object):
             
         for item in self._current_spectro_state : 
             self.set_current_spectro_state(item, False)
+            
+        for item in self._current_spectro_state : 
+            self.set_current_spectro_state(item, False)
+        
+        for item in self._current_action_aquarium : 
+            self.set_current_action_aquarium(item, False)
+            
+        for item in self._current_action_aquarium_evolved : 
+            self.set_current_action_aquarium_evolved(item, False)
+            
+        for item in self._current_action_aquarium_evolved : 
+            self.set_current_action_aquarium_evolved(item, False)
+        
+        for item in self._current_film_state : 
+            self.set_current_film_state(item, False)
+                
+        for item in self._current_time_controller_state : 
+            self.set_current_time_controller_state(item, False)
+                
+        for item in self._current_spectro_state : 
+            self.set_current_spectro_state(item, False)
+                
+        
+        for item in self._current_light_state : 
+            self.set_current_light_state(item, False)
+                
+        
     
     """not good solution, all action have to be listed in current_action in order to be stoped"""
     def set_keep_going(self, state):
