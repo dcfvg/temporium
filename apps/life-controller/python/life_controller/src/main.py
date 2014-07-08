@@ -32,7 +32,7 @@ if __name__ == "__main__":
             signal.signal(sig,handler)
     
     """test must be set to False when using with terminal mode"""
-    test = True
+    test = False
     for i in sys.argv : 
         if i.strip() == "test" : 
             test = True
