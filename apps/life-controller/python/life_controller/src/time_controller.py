@@ -23,6 +23,8 @@ class time_controller(threading.Thread):
         self.time_end_day = self.current_state.config_manager.get_time_controller("END_DAY")
         
         
+        
+        
     def run(self):
         
         while True : 
@@ -42,6 +44,9 @@ class time_controller(threading.Thread):
                         
                 
             
+                        
+            print ("renew" + str(self.current_state.get_current_time_controller_state("exposition")))
+
             if self.current_state.get_current_time_controller_state("exposition") : 
                  
                 if self.expo_open() :

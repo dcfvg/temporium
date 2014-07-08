@@ -133,7 +133,7 @@ class current_state(object):
                                    "concentration" : [threading.Lock(), False,"server_concentration"]}
       
         
-        self._current_time_controller_state = {"exposition" : [threading.Lock(), False], "renew_heavy_AQ" : [threading.Lock(), True]}
+        self._current_time_controller_state = {"exposition" : [threading.Lock(), False], "renew_heavy_AQ" : [threading.Lock(), False]}
         
         
         """lock, state, day"""
@@ -1293,6 +1293,7 @@ class current_state(object):
         self._current_time_controller_state[name][0].release()
     
     def get_current_time_controller_state(self, name):
+        
         """set the value of formation_rate"""
         self._current_time_controller_state[name][0].acquire()
         state = self._current_time_controller_state[name][1] 

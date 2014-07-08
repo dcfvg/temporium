@@ -32,7 +32,7 @@ if __name__ == "__main__":
             signal.signal(sig,handler)
     
     """test must be set to False when using with terminal mode"""
-    test = True
+    test = False
     for i in sys.argv : 
         if i.strip() == "test" : 
             test = True
@@ -63,8 +63,8 @@ if __name__ == "__main__":
     saving_th = saving_state_thread(cu_state)
     saving_th.start()
     """start time_controller"""
-    cu_state.set_current_time_controller_state("exposition", True)
-    cu_state.set_current_time_controller_state("renew_heavy_AQ", True)
+    cu_state.set_current_time_controller_state("exposition", False)
+    cu_state.set_current_time_controller_state("renew_heavy_AQ", False)
     
     
     

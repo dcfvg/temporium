@@ -12,7 +12,7 @@ comments : time_out in minutes when the film starts
 film : TIME_OUT : 60
 comments : time of the beginning of the exposure/time of the end of the exposure (format : 0-23h0-59)
 time_controller : START_DAY : 10h30
-time_controller : END_DAY : 21h30 
+time_controller : END_DAY : 21h30
 comments : AQ management
 AQ : FULL : 0.9
 AQ : EMPTY : 0.1

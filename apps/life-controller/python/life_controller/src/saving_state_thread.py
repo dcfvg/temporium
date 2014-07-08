@@ -34,7 +34,6 @@ class saving_state_thread (threading.Thread):
             save_file.write("occupied_volume : "+ item + " : " + str(self.current_state.get_occupied_volume(item)) + " \n")
     
         for item in self.current_state._daily_action : 
-            print("daily_action : "+ item + " : " + str(self.current_state.get_daily_action_state(item)) + " : " + str(self.current_state.get_daily_action_day(item)) + " \n")
             save_file.write("daily_action : "+ item + " : " + str(self.current_state.get_daily_action_state(item)) + " : " + str(self.current_state.get_daily_action_day(item)) + " \n")
 
         save_file.flush()
