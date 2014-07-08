@@ -196,7 +196,7 @@ class BRBU_controller (threading.Thread):
                 """if B3 is in WAIT"""
                 if self.current_state.get_BU_state("BU3") == "WAIT" :
                     
-                    if not self.BR_BU_ready["BU2"] :
+                    if not self.BR_BU_ready["BU3"] :
                         
                         """empty BR and fill BU : 2/3 BR -> BU """
                         self.fill_BRBU("P_BR3_BU3", "BU3", self.get_BRBU_controller("FILLING_BR_BU") )

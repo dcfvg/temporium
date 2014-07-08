@@ -46,7 +46,7 @@ class current_state(object):
         self.number_usage = dict()
         
         """BRBU_controller state"""
-        self._BU_state = {"BU1" : [threading.Lock(), "USE"],"BU2" : [threading.Lock(), "NULL"],"BU3" : [threading.Lock(), "NULL"] }
+        self._BU_state = {"BU1" : [threading.Lock(), "NULL"],"BU2" : [threading.Lock(), "NULL"],"BU3" : [threading.Lock(), "NULL"] }
         
         """current_action"""
         self._current_action = {"AQ_filtration" : [threading.Lock(),False],\
@@ -689,7 +689,7 @@ class current_state(object):
         while self.get_concentration("AQ")=="NULL" : 
                 time.sleep(1)
                 print("spectro wait")
-        value = self.get_information_asked("concentration")
+        value = self.get_concentration("AQ")
         self.set_current_spectro_state("spectro",False)
         return value 
        

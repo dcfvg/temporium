@@ -54,6 +54,8 @@ class window(Tk):
         self.left_panel.notebook.manual_action.refresh_state()
         self.left_panel.notebook.cycle_automatique.refresh_state()
         self.right_panel.notebook_right.client_connected_frame.refresh_state()
+        self.right_panel.notebook_right.global_state_frame.refresh_state()
+        
         
     
     def refresh_after(self):
