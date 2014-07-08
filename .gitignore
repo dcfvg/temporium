@@ -39,3 +39,4 @@
 
 *.m4v
 apps/interface/bin/tmp*
+apps/life-controller/python/life_controller/src/save_current_situation/  .txt
