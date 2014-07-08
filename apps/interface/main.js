@@ -10,7 +10,7 @@ module.exports = function(app, io, oscServer){
   var capt; // capture programme (bash)
   var spawn = require('child_process').spawn;
 
-  initClientWindows(); // lauch chrome at launch
+  initClientWindows(); // lauch safari at launch
 
   //////////////////////////////
   // server side
@@ -20,17 +20,17 @@ module.exports = function(app, io, oscServer){
     //lancement du script qui lance chrome et chrome canary en FS sur chacun des écrans
     //cf. bin/initClientWindows.sh
 
-    // clientWindows = spawn('bash',['bin/initClientWindows.sh']);
+    clientWindows = spawn('bash',['bin/initClientWindows.sh']);
 
-    // clientWindows.stdout.on('data', function (data) {
-    //   console.log('stdout: ' + data);
-    // });
-    // clientWindows.stderr.on('data', function (data) {
-    //   console.log('stderr: ' + data);
-    // });
-    // clientWindows.on('exit', function (code) {
-    //   console.log('child process exited with code ' + code);
-    // });
+    clientWindows.stdout.on('data', function (data) {
+      console.log('stdout: ' + data);
+    });
+    clientWindows.stderr.on('data', function (data) {
+      console.log('stderr: ' + data);
+    });
+    clientWindows.on('exit', function (code) {
+      console.log('child process exited with code ' + code);
+    });
   };
   function loadScore(){
 
@@ -72,7 +72,7 @@ module.exports = function(app, io, oscServer){
         proc = new ffmpeg({ source: 'public/exposure/%04d.jpg' })
 
         .withFps(25)
-        .addOptions(['-pix_fmt yuv420p','-c:v libx264', '-preset ultrafast', '-crf 20'])
+        .addOptions(['-pix_fmt yuv420p','-c:v libx264', '-preset ultrafast', '-crf 22'])
         .addOptions(['-r 25'])
         .withVideoFilter('scale='+crop_w+':-1')
         .withVideoFilter('crop='+mov_w+':'+mov_h+':'+crop_x+':'+crop_y+'')

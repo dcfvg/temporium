@@ -30,9 +30,9 @@ function init() {
       $pop_life         = Popcorn("#life")
       ;
 
-  var image_formation = 70,
+  var image_formation = 20,
       formationStartLevel = 20,
-      compileDelay = 200,
+      compileDelay = 120,
       decideDelay = 2,
       canPlay = false;
 
@@ -49,7 +49,8 @@ function init() {
   
   $d // on
     .on( "seance_start"     , onSeanceStart)
-    .on( "seance_stop"       , onMovieEnded)
+    .on( "seance_stop"      , onMovieEnded)
+    .on( "capture_stop"     , onMovieEnded)
     .on( "lifeRefreshMovie" , onReloadLife)
     .on( "image_formation"  , onImageFormation)
     .on( "player_reset"     , reset)
@@ -118,10 +119,7 @@ function init() {
     console.log("# projection !");
  
     $pop_movie.play(0);
-    sleep(0);
     $d.trigger("showMovie");
-    var film = $d.getElementById("movie");
-    film.webkitRequestFullScreen(0);
 
     movieGoesOn = true;
 
@@ -156,7 +154,6 @@ function init() {
   function onShowMovie(){
     
     $movie.removeClass("off");
-    sleep(0);
     $life.addClass("off");
     $d.trigger("lifeRefreshMovie");
 
@@ -166,7 +163,6 @@ function init() {
     $pop_life.play(0);
     
     $life.removeClass("off");
-    sleep(0);
     $movie.addClass("off");
     
     console.log("Life !!!");    
@@ -184,7 +180,7 @@ function init() {
     socket.emit('getScore',true);
   };
   function getAt(l){
-    return (parseInt(l.at_min)*60 + parseInt(l.at_sec) + movieStartMargin); 
+    return (parseInt(l.at_sec)); 
   };
   function randomRange(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -277,6 +273,7 @@ function init() {
       // TAKE DECISION
       if (t > (at - decideDelay) && !decideStarted){
         decideStarted = true;
+        console.log(at);
         console.log('~ decide !');
         
         jump = getJump(step);
