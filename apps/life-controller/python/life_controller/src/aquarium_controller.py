@@ -31,9 +31,11 @@ class aquarium_controller(threading.Thread):
         while True : 
             self._start_lock.acquire()
             if self._action_asked == "aquarium_cycle_light" : 
-                self.aquarium_cycle_light()
+                self._aquarium_cycle_light()
+                self.current_state._set_current_action_aquarium_evolved("aquarium_cycle_light", False)
             elif self._action_asked == "aquarium_cycle_heavy" : 
-                self.aquarium_cycle_light()
+                self._aquarium_cycle_heavy()
+                self.current_state._set_current_action_aquarium_evolved("aquarium_cycle_heavy", False)
 
     """start the action"""
     def start_aquarium_controller_action_name(self, action_name):
@@ -41,11 +43,9 @@ class aquarium_controller(threading.Thread):
             self._start_lock.release()
  
  
-    def aquarium_cycle_light(self):
-        self.current_state._set_current_action_aquarium_evolved("aquarium_cycle_light", True)
+    def _aquarium_cycle_light(self):
         
         
-            
         """cycle less that 1% of the aquarium at the end of each film"""
         
         """get the BU in use"""
@@ -62,13 +62,16 @@ class aquarium_controller(threading.Thread):
         """start filtration"""
         self.current_state.set_current_action("AQ_filtration", True)
         """lift_down"""
-        self.current_state._current_action_lift_screen("lift_down")
+        self.current_state.set_current_action_lift_screen("lift_down")
         """wait until lift_down is finished"""
+        
+        time.sleep(2)
         while self.current_state.get_lift_busy() : 
             time.sleep(2)
         """lift_up"""
-        self.current_state._current_action_lift_screen("lift_up")
+        self.current_state.set_current_action_lift_screen("lift_up")
         """wait until lift_up is finished"""
+        time.sleep(2)
         while self.current_state.get_lift_busy() : 
             time.sleep(2)
         
@@ -76,28 +79,26 @@ class aquarium_controller(threading.Thread):
         self.current_state.set_current_action("AQ_filtration", False)
         
         
-        """start the spectro and wait for a value"""
-        current_concentration = self.current_state.get_spectro_mesure()
-        
-        print("current concentration AQ : " + str(current_concentration))
-        self.current_state.set_inforamtion_asked("concentration", False)
+        if False :
+            """start the spectro and wait for a value"""
+            current_concentration = self.current_state.get_spectro_mesure()
+            
+            print("current concentration AQ : " + str(current_concentration))
+            self.current_state.set_inforamtion_asked("concentration", False)
         
         """function to call to save the state"""
         #self.current_state.saving_state()
          
-            
-        self.current_state._set_current_action_aquarium_evolved("aquarium_cycle_light", False)
-    
-    def aquarium_cycle_heavy(self):
-        """recycle 10% of the aquarium at the end of each film"""
+                
+    def _aquarium_cycle_heavy(self):
+        """recycle 10% of the aquarium at the end of each film"""        
         
-        self.current_state._set_current_action_aquarium_evolved("aquarium_cycle_heavy", True)
-        
-        
+        """stop filtration"""
+        self.current_state.set_current_action("AQ_filtration", True)
         
         """lift_down"""
-        self.current_state._current_action_lift_screen("lift_down")
-        
+        self.current_state.set_current_action_lift_screen("lift_down")
+        time.sleep(2)
         """wait until lift_down is finished"""
         while self.current_state.get_lift_busy()  :  
             time.sleep(2)
@@ -120,8 +121,9 @@ class aquarium_controller(threading.Thread):
         self.current_state.set_current_action("AQ_filtration", True)
         
         """lift_up"""
-        self.current_state._current_action_lift_screen("lift_up")
+        self.current_state.set_current_action_lift_screen("lift_up")
         """wait until lift_down is finished"""
+        time.sleep(2)
         while self.current_state.get_lift_busy() : 
             time.sleep(2)
             
@@ -133,8 +135,6 @@ class aquarium_controller(threading.Thread):
             """start the spectro and wait for a value"""
             current_concentration = self.current_state.get_spectro_mesure()
             print("current concentration AQ : " + str(current_concentration))
-
-        self.current_state._set_current_action_aquarium_evolved("aquarium_cycle_heavy", False)
         
 
         

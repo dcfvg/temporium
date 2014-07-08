@@ -6,6 +6,7 @@ Created on 10 mai 2014
 import threading
 import os 
 
+"not used"""
 class starting_capture(threading.Thread):
     '''
     classdocs

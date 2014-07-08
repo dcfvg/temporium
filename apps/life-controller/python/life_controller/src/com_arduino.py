@@ -1,6 +1,7 @@
 from arduino.arduino_mega import*
 from arduino.arduino_lift import *
 import time
+import os
 '''
 Created on Apr 21, 2014
  
@@ -50,6 +51,7 @@ class com_arduino(object):
          
     """Pump order"""  
     def P_BR1_BU1(self, state):
+        
         name = 'P_BR1_BU1'
         self.pump_order(name, state)
                  
@@ -156,6 +158,7 @@ class com_arduino(object):
     
     """order to turn on/off the spectro_light"""
     def spectro_light(self, state):
+        
         name = "SPECTRO_LIGHT"
         """if not in test mode"""
         if not self.test :
@@ -487,6 +490,8 @@ class com_arduino(object):
             for ard in self.pin_array_output :
                 print(self.pin_array_output[ard])
                 ard.output(self.pin_array_output[ard])
+                
+            
     
     """set the state of the serv_arduino_order"""  
     def set_server_arduino_order_state(self, state):

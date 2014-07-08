@@ -61,10 +61,10 @@ class seance_controller(threading.Thread):
         while True : 
             self._start_lock.acquire()
             self.film_begin()
+            self.current_state._set_current_film_state("film",False)
         
     def film_begin(self):
         self._time_out = self.current_state.config_manager.get_film("TIME_OUT")
-        self.current_state._set_current_film_state("film",True)
         print("film time begin")
         #time.sleep(5)
         
@@ -76,19 +76,18 @@ class seance_controller(threading.Thread):
 
         """server_OSC_seance is waiting for first photo to begin analysing image and send it """
         
-        compt = 0 
-        
+       
         
         start_time = time.time()
         while  (time.time()-start_time) < (self._time_out*60) and self.current_state.get_current_film_state("film"):
             time.sleep(2)
-            compt= compt + 1
+            
         
         
         """stop ask information formation """
         self.current_state.set_information_asked("formation_rate", False)
         
-        self.current_state._set_current_film_state("film",False)
+        
         self.client_seance.sent_seance_stop()
         print("film time end")    
         

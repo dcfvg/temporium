@@ -28,12 +28,17 @@ class cycle_automatique(Frame):
         
         self.button_current_action_aquarium_evolved = {"aquarium_cycle_light": [0],\
                                                "aquarium_cycle_heavy": [1]}
-                                               
+        
+        
+        self.button_current_time_controller_state = {"exposition": [0],\
+                                                     "renew_heavy_AQ" : [1]}
+                                                                                          
         
 
         self._build_button_BRBU_controller()
         self._build_button_security_checking()
         self._build_button_current_action_aquarium_evolved()
+        self._build_button_current_time_controller_state()
         self._build_state_label()
         self._add_to_frame()
         
@@ -49,7 +54,8 @@ class cycle_automatique(Frame):
             self.button_security_checking[item].append(tkinter.Label(self,bg ='red', text = "FALSE")) 
         for item in self.button_current_action_aquarium_evolved : 
             self.button_current_action_aquarium_evolved[item].append(tkinter.Label(self,bg ='red', text = "FALSE")) 
-            
+        for item in self.button_current_time_controller_state : 
+            self.button_current_time_controller_state[item].append(tkinter.Label(self,bg ='red', text = "FALSE")) 
         
         
     
@@ -87,10 +93,25 @@ class cycle_automatique(Frame):
             self.button_current_action_aquarium_evolved[item][2].grid(sticky=E, row= self.button_current_action_aquarium_evolved[item][0]+compt_left, column=1)
         compt_left = compt_left+internal_compt
         
+        Label(self, text = "Ouverture exposition : ",fg = "white", bg = "black").grid(sticky = W,row=compt_left, columnspan = 2)
+        compt_left = compt_left+1
+        
+        internal_compt = 0
+        for item in self.button_current_time_controller_state :
+            internal_compt = internal_compt +1
+            self.button_current_time_controller_state[item][1].grid(sticky=W, row= self.button_current_time_controller_state[item][0]+compt_left, column=0)
+            self.button_current_time_controller_state[item][2].grid(sticky=E, row= self.button_current_time_controller_state[item][0]+compt_left, column=1)
+        compt_left = compt_left+internal_compt
         
         
         
-
+        
+    def _build_button_current_time_controller_state(self):
+        for item in self.button_current_time_controller_state : 
+            if item =="exposition" : 
+                self.button_current_time_controller_state[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_current_time_controller_state("exposition")))   
+            if item =="renew_heavy_AQ" : 
+                self.button_current_time_controller_state[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_current_time_controller_state("renew_heavy_AQ")))   
 
     def _build_button_BRBU_controller(self):
         for item in self.button_BRBU_controller : 
@@ -140,5 +161,13 @@ class cycle_automatique(Frame):
                 color = "red"
                 t = "FALSE"
             self.button_current_action_aquarium_evolved[item][2].config (bg = color, text = t)
+        for item in self.button_current_time_controller_state :  
+            if self.current_state.get_current_time_controller_state(item) : 
+                color = "green"
+                t = "TRUE"
+            else : 
+                color = "red"
+                t = "FALSE"
+            self.button_current_time_controller_state[item][2].config (bg = color, text = t)
    
         

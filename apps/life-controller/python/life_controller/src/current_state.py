@@ -13,6 +13,7 @@ from action_thread.renew_light_AQ_BU import *
 from action_thread.renew_heavy_AQ_BU import *
 from action_thread.empty_BU_S import *
 from action_thread.AQ_emptying import *
+from time_controller import *
 
 class current_state(object):
     """ Gather all the informations about the state of the installation"""
@@ -131,6 +132,12 @@ class current_state(object):
                                    "level_AQ" : [threading.Lock(), False, "server_level_AQ"],\
                                    "concentration" : [threading.Lock(), False,"server_concentration"]}
       
+        
+        self._current_time_controller_state = {"exposition" : [threading.Lock(), False], "renew_heavy_AQ" : [threading.Lock(), True]}
+        
+        
+        """lock, state, day"""
+        self._daily_action = {"renew_heavy_AQ" : [threading.Lock(), False, 0]}
         
         """if there is a GUI or not"""
         self.GUI = False 
@@ -546,11 +553,11 @@ class current_state(object):
                         b = False
             """if there is no action running"""
             if b : 
+                self._set_current_action_aquarium_evolved(name, state)
                 if state : 
                     self.aquarium_controller.start_aquarium_controller_action_name(name)
-                else : 
-                    #self._set_current_action_aquarium_evolved(name, False)
-                    pass
+                    
+                   
         
     def _set_current_action_aquarium_evolved(self, name, state):
         self._current_action_aquarium_evolved[name][0].acquire()
@@ -606,14 +613,12 @@ class current_state(object):
     """FILM STATE"""
     
     def set_current_film_state(self, name, state,):
-        """if different from current state"""
-        if not state : 
-            print ("Film stopped")
-            self._set_current_film_state(name, False)
-        else : 
-            if not self.get_current_film_state(name) == state : 
-                """checking if there is not already a task runnig on this arduino"""
+        if not self.get_current_film_state(name) == state : 
+            self._set_current_film_state(name, state)
+            if state : 
                 self.seance_controller.start_film()
+                
+                
                 
     
     """do not use this function"""       
@@ -1086,7 +1091,32 @@ class current_state(object):
         self._formation_rate[1] = value
         self._formation_rate[0].release()
     
+    """DAILY ACTION"""
+    def get_daily_action_state(self, name):
+        """get the value of formation_rate"""
+        self._daily_action[name][0].acquire()
+        value = self._daily_action[name][1]
+        self._daily_action[name][0].release()
+        return value
     
+    def get_daily_action_day(self, name):
+        """get the value of formation_rate"""
+        self._daily_action[name][0].acquire()
+        day = self._daily_action[name][2]
+        self._daily_action[name][0].release()
+        return day
+    
+    def set_daily_action_state(self, name, state):
+        """set the value of formation_rate"""
+        self._daily_action[name][0].acquire()
+        self._daily_action[name][1] = state
+        self._daily_action[name][0].release()
+    
+    def set_daily_action_day(self, name, day):
+        """set the value of formation_rate"""
+        self._daily_action[name][0].acquire()
+        self._daily_action[name][2] = day
+        self._daily_action[name][0].release()
     
     
     
@@ -1148,10 +1178,10 @@ class current_state(object):
     """ Set the states to the right values according to the log_start.txt file """
     def __setState__(self):
             # Open the file
-        log_pin = open("config/config_start.txt", "r")
+        start_file = open("config/config_start.txt", "r")
      
         # read the ligne one by one
-        for ligne in log_pin:
+        for ligne in start_file:
             #Take out the end symbols (\n)
             ligne = ligne.strip()
             #split on  ":" 
@@ -1193,10 +1223,81 @@ class current_state(object):
                     else: 
                         self._state_EL[name_container][name_EL] = [threading.Lock(),self.com_arduino.EL_read(name_container, name_EL),float(level_ref) ]
     
+        start_file.close()
+        
+        last_state_file = open("save_current_situation/last_state.txt", "r")
+        
+        for lign in last_state_file:
+            #Take out the end symbols (\n)
+            lign = lign.strip()
+            #split on  ":" 
+            list = lign.split(":")
+            
+            
+            
+            if list[0].strip() == "comments" :
+                continue
+            
+            elif list[0].strip() == "print" :
+                print (list[1].strip())
+            
+            elif list[0].strip() == "time_cycle" : 
+                """set cycle's time { C1 : [Lock, 75] , C2 : ...} """
+                self.time_cycle[list[1].strip()] = [threading.Lock(), float(list[2].strip())]
+                print ("cycle "+ list[1].strip() +" set at " + list[2].strip())
+                
+                
+            elif list[0].strip() =="occupied_volume" :
+                """set the occupied volume { M1 : [Lock, 0.75] , C2 : ...} """
+                self._occupied_volume[list[1].strip()] = [threading.Lock(), float(list[2].strip())]
+                
+            elif list[0].strip() =="number_usage" :
+                """set the number_usage { BU1 : 0 , BU2 : 23, ...} """
+                self.number_usage[list[1].strip()] = int(list[2].strip())
+                
+            elif list[0].strip() =="daily_action" :
+                """set the number_usage { BU1 : 0 , BU2 : 23, ...} """
+                name_action = list[1].strip()
+                print(name_action)
+                if list[2].strip() =="True" : 
+                    state_action = True
+                else : 
+                    state_action = False
+                day_action = int(list[3].strip())
+                self.set_daily_action_state(name_action,state_action)
+                self.set_daily_action_day(name_action,day_action)   
+                
+                
+            
+            
+        last_state_file.close()
+        
     
+    """Time_controller"""
+    
+    def set_current_time_controller_state(self, name, state):
+        """set the value of formation_rate"""
+        if  not (self.get_current_time_controller_state( name) == state) :
+            if state :
+                self._time_controller = time_controller(self)
+                self._set_current_time_controller_state(name, state)
+                self._time_controller.start()
+            else : 
+                self._set_current_time_controller_state(name, state)
     
                 
+    def _set_current_time_controller_state(self, name, state):
+        """set the value of formation_rate"""
+        self._current_time_controller_state[name][0].acquire()
+        self._current_time_controller_state[name][1] = state
+        self._current_time_controller_state[name][0].release()
     
+    def get_current_time_controller_state(self, name):
+        """set the value of formation_rate"""
+        self._current_time_controller_state[name][0].acquire()
+        state = self._current_time_controller_state[name][1] 
+        self._current_time_controller_state[name][0].release()
+        return state
             
                 
         

@@ -54,10 +54,12 @@ class current_state_order(object):
         
     def button_current_action_aquarium_evolved(self, name):
         self.current_state.set_current_action_aquarium_evolved(name, not self.current_state.get_current_action_aquarium_evolved(name))
-    
+       
     def button_current_action_aquarium(self, name):
         self.current_state.set_current_action_aquarium(name, not self.current_state.get_current_action_aquarium(name))
     
+    def button_current_time_controller_state(self, name):
+        self.current_state.set_current_time_controller_state(name, not self.current_state.get_current_time_controller_state(name))
 
     
     

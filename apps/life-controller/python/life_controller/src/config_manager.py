@@ -109,8 +109,10 @@ class config_manager(object):
                 
             elif key  == "time_controller" :
                 name = list[1].strip()
-                value = int(list[2].strip())
-                self._set_time_controller(name, value) 
+                value = list[2].strip().split("h")
+                hour = int(value[0].strip())
+                minute = int(value[1].strip())
+                self._set_time_controller(name, [hour, minute]) 
             elif key  == "spectro" :
                 name = list[1].strip()
                 value = int(list[2].strip())

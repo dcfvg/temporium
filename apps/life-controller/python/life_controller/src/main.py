@@ -15,9 +15,22 @@ from security_EL import *
 from config_manager import *
 from current_state_order import *
 from aquarium_controller import *
+import signal
 import sys
+from saving_state_thread import *
+from time_controller import *
+
+
+        
+        
+def handler( signo, sig_frame):
+    print("Exiting program")
+    os._exit(0)
 
 if __name__ == "__main__":
+    for sig in [signal.SIGTERM, signal.SIGINT, signal.SIGHUP, signal.SIGQUIT]:
+            signal.signal(sig,handler)
+    
     """test must be set to False when using with terminal mode"""
     test = True
     for i in sys.argv : 
@@ -46,6 +59,14 @@ if __name__ == "__main__":
     BRBU_cont.start()
     s = security_EL(cu_state)
     cu_state.set_security_EL(s)
+    
+    saving_th = saving_state_thread(cu_state)
+    saving_th.start()
+    """start time_controller"""
+    cu_state.set_current_time_controller_state("exposition", True)
+    cu_state.set_current_time_controller_state("renew_heavy_AQ", True)
+    
+    
     
     """will be an option later"""
     GUI = True

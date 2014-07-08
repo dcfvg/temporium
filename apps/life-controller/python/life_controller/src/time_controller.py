@@ -4,27 +4,96 @@ Created on Jun 5, 2014
 @author: Cactus
 '''
 import time
+import threading
 
-class time_controller(object):
-    '''
-    classdocs
- '''
-""""
-0     tm_year     (for example, 1993)
-1     tm_mon     range [1, 12]
-2     tm_mday     range [1, 31]
-3     tm_hour     range [0, 23]
-4     tm_min     range [0, 59]
-5     tm_sec     range [0, 61]; 
-6     tm_wday     range [0, 6],
-7     tm_yday     range [1, 366]
-8     tm_isdst"""
+class time_controller(threading.Thread):
+    
 
-print (time.strftime("%a, %d %b %Y %H:%M:%S +0000",time.localtime()))
-time.localtime()[1]
-
-    def __init__(selfparams):
+    def __init__(self, un_current_state):
         '''
-        Constructor
+    
+        
+        manage the schedule of the temporium"""
         '''
+        
+        threading.Thread.__init__ (self, target=self.run)
+        self.current_state = un_current_state
+        """like [hour, minute]"""
+        self.time_start_day = self.current_state.config_manager.get_time_controller("START_DAY")
+        self.time_end_day = self.current_state.config_manager.get_time_controller("END_DAY")
+        
+        
+    def run(self):
+        
+        while True : 
+            if self.current_state.get_current_time_controller_state("renew_heavy_AQ") :
+                if  self.renew_heavy_AQ_state() and self.expo_open() :
+                        
+                        
+                        print("start cycle heavy for this day")
+                        self.current_state.set_current_action_aquarium_evolved("aquarium_cycle_heavy", True)
+                        #time.sleep(5)
+                        while self.current_state.get_current_action_aquarium_evolved("aquarium_cycle_heavy") : 
+                            time.sleep(5) 
+                        print("renew cycle heavy done for this day")
+                        """set this action to done"""
+                        self.current_state.set_daily_action_day("renew_heavy_AQ",int(time.strftime("%d",time. localtime())) )
+                        self.current_state.set_daily_action_state("renew_heavy_AQ",True )
+                        
+                
+            
+            if self.current_state.get_current_time_controller_state("exposition") : 
+                 
+                if self.expo_open() :
+                    """start the day with  renew heavy""" 
+                    
+                    print("Start film")
+                    self.current_state.set_current_film_state("film", True)
+                    
+                    while self.current_state.get_current_film_state("film") : 
+                        time.sleep(5)
+                    
+                    print("End film")
+                    
+                    print("start cycle light for this day")
+                    self.current_state.set_current_action_aquarium_evolved("aquarium_cycle_light", True)
+                    #time.sleep(5)
+                    while self.current_state.get_current_action_aquarium_evolved("aquarium_cycle_light") : 
+                        time.sleep(5) 
+                    print("renew cycle light for this day")
+            
+            
+                    
+                
+                
+                
+            time.sleep(5)
+                
+    
+    def renew_heavy_AQ_state(self):
+        
+        print(self.current_state.get_daily_action_state("renew_heavy_AQ"))
+        
+        if not (self.current_state.get_daily_action_day("renew_heavy_AQ") == int(time.strftime("%d",time. localtime()))) :
+            state = True
+        else : 
+            state = not self.current_state.get_daily_action_state("renew_heavy_AQ")   
+        return state
+        
+        
+    def expo_open(self):
+        """get the time and check if the expo is open"""
+        """conversion in minute to simplify"""
+        time_start_day_minute  = self.time_start_day[0]*60 + self.time_start_day[1]
+        time_end_day_minute  = self.time_end_day[0]*60 + self.time_end_day[1]
+        
+        state = False 
+        current_time_minute  = int(time.strftime("%H",time. localtime())) * 60 + int(time.strftime("%M",time. localtime()))
+        if  current_time_minute > time_start_day_minute and \
+            current_time_minute < time_end_day_minute :
+            
+            state = True
+            
+        return state 
+            
         
