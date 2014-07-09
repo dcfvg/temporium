@@ -62,11 +62,12 @@ if __name__ == "__main__":
     
     saving_th = saving_state_thread(cu_state)
     saving_th.start()
+    
+    time_cont = time_controller(cu_state)
+    time_cont.start()
     """start time_controller"""
-    cu_state.set_current_time_controller_state("exposition", False)
-    cu_state.set_current_time_controller_state("renew_heavy_AQ", False)
-    
-    
+    cu_state.set_current_time_controller_state("renew_heavy_AQ", True)
+    cu_state.set_current_time_controller_state("exposition", True)
     
     """will be an option later"""
     GUI = True

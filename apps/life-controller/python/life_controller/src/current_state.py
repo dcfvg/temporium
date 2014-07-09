@@ -1307,14 +1307,8 @@ class current_state(object):
     def set_current_time_controller_state(self, name, state):
         """set the value of formation_rate"""
         if  not (self.get_current_time_controller_state( name) == state) :
-            if state :
-                self._time_controller = time_controller(self)
                 self._set_current_time_controller_state(name, state)
-                self._time_controller.start()
-            else : 
-                self._set_current_time_controller_state(name, state)
-    
-                
+                           
     def _set_current_time_controller_state(self, name, state):
         """set the value of formation_rate"""
         self._current_time_controller_state[name][0].acquire()

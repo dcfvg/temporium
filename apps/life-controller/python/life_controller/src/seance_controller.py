@@ -70,7 +70,7 @@ class seance_controller(threading.Thread):
         
         print("screen outside down begin")
         self.current_state.set_current_action_lift_screen("screen_down_outside")
-        while self.current_state.set_current_action_lift_screen("screen_down_outside") : 
+        while self.current_state.get_current_action_lift_screen("screen_down_outside") : 
             time.sleep(2)
         print("screen outside down finish")
         
@@ -99,7 +99,7 @@ class seance_controller(threading.Thread):
         
         print("screen outside up begin")
         self.current_state.set_current_action_lift_screen("screen_up_outside")
-        while self.current_state.set_current_action_lift_screen("screen_up_outside") : 
+        while self.current_state.get_current_action_lift_screen("screen_up_outside") : 
             time.sleep(2)
         print("screen outside up finish")
         
