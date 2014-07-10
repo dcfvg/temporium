@@ -34,11 +34,13 @@ class window(Tk):
         try : 
             self.file = filedialog.askopenfilename(parent = self, title="Choisir Image BR")
       
-            self.visual_feedback  = visual_feedback(self, self.file)
-            
             self.button_manuel.display_button()
         except Exception as e: 
             print(str(e))
+            
+        self.visual_feedback  = visual_feedback(self, self.file, self.button_manuel.method.get())
+            
+        
             
         
 

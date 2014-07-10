@@ -14,16 +14,13 @@ class image_level():
 		self.diff = dict()
 		self.gaussian_radius = dict()
 		self.nb_pixel_level_line = dict()
-		
-		self.image_upside_down  = True 
-
 
 		"""for pao method"""
 		self.method_pao = True
 
 		self.window = un_window
 		
-		self.config_detection_read_for = ["AQ"]
+		self.config_detection_read_for = ["BR1", "BR2", "BR3"]
 		
 		self.read_config_detection()
 	
@@ -76,17 +73,12 @@ class image_level():
 	def get_level(self,image_full_name, name_container,  crop):
 		
 		image_full = Image.open(image_full_name)
-		
-		if self.image_upside_down : 
-			image_full = image_full.rotate(180)
-
 		self.image_cropping(image_full, name_container,crop[0], crop[1], crop[2], crop[3] )
 		
 		return self.level_mesure(name_container+".jpg", name_container)
 		
 		
 	def image_cropping(self, image_a_traiter,outfile,a,b,c,d):
-		
 
 		uneImage = image_a_traiter.crop((a,b,c,d))
 		

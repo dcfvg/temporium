@@ -20,7 +20,7 @@ class image_level():
 
 		self.window = un_window
 		
-		self.config_detection_read_for = ["BU1", "BU2", "BU3"]
+		self.config_detection_read_for = ["BR1", "BR2", "BR3"]
 		
 		self.read_config_detection()
 	
@@ -71,6 +71,7 @@ class image_level():
 	
 	
 	def get_level(self,image_full_name, name_container,  crop):
+		
 		image_full = Image.open(image_full_name)
 		self.image_cropping(image_full, name_container,crop[0], crop[1], crop[2], crop[3] )
 		
@@ -78,7 +79,6 @@ class image_level():
 		
 		
 	def image_cropping(self, image_a_traiter,outfile,a,b,c,d):
-		
 
 		uneImage = image_a_traiter.crop((a,b,c,d))
 		

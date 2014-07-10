@@ -25,7 +25,7 @@ class visual_feedback(Canvas):
     """Notre fenetre principale.
     Tous les widgets sont stockes comme attributs de cette fenetre."""
     
-    def __init__(self, parent, file):
+    def __init__(self, parent, file, method):
         
         self.image = Image.open(file)
         """coeef od reduction for the image"""
@@ -46,6 +46,8 @@ class visual_feedback(Canvas):
         self.first = True 
 
         self.bind("<Configure>", self.resize)
+        
+        
        
         
 
@@ -61,8 +63,8 @@ class visual_feedback(Canvas):
         
         """crop values for BU : pixel value in cropped image"""
         self.dict_level = {"BU1" :  0,\
-                           "BU2" :  0,\
-                           "BU3" :  0}
+                               "BU2" :  0,\
+                               "BU3" :  0}
         
         """line for showing level"""
         self.dict_line_level = {"BU1" :  [0, [0,0,0,0],self.create_line(0,0,0,0, fill="white")],\
@@ -72,6 +74,12 @@ class visual_feedback(Canvas):
         self.current_rect = "NULL"
         
         self._in_canvas = False
+        
+        if method =="manual" :
+            self.bind("<ButtonPress-1>", self.draw_line_press)
+            self.bind("<B1-Motion>", self.draw_line)
+            self.bind("<Enter>", self.enter)
+            self.bind("<Leave>", self.leave)
         
     def resize(self, event):
         """if first time, create photo"""
@@ -123,7 +131,7 @@ class visual_feedback(Canvas):
             self.first = False 
         else :
             #print ("daz")
-            self.current_rect = "NULL"
+            #self.current_rect = "NULL"
             """called when the user resize the windows, draw the graphics to the new scale"""
             #print ("winfo_height" + str(self.winfo_height()))
             #print ("winfo_width" + str(self.winfo_width()))
@@ -155,6 +163,7 @@ class visual_feedback(Canvas):
                  int(self.dict_rect[name][1][3]*self.image_size_y)] 
         return coord
     
+    """teake the name of the container, the pixel value in the ropped image"""
     def set_dec_level(self, name, value):
         """pixel value in cropped image""" 
         self.dict_level[name] = value
@@ -232,6 +241,7 @@ class visual_feedback(Canvas):
                     
                     """set in rectangle pixel for crop """
                     self.dict_rect_crop[list[0].strip()] = coord
+        
         except Exception as e : 
             print(str(e))
             print ("no file : config_crop_BU.txt in the directory")
@@ -243,10 +253,41 @@ class visual_feedback(Canvas):
     def leave(self, event):
         self._in_canvas = False  
 
+    """return the name of the container where the pointer is"""
+    def get_in_container(self, percent_x, percent_y):
+        name_container = "NULL"
+        for item in self.dict_rect : 
+            if percent_x > self.dict_rect[item][1][0] and\
+               percent_x <self.dict_rect[item][1][2] and\
+               percent_y > self.dict_rect[item][1][1] and\
+               percent_y < self.dict_rect[item][1][3] : 
+               
+                name_container = item
+        return name_container
+            
+               
 
+    def draw_line_press(self, event):
         
+        if not self.parent.button_manuel._type_detection == "NULL" :
+            name_container = self.get_in_container(event.x/self.winfo_width(), event.y/self.winfo_height())
+            self.current_rect = name_container 
+            
+            if not self.current_rect == "NULL" : 
+                
+                """geting pixel value in the cropped image"""
+                value = (event.y / self.winfo_height())*self.image_size_y - self.dict_rect_crop[self.current_rect][1] 
+                self.set_dec_level(self.current_rect, value )
+            
         
-        
- 
-           
+    def draw_line(self, event):
+        if not self.parent.button_manuel._type_detection == "NULL" :
+            self.current_rect = self.get_in_container(event.x/self.winfo_width(), event.y/self.winfo_height())
+            if not self.current_rect == "NULL" :
+                 
+                """geting pixel value in the cropped image"""
+                value = (event.y / self.winfo_height())*self.image_size_y - self.dict_rect_crop[self.current_rect][1] 
+                self.set_dec_level(self.current_rect, value )
+            
+              
     
