@@ -77,6 +77,8 @@ class BRBU_controller (threading.Thread):
             
             while self.current_state.get_BRBU_controller_state("run") :
                 
+                self._load_value_config()
+                
                 """way of knowing time betweeen two round"""
                 if self.fake :
                     self.current_time_cycle = self.current_time_cycle + (self.fake_clock.time() - self.old_time)
@@ -262,6 +264,8 @@ class BRBU_controller (threading.Thread):
                     print ("no information about level : BR_BU cycle in pause")
                     self.current_state.set_BRBU_controller_state("pause", True)
                     self.try_to_unpaused()
+                if not self.current_state.get_security_checking("EL_max") : 
+                    self.current_state.set_BRBU_controller_state("pause", True)
                 self.current_state.set_state_pump(pump_name, True)
                 self._get_pause(pump_name,0)
                 time.sleep(0.2)

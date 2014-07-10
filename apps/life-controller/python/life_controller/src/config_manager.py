@@ -138,6 +138,7 @@ class config_manager(object):
     
     """return the value corresponding to the name you asked : ex "TIME" here""" 
     def get_renew_light_AQ(self, name):
+        self.read_config()
         self.lock.acquire()
         value = self._renew_light_AQ_value[name]      
         self.lock.release()
@@ -150,6 +151,7 @@ class config_manager(object):
     
     """return the value corresponding to the name you asked : ex "TIME" here""" 
     def get_spectro(self, name):
+        self.read_config()
         self.lock.acquire()
         value = self._spectro[name]      
         self.lock.release()
@@ -162,6 +164,7 @@ class config_manager(object):
     
     """return the value corresponding to the name you asked : ex "TIME" here""" 
     def get_auto_AQ_filtration(self, name):
+        self.read_config()
         self.lock.acquire()
         value = self._auto_AQ_filtration_value[name]      
         self.lock.release()
@@ -174,6 +177,7 @@ class config_manager(object):
     
     """return the value corresponding to the name you asked : ex "TIME" here""" 
     def get_film(self, name):
+        self.read_config()
         self.lock.acquire()
         value = self._film[name]      
         self.lock.release()
@@ -186,6 +190,7 @@ class config_manager(object):
     
     """return the value corresponding to the name you asked : ex "TIME" here""" 
     def get_time_controller(self, name):
+        self.read_config()
         self.lock.acquire()
         value = self._time_controller[name]      
         self.lock.release()
@@ -199,6 +204,7 @@ class config_manager(object):
     
     """return the value corresponding to the name you asked : ex "BU_FULL" here""" 
     def get_BRBU_controller(self, name):
+        self.read_config()
         self.lock.acquire()
         value = self._BRBU_controller_value[name]    
         self.lock.release()
@@ -211,6 +217,7 @@ class config_manager(object):
     
     """return the value corresponding to the name you asked : ex "BU_FULL" here""" 
     def get_AQ(self, name):
+        self.read_config()
         self.lock.acquire()
         value = self._AQ[name]    
         self.lock.release()

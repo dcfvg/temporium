@@ -19,14 +19,15 @@ class time_controller(threading.Thread):
         threading.Thread.__init__ (self, target=self.run)
         self.current_state = un_current_state
         """like [hour, minute]"""
-        self.time_start_day = self.current_state.config_manager.get_time_controller("START_DAY")
-        self.time_end_day = self.current_state.config_manager.get_time_controller("END_DAY")
+        self._load_value_config()
         
         
         
     def run(self):
-        
+        print("start time_controller")
         while True :
+            self._load_value_config()
+            
             if self.current_state.get_current_time_controller_state("renew_heavy_AQ") :
                 
                 if  self.renew_heavy_AQ_state() and self.expo_open() :
@@ -99,5 +100,9 @@ class time_controller(threading.Thread):
             state = True
             
         return state 
-            
+    
+    def _load_value_config(self):
+        self.time_start_day = self.current_state.config_manager.get_time_controller("START_DAY")
+        self.time_end_day = self.current_state.config_manager.get_time_controller("END_DAY")
+         
         

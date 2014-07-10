@@ -44,8 +44,6 @@ class security_EL(threading.Thread):
                     print ("WARNING : " +name+ " boiled over ")
                     """there is a pb"""
                     self.boiling_over = True
-            else : 
-                print ("El " + name + " MAX not connected")
             
             name = "BR2"
             if not self.current_state.get_state_EL(name,"MAX") =="NULL" :
@@ -53,8 +51,6 @@ class security_EL(threading.Thread):
                     print ("WARNING : " +name+ " boiled over ")
                     """there is a pb"""
                     self.boiling_over = True
-            else : 
-                print ("El " + name + " MAX not connected")
             
             name = "BR3"
             if not self.current_state.get_state_EL(name,"MAX") =="NULL" :
@@ -62,8 +58,6 @@ class security_EL(threading.Thread):
                     print ("WARNING : " +name+ " boiled over ")
                     """there is a pb"""
                     self.boiling_over = True
-            else : 
-                print ("El " + name + " MAX not connected")
             
             name = "BU1"
             if not self.current_state.get_state_EL(name,"MAX") =="NULL" :
@@ -71,8 +65,6 @@ class security_EL(threading.Thread):
                     print ("WARNING : " +name+ " boiled over ")
                     """there is a pb"""
                     self.boiling_over = True
-            else : 
-                print ("El " + name + " MAX not connected")
             
             name = "BU2"
             if not self.current_state.get_state_EL(name,"MAX") =="NULL" :
@@ -80,8 +72,6 @@ class security_EL(threading.Thread):
                     print ("WARNING : " +name+ " boiled over ")
                     """there is a pb"""
                     self.boiling_over = True
-            else : 
-                print ("El " + name + " MAX not connected")
             
             name = "BU3"
             if not self.current_state.get_state_EL(name,"MAX") =="NULL" :
@@ -89,8 +79,6 @@ class security_EL(threading.Thread):
                     print ("WARNING : " +name+ " boiled over ")
                     """there is a pb"""
                     self.boiling_over = True
-            else : 
-                print ("El " + name + " MAX not connected")
             
             name = "AQ"
             if not self.current_state.get_state_EL(name,"MAX") =="NULL" :
@@ -98,8 +86,6 @@ class security_EL(threading.Thread):
                     print ("WARNING : " +name+ " boiled over ")
                     """there is a pb"""
                     self.boiling_over = True
-            else : 
-                print ("El " + name + " MAX not connected")
             
             self.lock_start.release()
             

@@ -386,6 +386,7 @@ class current_state(object):
                     self.set_state_pump("P_FI_AQ_3", state)
                     self._set_current_action("AQ_filtration",state)
                     
+                    
                  
                         
                 elif name == "fill_BU1_AQ" : 
@@ -741,69 +742,58 @@ class current_state(object):
         self.set_current_action_evolved(name_action)
     
     def set_current_action_evolved(self, name, state):
-        """check if there is no action running"""
-        b = True
-        for item in self._current_action_evolved : 
-            if not item == name :
-                if self.get_current_action_evolved(item) : 
-                    b = False
-        """if there is no action running"""
-        if b : 
-            if not self.get_current_action_evolved(name) == state : 
-                if name == "auto_AQ_filtration" : 
-                    if state : 
+        if not self.get_current_action_evolved(name) == state :
+            """if false"""
+            if not state :
+                self._set_current_action_evolved(name,False) 
+                
+                """if trying to begin an action"""
+            else : 
+                """check if there is no action running"""
+                b = True
+                for item in self._current_action_evolved : 
+                    if not item == name :
+                        if self.get_current_action_evolved(item) : 
+                            b = False
+                """if there is no action running"""
+                if b and self.get_security_checking("EL_max"): 
+             
+                    if name == "auto_AQ_filtration" : 
                         action = auto_AQ_filtration(self)
                         action.start()
-                            
-                    else : 
-                        """set the action to end, and will stop the current action""" 
-                        self._set_current_action_evolved("auto_AQ_filtration",False)
-                if name == "renew_light_AQ_BU1" : 
-                    if state : 
+                                
+                    if name == "renew_light_AQ_BU1" : 
+                         
                         action = renew_light_AQ_BU(self,"BU1")
                         action.start()
-                    else : 
-                        """set the action to end, and will stop the current action""" 
-                        self._set_current_action_evolved("renew_light_AQ_BU1",False)
-                if name == "renew_light_AQ_BU2" : 
-                    if state : 
+                        
+                    if name == "renew_light_AQ_BU2" : 
+                      
                         action = renew_light_AQ_BU(self,"BU2")
                         action.start() 
-                    else : 
-                        """set the action to end, and will stop the current action""" 
-                        self._set_current_action_evolved("renew_light_AQ_BU2",False)
-                if name == "renew_light_AQ_BU3" : 
-                    if state : 
+                       
+                    if name == "renew_light_AQ_BU3" : 
+                    
                         action = renew_light_AQ_BU(self,"BU3")
                         action.start()  
-                    else : 
-                        """set the action to end, and will stop the current action""" 
-                        self._set_current_action_evolved("renew_light_AQ_BU3",False)
-                if name == "renew_heavy_AQ_BU1" : 
-                    if state : 
+                        
+                    if name == "renew_heavy_AQ_BU1" : 
+                        
                         action = renew_heavy_AQ_BU(self,"BU1")
                         action.start()
-                            
-                    else : 
-                        """set the action to end, and will stop the current action""" 
-                        self._set_current_action_evolved("renew_heavy_AQ_BU1",False)
-                if name == "renew_heavy_AQ_BU2" : 
-                    if state : 
+                                
+                      
+                    if name == "renew_heavy_AQ_BU2" : 
+                       
                         action = renew_heavy_AQ_BU(self,"BU2")
                         action.start()
                             
-                    else : 
-                        """set the action to end, and will stop the current action""" 
-                        self._set_current_action_evolved("renew_heavy_AQ_BU2",False)
-                if name == "renew_heavy_AQ_BU3" : 
-                    if state : 
+                       
+                    if name == "renew_heavy_AQ_BU3" : 
+                      
                         action = renew_heavy_AQ_BU(self,"BU3")
                         action.start()
-                            
-                    else : 
-                        """set the action to end, and will stop the current action""" 
-                        self._set_current_action_evolved("renew_heavy_AQ_BU3",False)
-            
+                  
         else : 
             print("already a evolved task running")   
         
@@ -1016,9 +1006,11 @@ class current_state(object):
                     
                         """if False : get out from the pause"""
                     else : 
-                        self.BRBU_controller._lock_pause.release()
-                        self._set_BRBU_controller_state("pause",False)
-    
+                        """exit pause mode only if EL_max is active"""
+                        if self.get_security_checking("EL_max") : 
+                            self.BRBU_controller._lock_pause.release()
+                            self._set_BRBU_controller_state("pause",False)
+        
     """do not use this function"""
     def _set_BRBU_controller_state(self, type, state) : 
         self._BRBU_controller_state[type][0].acquire()
@@ -1129,7 +1121,7 @@ class current_state(object):
     """kill all action running, st all pump to false"""          
     def kill_all(self):
         
-        self.set_BRBU_controller_state("pause",False)
+        self.set_BRBU_controller_state("pause",True)
         
         for item in self._current_action_evolved : 
             self.set_current_action_evolved(item, False)
@@ -1168,7 +1160,6 @@ class current_state(object):
         for item in self._current_spectro_state : 
             self.set_current_spectro_state(item, False)
                 
-        
         for item in self._current_light_state : 
             self.set_current_light_state(item, False)
                 
