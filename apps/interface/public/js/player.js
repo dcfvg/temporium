@@ -208,6 +208,7 @@ function init() {
   function onMovieEnded(){
 
     socket.emit('message', "seance_end" , true);
+    socket.emit('oscMessage', ["seance_end", "1"]);
 
     reset();
   };

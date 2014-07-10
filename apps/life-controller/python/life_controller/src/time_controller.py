@@ -22,14 +22,11 @@ class time_controller(threading.Thread):
         self.time_start_day = self.current_state.config_manager.get_time_controller("START_DAY")
         self.time_end_day = self.current_state.config_manager.get_time_controller("END_DAY")
         
-        print("start time_controller")
         
         
     def run(self):
-        compt = 0
+        
         while True :
-            print ("time_controller" + str(compt)) 
-            compt = compt +1
             if self.current_state.get_current_time_controller_state("renew_heavy_AQ") :
                 
                 if  self.renew_heavy_AQ_state() and self.expo_open() :

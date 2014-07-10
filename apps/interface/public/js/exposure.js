@@ -44,6 +44,9 @@ function init() {
       case "/seance_end":
         onSeanceEnd();
       break;
+      case "/capture_stop":
+        onSeanceEnd();
+      break;
     }
   });
   // shortcuts

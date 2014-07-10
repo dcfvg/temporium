@@ -26,11 +26,10 @@ from time_controller import *
 def handler( signo, sig_frame):
     print("Exiting program")
     os._exit(0)
+    le_server.stop()
 
 if __name__ == "__main__":
-    for sig in [signal.SIGTERM, signal.SIGINT, signal.SIGHUP, signal.SIGQUIT]:
-            signal.signal(sig,handler)
-    
+   
     """test must be set to False when using with terminal mode"""
     test = False
     for i in sys.argv : 
@@ -68,6 +67,11 @@ if __name__ == "__main__":
     """start time_controller"""
     cu_state.set_current_time_controller_state("renew_heavy_AQ", True)
     cu_state.set_current_time_controller_state("exposition", True)
+
+    cu_state.set_security_checking("EL_max", True)
+    
+    for sig in [signal.SIGTERM, signal.SIGINT, signal.SIGHUP, signal.SIGQUIT]:
+        signal.signal(sig,handler)
     
     """will be an option later"""
     GUI = True
