@@ -11,4 +11,4 @@ occupied_volume : S : 0.15
 occupied_volume : BR1 : 1.1 
 occupied_volume : BU1 : 1.1 
 occupied_volume : BU3 : 1.1 
-daily_action : renew_heavy_AQ : True : 10 
+daily_action : AQ_cycle_heavy : True : 10 
