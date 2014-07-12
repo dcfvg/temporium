@@ -68,7 +68,7 @@ class image_level(threading.Thread):
 	def read_config_detection(self):
 		print("read config detection")
 		try : 
-			file = open("config/config_detection.txt", "r")
+			file = open("config/config_detection_AQ.txt", "r")
 			
 	
 			for ligne in file :
@@ -99,7 +99,7 @@ class image_level(threading.Thread):
 						
 		except Exception as e : 
 			print(str(e))
-			print ("no file : config_crop_BU.txt in the directory")
+			
 		
 
 			#ce sont les limites le limage
@@ -127,7 +127,7 @@ class image_level(threading.Thread):
 			
 		except Exception as e : 
 			print(str(e))
-			print ("no file : config/config_camera.txt in the directory")
+			
 			
 	# Read the values of TOP level and LOW level for each BU
 	def read_config_crop_AQ(self):
@@ -152,7 +152,7 @@ class image_level(threading.Thread):
 
 		except Exception as e : 
 			print(str(e))
-			print ("no file : config/config_crop_SPECTRO.txt in the directory")
+			
 			
 
 

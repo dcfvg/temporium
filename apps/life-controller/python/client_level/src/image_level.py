@@ -89,7 +89,7 @@ class image_level(threading.Thread):
 	def read_config_detection(self):
 		print("read config detection")
 		try : 
-			file = open("config/config_detection.txt", "r")
+			file = open("config/config_detection_BR.txt", "r")
 			
 	
 			for ligne in file :
@@ -116,10 +116,45 @@ class image_level(threading.Thread):
 						elif name_parameter == "NB_PIXEL_LEVEL_LINE" :
 							self.nb_pixel_level_line[name_container] = value
 					
-						
+			file.close()
 		except Exception as e : 
 			print(str(e))
-			print ("no file : config_crop_BU.txt in the directory")
+			
+		
+		
+		try : 
+			file2 = open("config/config_detection_BU.txt", "r")
+			
+	
+			for ligne2 in file2 :
+				"""Take out the end symbols (\n)"""
+				ligne2 = ligne2.strip()
+				"""split on  ':' """
+				list = ligne2.split(":")	
+				
+				name_container = list[0].strip()
+				for name in self.config_detection_read_for:
+					if name_container == name :
+						name_parameter = list[1].strip()
+						value = int(list[2].strip())
+						
+						if name_parameter == "JUMP_PIXEL" : 
+							self.jump_pixel[name_container] = value
+						
+						elif name_parameter == "DIFF" : 
+							self.diff[name_container] = value
+						
+						elif name_parameter == "GAUSSIAN_RADIUS" :
+							self.gaussian_radius[name_container] = value
+							
+						elif name_parameter == "NB_PIXEL_LEVEL_LINE" :
+							self.nb_pixel_level_line[name_container] = value
+					
+			file2.close()
+		except Exception as e : 
+			print(str(e))
+			
+			
 		
 
 			#ce sont les limites le limage
@@ -197,7 +232,7 @@ class image_level(threading.Thread):
 			
 		except Exception as e : 
 			print(str(e))
-			print ("no file : config/config_crop_SPECTRO.txt in the directory")
+			
 			
 	
 	def read_config_crop_BU(self):
@@ -247,7 +282,7 @@ class image_level(threading.Thread):
 			
 		except Exception as e : 
 			print(str(e))
-			print ("no file : config/config_crop_SPECTRO.txt in the directory")
+			
 			
 
 	# Read the coordinates for the image cropping of each BU 

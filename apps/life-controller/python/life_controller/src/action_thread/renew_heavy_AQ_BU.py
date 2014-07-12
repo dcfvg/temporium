@@ -160,7 +160,7 @@ class renew_heavy_AQ_BU(threading.Thread):
                   self.current_state.get_information_asked("level") and \
                   self.current_state.get_occupied_volume (self.BU_use) > self.BU_empty :
 
-                time.sleep(0.05)
+                time.sleep(0.02)
             self.current_state.fill_BU_AQ(BU_use, False)
             
             
@@ -168,10 +168,10 @@ class renew_heavy_AQ_BU(threading.Thread):
             self.current_state.set_state_pump("P_M2_AQ", True)
             while (not self.current_state.get_state_EL("AQ","HIGH")) and\
                   self.current_state.get_current_action_evolved("renew_heavy_AQ_"+self.BU_use): 
-                time.sleep(0.05)
+                time.sleep(0.02)
             self.current_state.set_state_pump("P_M2_AQ", False)
             
-            self.current_state.set_information_asked("level", True)
+            self.current_state.set_information_asked("level", False)
             
     def det_volume_to_fill_BU(self,current_concentration ):  
         diff = current_concentration - self.optimal_concentration

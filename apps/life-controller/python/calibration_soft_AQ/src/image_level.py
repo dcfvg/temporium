@@ -32,7 +32,7 @@ class image_level():
 	def read_config_detection(self):
 		print("read")
 		try : 
-			file = open("config/config_detection.txt", "r")
+			file = open("config/config_detection_AQ.txt", "r")
 			
 	
 			for ligne in file :

@@ -41,6 +41,8 @@ class config_manager(object):
         
         self._spectro = {"WAIT" : 0}
         
+        self._saving = {"action_time" : "NULL"}
+        
         
         
         """read the config at first"""
@@ -106,6 +108,11 @@ class config_manager(object):
                 name = list[1].strip()
                 value = int(list[2].strip())
                 self._set_film(name, value)  
+            
+            elif key  == "saving" :
+                name = list[1].strip()
+                value = list[2].strip()
+                self._set_saving(name, value)  
                 
             elif key  == "time_controller" :
                 try : 
@@ -222,4 +229,14 @@ class config_manager(object):
         value = self._AQ[name]    
         self.lock.release()
         return value     
+    """SAVING"""
+    def _set_saving(self, name, value):
+        self._saving[name] = value  
+    
+    def get_saving(self, name):
+        self.read_config()
+        self.lock.acquire()
+        value = self._saving[name]    
+        self.lock.release()
+        return value 
                 

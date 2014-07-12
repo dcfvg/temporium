@@ -206,7 +206,7 @@ class image_spectro(threading.Thread):
 		PathToFile = "image/"
 
 		#print ("capture")
-		os.system("imagesnap -d " + self.camera_SPECTRO + " " + PathToFile + "im_spectro.jpeg")
+		#os.system("imagesnap -d " + self.camera_SPECTRO + " " + PathToFile + "im_spectro.jpeg")
 		try : 
 			succed = False
 			while not succed : 

@@ -1,3 +1,0 @@
-Temporium
-CONFIGURATION_CROP  : AQ 
-AQ : 790, 133, 804, 910

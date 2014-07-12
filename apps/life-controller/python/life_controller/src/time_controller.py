@@ -25,22 +25,25 @@ class time_controller(threading.Thread):
         
     def run(self):
         print("start time_controller")
+        print("begin in 30 seconds")
+        time.sleep(30)
         while True :
             self._load_value_config()
             
-            if self.current_state.get_current_time_controller_state("renew_heavy_AQ") :
+            if self.current_state.get_current_time_controller_state("AQ_cycle_heavy") :
                 
-                if  self.renew_heavy_AQ_state() and self.expo_open() :
+                if  self.AQ_cycle_heavy_state() and self.expo_open() :
                         
                         print("start cycle heavy for this day")
+                        
                         self.current_state.set_current_action_aquarium_evolved("aquarium_cycle_heavy", True)
                         #time.sleep(5)
                         while self.current_state.get_current_action_aquarium_evolved("aquarium_cycle_heavy") : 
                             time.sleep(5) 
                         print("renew cycle heavy done for this day")
                         """set this action to done"""
-                        self.current_state.set_daily_action_day("renew_heavy_AQ",int(time.strftime("%d",time. localtime())) )
-                        self.current_state.set_daily_action_state("renew_heavy_AQ",True )
+                        self.current_state.set_daily_action_day("AQ_cycle_heavy",int(time.strftime("%d",time. localtime())) )
+                        self.current_state.set_daily_action_state("AQ_cycle_heavy",True )
                         
                 
             
@@ -65,7 +68,7 @@ class time_controller(threading.Thread):
                     #time.sleep(5)
                     while self.current_state.get_current_action_aquarium_evolved("aquarium_cycle_light") : 
                         time.sleep(5) 
-                    print("renew cycle light for this day")
+                    print("renew cycle light done for this day")
             
             
                     
@@ -75,14 +78,14 @@ class time_controller(threading.Thread):
             time.sleep(5)
                 
     
-    def renew_heavy_AQ_state(self):
+    def AQ_cycle_heavy_state(self):
         
         #print(self.current_state.get_daily_action_state("renew_heavy_AQ"))
         
-        if not (self.current_state.get_daily_action_day("renew_heavy_AQ") == int(time.strftime("%d",time. localtime()))) :
+        if not (self.current_state.get_daily_action_day("AQ_cycle_heavy") == int(time.strftime("%d",time. localtime()))) :
             state = True
         else : 
-            state = not self.current_state.get_daily_action_state("renew_heavy_AQ")   
+            state = not self.current_state.get_daily_action_state("AQ_cycle_heavy")   
         return state
         
         

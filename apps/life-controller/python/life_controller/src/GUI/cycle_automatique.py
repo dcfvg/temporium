@@ -31,7 +31,7 @@ class cycle_automatique(Frame):
         
         
         self.button_current_time_controller_state = {"exposition": [0],\
-                                                     "renew_heavy_AQ" : [1]}
+                                                     "AQ_cycle_heavy" : [1]}
                                                                                           
         
 
@@ -110,8 +110,8 @@ class cycle_automatique(Frame):
         for item in self.button_current_time_controller_state : 
             if item =="exposition" : 
                 self.button_current_time_controller_state[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_current_time_controller_state("exposition")))   
-            if item =="renew_heavy_AQ" : 
-                self.button_current_time_controller_state[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_current_time_controller_state("renew_heavy_AQ")))   
+            if item =="AQ_cycle_heavy" : 
+                self.button_current_time_controller_state[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_current_time_controller_state("AQ_cycle_heavy")))   
 
     def _build_button_BRBU_controller(self):
         for item in self.button_BRBU_controller : 

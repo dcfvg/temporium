@@ -9,6 +9,7 @@ import os
 import signal
 import time
 
+
 class saving_state_thread (threading.Thread):
 
     def __init__ (self, un_current_state):
@@ -16,8 +17,10 @@ class saving_state_thread (threading.Thread):
         threading.Thread.__init__ (self, target=self.run)
         
         self.current_state = un_current_state
-
         
+        self._saving_action_url = self.current_state.config_manager.get_saving("action_time")
+        self.file_action = open(self._saving_action_url +"/action_done"+ time.strftime("%d_%b_%Y_%H:%M:%S",time. localtime())+".txt","w")
+
 
     def run(self):
         while True : 
@@ -37,6 +40,9 @@ class saving_state_thread (threading.Thread):
 
         save_file.flush()
         
+    def write_action(self, action_string):
+        self.file_action.write(time.strftime("%d_%b_%Y_%H:%M:%S",time. localtime()) + " : "+ action_string +"\n")
+        self.file_action.flush()
     
     
         

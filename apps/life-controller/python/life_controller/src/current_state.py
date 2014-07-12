@@ -98,7 +98,7 @@ class current_state(object):
         
         
         
-        self._current_time_controller_state = {"exposition" : [threading.Lock(), False], "renew_heavy_AQ" : [threading.Lock(), False]}
+        self._current_time_controller_state = {"exposition" : [threading.Lock(), False], "AQ_cycle_heavy" : [threading.Lock(), False]}
         
         
         """current_spectro_state"""
@@ -138,7 +138,7 @@ class current_state(object):
       
         
         """lock, state, day, in order to know if these action have been done yet"""
-        self._daily_action = {"renew_heavy_AQ" : [threading.Lock(), False, 0]}
+        self._daily_action = {"AQ_cycle_heavy" : [threading.Lock(), False, 0]}
         
         """if there is a GUI or not"""
         self.GUI = False 
@@ -548,17 +548,18 @@ class current_state(object):
     def set_current_action_aquarium_evolved(self, name, state):
         if not self.get_current_action_aquarium_evolved(name) == state : 
             """check if there is no action running"""
-            b = True
-            for item in self._current_action_evolved : 
-                if not item == name :
-                    if self.get_current_action_evolved(item) : 
-                        b = False
-            """if there is no action running"""
-            if b : 
-                self._set_current_action_aquarium_evolved(name, state)
-                if state : 
-                    self.aquarium_controller.start_aquarium_controller_action_name(name)
-                    
+            if self.get_security_checking("EL_max") : 
+                b = True
+                for item in self._current_action_evolved : 
+                    if not item == name :
+                        if self.get_current_action_evolved(item) : 
+                            b = False
+                """if there is no action running"""
+                if b : 
+                    self._set_current_action_aquarium_evolved(name, state)
+                    if state : 
+                        self.aquarium_controller.start_aquarium_controller_action_name(name)
+                        
                    
         
     def _set_current_action_aquarium_evolved(self, name, state):
@@ -1340,6 +1341,9 @@ class current_state(object):
         
     def set_aquarium_controller(self, un_aquarium_controller):
         self.aquarium_controller = un_aquarium_controller
+        
+    def set_saving_state_thread(self, un_saving_state_thread):
+        self.saving_state_thread = un_saving_state_thread
     
     """function to call each time something changes"""     
     def refresh_windows(self):

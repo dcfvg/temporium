@@ -25,8 +25,9 @@ from time_controller import *
         
 def handler( signo, sig_frame):
     print("Exiting program")
-    os._exit(0)
     le_server.stop()
+    os._exit(0)
+    
 
 if __name__ == "__main__":
     
@@ -60,12 +61,13 @@ if __name__ == "__main__":
     cu_state.set_security_EL(s)
     
     saving_th = saving_state_thread(cu_state)
+    cu_state.set_saving_state_thread(saving_th)
     saving_th.start()
     
     time_cont = time_controller(cu_state)
     time_cont.start()
     """start time_controller"""
-    cu_state.set_current_time_controller_state("renew_heavy_AQ", True)
+    cu_state.set_current_time_controller_state("AQ_cycle_heavy", True)
     cu_state.set_current_time_controller_state("exposition", True)
     
     cu_state.set_security_checking("EL_max", True)

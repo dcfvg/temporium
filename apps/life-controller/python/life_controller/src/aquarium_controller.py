@@ -44,6 +44,7 @@ class aquarium_controller(threading.Thread):
  
  
     def _aquarium_cycle_light(self):
+        self.current_state.saving_state_thread.write_action("aquarium_cycle_light starts")
         
         
         """cycle less that 1% of the aquarium at the end of each film"""
@@ -89,8 +90,11 @@ class aquarium_controller(threading.Thread):
         """function to call to save the state"""
         #self.current_state.saving_state()
          
+        self.current_state.saving_state_thread.write_action("aquarium_cycle_light ends")
                 
     def _aquarium_cycle_heavy(self):
+        
+        self.current_state.saving_state_thread.write_action("aquarium_cycle_heavy starts")
         """recycle 10% of the aquarium at the end of each film"""        
         
         """stop filtration"""
@@ -136,7 +140,7 @@ class aquarium_controller(threading.Thread):
             current_concentration = self.current_state.get_spectro_mesure()
             print("current concentration AQ : " + str(current_concentration))
         
-
+        self.current_state.saving_state_thread.write_action("aquarium_cycle_heavy ends")
         
          
             

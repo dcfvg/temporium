@@ -142,6 +142,8 @@ class renew_light_AQ_BU(threading.Thread):
                 time.sleep(0.5)
                 
             self.current_state.fill_BU_AQ(BU_use, False)
+            print("AQ HIGH " + str(self.current_state.get_state_EL("AQ","HIGH")))
+            
             
             """completion with M2"""
             self.current_state.set_state_pump("P_M2_AQ", True)

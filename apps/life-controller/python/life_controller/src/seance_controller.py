@@ -66,6 +66,7 @@ class seance_controller(threading.Thread):
     def film_begin(self):
         self._time_out = self.current_state.config_manager.get_film("TIME_OUT")
         print("film time begin")
+        self.current_state.saving_state_thread.write_action("film starts")
         #time.sleep(5)
         
         print("screen outside down begin")
@@ -102,7 +103,7 @@ class seance_controller(threading.Thread):
         while self.current_state.get_current_action_lift_screen("screen_up_outside") : 
             time.sleep(2)
         print("screen outside up finish")
-        
+        self.current_state.saving_state_thread.write_action("film ends")
     def _create_client(self, ip, port):
         """create an UDP client on port and ip"""
         self.client_seance = client_OSC_seance(self, ip, port)
