@@ -257,31 +257,46 @@ class BRBU_controller (threading.Thread):
     """ACTION TAKEN BY BRBU_CONTROLLER"""          
     """fill container_name, with pump_name unti volume_order in conatainer_name"""
     def fill_BRBU(self, pump_name, container_name, volume_order):
+        self.current_state.set_information_asked("level", True)
+        time.sleep(20)
+        if not self.current_state.get_information_asked("level") : 
+            print ("no information about level : BR_BU cycle in pause")
+            self.current_state.set_BRBU_controller_state("pause", True)
+            self.try_to_unpaused()
+        if not self.current_state.get_security_checking("EL_max") : 
+            self.current_state.set_BRBU_controller_state("pause", True)
             
-            while self.current_state.get_occupied_volume(container_name) < volume_order and self.current_state.get_BRBU_controller_state("run") :
-                self.current_state.set_information_asked("level", True)
-                if not self.current_state.get_information_asked("level") : 
-                    print ("no information about level : BR_BU cycle in pause")
-                    self.current_state.set_BRBU_controller_state("pause", True)
-                    self.try_to_unpaused()
-                if not self.current_state.get_security_checking("EL_max") : 
-                    self.current_state.set_BRBU_controller_state("pause", True)
-                self.current_state.set_state_pump(pump_name, True)
-                self._get_pause(pump_name,0)
-                time.sleep(0.2)
-                """maybe add : if pump is in manuel-mode, end the manuel mode"""
-            self.current_state.set_state_pump(pump_name, False)
-            
-            self.current_state.set_information_asked("level", False)
+        while self.current_state.get_occupied_volume(container_name) < volume_order and self.current_state.get_BRBU_controller_state("run") :
+            self.current_state.set_information_asked("level", True)
+            if not self.current_state.get_information_asked("level") : 
+                print ("no information about level : BR_BU cycle in pause")
+                self.current_state.set_BRBU_controller_state("pause", True)
+                self.try_to_unpaused()
+            if not self.current_state.get_security_checking("EL_max") : 
+                self.current_state.set_BRBU_controller_state("pause", True)
+            self.current_state.set_state_pump(pump_name, True)
+            self._get_pause(pump_name,0)
+            time.sleep(0.2)
+            """maybe add : if pump is in manuel-mode, end the manuel mode"""
+        self.current_state.set_state_pump(pump_name, False)
+        
+        self.current_state.set_information_asked("level", False)
         
     
     """empty container_name with action_name until volume_order in container_name"""   
     def empty_BU(self, action_name, container_name, volume_order):
-
+        
         
         """to avoid wasting BU"""
         if False : 
             self.current_state.set_information_asked("level", True)
+            time.sleep(20)
+            if not self.current_state.get_information_asked("level") : 
+                print ("no information about level : BR_BU cycle in pause")
+                self.current_state.set_BRBU_controller_state("pause", True)
+                self.try_to_unpaused()
+            if not self.current_state.get_security_checking("EL_max") : 
+                self.current_state.set_BRBU_controller_state("pause", True)
             while self.current_state.get_occupied_volume(container_name) > volume_order and self.current_state.get_BRBU_controller_state("run")  :
                 self.current_state.set_information_asked("level", True)
                 if not self.current_state.get_information_asked("level") : 

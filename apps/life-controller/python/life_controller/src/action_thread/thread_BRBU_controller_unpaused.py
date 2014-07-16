@@ -26,6 +26,7 @@ class thread_BRBU_controller_unpaused(threading.Thread):
             time.sleep(self.wait_time_before_try)
             """wait x seconds"""
             self.current_state.set_information_asked("level", True)
+            time.sleep(20)
               
         self.current_state.set_BRBU_controller_state("pause", False)
             
