@@ -72,7 +72,9 @@ class server_level(threading.Thread):
                             
                                 
                             else : 
-                                print ("message null" + cont + " "  + vol)
+                                #print ("message null" + cont + " "  + vol)
+                                pass
+                                
                         except Exception:
 
                             #print(self.name +" Message does not fit the protocol " + msg)
