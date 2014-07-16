@@ -10,5 +10,5 @@ EL : BU3 : MAX : 1.1
 EL : AQ : MAX : 1.1
 EL : AQ : HIGH : 1
 comments : electrode de 10% du vidage de l'aq
-EL : AQ : MIDDLE : 0.9
+EL : AQ : MIDDLE : 0.95
 EL : AQ : MIN : 0.05
