@@ -45,6 +45,9 @@ class image_level(threading.Thread):
 		self.coordinates_crop ={"AQ" :  [0,0,0,0],\
 							   }
 
+		"""time to wait for shooting photo"""
+		self._time_wait_webcam = 8
+		
 		# Dictionnaries that gather of TOP and LOW levels for calibration
 		self.calibration_values = {'AQ':{'HIGH':0,'LOW':0}}
 
@@ -315,7 +318,7 @@ class image_level(threading.Thread):
 				a = subprocess.Popen(["imagesnap", "-d", self.camera_BR_BU ,PathToFile + "im_AQ_level.jpeg"])
 
 				compt = 0
-				while compt < 4 :
+				while compt < self._time_wait_webcam :
 					time.sleep(1)
 					compt = compt +1
 					#print ("wait" + str(compt))

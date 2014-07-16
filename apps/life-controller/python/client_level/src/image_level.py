@@ -49,6 +49,8 @@ class image_level(threading.Thread):
 		if self.archives : 
 			self.Values = open("les_mesures.txt","w")
 
+		"""time to wait for shooting photo"""
+		self._time_wait_webcam = 8
 
 
 		# Coordinates for the cropped images
@@ -638,7 +640,7 @@ class image_level(threading.Thread):
 					a = subprocess.Popen(["imagesnap", "-d", self.camera_BR_BU ,PathToFile + "im_B_level.jpeg"])
 
 					compt = 0
-					while compt < 4 :
+					while compt < self._time_wait_webcam :
 						time.sleep(1)
 						compt = compt +1
 						#print ("wait" + str(compt))
