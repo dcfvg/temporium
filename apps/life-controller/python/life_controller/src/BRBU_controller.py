@@ -51,6 +51,7 @@ class BRBU_controller (threading.Thread):
                                        "BU_EMPTY" :[threading.Lock(), 0],\
                                        "FILLING_BR_BU" :[threading.Lock(), 0],\
                                        }
+        self._time_wait_webcam = 60
         
         self._reset_time()
 
@@ -257,8 +258,9 @@ class BRBU_controller (threading.Thread):
     """ACTION TAKEN BY BRBU_CONTROLLER"""          
     """fill container_name, with pump_name unti volume_order in conatainer_name"""
     def fill_BRBU(self, pump_name, container_name, volume_order):
+        print ("fill " + container_name +"with " + str(volume_order))
         self.current_state.set_information_asked("level", True)
-        time.sleep(60)
+        time.sleep(self._time_wait_webcam)
         if not self.current_state.get_information_asked("level") : 
             print ("no information about level : BR_BU cycle in pause")
             self.current_state.set_BRBU_controller_state("pause", True)
@@ -290,7 +292,7 @@ class BRBU_controller (threading.Thread):
         """to avoid wasting BU"""
         if False : 
             self.current_state.set_information_asked("level", True)
-            time.sleep(20)
+            time.sleep(self._time_wait_webcam)
             if not self.current_state.get_information_asked("level") : 
                 print ("no information about level : BR_BU cycle in pause")
                 self.current_state.set_BRBU_controller_state("pause", True)
