@@ -853,9 +853,14 @@ class current_state(object):
     
     """get state EL from arduino and set it in _state_EL"""
     def get_state_EL(self,name_container, name_EL): 
-        """after each call to this function : be sure that it is different from NULL"""
-        state = self.com_arduino.EL_read(name_container, name_EL)
-        """if NULL, EL not connected"""
+        """WARING BR3, MAX is disabled"""
+        if name_container == "BR3" and name_EL == "MAX" : 
+            state = False
+        else : 
+            
+            """after each call to this function : be sure that it is different from NULL"""
+            state = self.com_arduino.EL_read(name_container, name_EL)
+            """if NULL, EL not connected"""
         
         """f state == NULL, do not updtate _EL_state"""
         if not state == "NULL" : 
