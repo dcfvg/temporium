@@ -240,7 +240,7 @@ class visual_feedback(Canvas):
             if not self.current_rect == "NULL" : 
                 
                 """geting pixel value in the cropped image"""
-                value = (event.y / self.winfo_height())*self.image_size_y - self.dict_rect_crop[self.current_rect][1] 
+                value = int((event.y / self.winfo_height())*self.image_size_y - self.dict_rect_crop[self.current_rect][1]) 
                 self.set_dec_level(self.current_rect, value )
             
         
@@ -250,7 +250,7 @@ class visual_feedback(Canvas):
             if not self.current_rect == "NULL" :
                  
                 """geting pixel value in the cropped image"""
-                value = (event.y / self.winfo_height())*self.image_size_y - self.dict_rect_crop[self.current_rect][1] 
+                value = int((event.y / self.winfo_height())*self.image_size_y - self.dict_rect_crop[self.current_rect][1] )
                 self.set_dec_level(self.current_rect, value )
             
               
