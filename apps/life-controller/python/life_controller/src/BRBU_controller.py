@@ -258,7 +258,7 @@ class BRBU_controller (threading.Thread):
     """fill container_name, with pump_name unti volume_order in conatainer_name"""
     def fill_BRBU(self, pump_name, container_name, volume_order):
         self.current_state.set_information_asked("level", True)
-        time.sleep(20)
+        time.sleep(60)
         if not self.current_state.get_information_asked("level") : 
             print ("no information about level : BR_BU cycle in pause")
             self.current_state.set_BRBU_controller_state("pause", True)
