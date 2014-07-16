@@ -901,7 +901,7 @@ class current_state(object):
                 """if name container is not already in _state_EL, creation of a dictionnary at this key"""
                 if not name_container in self._state_EL : 
                     self._state_EL[name_container] = {}
-                self._state_EL[name_container][name_EL][1] = self.com_arduino.EL_read(name_container, name_EL)
+                self._state_EL[name_container][name_EL][1] = self.get_state_EL(name_container, name_EL)
     
     def print_all_EL(self):
         """refresh all EL before printing them"""
