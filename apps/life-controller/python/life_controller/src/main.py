@@ -32,7 +32,7 @@ def handler( signo, sig_frame):
 if __name__ == "__main__":
     
     """test must be set to False when using with terminal mode"""
-    test = False
+    test = True
     for i in sys.argv : 
         if i.strip() == "test" : 
             test = True
