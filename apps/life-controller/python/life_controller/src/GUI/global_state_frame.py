@@ -58,7 +58,7 @@ class global_state_frame(Frame):
     def _build_button_refresh_state_El(self):
         for item in self._button_refresh_state_El : 
             if item =="refresh_EL" : 
-                self._button_refresh_state_El[item].append(tkinter.Button(self,  text =item , command = self.current_state_order.button_print_ALL_EL)) 
+                self._button_refresh_state_El[item].append(tkinter.Button(self,  text =item , command = self.current_state_order.button_check_ALL_EL)) 
     
     def _build_state_label(self):
         for item in self._BU_state : 

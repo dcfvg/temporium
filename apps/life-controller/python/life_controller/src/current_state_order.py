@@ -46,8 +46,8 @@ class current_state_order(object):
     def button_security_checking(self, name):
         self.current_state.set_security_checking(name,not self.current_state.get_security_checking(name) )
     
-    def button_print_ALL_EL(self):
-        self.current_state.print_all_EL()
+    def button_check_ALL_EL(self):
+        self.current_state._check_all_EL()
         
     def button_current_film_state(self, name):
         self.current_state.set_current_film_state(name, not self.current_state.get_current_film_state(name))

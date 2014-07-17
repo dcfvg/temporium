@@ -81,6 +81,7 @@ class renew_light_AQ_BU(threading.Thread):
                 self.current_state.set_state_pump("P_AQ_S",True)
                 compt = 0 
                 while self.current_state.get_current_action_evolved("renew_light_AQ_"+self.BU_use) and compt <sec : 
+                    self.current_state.set_state_pump("P_AQ_S",True)
                     time.sleep(1)
                     compt = compt + 1
                 self.current_state.set_state_pump("P_AQ_S",False)
@@ -93,6 +94,7 @@ class renew_light_AQ_BU(threading.Thread):
             self.current_state.set_state_pump("P_AQ_S",True)
             compt = 0 
             while self.current_state.get_current_action_evolved("renew_light_AQ_"+self.BU_use) and compt <sec : 
+                self.current_state.set_state_pump("P_AQ_S",True)
                 time.sleep(1)
                 compt = compt + 1
             self.current_state.set_state_pump("P_AQ_S",False)
@@ -118,7 +120,7 @@ class renew_light_AQ_BU(threading.Thread):
                 while self.current_state.get_occupied_volume("AQ")< self.AQ_FULL and \
                       self.current_state.get_current_action_evolved("renew_light_AQ_"+self.BU_use) and \
                       self.current_state.get_occupied_volume (self.BU_use) > self.BU_empty :
-                     
+                    self.current_state.fill_BU_AQ(BU_use, True)
                     time.sleep(1)
                 self.current_state.fill_BU_AQ(BU_use, False)
                 self.current_state.set_information_asked("level_AQ", False)
@@ -142,6 +144,7 @@ class renew_light_AQ_BU(threading.Thread):
                   self.current_state.get_current_action_evolved("renew_light_AQ_"+self.BU_use) and \
                   self.current_state.get_information_asked("level") and \
                   self.current_state.get_occupied_volume (self.BU_use) > self.BU_empty :
+                self.current_state.fill_BU_AQ(BU_use, True)
                 time.sleep(1)
                 
             self.current_state.fill_BU_AQ(BU_use, False)
@@ -150,10 +153,11 @@ class renew_light_AQ_BU(threading.Thread):
             
             """completion with M2"""
             self.current_state.set_state_pump("P_M2_AQ", True)
-            print ("AQ HIGH :" +str(self.current_state.get_state_EL("AQ","HIGH")))
+            #print ("AQ HIGH :" +str(self.current_state.get_state_EL("AQ","HIGH")))
             while (not self.current_state.get_state_EL("AQ","HIGH")) and\
                   self.current_state.get_current_action_evolved("renew_light_AQ_"+self.BU_use): 
-                time.sleep(2)
+                self.current_state.set_state_pump("P_M2_AQ", True)
+                time.sleep(1)
             self.current_state.set_state_pump("P_M2_AQ", False)
 
             

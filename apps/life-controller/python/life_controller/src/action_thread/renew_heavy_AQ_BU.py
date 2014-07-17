@@ -94,6 +94,7 @@ class renew_heavy_AQ_BU(threading.Thread):
              
             while self.current_state.get_state_EL(name_container,name_EL) and\
                   self.current_state.get_current_action_evolved("renew_heavy_AQ_"+self.BU_use): 
+                self.current_state.set_state_pump("P_AQ_S",True)
                 time.sleep(1)
                 
             self.current_state.set_state_pump("P_AQ_S",False)
@@ -109,6 +110,7 @@ class renew_heavy_AQ_BU(threading.Thread):
              
             while self.current_state.get_occupied_volume("AQ") > volume and\
                   self.current_state.get_current_action_evolved("renew_heavy_AQ_"+self.BU_use): 
+                self.current_state.set_state_pump("P_AQ_S",True)
                 time.sleep(1)
                 
             self.current_state.set_state_pump("P_AQ_S",False)
@@ -133,7 +135,7 @@ class renew_heavy_AQ_BU(threading.Thread):
                 while self.current_state.get_occupied_volume("AQ")< volume_to_reach_with_BU and \
                       self.current_state.get_current_action_evolved("renew_heavy_AQ_"+self.BU_use) and \
                       self.current_state.get_occupied_volume (self.BU_use) > self.BU_empty :
-    
+                    self.current_state.fill_BU_AQ(BU_use, True)
                     time.sleep(1)
                 self.current_state.fill_BU_AQ(BU_use, False)
                 
@@ -141,6 +143,7 @@ class renew_heavy_AQ_BU(threading.Thread):
                 """completion with M2"""
                 self.current_state.set_state_pump("P_M2_AQ", True)
                 while self.current_state.get_occupied_volume("AQ")< self.AQ_FULL and self.current_state.get_current_action_evolved("renew_heavy_AQ_"+self.BU_use): 
+                    self.current_state.set_state_pump("P_M2_AQ", True)
                     time.sleep(0.05)
                 self.current_state.set_state_pump("P_M2_AQ", False)
                 
@@ -153,17 +156,21 @@ class renew_heavy_AQ_BU(threading.Thread):
                
                
             print("Filling AQ with BU in USE until AQ is full or until a Stop ")
-            self.current_state.fill_BU_AQ(BU_use, True)
+            
             
             self.current_state.set_information_asked("level", True)
             """fill until AQ full or stop"""
             time.sleep(self._time_wait_webcam)
+            
+            self.current_state.fill_BU_AQ(BU_use, True)
             while  (not self.current_state.get_state_EL("AQ","HIGH")) and \
                   self.current_state.get_current_action_evolved("renew_heavy_AQ_"+self.BU_use) and \
                   self.current_state.get_information_asked("level") and \
                   self.current_state.get_occupied_volume (self.BU_use) > self.BU_empty :
-
+                self.current_state.fill_BU_AQ(BU_use, True)
                 time.sleep(1)
+           
+                
             self.current_state.fill_BU_AQ(BU_use, False)
             
             
@@ -171,6 +178,7 @@ class renew_heavy_AQ_BU(threading.Thread):
             self.current_state.set_state_pump("P_M2_AQ", True)
             while (not self.current_state.get_state_EL("AQ","HIGH")) and\
                   self.current_state.get_current_action_evolved("renew_heavy_AQ_"+self.BU_use): 
+                self.current_state.set_state_pump("P_M2_AQ", True)
                 time.sleep(1)
             self.current_state.set_state_pump("P_M2_AQ", False)
             
