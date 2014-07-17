@@ -17,14 +17,14 @@ tell application "Google Chrome"
 	
 	tell window 1 to enter presentation mode
 end tell
+EOF
 
-tell application "Safari"
-	activate
-	make new document with properties {URL : "http://localhost:8080/player"}
-    tell application "System Events"
-    	tell process "Safari"
-       		keystroke "f" using {control down, command down}
-       	end tell
-    end tell
+open -a /Applications/Safari.app http://localhost:8080/player
+
+osascript<<EOF	
+tell application "System Events"
+	tell process "Safari"
+   		keystroke "f" using {control down, command down}
+   	end tell
 end tell
 EOF
