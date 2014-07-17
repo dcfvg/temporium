@@ -1,2 +1,0 @@
-16_Jul_2014_19:25:33 : film starts
-16_Jul_2014_19:28:15 : film ends

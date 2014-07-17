@@ -30,6 +30,9 @@ class renew_heavy_AQ_BU(threading.Thread):
         """ get value of BU_empty""" 
         self.BU_empty =  self.current_state.config_manager.get_BRBU_controller("BU_EMPTY")
         
+        """wait time after asking level information"""
+        self._time_wait_webcam = self.current_state.config_manager.get_webcam("time_wait")
+        
         
     def run(self):
         if False : 
@@ -64,7 +67,7 @@ class renew_heavy_AQ_BU(threading.Thread):
             
             if self.current_state.get_information_asked("level") :
                 
-                time.sleep(10)
+                time.sleep(self._time_wait_webcam)
                 if self.current_state.get_occupied_volume(self.BU_use) > self.BU_empty :
                     
                     
@@ -131,7 +134,7 @@ class renew_heavy_AQ_BU(threading.Thread):
                       self.current_state.get_current_action_evolved("renew_heavy_AQ_"+self.BU_use) and \
                       self.current_state.get_occupied_volume (self.BU_use) > self.BU_empty :
     
-                    time.sleep(0.05)
+                    time.sleep(1)
                 self.current_state.fill_BU_AQ(BU_use, False)
                 
                 
@@ -154,13 +157,13 @@ class renew_heavy_AQ_BU(threading.Thread):
             
             self.current_state.set_information_asked("level", True)
             """fill until AQ full or stop"""
-            time.sleep(10)
+            time.sleep(self._time_wait_webcam)
             while  (not self.current_state.get_state_EL("AQ","HIGH")) and \
                   self.current_state.get_current_action_evolved("renew_heavy_AQ_"+self.BU_use) and \
                   self.current_state.get_information_asked("level") and \
                   self.current_state.get_occupied_volume (self.BU_use) > self.BU_empty :
 
-                time.sleep(0.02)
+                time.sleep(1)
             self.current_state.fill_BU_AQ(BU_use, False)
             
             
@@ -168,7 +171,7 @@ class renew_heavy_AQ_BU(threading.Thread):
             self.current_state.set_state_pump("P_M2_AQ", True)
             while (not self.current_state.get_state_EL("AQ","HIGH")) and\
                   self.current_state.get_current_action_evolved("renew_heavy_AQ_"+self.BU_use): 
-                time.sleep(0.02)
+                time.sleep(1)
             self.current_state.set_state_pump("P_M2_AQ", False)
             
             self.current_state.set_information_asked("level", False)

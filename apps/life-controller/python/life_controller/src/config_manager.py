@@ -43,6 +43,8 @@ class config_manager(object):
         
         self._saving = {"action_time" : "NULL"}
         
+        self._webcam = {"time_wait" : 0 }
+        
         
         
         """read the config at first"""
@@ -79,7 +81,12 @@ class config_manager(object):
             elif key  == "BRBU_controller" :
                 name = list[1].strip()
                 value = float(list[2].strip())
-                self._set_BRBU_controller(name, value)  
+                self._set_BRBU_controller(name, value)
+                
+            elif key  == "webcam" :
+                name = list[1].strip()
+                value = int(list[2].strip())
+                self._set_webcam(name, value) 
             
             elif key  == "AQ" :
                 name = list[1].strip()
@@ -123,7 +130,6 @@ class config_manager(object):
                     self._set_time_controller(name, [hour, minute]) 
                 except Exception : 
                     name = list[1].strip()
-                    print (name)
                     #self.current_state.set_current_time_controller_state(name, list[2].strip() == "True") 
                 
             elif key  == "spectro" :
@@ -176,6 +182,20 @@ class config_manager(object):
         value = self._auto_AQ_filtration_value[name]      
         self.lock.release()
         return value      
+    
+    """WEBCAM"""
+    def _set_webcam(self, name, value):
+        self._webcam[name] = value      
+        
+    
+    """return the value corresponding to the name you asked : ex "TIME" here""" 
+    def get_webcam(self, name):
+        self.read_config()
+        self.lock.acquire()
+        value = self._webcam[name]      
+        self.lock.release()
+        return value 
+    
     
     """FILM"""
     def _set_film(self, name, value):

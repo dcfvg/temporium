@@ -854,7 +854,8 @@ class current_state(object):
     """get state EL from arduino and set it in _state_EL"""
     def get_state_EL(self,name_container, name_EL): 
         """WARING BR3, MAX is disabled"""
-        if name_container == "BR3" and name_EL == "MAX" : 
+        if (name_container == "BR3" and name_EL == "MAX") or \
+           (name_container == "BR2" and name_EL == "MAX") : 
             state = False
         else : 
             
@@ -1284,7 +1285,7 @@ class current_state(object):
             elif list[0].strip() =="daily_action" :
                 """set the number_usage { BU1 : 0 , BU2 : 23, ...} """
                 name_action = list[1].strip()
-                print(name_action)
+                #print(name_action)
                 if list[2].strip() =="True" : 
                     state_action = True
                 else : 

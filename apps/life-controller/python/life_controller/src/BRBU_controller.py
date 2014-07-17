@@ -51,7 +51,8 @@ class BRBU_controller (threading.Thread):
                                        "BU_EMPTY" :[threading.Lock(), 0],\
                                        "FILLING_BR_BU" :[threading.Lock(), 0],\
                                        }
-        self._time_wait_webcam = 60
+        """time to wait after asking webcam info"""
+        self._time_wait_webcam = 0
         
         self._reset_time()
 
@@ -258,15 +259,17 @@ class BRBU_controller (threading.Thread):
     """ACTION TAKEN BY BRBU_CONTROLLER"""          
     """fill container_name, with pump_name unti volume_order in conatainer_name"""
     def fill_BRBU(self, pump_name, container_name, volume_order):
-        print ("fill " + container_name +"with " + str(volume_order))
+        print ("fill " + container_name +" with " + str(volume_order))
         self.current_state.set_information_asked("level", True)
         time.sleep(self._time_wait_webcam)
         if not self.current_state.get_information_asked("level") : 
             print ("no information about level : BR_BU cycle in pause")
             self.current_state.set_BRBU_controller_state("pause", True)
             self.try_to_unpaused()
+            self._get_pause(pump_name,0)
         if not self.current_state.get_security_checking("EL_max") : 
             self.current_state.set_BRBU_controller_state("pause", True)
+            self._get_pause(pump_name,0)
             
         while self.current_state.get_occupied_volume(container_name) < volume_order and self.current_state.get_BRBU_controller_state("run") :
             self.current_state.set_information_asked("level", True)
@@ -451,8 +454,9 @@ class BRBU_controller (threading.Thread):
                     elif list[1].strip() == "EMPTY" :
                         self.BU_empty["BU3"] = ( list[2].strip() == "True")
                 
-                elif list[0].strip() == "time_cycle_second" :
-                    self.current_time_cycle = int(list[1].strip())
+                elif list[0].strip() == "time_cycle_hour" :
+                    "convert in hour"""
+                    self.current_time_cycle = int(list[1].strip())*3600
             
             
             """start the cycle with the situation form the saved file"""
@@ -485,9 +489,8 @@ class BRBU_controller (threading.Thread):
         save_file = open("save_current_situation/BRBU_current_state.txt", "w")
         save_file.write("Temporium : BRBU_controller "+ " \n")
         save_file.write("auto_start : "+ str(auto_start_state) + " \n")
-        save_file.write("time_save_second : "+ str(int(time.time())) + " \n")
-        save_file.write("time_save_second : "+ time.strftime("%a, %d %b %Y %H:%M:%S +0000",time. localtime()) + "\n")
-        save_file.write("time_cycle_second : "+ str(int(current_time_cycle_save)) + " \n")
+        save_file.write("time_save : "+ time.strftime("%a, %d %b %Y %H:%M:%S +0000",time. localtime()) + "\n")
+        save_file.write("time_cycle_hour : "+ str(int(current_time_cycle_save/3600)) + " \n")
         save_file.write("time_cycle : "+ str(int(time_laps_hour))+ "h" + str(int(time_laps_minute)) + "m" + str(int(time_laps_second)) + " \n")
         save_file.write("BU1 : READY : " + str(self.BR_BU_ready["BU1"])+ " \n")
         save_file.write("BU2 : READY : " + str(self.BR_BU_ready["BU2"])+ " \n")
@@ -504,6 +507,7 @@ class BRBU_controller (threading.Thread):
         for item in self._BRBU_controller_value :
             value =  self.current_state.config_manager.get_BRBU_controller(item)
             self._set_BRBU_controller(item, value)
+        self._time_wait_webcam = self.current_state.config_manager.get_webcam("time_wait")
     
     def _set_BRBU_controller(self, name, value):
         self._BRBU_controller_value[name][0].acquire()

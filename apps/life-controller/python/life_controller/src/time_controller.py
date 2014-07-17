@@ -24,8 +24,8 @@ class time_controller(threading.Thread):
         
         
     def run(self):
-        print("start time_controller")
-        print("begin in 30 seconds")
+        #print("start time_controller")
+        #print("begin in 30 seconds")
         time.sleep(30)
         while True :
             self._load_value_config()

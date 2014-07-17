@@ -33,9 +33,15 @@ if __name__ == "__main__":
     
     """test must be set to False when using with terminal mode"""
     test = False
+    exposition_bool = False
+    AQ_cycle_heavy_bool = False
     for i in sys.argv : 
         if i.strip() == "test" : 
             test = True
+        elif i.strip() =="exposition" : 
+            exposition_bool = True
+        elif i.strip() == "AQ_cycle_heavy" : 
+            AQ_cycle_heavy_bool = True
     
     co_ard = com_arduino(test)
     cu_state = current_state(co_ard)
@@ -67,8 +73,8 @@ if __name__ == "__main__":
     time_cont = time_controller(cu_state)
     time_cont.start()
     """start time_controller"""
-    cu_state.set_current_time_controller_state("AQ_cycle_heavy", True)
-    cu_state.set_current_time_controller_state("exposition", True)
+    cu_state.set_current_time_controller_state("AQ_cycle_heavy", AQ_cycle_heavy_bool)
+    cu_state.set_current_time_controller_state("exposition", exposition_bool)
     
     cu_state.set_security_checking("EL_max", True)
     
