@@ -28,13 +28,10 @@ class time_controller(threading.Thread):
         #print("begin in 30 seconds")
         time.sleep(30)
         while True :
-            print("begin load config")
             self._load_value_config()
-            print("end load config")
             
             
             if self.expo_open() :
-                print("do action")
                 """do action of BRBU_controller if there are action to do"""
                 self.current_state.BRBU_controller.do_action()
             
