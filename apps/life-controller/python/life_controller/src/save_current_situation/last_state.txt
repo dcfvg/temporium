@@ -1,14 +1,14 @@
 Temporium : last_situation  
-occupied_volume : BR1 : 0.96 
+occupied_volume : M1 : 0.86 
 occupied_volume : SPECTRO : 1.0 
 occupied_volume : S : 0.12 
-occupied_volume : BU3 : 0.1 
-occupied_volume : M1 : 0.86 
-occupied_volume : BR2 : 1.03 
-occupied_volume : AQ : 1.1 
-occupied_volume : BU2 : 0.07 
-occupied_volume : BR3 : 0.96 
+occupied_volume : BR3 : 1.1 
+occupied_volume : BU3 : 1.1 
+occupied_volume : BR2 : 1.1 
+occupied_volume : AQ : 0.05 
+occupied_volume : BR1 : 1.1 
 occupied_volume : FI : -0.0 
 occupied_volume : M2 : 0.85 
-occupied_volume : BU1 : 0.03 
-daily_action : AQ_cycle_heavy : True : 27 
+occupied_volume : BU1 : 1.1 
+occupied_volume : BU2 : 1.1 
+daily_action : AQ_cycle_heavy : True : 19 
