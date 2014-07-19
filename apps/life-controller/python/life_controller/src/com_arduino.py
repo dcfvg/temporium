@@ -149,8 +149,10 @@ class com_arduino(object):
         self.send_server_arduino_order("PUMP", name, state)
         if state :
             print(name + " HIGH") 
+            self.current_state.saving_state_thread.write_action(name + " HIGH") 
         else :
-            print(name + " LOW")
+            print(name + " LOW") 
+            self.current_state.saving_state_thread.write_action(name + " LOW") 
                 
         return True 
     
@@ -175,9 +177,11 @@ class com_arduino(object):
         """send information to arduino_server"""
         self.send_server_arduino_order("LIGHT", name, state)
         if state :
-            print(name + " HIGH") 
+            print(name + " HIGH")
+            self.current_state.saving_state_thread.write_action(name + " HIGH") 
         else :
             print(name + " LOW")
+            self.current_state.saving_state_thread.write_action(name + " LOW") 
                 
         return True 
         
@@ -225,6 +229,7 @@ class com_arduino(object):
                 print ("arduino_lift not declared/connected")   
         
         print("LiftDown asked")
+        self.current_state.saving_state_thread.write_action("LiftDown asked")
             
         return answer
 
@@ -238,6 +243,7 @@ class com_arduino(object):
             else : 
                 print ("arduino_lift not declared/connected")      
         print("LiftUp asked")
+        self.current_state.saving_state_thread.write_action("LiftUp asked")
         
         return answer
 
@@ -250,7 +256,8 @@ class com_arduino(object):
                 answer = self.the_arduino["arduino_lift"].screen_down_outside()
             else : 
                 print ("arduino_lift not declared/connected")
-        print("screenDown asked")
+        print("screen_down_outside asked")
+        self.current_state.saving_state_thread.write_action("screen_down_outside asked")
         return answer 
 
     def screen_up_outside(self):
@@ -262,7 +269,8 @@ class com_arduino(object):
                 answer = self.the_arduino["arduino_lift"].screen_up_outside()
             else : 
                 print ("arduino_lift not declared/connected")  
-        print("screenUp asked")
+        print("screen_up_outside asked")
+        self.current_state.saving_state_thread.write_action("screen_up_outside asked")
         
         return answer
     
@@ -275,7 +283,8 @@ class com_arduino(object):
                 answer = self.the_arduino["arduino_lift"].screen_down_inside()
             else : 
                 print ("arduino_lift not declared/connected")
-        print("screenDown asked")
+        print("screen_down_inside asked")
+        self.current_state.saving_state_thread.write_action("screen_down_inside asked")
         return answer 
 
     def screen_up_inside(self):
@@ -287,7 +296,8 @@ class com_arduino(object):
                 answer = self.the_arduino["arduino_lift"].screen_up_inside()
             else : 
                 print ("arduino_lift not declared/connected")  
-        print("screenUp asked")
+        print("screen_up_inside asked")
+        self.current_state.saving_state_thread.write_action("screen_up_inside asked")
         
         return answer
     

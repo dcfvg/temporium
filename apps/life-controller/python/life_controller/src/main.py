@@ -78,6 +78,7 @@ if __name__ == "__main__":
     
     cu_state.set_security_checking("EL_max", True)
     
+    
     for sig in [signal.SIGTERM, signal.SIGINT, signal.SIGHUP, signal.SIGQUIT]:
             signal.signal(sig,handler)
     

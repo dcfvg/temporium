@@ -19,7 +19,7 @@ class saving_state_thread (threading.Thread):
         self.current_state = un_current_state
         
         self._saving_action_url = self.current_state.config_manager.get_saving("action_time")
-        self.file_action = open(self._saving_action_url +"/action_done"+ time.strftime("%d_%b_%Y_%H:%M:%S",time. localtime())+".txt","w")
+        self.file_action = open(self._saving_action_url +"/action_done"+ time.strftime("%d_%b_%Y_%Hh%Mm%S",time. localtime())+".txt","w")
 
         self._save_current_situation_sate = [threading.Lock(), True]
     
@@ -40,11 +40,12 @@ class saving_state_thread (threading.Thread):
             save_file.write("daily_action : "+ item + " : " + str(self.current_state.get_daily_action_state(item)) + " : " + str(self.current_state.get_daily_action_day(item)) + " \n")
 
         save_file.flush()
+        save_file.close()
         
     def write_action(self, action_string):
         self.file_action.write(time.strftime("%d_%b_%Y_%H:%M:%S",time. localtime()) + " : "+ action_string +"\n")
         self.file_action.flush()
-    
+        
     def set_save_current_situation_sate(self, value):
         self._save_current_situation_sate[0].acquire()
         self._save_current_situation_sate[1] = value      
@@ -56,5 +57,12 @@ class saving_state_thread (threading.Thread):
         value = self._save_current_situation_sate[1]       
         self._save_current_situation_sate[0].release()
         return value
+    
+    def close(self):
+        self.file_action.flush()
+        self.file_action.close()
+        
+        
+        
     
         

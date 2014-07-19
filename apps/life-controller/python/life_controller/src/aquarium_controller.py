@@ -27,7 +27,7 @@ class aquarium_controller(threading.Thread):
     
         
         """actionning lift or not"""
-        self.lift_action = False 
+        self.lift_action = True 
         self.time_wait_no_lift = 120
         
         self.start()
@@ -37,7 +37,6 @@ class aquarium_controller(threading.Thread):
             self._start_lock.acquire()
             if self._action_asked == "aquarium_cycle_light" : 
                 self._aquarium_cycle_light()
-                self.current_state._set_current_action_aquarium_evolved("aquarium_cycle_light", False)
             elif self._action_asked == "aquarium_cycle_heavy" : 
                 self._aquarium_cycle_heavy()
                 self.current_state._set_current_action_aquarium_evolved("aquarium_cycle_heavy", False)
@@ -49,133 +48,168 @@ class aquarium_controller(threading.Thread):
  
  
     def _aquarium_cycle_light(self):
-        self.current_state.saving_state_thread.write_action("aquarium_cycle_light starts")
-        
-        
-        """cycle less that 1% of the aquarium at the end of each film"""
-        
         """get the BU in use"""
         BU_USE = self.current_state.get_BU_USE()
         
-        """empty AQ for xx seconds, fill it until EL_HIGH with BU_USE"""
-        action_name = "renew_light_AQ_" + BU_USE
-        self.current_state.set_current_action_evolved(action_name, True)
-        
-        while self.current_state.get_current_action_evolved(action_name) : 
-            time.sleep(1)
-        
-        
-        """start filtration"""
-        self.current_state.set_current_action("AQ_filtration", True)
-        """lift_down"""
-        
-        if self.lift_action : 
-            self.current_state.set_current_action_lift_screen("lift_down")
-            """wait until lift_down is finished"""
+        if BU_USE!= None : 
+            self.current_state._set_current_action_aquarium_evolved("aquarium_cycle_light", True)
+            self.current_state.saving_state_thread.write_action("Begin aquarium_cycle_light ")
             
-            time.sleep(2)
-            while self.current_state.get_lift_busy() : 
-                time.sleep(2)
             
-        
+            """cycle less that 1% of the aquarium at the end of each film"""
+    
+            
+            """empty AQ for xx seconds, fill it until EL_HIGH with BU_USE"""
+            action_name = "renew_light_AQ_" + BU_USE
+            self.current_state.set_current_action_evolved(action_name, True)
+            
+            while self.current_state.get_current_action_evolved(action_name) and \
+                self.current_state.get_current_action_aquarium_evolved("aquarium_cycle_light") : 
+                time.sleep(1)
+            
+            
+            
+            
+            if self.current_state.get_current_action_aquarium_evolved("aquarium_cycle_light") :
+                """start filtration"""
+                self.current_state.set_current_action("AQ_filtration", True)
+            """lift_down"""
+            
+            if self.current_state.get_current_action_aquarium_evolved("aquarium_cycle_light") :
+                if self.lift_action : 
+                    self.current_state.set_current_action_lift_screen("lift_down")
+                    """wait until lift_down is finished"""
+                    
+                    time.sleep(2)
+                    while self.current_state.get_lift_busy() : 
+                        time.sleep(2)
+                    
+                
+                else : 
+                    print("No lift, waiting " + str(self.time_wait_no_lift))
+                    time.sleep(self.time_wait_no_lift)
+            
+            if self.current_state.get_current_action_aquarium_evolved("aquarium_cycle_light") :
+                if self.lift_action : 
+                    
+                    """lift_up"""
+                    
+                    self.current_state.set_current_action_lift_screen("lift_up")
+                    """wait until lift_up is finished"""
+                    time.sleep(2)
+                    while self.current_state.get_lift_busy() : 
+                        time.sleep(2)
+                
+                else : 
+                    print("No lift, waiting " + str(self.time_wait_no_lift))
+                    time.sleep(self.time_wait_no_lift)
+                
+                
+            
+            
+            """end filtration"""
+            self.current_state.set_current_action("AQ_filtration", False)
+            
+            
+            if False :
+                """start the spectro and wait for a value"""
+                current_concentration = self.current_state.get_spectro_mesure()
+                
+                print("current concentration AQ : " + str(current_concentration))
+                self.current_state.set_inforamtion_asked("concentration", False)
+            
+            """function to call to save the state"""
+            #self.current_state.saving_state()
+            
+            """end all that has been launched"""
+            if not self.current_state.get_current_action_aquarium_evolved("aquarium_cycle_light") :
+                print (action_name + " False")
+                action_name = "renew_light_AQ_" + BU_USE
+                self.current_state.set_current_action_evolved(action_name, False)
+                 
+                
+            self.current_state._set_current_action_aquarium_evolved("aquarium_cycle_light", False)
+            self.current_state.saving_state_thread.write_action("End aquarium_cycle_light ")
+            
         else : 
-            print("No lift, waiting " + str(self.time_wait_no_lift))
-            time.sleep(self.time_wait_no_lift)
-        
-        if self.lift_action : 
-            
-            """lift_up"""
-            
-            self.current_state.set_current_action_lift_screen("lift_up")
-            """wait until lift_up is finished"""
-            time.sleep(2)
-            while self.current_state.get_lift_busy() : 
-                time.sleep(2)
-        
-        else : 
-            print("No lift, waiting " + str(self.time_wait_no_lift))
-            time.sleep(self.time_wait_no_lift)
-        
-        
-        
-        
-        """end filtration"""
-        self.current_state.set_current_action("AQ_filtration", False)
-        
-        
-        if False :
-            """start the spectro and wait for a value"""
-            current_concentration = self.current_state.get_spectro_mesure()
-            
-            print("current concentration AQ : " + str(current_concentration))
-            self.current_state.set_inforamtion_asked("concentration", False)
-        
-        """function to call to save the state"""
-        #self.current_state.saving_state()
-         
-        self.current_state.saving_state_thread.write_action("aquarium_cycle_light ends")
+            print ("No BU in USE")
                 
     def _aquarium_cycle_heavy(self):
         
-        self.current_state.saving_state_thread.write_action("aquarium_cycle_heavy starts")
-        """recycle 10% of the aquarium at the end of each film"""        
-        
-        """stop filtration"""
-        self.current_state.set_current_action("AQ_filtration", True)
-        
-        
-        if self.lift_action : 
-            """lift_down"""
-            self.current_state.set_current_action_lift_screen("lift_down")
-            time.sleep(2)
-            """wait until lift_down is finished"""
-            while self.current_state.get_lift_busy()  :  
-                time.sleep(2)
-        else : 
-            print("No lift, waiting " + str(self.time_wait_no_lift))
-            time.sleep(self.time_wait_no_lift)
-            
-            
-        """stop filtration"""
-        self.current_state.set_current_action("AQ_filtration", False)
-            
-        
         """get the BU in use"""
         BU_USE = self.current_state.get_BU_USE()
         
-        """start heavy renew"""
-        action_name = "renew_heavy_AQ_" + BU_USE
-        self.current_state.set_current_action_evolved(action_name, True)
-        
-        while self.current_state.get_current_action_evolved(action_name) : 
-            time.sleep(1)
-        
-        """start filtration"""
-        self.current_state.set_current_action("AQ_filtration", True)
-        
-        if self.lift_action : 
-            """lift_up"""
-            self.current_state.set_current_action_lift_screen("lift_up")
-            """wait until lift_down is finished"""
-            time.sleep(2)
-            while self.current_state.get_lift_busy() : 
-                time.sleep(2)
+        if BU_USE != None :
+            self.current_state._set_current_action_aquarium_evolved("aquarium_cycle_heavy", True)
+            self.current_state.saving_state_thread.write_action("Begin aquarium_cycle_heavy")
+            """recycle 10% of the aquarium at the end of each film"""        
+            
+            """stop filtration"""
+            self.current_state.set_current_action("AQ_filtration", True)
+            
+            if self.current_state.get_current_action_aquarium_evolved("aquarium_cycle_heavy") :
+                if self.lift_action : 
+                    """lift_down"""
+                    self.current_state.set_current_action_lift_screen("lift_down")
+                    time.sleep(2)
+                    """wait until lift_down is finished"""
+                    while self.current_state.get_lift_busy()  :  
+                        time.sleep(2)
+                else : 
+                    print("No lift, waiting " + str(self.time_wait_no_lift))
+                    time.sleep(self.time_wait_no_lift)
+                
+                
+            """stop filtration"""
+            self.current_state.set_current_action("AQ_filtration", False)
+                
+            
+            """get the BU in use"""
+            BU_USE = self.current_state.get_BU_USE()
+            
+            if self.current_state.get_current_action_aquarium_evolved("aquarium_cycle_heavy") :
+                """start heavy renew"""
+                action_name = "renew_heavy_AQ_" + BU_USE
+                self.current_state.set_current_action_evolved(action_name, True)
+                
+                while self.current_state.get_current_action_evolved(action_name) and \
+                self.current_state.get_current_action_aquarium_evolved("aquarium_cycle_heavy") : 
+                    time.sleep(1)
+                
+            if self.current_state.get_current_action_aquarium_evolved("aquarium_cycle_heavy") :    
+                """start filtration"""
+                self.current_state.set_current_action("AQ_filtration", True)
+            
+            if self.current_state.get_current_action_aquarium_evolved("aquarium_cycle_heavy") :
+                if self.lift_action : 
+                    """lift_up"""
+                    self.current_state.set_current_action_lift_screen("lift_up")
+                    """wait until lift_down is finished"""
+                    time.sleep(2)
+                    while self.current_state.get_lift_busy() : 
+                        time.sleep(2)
+                else : 
+                    print("No lift, waiting " + str(self.time_wait_no_lift))
+                    time.sleep(self.time_wait_no_lift)
+                
+            """stop filtration"""
+            self.current_state.set_current_action("AQ_filtration", False)
+            
+            """simplification"""
+            if False : 
+                """start the spectro and wait for a value"""
+                current_concentration = self.current_state.get_spectro_mesure()
+                print("current concentration AQ : " + str(current_concentration))
+                
+            if not self.current_state.get_current_action_aquarium_evolved("aquarium_cycle_heavy") :
+                action_name = "renew_heavy_AQ_" + BU_USE
+                self.current_state.set_current_action_evolved(action_name, False)
+            
+            self.current_state._set_current_action_aquarium_evolved("aquarium_cycle_heavy", False)
+            self.current_state.saving_state_thread.write_action("End aquarium_cycle_heavy")
+            
         else : 
-            print("No lift, waiting " + str(self.time_wait_no_lift))
-            time.sleep(self.time_wait_no_lift)
-            
-        """stop filtration"""
-        self.current_state.set_current_action("AQ_filtration", False)
-        
-        """simplification"""
-        if False : 
-            """start the spectro and wait for a value"""
-            current_concentration = self.current_state.get_spectro_mesure()
-            print("current concentration AQ : " + str(current_concentration))
-        
-        self.current_state.saving_state_thread.write_action("aquarium_cycle_heavy ends")
-        
-         
-            
+            print ("No BU in USE")
+                
 
         

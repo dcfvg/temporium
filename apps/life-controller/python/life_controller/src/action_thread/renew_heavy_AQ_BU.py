@@ -61,13 +61,19 @@ class renew_heavy_AQ_BU(threading.Thread):
             else : 
                 print ("server_level_AQ or server_concentration not connected")
         else : 
+            self.current_state.saving_state_thread.write_action("Begin renew_heavy_AQ_" + self.BU_use)
             self.current_state._set_current_action_evolved("renew_heavy_AQ_" + self.BU_use, True)
             """need to be sure that there is enough BU"""
             self.current_state.set_information_asked("level", True)
             
             if self.current_state.get_information_asked("level") :
                 
-                time.sleep(self._time_wait_webcam)
+                compt = 0 
+                while compt < self._time_wait_webcam and\
+                    self.current_state.get_current_action_evolved("renew_heavy_AQ_"+self.BU_use) : 
+                    time.sleep(1)
+                    compt = compt + 1
+                    
                 if self.current_state.get_occupied_volume(self.BU_use) > self.BU_empty :
                     
                     
@@ -84,6 +90,7 @@ class renew_heavy_AQ_BU(threading.Thread):
             
             self.current_state.set_information_asked("level", False)
             self.current_state._set_current_action_evolved("renew_heavy_AQ_" + self.BU_use, False)
+            self.current_state.saving_state_thread.write_action("End renew_heavy_AQ_" + self.BU_use)
             
     
     def emptying_AQ_EL(self, name_container, name_EL):
@@ -160,7 +167,12 @@ class renew_heavy_AQ_BU(threading.Thread):
             
             self.current_state.set_information_asked("level", True)
             """fill until AQ full or stop"""
-            time.sleep(self._time_wait_webcam)
+            compt = 0 
+            while compt < self._time_wait_webcam and\
+             self.current_state.get_current_action_evolved("renew_heavy_AQ_"+self.BU_use) : 
+                time.sleep(1)
+                compt = compt + 1
+            
             
             self.current_state.fill_BU_AQ(BU_use, True)
             while  (not self.current_state.get_state_EL("AQ","HIGH")) and \

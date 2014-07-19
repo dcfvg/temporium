@@ -547,18 +547,22 @@ class current_state(object):
     """EVOLVED ACTION AQ"""
     def set_current_action_aquarium_evolved(self, name, state):
         if not self.get_current_action_aquarium_evolved(name) == state : 
-            """check if there is no action running"""
-            if self.get_security_checking("EL_max") : 
-                b = True
-                for item in self._current_action_evolved : 
-                    if not item == name :
-                        if self.get_current_action_evolved(item) : 
-                            b = False
-                """if there is no action running"""
-                if b : 
-                    self._set_current_action_aquarium_evolved(name, state)
-                    if state : 
-                        self.aquarium_controller.start_aquarium_controller_action_name(name)
+            if not state : 
+                self._set_current_action_aquarium_evolved(name, state)
+            else : 
+                
+                """check if there is no action running"""
+                if self.get_security_checking("EL_max") : 
+                    b = True
+                    for item in self._current_action_evolved : 
+                        if not item == name :
+                            if self.get_current_action_evolved(item) : 
+                                b = False
+                    """if there is no action running"""
+                    if b : 
+                        
+                        if state :
+                            self.aquarium_controller.start_aquarium_controller_action_name(name)
                         
                    
         
@@ -855,7 +859,13 @@ class current_state(object):
     def get_state_EL(self,name_container, name_EL): 
         """WARING BR3, MAX is disabled"""
         if (name_container == "BR3" and name_EL == "MAX") or \
-           (name_container == "BR2" and name_EL == "MAX") : 
+           (name_container == "BR2" and name_EL == "MAX") or \
+           (name_container == "BR1" and name_EL == "MAX") or \
+           (name_container == "BU1" and name_EL == "MAX") or \
+           (name_container == "BU2" and name_EL == "MAX") or \
+           (name_container == "BU3" and name_EL == "MAX") or \
+           (name_container == "AQ" and name_EL == "MAX") :
+            
             state = False
         else : 
             
@@ -875,9 +885,18 @@ class current_state(object):
         """name_container : AQ , name_EL : HIGH"""
         """set the state of the electrode in state_EL, and set the occupied_volume associated to occupied_volume"""
         if not state == self._get_state_EL(name_container, name_EL) : 
+            if (name_container == "BR3" and name_EL == "MAX") or \
+           (name_container == "BR2" and name_EL == "MAX") or \
+           (name_container == "BR1" and name_EL == "MAX") or \
+           (name_container == "BU1" and name_EL == "MAX") or \
+           (name_container == "BU2" and name_EL == "MAX") or \
+           (name_container == "BU3" and name_EL == "MAX") or \
+           (name_container == "AQ" and name_EL == "MAX") :
             
-            self.set_occupied_volume(name_container, self._state_EL[name_container][name_EL][2] )
-            
+                pass
+            else : 
+                self.set_occupied_volume(name_container, self._state_EL[name_container][name_EL][2] )
+        
             self._state_EL[name_container][name_EL][0].acquire()
             self._state_EL[name_container][name_EL][1] = state
             self._state_EL[name_container][name_EL][0].release()
@@ -1338,6 +1357,8 @@ class current_state(object):
         """last saving"""
         self.BRBU_controller.set_save_current_situation_sate(False)
         self.saving_state_thread.set_save_current_situation_sate(False)
+        
+        self.saving_state_thread.close()
         
         time.sleep(1)
             

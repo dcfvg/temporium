@@ -28,10 +28,13 @@ class time_controller(threading.Thread):
         #print("begin in 30 seconds")
         time.sleep(30)
         while True :
+            print("begin load config")
             self._load_value_config()
+            print("end load config")
             
             
             if self.expo_open() :
+                print("do action")
                 """do action of BRBU_controller if there are action to do"""
                 self.current_state.BRBU_controller.do_action()
             
@@ -42,7 +45,7 @@ class time_controller(threading.Thread):
                         print("start cycle heavy for this day")
                         
                         self.current_state.set_current_action_aquarium_evolved("aquarium_cycle_heavy", True)
-                        #time.sleep(5)
+                        time.sleep(5)
                         while self.current_state.get_current_action_aquarium_evolved("aquarium_cycle_heavy") : 
                             time.sleep(5) 
                         print("renew cycle heavy done for this day")
@@ -62,7 +65,7 @@ class time_controller(threading.Thread):
                     
                     print("Start film")
                     self.current_state.set_current_film_state("film", True)
-                    
+                    time.sleep(5)
                     while self.current_state.get_current_film_state("film") : 
                         time.sleep(5)
                     
@@ -70,7 +73,7 @@ class time_controller(threading.Thread):
                     
                     print("start cycle light for this day")
                     self.current_state.set_current_action_aquarium_evolved("aquarium_cycle_light", True)
-                    #time.sleep(5)
+                    time.sleep(5)
                     while self.current_state.get_current_action_aquarium_evolved("aquarium_cycle_light") : 
                         time.sleep(5) 
                     print("renew cycle light done for this day")

@@ -42,6 +42,7 @@ class security_EL(threading.Thread):
             if not self.current_state.get_state_EL(name,"MAX") =="NULL" :
                 if self.current_state.get_state_EL(name,"MAX") : 
                     print ("WARNING : " +name+ " boiled over ")
+                    self.current_state.saving_state_thread.write_action ("WARNING : " +name+ " boiled over ")
                     """there is a pb"""
                     self.boiling_over = True
             
@@ -49,6 +50,7 @@ class security_EL(threading.Thread):
             if not self.current_state.get_state_EL(name,"MAX") =="NULL" :
                 if self.current_state.get_state_EL(name,"MAX") : 
                     print ("WARNING : " +name+ " boiled over ")
+                    self.current_state.saving_state_thread.write_action ("WARNING : " +name+ " boiled over ")
                     """there is a pb"""
                     self.boiling_over = True
             
@@ -56,6 +58,7 @@ class security_EL(threading.Thread):
             if not self.current_state.get_state_EL(name,"MAX") =="NULL" :
                 if self.current_state.get_state_EL(name,"MAX") : 
                     print ("WARNING : " +name+ " boiled over ")
+                    self.current_state.saving_state_thread.write_action ("WARNING : " +name+ " boiled over ")
                     """there is a pb"""
                     self.boiling_over = True
             
@@ -63,6 +66,7 @@ class security_EL(threading.Thread):
             if not self.current_state.get_state_EL(name,"MAX") =="NULL" :
                 if self.current_state.get_state_EL(name,"MAX") : 
                     print ("WARNING : " +name+ " boiled over ")
+                    self.current_state.saving_state_thread.write_action ("WARNING : " +name+ " boiled over ")
                     """there is a pb"""
                     self.boiling_over = True
             
@@ -70,6 +74,7 @@ class security_EL(threading.Thread):
             if not self.current_state.get_state_EL(name,"MAX") =="NULL" :
                 if self.current_state.get_state_EL(name,"MAX") : 
                     print ("WARNING : " +name+ " boiled over ")
+                    self.current_state.saving_state_thread.write_action ("WARNING : " +name+ " boiled over ")
                     """there is a pb"""
                     self.boiling_over = True
             
@@ -84,6 +89,7 @@ class security_EL(threading.Thread):
             if not self.current_state.get_state_EL(name,"MAX") =="NULL" :
                 if self.current_state.get_state_EL(name,"MAX") : 
                     print ("WARNING : " +name+ " boiled over ")
+                    self.current_state.saving_state_thread.write_action ("WARNING : " +name+ " boiled over ")
                     """there is a pb"""
                     self.boiling_over = True
             

@@ -45,6 +45,7 @@ class renew_light_AQ_BU(threading.Thread):
             else : 
                 print( "server_level_AQ not connected, it will be impossible to fill AQ after")
         else : 
+            self.current_state.saving_state_thread.write_action("Begin renew_light_AQ_" + self.BU_use)
             self.current_state._set_current_action_evolved("renew_light_AQ_" + self.BU_use, True)
             """need to be sure that there is enough BU"""
             self.current_state.set_information_asked("level", True)
@@ -52,7 +53,10 @@ class renew_light_AQ_BU(threading.Thread):
             if self.current_state.get_information_asked("level") : 
                 """be sure that there is still BU"""
                 """wait to upload occupied volume"""
-                time.sleep(self._time_wait_webcam)
+                compt = 0 
+                while compt < self._time_wait_webcam and self.current_state.get_current_action_evolved("renew_light_AQ_"+self.BU_use) : 
+                    time.sleep(1)
+                    compt = compt + 1
                 
                 if self.current_state.get_occupied_volume(self.BU_use) > self.BU_empty :
                 
@@ -69,7 +73,7 @@ class renew_light_AQ_BU(threading.Thread):
             
             self.current_state.set_information_asked("level", False)
             self.current_state._set_current_action_evolved("renew_light_AQ_" + self.BU_use, False)
-            
+            self.current_state.saving_state_thread.write_action("End renew_light_AQ_" + self.BU_use)
         
     
     def emptying_AQ_sec(self, sec):
@@ -135,8 +139,12 @@ class renew_light_AQ_BU(threading.Thread):
             
             self.current_state.set_information_asked("level", True)
             
-            """wait to upload occupied volume"""
-            time.sleep(self._time_wait_webcam)
+            """wait to upload volume info"""
+            compt = 0 
+            while compt < self._time_wait_webcam and self.current_state.get_current_action_evolved("renew_light_AQ_"+self.BU_use) : 
+                time.sleep(1)
+                compt = compt + 1
+                
             print("Filling AQ with BU in USE until AQ is full or until a Stop ")
             self.current_state.fill_BU_AQ(BU_use, True)
             """fill until AQ full or stop"""
