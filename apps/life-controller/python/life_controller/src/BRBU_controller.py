@@ -97,7 +97,7 @@ class BRBU_controller (threading.Thread):
                
                 """ time betweeen two round in hour"""
                 self.time_laps_hour = int(self.current_time_cycle /3600)
-                print (self.time_laps_hour)
+                #print (self.time_laps_hour)
                 
                 """ time betweeen two round in minute"""
                 time_laps_minute = (60 * self.time_laps_hour)%60        
