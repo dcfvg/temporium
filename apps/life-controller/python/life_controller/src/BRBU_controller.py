@@ -29,7 +29,7 @@ class BRBU_controller (threading.Thread):
         """if BU is empty for the EMPTY state"""
         self._BU_empty = {"BU1" : [threading.Lock(), False], "BU2" : [threading.Lock(), False] , "BU3" : [threading.Lock(), False] }
  
-  
+        
         
         """if wish to have a fake time"""
         self.fake = False
@@ -51,6 +51,7 @@ class BRBU_controller (threading.Thread):
                                        "BU_EMPTY" :[threading.Lock(), 0],\
                                        "FILLING_BR_BU" :[threading.Lock(), 0],\
                                        }
+        
         """time to wait after asking webcam info"""
         self._time_wait_webcam = 0
         
@@ -95,7 +96,8 @@ class BRBU_controller (threading.Thread):
                   
                
                 """ time betweeen two round in hour"""
-                self.time_laps_hour = self.current_time_cycle /3600
+                self.time_laps_hour = int(self.current_time_cycle /3600)
+                print (self.time_laps_hour)
                 
                 """ time betweeen two round in minute"""
                 time_laps_minute = (60 * self.time_laps_hour)%60        
@@ -103,6 +105,16 @@ class BRBU_controller (threading.Thread):
                 time_laps_second = (60 * time_laps_minute)%60
                 
                 self.save_current_situation(True)
+                
+                
+                if self.current_state.get_BU_used("BU1") and self.current_state.get_BU_used("BU2") and self.current_state.get_BU_used("BU3") :
+                    if self.time_laps_hour > 215 : 
+                        self.current_time_cycle = 0
+                else : 
+                    if self.time_laps_hour > 143 : 
+                        self.current_time_cycle = 0
+                        
+                time.sleep(5)
                 
                 
                 
@@ -114,36 +126,96 @@ class BRBU_controller (threading.Thread):
     
     def set_time_cycle(self):
         self.save_current_situation(True)
-        #if time_laps_second < 72 :
-        if self.time_laps_hour < 72 : 
-            self.current_state.set_BU_state("BU1", "WAIT")
-            self.current_state.set_BU_state("BU2", "USE")
-            self.current_state.set_BU_state("BU3", "EMPTY")
-            
-            self.set_BR_BU_ready("BU2", False)
-            self.set_BU_empty("BU1", False)
-
-
-            """Day 3 -Day  6  """
-        #elif time_laps_second < 144 :
-        elif self.time_laps_hour < 144 :
-            self.current_state.set_BU_state("BU1", "USE")
-            self.current_state.set_BU_state("BU2", "EMPTY")
-            self.current_state.set_BU_state("BU3", "WAIT")
-            
-            self.set_BR_BU_ready("BU1", False)
-            self.set_BU_empty("BU3", False)
-
+        """if BU1, BU2, BU3 used"""
+        if self.current_state.get_BU_used("BU1") and self.current_state.get_BU_used("BU2") and self.current_state.get_BU_used("BU3") : 
+            #if time_laps_second < 72 :
+            if self.time_laps_hour < 72 : 
+                self.current_state.set_BU_state("BU1", "WAIT")
+                self.current_state.set_BU_state("BU2", "USE")
+                self.current_state.set_BU_state("BU3", "EMPTY")
+                
+                self.set_BR_BU_ready("BU2", False)
+                self.set_BU_empty("BU1", False)
     
-            """Day 6 -Day  9  """
-        #elif time_laps_second < 216 :
-        elif self.time_laps_hour < 216 :
-            self.current_state.set_BU_state("BU1", "EMPTY")
-            self.current_state.set_BU_state("BU2", "WAIT")
-            self.current_state.set_BU_state("BU3", "USE")
-            
-            self.set_BR_BU_ready("BU3", False)
-            self.set_BU_empty("BU2", False)   
+    
+                """Day 3 -Day  6  """
+            #elif time_laps_second < 144 :
+            elif self.time_laps_hour < 144 :
+                self.current_state.set_BU_state("BU1", "USE")
+                self.current_state.set_BU_state("BU2", "EMPTY")
+                self.current_state.set_BU_state("BU3", "WAIT")
+                
+                self.set_BR_BU_ready("BU1", False)
+                self.set_BU_empty("BU3", False)
+    
+        
+                """Day 6 -Day  9  """
+            #elif time_laps_second < 216 :
+            elif self.time_laps_hour < 216 :
+                self.current_state.set_BU_state("BU1", "EMPTY")
+                self.current_state.set_BU_state("BU2", "WAIT")
+                self.current_state.set_BU_state("BU3", "USE")
+                
+                self.set_BR_BU_ready("BU3", False)
+                self.set_BU_empty("BU2", False)
+        
+        if self.current_state.get_BU_used("BU1") and self.current_state.get_BU_used("BU2") and (not self.current_state.get_BU_used("BU3")) : 
+            #if time_laps_second < 72 :
+            if self.time_laps_hour < 72 : 
+                self.current_state.set_BU_state("BU1", "WAIT")
+                self.current_state.set_BU_state("BU2", "USE")
+                
+                self.set_BR_BU_ready("BU2", False)
+                self.set_BU_empty("BU2", False)
+    
+    
+                """Day 3 -Day  6  """
+            #elif time_laps_second < 144 :
+            elif self.time_laps_hour < 144 :
+                self.current_state.set_BU_state("BU1", "USE")
+                self.current_state.set_BU_state("BU2", "WAIT")
+                
+                self.set_BR_BU_ready("BU1", False)
+                self.set_BU_empty("BU1", False)
+
+        if (not self.current_state.get_BU_used("BU1")) and self.current_state.get_BU_used("BU2") and  self.current_state.get_BU_used("BU3") : 
+            #if time_laps_second < 72 :
+            if self.time_laps_hour < 72 : 
+                self.current_state.set_BU_state("BU2", "WAIT")
+                self.current_state.set_BU_state("BU3", "USE")
+                
+                self.set_BR_BU_ready("BU3", False)
+                self.set_BU_empty("BU3", False)
+    
+    
+                """Day 3 -Day  6  """
+            #elif time_laps_second < 144 :
+            elif self.time_laps_hour < 144 :
+                self.current_state.set_BU_state("BU2", "USE")
+                self.current_state.set_BU_state("BU3", "WAIT")
+                
+                self.set_BR_BU_ready("BU2", False)
+                self.set_BU_empty("BU2", False)
+                
+
+        if self.current_state.get_BU_used("BU1") and (not self.current_state.get_BU_used("BU2")) and  self.current_state.get_BU_used("BU3") : 
+            #if time_laps_second < 72 :
+            if self.time_laps_hour < 72 : 
+                self.current_state.set_BU_state("BU1", "WAIT")
+                self.current_state.set_BU_state("BU3", "USE")
+                
+                self.set_BR_BU_ready("BU3", False)
+                self.set_BU_empty("BU3", False)
+    
+    
+                """Day 3 -Day  6  """
+            #elif time_laps_second < 144 :
+            elif self.time_laps_hour < 144 :
+                self.current_state.set_BU_state("BU1", "USE")
+                self.current_state.set_BU_state("BU3", "WAIT")
+                
+                self.set_BR_BU_ready("BU1", False)
+                self.set_BU_empty("BU1", False)
         
         
     def do_action(self):
@@ -464,6 +536,13 @@ class BRBU_controller (threading.Thread):
             """if auto_start is yes, then set auto_start to True"""
             if list[0].strip() == "auto_start" :
                 self.auto_start = (list[1].strip() == "True" )
+                
+            elif list[0].strip() == "BU_used" :
+                    "convert in hour"""
+                    name_container = list[1].strip()
+                    state = list[2].strip() =="True"
+                    self.current_state.set_BU_used(name_container, state) 
+                    
         print ("BRBU_controller auto_start : "  + str(self.auto_start))
         file.close()
         
@@ -496,6 +575,8 @@ class BRBU_controller (threading.Thread):
                 elif list[0].strip() == "time_cycle_hour" :
                     "convert in hour"""
                     self.current_time_cycle = int(list[1].strip())*3600
+                
+                
             
             
             """set the time of the cycle"""
@@ -536,9 +617,22 @@ class BRBU_controller (threading.Thread):
         """a tester de ne l'ouvrir qu'au depart"""
         save_file = open("save_current_situation/BRBU_current_state.txt", "w")
         save_file.write("Temporium : BRBU_controller "+ " \n")
+        save_file.write("comments : if BU1 and BU2 and BU3 used : "+ " \n")
         save_file.write("comments : 0-71 : BU1 WAIT , BU2 USE, BU3 EMPTY"+ " \n")
         save_file.write("comments : 72-143 : BU1 USE , BU2 EMPTY, BU3 WAIT"+ " \n")
         save_file.write("comments : 144-215 : BU1 EMPTY , BU2 WAIT, BU3 USE"+ " \n")
+        save_file.write("comments : if BU1 and BU2 used : "+ " \n")
+        save_file.write("comments : 0-71 : BU1 WAIT , BU2 USE"+ " \n")
+        save_file.write("comments : 72-143 : BU1 USE , BU2 WAIT"+ " \n")
+        save_file.write("comments : if BU2 and BU3 used : "+ " \n")
+        save_file.write("comments : 0-71 : BU2 WAIT , BU3 USE"+ " \n")
+        save_file.write("comments : 72-143 : BU2 USE , BU3 WAIT"+ " \n")
+        save_file.write("comments : if BU1 and BU3 used : "+ " \n")
+        save_file.write("comments : 0-71 : BU1 WAIT , BU3 USE"+ " \n")
+        save_file.write("comments : 72-143 : BU1 USE , BU3 WAIT"+ " \n")
+        save_file.write("comments : BU_used : indicates if Bux is used like 'BU_used : BU1 : True'"+ " \n")
+        for item in self.current_state._BU_used : 
+            save_file.write("BU_used : " + item +  " : "+ str(self.current_state.get_BU_used(item))  +"\n")
         save_file.write("auto_start : "+ str(auto_start_state) + " \n")
         save_file.write("time_save : "+ time.strftime("%a, %d %b %Y %H:%M:%S +0000",time. localtime()) + "\n")
         save_file.write("time_cycle_hour : "+ str(int(current_time_cycle_save/3600)) + " \n")
@@ -573,6 +667,7 @@ class BRBU_controller (threading.Thread):
         state = self._BU_empty[name][1] 
         self._BU_empty[name][0].release()
         return state
+
     
     """LOADING CONFIGURTION VALUES"""
     """loading values from config_manager"""

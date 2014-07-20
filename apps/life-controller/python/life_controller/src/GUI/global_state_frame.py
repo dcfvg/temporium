@@ -24,6 +24,10 @@ class global_state_frame(Frame):
                           "BU2" : [1],\
                           "BU3" : [2] }
         
+        self._BU_used = {"BU1" : [0],\
+                          "BU2" : [1],\
+                          "BU3" : [2] }
+        
         """store each button in a dict()like : { "P_M1_BR1" : [0, button, label_state]...}"""
         self._state_EL = {"BR1" : {"MAX" :[0]},\
                           "BR2" : {"MAX" :[1]},\
@@ -38,13 +42,19 @@ class global_state_frame(Frame):
                           
         
         self._build_label_BU_state()
+        self._build_label_BU_used()
         self._build_label_state_EL()
         self._build_button_refresh_state_El()
         self._build_state_label()
         self._add_to_frame()
         
         self.pack(side = "left", fill=NONE, expand=1)
-        
+    
+    
+    def _build_label_BU_used(self):
+        for item in self._BU_used : 
+            self._BU_used[item].append(tkinter.Label(self,  text = item + " : ", fg = "black", bg = "white"))
+     
     def _build_label_BU_state(self):
         for item in self._BU_state : 
             self._BU_state[item].append(tkinter.Label(self,  text = item + " : ", fg = "black", bg = "white"))
@@ -66,7 +76,8 @@ class global_state_frame(Frame):
         for item in self._state_EL : 
             for item2 in self._state_EL[item] : 
                 self._state_EL[item][item2].append(tkinter.Label(self,  text = "NULL" , fg = "black", bg = "white"))
-        
+        for item in self._BU_used : 
+            self._BU_used[item].append(tkinter.Label(self,  text = "NULL" , fg = "black", bg = "white"))
         
     def _add_to_frame(self) :
         compt = 0
@@ -79,6 +90,18 @@ class global_state_frame(Frame):
             self._BU_state[item][1].grid(sticky=W, row= self._BU_state[item][0]+compt, column=0)
             self._BU_state[item][2].grid(sticky=E, row=self._BU_state[item][0]+compt, column=1)
         compt = compt+internal_compt
+        
+        
+        Label(self, text = "BU USED : ",fg = "white", bg = "black").grid(sticky = W, row=compt, columnspan = 2)
+        compt = compt+1
+        
+        internal_compt = 0
+        for item in self._BU_used :
+            internal_compt = internal_compt +1
+            self._BU_used[item][1].grid(sticky=W, row= self._BU_used[item][0]+compt, column=0)
+            self._BU_used[item][2].grid(sticky=E, row=self._BU_used[item][0]+compt, column=1)
+        compt = compt+internal_compt
+        
         
         Label(self, text = "EL STATE : ",fg = "white", bg = "black").grid(sticky = W, row=compt, columnspan = 2)
         compt = compt+1
@@ -104,6 +127,16 @@ class global_state_frame(Frame):
         for item in self._BU_state :  
             state = self.current_state.get_BU_state(item)
             self._BU_state[item][2].config (text = state)
+            
+        for item in self._BU_used :  
+            if self.current_state.get_BU_used(item) :
+                color = "green"
+                t = "TRUE" 
+            else : 
+                color = "red"
+                t = "FALSE"
+                
+            self._BU_used[item][2].config(bg = color, text = t)
         for item in self._state_EL : 
             for item2 in self._state_EL[item] : 
                 """Rq : getting state EL but without actually checking them"""

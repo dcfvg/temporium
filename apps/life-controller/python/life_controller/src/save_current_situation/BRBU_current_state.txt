@@ -1,7 +1,21 @@
 Temporium : BRBU_controller  
+comments : if BU1 and BU2 and BU3 used :  
 comments : 0-71 : BU1 WAIT , BU2 USE, BU3 EMPTY 
 comments : 72-143 : BU1 USE , BU2 EMPTY, BU3 WAIT 
 comments : 144-215 : BU1 EMPTY , BU2 WAIT, BU3 USE 
+comments : if BU1 and BU2 used :  
+comments : 0-71 : BU1 WAIT , BU2 USE 
+comments : 72-143 : BU1 USE , BU2 WAIT 
+comments : if BU2 and BU3 used :  
+comments : 0-71 : BU2 WAIT , BU3 USE 
+comments : 72-143 : BU2 USE , BU3 WAIT 
+comments : if BU1 and BU3 used :  
+comments : 0-71 : BU1 WAIT , BU3 USE 
+comments : 72-143 : BU1 USE , BU3 WAIT 
+comments : BU_used : indicates if Bux is used like 'BU_used : BU1 : True' 
+BU_used : BU3 : True
+BU_used : BU1 : True
+BU_used : BU2 : True
 auto_start : True 
 time_save : Sun, 20 Jul 2014 14:49:09 +0000
 time_cycle_hour : 7 

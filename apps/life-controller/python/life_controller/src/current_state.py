@@ -49,6 +49,9 @@ class current_state(object):
         """BRBU_controller state"""
         self._BU_state = {"BU1" : [threading.Lock(), "NULL"],"BU2" : [threading.Lock(), "NULL"],"BU3" : [threading.Lock(), "NULL"] }
         
+        """indicates wich BU1 is fonctionning (used) for BRBU_controller"""
+        self._BU_used = {"BU1" : [threading.Lock(), False], "BU2" : [threading.Lock(), False] , "BU3" : [threading.Lock(), False] }
+
         """current_action"""
         self._current_action = {"AQ_filtration" : [threading.Lock(),False],\
                                 "fill_BU1_AQ" : [threading.Lock(),False],\
@@ -995,6 +998,19 @@ class current_state(object):
         self._BU_state[BU][0].release()
         return state
     
+    
+    """BU_USED"""
+        
+    def set_BU_used(self,name, state):
+        self._BU_used[name][0].acquire()
+        self._BU_used[name][1] = state
+        self._BU_used[name][0].release()
+        
+    def get_BU_used(self,name):
+        self._BU_used[name][0].acquire()
+        state = self._BU_used[name][1] 
+        self._BU_used[name][0].release()
+        return state
     """BRBU_COTROLLER"""
     
     
