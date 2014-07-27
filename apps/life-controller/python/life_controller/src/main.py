@@ -25,7 +25,7 @@ from time_controller import *
         
 def handler( signo, sig_frame):
     print("Exiting program")
-    le_server.stop()
+    cu_state.quit()
     os._exit(0)
     
 

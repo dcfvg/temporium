@@ -25,6 +25,11 @@ class aquarium_controller(threading.Thread):
         self._start_lock = threading.Lock()
         self._start_lock.acquire()
     
+        
+        """actionning lift or not"""
+        self.lift_action = False 
+        self.time_wait_no_lift = 120
+        
         self.start()
         
     def run(self):
@@ -63,18 +68,36 @@ class aquarium_controller(threading.Thread):
         """start filtration"""
         self.current_state.set_current_action("AQ_filtration", True)
         """lift_down"""
-        self.current_state.set_current_action_lift_screen("lift_down")
-        """wait until lift_down is finished"""
         
-        time.sleep(2)
-        while self.current_state.get_lift_busy() : 
+        if self.lift_action : 
+            self.current_state.set_current_action_lift_screen("lift_down")
+            """wait until lift_down is finished"""
+            
             time.sleep(2)
-        """lift_up"""
-        self.current_state.set_current_action_lift_screen("lift_up")
-        """wait until lift_up is finished"""
-        time.sleep(2)
-        while self.current_state.get_lift_busy() : 
+            while self.current_state.get_lift_busy() : 
+                time.sleep(2)
+            
+        
+        else : 
+            print("No lift, waiting " + str(self.time_wait_no_lift))
+            time.sleep(self.time_wait_no_lift)
+        
+        if self.lift_action : 
+            
+            """lift_up"""
+            
+            self.current_state.set_current_action_lift_screen("lift_up")
+            """wait until lift_up is finished"""
             time.sleep(2)
+            while self.current_state.get_lift_busy() : 
+                time.sleep(2)
+        
+        else : 
+            print("No lift, waiting " + str(self.time_wait_no_lift))
+            time.sleep(self.time_wait_no_lift)
+        
+        
+        
         
         """end filtration"""
         self.current_state.set_current_action("AQ_filtration", False)
@@ -100,12 +123,18 @@ class aquarium_controller(threading.Thread):
         """stop filtration"""
         self.current_state.set_current_action("AQ_filtration", True)
         
-        """lift_down"""
-        self.current_state.set_current_action_lift_screen("lift_down")
-        time.sleep(2)
-        """wait until lift_down is finished"""
-        while self.current_state.get_lift_busy()  :  
+        
+        if self.lift_action : 
+            """lift_down"""
+            self.current_state.set_current_action_lift_screen("lift_down")
             time.sleep(2)
+            """wait until lift_down is finished"""
+            while self.current_state.get_lift_busy()  :  
+                time.sleep(2)
+        else : 
+            print("No lift, waiting " + str(self.time_wait_no_lift))
+            time.sleep(self.time_wait_no_lift)
+            
             
         """stop filtration"""
         self.current_state.set_current_action("AQ_filtration", False)
@@ -124,12 +153,16 @@ class aquarium_controller(threading.Thread):
         """start filtration"""
         self.current_state.set_current_action("AQ_filtration", True)
         
-        """lift_up"""
-        self.current_state.set_current_action_lift_screen("lift_up")
-        """wait until lift_down is finished"""
-        time.sleep(2)
-        while self.current_state.get_lift_busy() : 
+        if self.lift_action : 
+            """lift_up"""
+            self.current_state.set_current_action_lift_screen("lift_up")
+            """wait until lift_down is finished"""
             time.sleep(2)
+            while self.current_state.get_lift_busy() : 
+                time.sleep(2)
+        else : 
+            print("No lift, waiting " + str(self.time_wait_no_lift))
+            time.sleep(self.time_wait_no_lift)
             
         """stop filtration"""
         self.current_state.set_current_action("AQ_filtration", False)

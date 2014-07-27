@@ -30,6 +30,11 @@ class time_controller(threading.Thread):
         while True :
             self._load_value_config()
             
+            
+            if self.expo_open() :
+                """do action of BRBU_controller if there are action to do"""
+                self.current_state.BRBU_controller.do_action()
+            
             if self.current_state.get_current_time_controller_state("AQ_cycle_heavy") :
                 
                 if  self.AQ_cycle_heavy_state() and self.expo_open() :
@@ -75,7 +80,7 @@ class time_controller(threading.Thread):
                 
                 
                 
-            time.sleep(5)
+            time.sleep(60)
                 
     
     def AQ_cycle_heavy_state(self):

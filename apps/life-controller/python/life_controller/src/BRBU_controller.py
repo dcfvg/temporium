@@ -23,11 +23,11 @@ class BRBU_controller (threading.Thread):
         self.current_state = un_current_state
         
         """if false, it's the first time it enter in the cycle : work to do then it is ready, True"""
-        self.BR_BU_ready = {"BU1" : False , "BU2" : False , "BU3" : False }
+        self._BR_BU_ready = {"BU1" : [threading.Lock(), False] , "BU2" : [threading.Lock(), False] , "BU3" : [threading.Lock(), False] }
 
         
         """if BU is empty for the EMPTY state"""
-        self.BU_empty = {"BU1" : False , "BU2" : False , "BU3" : False }
+        self._BU_empty = {"BU1" : [threading.Lock(), False], "BU2" : [threading.Lock(), False] , "BU3" : [threading.Lock(), False] }
  
   
         
@@ -54,6 +54,10 @@ class BRBU_controller (threading.Thread):
         """time to wait after asking webcam info"""
         self._time_wait_webcam = 0
         
+        """time managing"""
+        self.time_laps_hour = 0 
+        
+        self._save_current_situation_sate = [threading.Lock(), True]
         self._reset_time()
 
         
@@ -91,175 +95,184 @@ class BRBU_controller (threading.Thread):
                   
                
                 """ time betweeen two round in hour"""
-                time_laps_hour = self.current_time_cycle /3600
+                self.time_laps_hour = self.current_time_cycle /3600
                 
                 """ time betweeen two round in minute"""
-                time_laps_minute = (60 * time_laps_hour)%60        
+                time_laps_minute = (60 * self.time_laps_hour)%60        
                 
                 time_laps_second = (60 * time_laps_minute)%60
                 
                 self.save_current_situation(True)
-                #if time_laps_second < 72 :
-                if time_laps_hour < 72 : 
-                    self.current_state.set_BU_state("BU1", "WAIT")
-                    self.current_state.set_BU_state("BU2", "USE")
-                    self.current_state.set_BU_state("BU3", "EMPTY")
-                    
-                    self.BR_BU_ready["BU2"] = False
-                    self.BU_empty["BU1"] = False
-        
-    
-    
-                    """Day 3 -Day  6  """
-                #elif time_laps_second < 144 :
-                elif time_laps_hour < 144 :
-                    self.current_state.set_BU_state("BU1", "USE")
-                    self.current_state.set_BU_state("BU2", "EMPTY")
-                    self.current_state.set_BU_state("BU3", "WAIT")
-                    
-                    self.BR_BU_ready["BU1"] = False
-                    self.BU_empty["BU3"] = False
-    
-            
-                    """Day 6 -Day  9  """
-                #elif time_laps_second < 216 :
-                elif time_laps_hour < 216 :
-                    self.current_state.set_BU_state("BU1", "EMPTY")
-                    self.current_state.set_BU_state("BU2", "WAIT")
-                    self.current_state.set_BU_state("BU3", "USE")
-                    
-                    self.BR_BU_ready["BU3"] = False
-                    self.BU_empty["BU2"] = False
                 
                 
-                #for item in self.current_state.BRBU_state : 
-                #  print (item + " " + str(self.current_state.get_BU_state(item)) )
-    
-                """Action on BU - BR to produce alguae"""
                 
-                """if B1 is in WAIT"""
-                if self.current_state.get_BU_state("BU1") == "WAIT":
-                    
-                    """At the begining of WAIT for C1"""
-                    if not self.BR_BU_ready["BU1"] :
-                        
-                        """empty BR and fill BU : 2/3 BR -> BU """
-                        
-                        """check if it is not in pause, not in stop and if volume occupied ... """
-                        """name of the pump associatedto this action"""
-                        
-                        """empty BR and fill BU : 2/3 BR -> BU """
-                        
-                        self.fill_BRBU("P_BR1_BU1", "BU1",self.get_BRBU_controller("FILLING_BR_BU") )
-                        """saving the state"""
-                        self.save_current_situation(True)
-                        
-                        """fill BU : full with M2 """
-                        self.fill_BRBU("P_M2_BU1", "BU1", self.get_BRBU_controller("BU_FULL"))
-                        """saving the state"""
-                        self.save_current_situation(True)
-        
-                        
-                        """fill BR : full with M1 """
-                        self.fill_BRBU("P_M1_BR1", "BR1",  self.get_BRBU_controller("BR_FULL"))
-                        """saving the state"""
-                        self.save_current_situation(True)
-        
-
-                        """BR1_BU1_ready ready """
-                        self.BR_BU_ready["BU1"] = True;
-                        """saving the state"""
-                        self.save_current_situation(True)               
-                        
-
-                
-                """if B2 is in WAIT"""
-                if self.current_state.get_BU_state("BU2") == "WAIT":
-                    if not self.BR_BU_ready["BU2"] :
-                        
-                        """empty BR and fill BU : 2/3 BR -> BU """
-                        self.fill_BRBU("P_BR2_BU2", "BU2", self.get_BRBU_controller("FILLING_BR_BU") )
-                        """saving the state"""
-                        self.save_current_situation(True)
-                        
-                        """fill BU : full with M2 """
-                        self.fill_BRBU("P_M2_BU2", "BU2", self.get_BRBU_controller("BU_FULL"))
-                        """saving the state"""
-                        self.save_current_situation(True)
-                        
-                        """fill BR : full with M1 """
-                        self.fill_BRBU("P_M1_BR2", "BR2", self.get_BRBU_controller("BR_FULL"))
-                        """saving the state"""
-                        self.save_current_situation(True)  
-                    
-                        """BR2_BU2_ready ready """
-                        self.BR_BU_ready["BU2"] = True
-                        """saving the state"""
-                        self.save_current_situation(True)            
-                
-                """if B3 is in WAIT"""
-                if self.current_state.get_BU_state("BU3") == "WAIT" :
-                    
-                    if not self.BR_BU_ready["BU3"] :
-                        
-                        """empty BR and fill BU : 2/3 BR -> BU """
-                        self.fill_BRBU("P_BR3_BU3", "BU3", self.get_BRBU_controller("FILLING_BR_BU") )
-                        """saving the state"""
-                        self.save_current_situation(True)
-                        
-                        """fill BU : full with M2 """
-                        self.fill_BRBU("P_M2_BU3", "BU3", self.get_BRBU_controller("BU_FULL") )
-                        """saving the state"""
-                        self.save_current_situation(True)
-                          
-                        """fill BR : full with M1 """
-                        self.fill_BRBU("P_M1_BR3", "BR3", self.get_BRBU_controller("BR_FULL"))
-                        """saving the state"""
-                        self.save_current_situation(True)
-                        
-                        
-                        """BR_BU_ready ready """
-                        self.BR_BU_ready["BU3"] = True;
-                        """saving the state"""
-                        self.save_current_situation(True)
-                
-                
-                if self.current_state.get_BU_state("BU1") == "EMPTY":
-                    """for testing purposes, emptying BU"""
-                    if not self.BU_empty["BU1"]  : 
-                        
-                        """function to complete, action to do at the begining of EMPTY"""
-                        self.empty_BU("empty_BU1_S", "BU1", self.get_BRBU_controller("BU_EMPTY"))
-                        """saving the state"""
-                        self.save_current_situation(True)
-                        
-                          
-                    
-                if self.current_state.get_BU_state("BU2") == "EMPTY":
-                    if not self.BU_empty["BU2"]  :
-                        """function to complete, action to do at the begining of EMPTY"""
-                        self.empty_BU("empty_BU2_S", "BU2", self.get_BRBU_controller("BU_EMPTY"))
-                        """saving the state"""
-                        self.save_current_situation(True)
-                              
-                    
-                if self.current_state.get_BU_state("BU3") == "EMPTY":
-                    
-                    if not self.BU_empty["BU3"]  :
-                        """function to complete, action to do at the begining of EMPTY"""
-                        self.empty_BU("empty_BU3_S", "BU3", self.get_BRBU_controller("BU_EMPTY"))
-                        """saving the state"""
-                        self.save_current_situation(True)
-                time.sleep(1)
                 
             """when stopped, save current_situation autostart to False"""
             self.save_current_situation(False)
 
-                        
+
+                  
+    def do_action(self):
+        self.save_current_situation(True)
+        #if time_laps_second < 72 :
+        if self.time_laps_hour < 72 : 
+            self.current_state.set_BU_state("BU1", "WAIT")
+            self.current_state.set_BU_state("BU2", "USE")
+            self.current_state.set_BU_state("BU3", "EMPTY")
+            
+            self.set_BR_BU_ready("BU2", False)
+            self.set_BU_empty("BU1", False)
+
+
+            """Day 3 -Day  6  """
+        #elif time_laps_second < 144 :
+        elif self.time_laps_hour < 144 :
+            self.current_state.set_BU_state("BU1", "USE")
+            self.current_state.set_BU_state("BU2", "EMPTY")
+            self.current_state.set_BU_state("BU3", "WAIT")
+            
+            self.set_BR_BU_ready("BU1", False)
+            self.set_BU_empty("BU3", False)
+
+    
+            """Day 6 -Day  9  """
+        #elif time_laps_second < 216 :
+        elif self.time_laps_hour < 216 :
+            self.current_state.set_BU_state("BU1", "EMPTY")
+            self.current_state.set_BU_state("BU2", "WAIT")
+            self.current_state.set_BU_state("BU3", "USE")
+            
+            self.set_BR_BU_ready("BU3", False)
+            self.set_BU_empty("BU2", False)
+        
+        
+        #for item in self.current_state.BRBU_state : 
+        #  print (item + " " + str(self.current_state.get_BU_state(item)) )
+
+        """Action on BU - BR to produce alguae"""
+        """if B1 is in WAIT"""
+        if self.current_state.get_BU_state("BU1") == "WAIT":
+            
+            """At the begining of WAIT for C1"""
+            if not self.get_BR_BU_ready("BU1") :
+                
+                """empty BR and fill BU : 2/3 BR -> BU """
+                
+                """check if it is not in pause, not in stop and if volume occupied ... """
+                """name of the pump associatedto this action"""
+                
+                """empty BR and fill BU : 2/3 BR -> BU """
+                
+                self.fill_BRBU("P_BR1_BU1", "BU1",self.get_BRBU_controller("FILLING_BR_BU") )
+                """saving the state"""
+                self.save_current_situation(True)
+                
+                """fill BU : full with M2 """
+                self.fill_BRBU("P_M2_BU1", "BU1", self.get_BRBU_controller("BU_FULL"))
+                """saving the state"""
+                self.save_current_situation(True)
+
+                
+                """fill BR : full with M1 """
+                self.fill_BRBU("P_M1_BR1", "BR1",  self.get_BRBU_controller("BR_FULL"))
+                """saving the state"""
+                self.save_current_situation(True)
+
+
+                """BR1_BU1_ready ready """
+                self.set_BR_BU_ready("BU1", True)
+                """saving the state"""
+                self.save_current_situation(True)               
+                
+
+        
+        """if B2 is in WAIT"""
+        if self.current_state.get_BU_state("BU2") == "WAIT":
+            if not self.get_BR_BU_ready("BU2") :
+                
+                """empty BR and fill BU : 2/3 BR -> BU """
+                self.fill_BRBU("P_BR2_BU2", "BU2", self.get_BRBU_controller("FILLING_BR_BU") )
+                """saving the state"""
+                self.save_current_situation(True)
+                
+                """fill BU : full with M2 """
+                self.fill_BRBU("P_M2_BU2", "BU2", self.get_BRBU_controller("BU_FULL"))
+                """saving the state"""
+                self.save_current_situation(True)
+                
+                """fill BR : full with M1 """
+                self.fill_BRBU("P_M1_BR2", "BR2", self.get_BRBU_controller("BR_FULL"))
+                """saving the state"""
+                self.save_current_situation(True)  
+            
+                """BR2_BU2_ready ready """
+                self.set_BR_BU_ready("BU2", True)
+                """saving the state"""
+                self.save_current_situation(True)            
+        
+        """if B3 is in WAIT"""
+        if self.current_state.get_BU_state("BU3") == "WAIT" :
+            
+            if not self.get_BR_BU_ready("BU3") :
+                
+                """empty BR and fill BU : 2/3 BR -> BU """
+                self.fill_BRBU("P_BR3_BU3", "BU3", self.get_BRBU_controller("FILLING_BR_BU") )
+                """saving the state"""
+                self.save_current_situation(True)
+                
+                """fill BU : full with M2 """
+                self.fill_BRBU("P_M2_BU3", "BU3", self.get_BRBU_controller("BU_FULL") )
+                """saving the state"""
+                self.save_current_situation(True)
+                  
+                """fill BR : full with M1 """
+                self.fill_BRBU("P_M1_BR3", "BR3", self.get_BRBU_controller("BR_FULL"))
+                """saving the state"""
+                self.save_current_situation(True)
+                
+                
+                """BR_BU_ready ready """
+                self.set_BR_BU_ready("BU3", True)
+                """saving the state"""
+                self.save_current_situation(True)
+        
+        
+        if self.current_state.get_BU_state("BU1") == "EMPTY":
+            """for testing purposes, emptying BU"""
+            if not self.get_BU_empty("BU1")  : 
+                
+                """function to complete, action to do at the begining of EMPTY"""
+                self.empty_BU("empty_BU1_S", "BU1", self.get_BRBU_controller("BU_EMPTY"))
+                self.set_BU_empty("BU1", True)
+                """saving the state"""
+                self.save_current_situation(True)
+                
+                  
+            
+        if self.current_state.get_BU_state("BU2") == "EMPTY":
+            if not self.get_BU_empty("BU2")  :
+                """function to complete, action to do at the begining of EMPTY"""
+                self.empty_BU("empty_BU2_S", "BU2", self.get_BRBU_controller("BU_EMPTY"))
+                self.set_BU_empty("BU2", True)
+                """saving the state"""
+                self.save_current_situation(True)
+                      
+            
+        if self.current_state.get_BU_state("BU3") == "EMPTY":
+            
+            if not self.get_BU_empty("BU3")  :
+                """function to complete, action to do at the begining of EMPTY"""
+                self.empty_BU("empty_BU3_S", "BU3", self.get_BRBU_controller("BU_EMPTY"))
+                self.set_BU_empty("BU3", True)
+                """saving the state"""
+                self.save_current_situation(True)
+        time.sleep(1)
+        
+          
     """ACTION TAKEN BY BRBU_CONTROLLER"""          
     """fill container_name, with pump_name unti volume_order in conatainer_name"""
     def fill_BRBU(self, pump_name, container_name, volume_order):
-        print ("fill " + container_name +" with " + str(volume_order))
+        print ("fill " + container_name +" until " + str(volume_order))
         self.current_state.set_information_asked("level", True)
         time.sleep(self._time_wait_webcam)
         if not self.current_state.get_information_asked("level") : 
@@ -286,6 +299,7 @@ class BRBU_controller (threading.Thread):
         self.current_state.set_state_pump(pump_name, False)
         
         self.current_state.set_information_asked("level", False)
+        
         
     
     """empty container_name with action_name until volume_order in container_name"""   
@@ -314,7 +328,7 @@ class BRBU_controller (threading.Thread):
             self.current_state.set_current_action(action_name, False)
         
             self.current_state.set_information_asked("level", False)
-        self.BU_empty[container_name] = True 
+         
     
     
 
@@ -325,7 +339,7 @@ class BRBU_controller (threading.Thread):
                 self.current_state.set_BU_state(item, "NULL")
                 
             if not self.current_state.get_BU_state(item) == "EMPTY" : 
-                self.BU_empty[item] = False
+                self.set_BU_empty(item, False)
     
     """CYCLE MANAGEMENT"""
         
@@ -343,10 +357,10 @@ class BRBU_controller (threading.Thread):
             self.old_time = time.time()
         
         """set all the BR_BU_redy, BU_empty to false """
-        for item in self.BR_BU_ready : 
-            self.BR_BU_ready[item] = False 
-        for item in self.BU_empty : 
-            self.BU_empty[item] = False
+        for item in self._BR_BU_ready : 
+            self.set_BR_BU_ready(item, False) 
+        for item in self._BU_empty : 
+            self.set_BU_empty(item, False)
     
     
      
@@ -438,21 +452,21 @@ class BRBU_controller (threading.Thread):
                 list = ligne.split(":")    
                 if list[0].strip() == "BU1" :
                     if list[1].strip() == "READY" :
-                        self.BR_BU_ready["BU1"] = ( list[2].strip() == "True")
+                        self.set_BR_BU_ready("BU1", list[2].strip() == "True")
                     elif list[1].strip() == "EMPTY" :
-                        self.BU_empty["BU1"] = ( list[2].strip() == "True")
+                        self.set_BU_empty("BU1", list[2].strip() == "True")
                         
                 elif list[0].strip() == "BU2" :
                     if list[1].strip() == "READY" :
-                        self.BR_BU_ready["BU2"] = ( list[2].strip() == "True")
+                        self.set_BR_BU_ready("BU2",list[2].strip() == "True")
                     elif list[1].strip() == "EMPTY" :
-                        self.BU_empty["BU2"] = ( list[2].strip() == "True")
+                        self.set_BU_empty("BU2", list[2].strip() == "True")
                 
                 elif list[0].strip() == "BU3" :
                     if list[1].strip() == "READY" :
-                        self.BR_BU_ready["BU3"] = ( list[2].strip() == "True")
+                        self.set_BR_BU_ready("BU3", list[2].strip() == "True")
                     elif list[1].strip() == "EMPTY" :
-                        self.BU_empty["BU3"] = ( list[2].strip() == "True")
+                        self.set_BU_empty("BU3", list[2].strip() == "True")
                 
                 elif list[0].strip() == "time_cycle_hour" :
                     "convert in hour"""
@@ -473,6 +487,13 @@ class BRBU_controller (threading.Thread):
               
         
     def save_current_situation(self, auto_start_state):
+        
+        if self.get_save_current_situation_sate() :
+            self.save_current_situation_manual(auto_start_state)
+            
+    def save_current_situation_manual(self, auto_start_state):
+        
+       
         #print("saving BRBU_controller " + str(auto_start_state))
         """stock the current time of the cyle"""
         if self.fake : 
@@ -488,19 +509,44 @@ class BRBU_controller (threading.Thread):
         """a tester de ne l'ouvrir qu'au depart"""
         save_file = open("save_current_situation/BRBU_current_state.txt", "w")
         save_file.write("Temporium : BRBU_controller "+ " \n")
+        save_file.write("comments : 0-71 : BU1 WAIT , BU2 USE, BU3 EMPTY"+ " \n")
+        save_file.write("comments : 72-143 : BU1 USE , BU2 EMPTY, BU3 WAIT"+ " \n")
+        save_file.write("comments : 144-215 : BU1 EMPTY , BU2 WAIT, BU3 USE"+ " \n")
         save_file.write("auto_start : "+ str(auto_start_state) + " \n")
         save_file.write("time_save : "+ time.strftime("%a, %d %b %Y %H:%M:%S +0000",time. localtime()) + "\n")
         save_file.write("time_cycle_hour : "+ str(int(current_time_cycle_save/3600)) + " \n")
         save_file.write("time_cycle : "+ str(int(time_laps_hour))+ "h" + str(int(time_laps_minute)) + "m" + str(int(time_laps_second)) + " \n")
-        save_file.write("BU1 : READY : " + str(self.BR_BU_ready["BU1"])+ " \n")
-        save_file.write("BU2 : READY : " + str(self.BR_BU_ready["BU2"])+ " \n")
-        save_file.write("BU3 : READY : " + str(self.BR_BU_ready["BU3"])+ " \n")
-        save_file.write("BU1 : EMPTY : " + str(self.BU_empty["BU1"])+ " \n")
-        save_file.write("BU2 : EMPTY : " + str(self.BU_empty["BU2"])+ " \n")
-        save_file.write("BU3 : EMPTY : " + str(self.BU_empty["BU3"]))
+        save_file.write("BU1 : READY : " + str(self.get_BR_BU_ready("BU1"))+ " \n")
+        save_file.write("BU2 : READY : " + str(self.get_BR_BU_ready("BU2"))+ " \n")
+        save_file.write("BU3 : READY : " + str(self.get_BR_BU_ready("BU3"))+ " \n")
+        save_file.write("BU1 : EMPTY : " + str(self.get_BU_empty("BU1"))+ " \n")
+        save_file.write("BU2 : EMPTY : " + str(self.get_BU_empty("BU2"))+ " \n")
+        save_file.write("BU3 : EMPTY : " + str(self.get_BU_empty("BU3"))+ " \n")
         save_file.flush()
          
-
+    
+    def set_BR_BU_ready(self,name, state):
+        self._BR_BU_ready[name][0].acquire()
+        self._BR_BU_ready[name][1] = state
+        self._BR_BU_ready[name][0].release()
+        
+    def get_BR_BU_ready(self,name):
+        self._BR_BU_ready[name][0].acquire()
+        state = self._BR_BU_ready[name][1] 
+        self._BR_BU_ready[name][0].release()
+        return state
+    
+    def set_BU_empty(self,name, state):
+        self._BU_empty[name][0].acquire()
+        self._BU_empty[name][1] = state
+        self._BU_empty[name][0].release()
+        
+    def get_BU_empty(self,name):
+        self._BU_empty[name][0].acquire()
+        state = self._BU_empty[name][1] 
+        self._BU_empty[name][0].release()
+        return state
+    
     """LOADING CONFIGURTION VALUES"""
     """loading values from config_manager"""
     def _load_value_config(self):
@@ -520,6 +566,19 @@ class BRBU_controller (threading.Thread):
         value = self._BRBU_controller_value[name][1]       
         self._BRBU_controller_value[name][0].release()
         return value
+    
+    def set_save_current_situation_sate(self, value):
+        self._save_current_situation_sate[0].acquire()
+        self._save_current_situation_sate[1] = value      
+        self._save_current_situation_sate[0].release()
+    
+    """return the value corresponding to the name you asked : ex "BU_FULL" here""" 
+    def get_save_current_situation_sate(self):
+        self._save_current_situation_sate[0].acquire()
+        value = self._save_current_situation_sate[1]       
+        self._save_current_situation_sate[0].release()
+        return value
+
              
 
    

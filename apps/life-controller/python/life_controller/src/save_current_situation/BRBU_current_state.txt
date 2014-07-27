@@ -1,14 +1,14 @@
 Temporium : BRBU_controller  
+comments : 0-71 : BU1 WAIT , BU2 USE, BU3 EMPTY 
+comments : 72-143 : BU1 USE , BU2 EMPTY, BU3 WAIT 
+comments : 144-215 : BU1 EMPTY , BU2 WAIT, BU3 USE 
 auto_start : True 
-time_save : Thu, 17 Jul 2014 12:23:32 +0000
-comments : 0 - 71 : BU1 WAIT, BU2 USE, BU3 EMPY
-comments : 72 - 143 : BU1 USE, BU2 EMPY, BU3 WAIT
-comments : 144 - 215 : BU1 EMPTY, BU2 WAIT, BU3 USE
+time_save : Sun, 27 Jul 2014 19:20:01 +0000
 time_cycle_hour : 144 
-time_cycle : 0h0m29 
+time_cycle : 144h0m3 
 BU1 : READY : False 
 BU2 : READY : False 
 BU3 : READY : False 
 BU1 : EMPTY : False 
 BU2 : EMPTY : False 
-BU3 : EMPTY : False
+BU3 : EMPTY : False 

@@ -21,9 +21,10 @@ class saving_state_thread (threading.Thread):
         self._saving_action_url = self.current_state.config_manager.get_saving("action_time")
         self.file_action = open(self._saving_action_url +"/action_done"+ time.strftime("%d_%b_%Y_%H:%M:%S",time. localtime())+".txt","w")
 
-
+        self._save_current_situation_sate = [threading.Lock(), True]
+    
     def run(self):
-        while True : 
+        while self.get_save_current_situation_sate() : 
             self.write_curren_situation()
             time.sleep (2)
             
@@ -44,5 +45,16 @@ class saving_state_thread (threading.Thread):
         self.file_action.write(time.strftime("%d_%b_%Y_%H:%M:%S",time. localtime()) + " : "+ action_string +"\n")
         self.file_action.flush()
     
+    def set_save_current_situation_sate(self, value):
+        self._save_current_situation_sate[0].acquire()
+        self._save_current_situation_sate[1] = value      
+        self._save_current_situation_sate[0].release()
+    
+    """return the value corresponding to the name you asked : ex "BU_FULL" here""" 
+    def get_save_current_situation_sate(self):
+        self._save_current_situation_sate[0].acquire()
+        value = self._save_current_situation_sate[1]       
+        self._save_current_situation_sate[0].release()
+        return value
     
         

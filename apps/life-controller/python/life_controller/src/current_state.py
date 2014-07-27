@@ -1320,7 +1320,30 @@ class current_state(object):
         state = self._current_time_controller_state[name][1] 
         self._current_time_controller_state[name][0].release()
         return state
+    
+    """QUIT"""
+    def quit(self):
+        """closing server"""
+        """for item in self._client_connected :
+            try : 
+                self.get_client_connected(item).stop()
+            except Exception : 
+                pass
+        try : 
+                self.server.stop()
+        except Exception as e : 
+                print (e)  """  
+        
+        
+        """last saving"""
+        self.BRBU_controller.set_save_current_situation_sate(False)
+        self.saving_state_thread.set_save_current_situation_sate(False)
+        
+        time.sleep(1)
             
+        
+        
+                 
                 
         
     """SETTING OBJECT IN ATTRIBUTE"""
