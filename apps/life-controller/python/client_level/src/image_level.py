@@ -653,7 +653,7 @@ class image_level(threading.Thread):
 						print ("Image taken")
 					else  :
 						print ("no camera") 
-						a.kill()
+						
 				
 			except Exception as e : 
 				print(e)				
