@@ -648,9 +648,12 @@ class image_level(threading.Thread):
 						print ("camera lost, new try") 
 						a.kill()
 						time.sleep(1)
-					else : 
+					elif a.poll() == 0 : 
 						succed = True
 						print ("Image taken")
+					else  :
+						print ("no camera") 
+						a.kill()
 				
 			except Exception as e : 
 				print(e)				
