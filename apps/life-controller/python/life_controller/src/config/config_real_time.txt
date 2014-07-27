@@ -33,5 +33,5 @@ AQ : INSTRUCTION_FILLING : [-30,-40] : 1
 AQ : INSTRUCTION_FILLING : [40,50] : 0.3
 AQ : INSTRUCTION_FILLING : [-40,-50] : 1
 saving : action_time : archives
-webcam : time_wait : 10
+webcam : time_wait : 30
 
