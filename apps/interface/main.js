@@ -103,7 +103,7 @@ module.exports = function(app, io, oscServer){
     });
   };
   function onCaptureStop (){
-
+    //use ps in terminal for idetifying the process
     // quitter node ne quite pas les processus qui ont été "spawné"
     // cette commande permet de killer la capture.
 
@@ -116,7 +116,7 @@ module.exports = function(app, io, oscServer){
 
   }; 
   function onMessage(msg){
-    oscClient.send(msg);
+    oscClient.send("/"+ msg);
   };
 
   //////////////////////////////
@@ -130,6 +130,9 @@ module.exports = function(app, io, oscServer){
       case "/refreshTimelaps":
         refreshTimelaps();
       break;
+      //function to stop the film :
+      case "/seance_end":
+        onCaptureStop();
       case "/capture_stop":
         onCaptureStop();
       break;
