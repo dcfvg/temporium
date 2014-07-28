@@ -234,6 +234,7 @@ class formation_rate(threading.Thread):
         self.lock.acquire()
         value = 0 
         try : 
+            print("calcul formation")
             uniformed_data_current_image = self.get_uniformed_data_from_image(url, self.coordinates_crop["FORMATION_RATE"])
            
             
@@ -254,6 +255,7 @@ class formation_rate(threading.Thread):
             print(e)
             
         self.lock.release()
+        print("value " + url + " : " + str(value))
         return value
     
     def formation_rate_mesure_brut(self, url) :

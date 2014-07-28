@@ -52,13 +52,12 @@ class server_OSC(threading.Thread):
         self.formation_rate.show_steadily_curve()
         
     def formation_rate_mesure(self, msg):
-        print (msg)
+        """print (msg)"""
         """security to prevent of analysing two image to close from each other"""
         
         if self.formation_rate.get_formation_rate_asked() :
             delta = time.time() - self.old_time  
             if delta >= self.min_laps :
-                    print("calcul formation")
                     value = self.formation_rate.formation_rate_mesure_percent(msg)
                     self.formation_rate.client_OSC.send_formation_rate(value)
                     self.formation_rate.client_TCP._send("AQ : " + str(value))

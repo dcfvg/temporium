@@ -23,7 +23,7 @@ class client_OSC(object):
         
     def send_formation_rate (self, value):
 
-        msg = osc_message_builder.OscMessageBuilder(address = "image_formation")
+        msg = osc_message_builder.OscMessageBuilder(address = "/image_formation")
         msg.add_arg(value)
         msg = msg.build()
         self.client.send(msg)
