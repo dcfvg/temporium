@@ -32,11 +32,14 @@ class server_OSC(threading.Thread):
         self.dispatcher = dispatcher.Dispatcher()
         self.dispatcher.map("/seance_start", self.reset)
         self.dispatcher.map("/image_capture", self.formation_rate_mesure)
+        self.dispatcher.map("image_capture", print)
+        self.dispatcher.map("/show_curve", self.show_curve)
 
         self.server = osc_server.ThreadingOSCUDPServer((self.ip, self.port), self.dispatcher)
         
         """minimal time in seconds between two calcul"""
-        self.min_laps = 20
+        self.min_laps = 0
+        self.old_time = 0
         
         self.start()
         
@@ -45,19 +48,28 @@ class server_OSC(threading.Thread):
         print ("reset")
         self.formation_rate.reset()
         
+    def show_curve(self, msg):    
+        self.formation_rate.show_steadily_curve()
+        
     def formation_rate_mesure(self, msg):
         print (msg)
-        delta = time.time() - self.old_time 
-        self.old_time = time.time()
-        if delta >= self.min_laps :
-            print("calcul formation")
-            value = self.formation_rate.formation_rate_mesure(msg)
-            self.formation_rate.client_OSC.send_formation_rate(value)
-            
-            if self.formation_rate.get_formation_rate_asked() : 
-                self.formation_rate.client_TCP._send("FORMATION_RATE : value")
+        """security to prevent of analysing two image to close from each other"""
+        
+        if self.formation_rate.get_formation_rate_asked() :
+            delta = time.time() - self.old_time  
+            if delta >= self.min_laps :
+                    print("calcul formation")
+                    value = self.formation_rate.formation_rate_mesure_percent(msg)
+                    self.formation_rate.client_OSC.send_formation_rate(value)
+                    self.formation_rate.client_TCP._send("AQ : " + str(value))
+                    self.old_time = time.time()
+             
+            else : 
+                print("no calcul formation ")   
         else : 
-            print("no calcul formation ")
+            print ("formation_rate not asked") 
+                
+        
         
 
     

@@ -6,16 +6,16 @@ Created on Apr 28, 2014
 import socket
 import time
 import threading
-from formation_rate import *
+from image_spectro import *
 
 
  
-class client_formation_rate(threading.Thread):
+class client_spectro(threading.Thread):
  
     def __init__(self, adress, port):
         threading.Thread.__init__(self)
          
-        self.name = "client_formation_rate"
+        self.name = "client_concentration"
          
         self.connected = False
         self.terminated = False
@@ -25,8 +25,13 @@ class client_formation_rate(threading.Thread):
 
         """Creation of the object image_spectro"""
          
-        self.formation_rate = formation_rate(self)
 
+        self.image_level = image_spectro(self)
+
+        
+
+        
+        
         self.start()
 
     
@@ -40,6 +45,7 @@ class client_formation_rate(threading.Thread):
             while not self.connected and not self.terminated :
                 self.ask_connection(self.adress, self.port)
                 time.sleep(5)
+            
             
             try:
                 
@@ -58,23 +64,22 @@ class client_formation_rate(threading.Thread):
                         for item in data :
                             #print(self.name + " received" + item)
                             try : 
-                                if item.strip() == "formation_rate_start" :
+                                if item.strip() == "concentration_start" :
                                     print("Ask for starting image analysis")
-                                    self.formation_rate.start_formation_rate()
+                                    self.image_level.start_concentration()
                                 
-                                elif item.strip() == "formation_rate_stop" :
+                                elif item.strip() == "concentration_stop" :
                                     print("Ask for stoping image analysis")
-                                    self.formation_rate.stop_formation_rate()
+                                    self.image_level.stop_concentration()
                                 
                                 else : 
     
                                     """Print something is wrong"""
                                     #print(self.name + " Message unknown " + item)
                                     pass
-                            except Exception as e:
+                            except Exception:
                                 """Sprint what is wrong"""
                                 print(self.name + " Message does not fit the protocol")
-                                print (e)
             
             except IOError:
                 print("not ready")

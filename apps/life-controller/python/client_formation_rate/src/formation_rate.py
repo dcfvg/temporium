@@ -9,8 +9,8 @@ from client_OSC import *
 from server_OSC import *
 import random
 import numpy
-#import matplotlib
-#import matplotlib.pyplot as plt
+import matplotlib
+import matplotlib.pyplot as plt
 import io
 #import matplotlib.cm as cm
 
@@ -40,7 +40,7 @@ class formation_rate(threading.Thread):
         self.coordinates_crop ={"FORMATION_RATE" :  [0,0,0,0]}
         
         """to change to set the reference value"""
-        self.low_reference = 50722305
+        self.low_reference = 0
                                  
         """set to True if life_controller asked infomration"""
         self._formation_rate_asked = [threading.Lock(), False]
@@ -51,10 +51,10 @@ class formation_rate(threading.Thread):
         print ("Cropping coordinates : " + str(self.coordinates_crop))
         
         """reference image"""
-        self.url_image_ref = "image/image_ref.jpg"
-        
-        self.step_between_printred_curve = 50
-        self.compteur = 0
+        """no formation"""
+        self.url_image_ref_0 = "image/image_ref_0.jpg"
+        """full formation"""
+        self.url_image_ref_100 = "image/image_ref_100.jpg"
         
         self.curve = []
         self.formation_rate = []
@@ -76,7 +76,8 @@ class formation_rate(threading.Thread):
         self.client_OSC = client_OSC(self, "localhost", 3333)
         self.server_OSC = server_OSC(self, "localhost", 3335)
         
-        #self.start()
+       
+        
 
     # Read the values of TOP level and LOW level for each BU
     def read_config_crop_FORMATION_RATE(self):
@@ -199,7 +200,7 @@ class formation_rate(threading.Thread):
             group_pixels_all_columns.append(abs(sum(group_pixels_all_lines[(nb_pixels_compared_line*self.pixel_len_column):, :])))
         return(numpy.sum(group_pixels_all_columns))
 
-    def convert_to_formation_rate (self, compared_data, initial_compared_data) :
+    def convert_to_formation_rate (self, compared_data, initial_compared_data) :        
         return 100*(1 - float(compared_data)/float(initial_compared_data))
 
     def smooth_formation_rate(self) :
@@ -222,35 +223,56 @@ class formation_rate(threading.Thread):
         file.flush()
 
     def show_steadily_curve(self) :
-        if self.compteur < self.step_between_printred_curve :
-            self.compteur = self.compteur +1
-        else :
-            self.compteur = 0
-            plt.plot(self.formation_rate)
-            plt.plot(self.formation_rate_smoothed)
-            plt.savefig("current_formation_rate_fig/current_fig_2")
+        plt.plot(self.formation_rate)
+        plt.plot(self.formation_rate_smoothed)
+        plt.savefig("current_formation_rate_fig/current_fig_2")
 
     """return the value of the image asked"""
-    def formation_rate_mesure(self, url) :
+    def formation_rate_mesure_percent(self, url) :
+        
         self.lock.acquire()
-        uniformed_data_current_image = self.get_uniformed_data_from_image(url, self.coordinates_crop["FORMATION_RATE"])
-        img_comparison = self.compare_uniformed_data(uniformed_data_current_image, self.uniformed_data_ref_image)
-        img_comparison_by_pixels_group = self.compare_pixels_group(img_comparison)
-        self.curve.append(img_comparison_by_pixels_group)
-        """if first value is the reference"""
-        #print( self.curve[0])
-        #self.formation_rate.append(self.convert_to_formation_rate(img_comparison_by_pixels_group, self.curve[0]))
-        """if other value is the reference"""
-        self.formation_rate.append(self.convert_to_formation_rate(img_comparison_by_pixels_group, self.low_reference))
-        self.formation_rate_smoothed = self.smooth_formation_rate()
-        value = int(self.formation_rate_smoothed[len(self.formation_rate_smoothed)-1])
+        value = 0 
+        try : 
+            uniformed_data_current_image = self.get_uniformed_data_from_image(url, self.coordinates_crop["FORMATION_RATE"])
+           
+            
+            img_comparison = self.compare_uniformed_data(uniformed_data_current_image, self.uniformed_data_ref_image)
+            img_comparison_by_pixels_group = self.compare_pixels_group(img_comparison)
+            self.curve.append(img_comparison_by_pixels_group)
+            """if first value is the reference"""
+            #print( self.curve[0])
+            #self.formation_rate.append(self.convert_to_formation_rate(img_comparison_by_pixels_group, self.curve[0]))
+            """if other value is the reference"""
+            """set ref at the first image """
+            
+            self.formation_rate.append(self.convert_to_formation_rate(img_comparison_by_pixels_group, self.low_reference))
+            self.formation_rate_smoothed = self.smooth_formation_rate()
+            value = int(self.formation_rate_smoothed[len(self.formation_rate_smoothed)-1])
+            
+        except Exception as e :
+            print(e)
+            
         self.lock.release()
         return value
+    
+    def formation_rate_mesure_brut(self, url) :
+        
+        self.lock.acquire()
+        uniformed_data_current_image = self.get_uniformed_data_from_image(url, self.coordinates_crop["FORMATION_RATE"])
+       
+        
+        img_comparison = self.compare_uniformed_data(uniformed_data_current_image, self.uniformed_data_ref_image)
+        img_comparison_by_pixels_group = self.compare_pixels_group(img_comparison)
+        self.lock.release()
+        
+        return img_comparison_by_pixels_group
+        
 
     """reset the old value of formation rate"""
     def reset(self):
         self.read_config_crop_FORMATION_RATE()
-        self.uniformed_data_ref_image = self.get_uniformed_data_from_image(self.url_image_ref, self.coordinates_crop["FORMATION_RATE"])
+        self.uniformed_data_ref_image = self.get_uniformed_data_from_image(self.url_image_ref_100, self.coordinates_crop["FORMATION_RATE"])
+        self.low_reference = self.formation_rate_mesure_brut(self.url_image_ref_0)
         self.formation_rate = []
         self.formation_rate_smoothed = []
         
@@ -269,10 +291,14 @@ class formation_rate(threading.Thread):
         return state
     """to start analysis"""
     def start_formation_rate(self):
-        self.set__formation_rate_asked(True) 
+        """reset the old value of formation"""
+        self.reset()
+        self.set_formation_rate_asked(True) 
+        print ("start formation_rate")
 
     """to stop analysis"""
     def stop_formation_rate(self):
-        self.set__formation_rate_asked(False) 
+        self.set_formation_rate_asked(False) 
+        print ("stop formation_rate")
 
 
