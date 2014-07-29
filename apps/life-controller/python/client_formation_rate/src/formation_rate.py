@@ -9,8 +9,8 @@ from client_OSC import *
 from server_OSC import *
 import random
 import numpy
-"""import matplotlib
-import matplotlib.pyplot as plt"""
+import matplotlib
+import matplotlib.pyplot as plt
 import io
 #import matplotlib.cm as cm
 
@@ -223,10 +223,9 @@ class formation_rate(threading.Thread):
         file.flush()
 
     def show_steadily_curve(self) :
-        """plt.plot(self.formation_rate)
+        plt.plot(self.formation_rate)
         plt.plot(self.formation_rate_smoothed)
-        plt.savefig("current_formation_rate_fig/current_fig_2")"""
-        pass
+        plt.savefig("current_formation_rate_fig/current_fig_2")
 
     """return the value of the image asked"""
     def formation_rate_mesure_percent(self, url) :
@@ -249,12 +248,14 @@ class formation_rate(threading.Thread):
             
             self.formation_rate.append(self.convert_to_formation_rate(img_comparison_by_pixels_group, self.low_reference))
             self.formation_rate_smoothed = self.smooth_formation_rate()
+            print(self.formation_rate_smoothed )
             value = int(self.formation_rate_smoothed[len(self.formation_rate_smoothed)-1])
             
         except Exception as e :
             print(e)
             
         self.lock.release()
+        value = value*2
         print("value " + url + " : " + str(value))
         return value
     
