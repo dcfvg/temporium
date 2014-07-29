@@ -70,6 +70,12 @@ class current_state(object):
                                             "screen_up_outside" : [threading.Lock(),False],\
                                             "screen_down_inside" : [threading.Lock(),False],\
                                             "screen_up_inside" : [threading.Lock(),False],\
+                                            "lift_down_manual" : [threading.Lock(),False],\
+                                            "lift_up_manual" : [threading.Lock(),False],\
+                                            "screen_down_outside_manual" : [threading.Lock(),False],\
+                                            "screen_up_outside_manual" : [threading.Lock(),False],\
+                                            "screen_down_inside_manual" : [threading.Lock(),False],\
+                                            "screen_up_inside_manual" : [threading.Lock(),False],\
                                             }
         
         """action on the aquarium"""
@@ -373,7 +379,7 @@ class current_state(object):
         return state   
     
     """LIFT ORDERS"""   
-    """Order to liftDown and liftUp, screenDown and screenUp"""
+    """Automatic Order to liftDown and liftUp, screenDown and screenUp"""
     
     def lift_down(self):
         print("lift_down")
@@ -398,6 +404,32 @@ class current_state(object):
     def screen_up_inside(self):
         print("screen_up_inside")
         self.set_current_action_lift_screen("screen_up_inside")
+    
+
+    """Manual Order to liftDown and liftUp, screenDown and screenUp"""
+    def lift_down_manual(self):
+        print("lift_down_manual")
+        self.set_current_action_lift_screen("lift_down_manual")
+
+    def lift_up_manual(self):
+        print("lift_up_manual")
+        self.set_current_action_lift_screen("lift_up_manual")
+
+    def screen_down_outside_manual(self):
+        print("screen_down_outside_manual")
+        self.set_current_action_lift_screen("screen_down_outside_manual")
+
+    def screen_up_outside_manual(self):
+        print("screen_up_outside_manual")
+        self.set_current_action_lift_screen("screen_up_outside_manual")
+    
+    def screen_down_inside_manual(self):
+        print("screen_down_inside_manual")
+        self.set_current_action_lift_screen("screen_down_inside_manual")
+
+    def screen_up_inside_manual(self):
+        print("screen_up_inside_manual")
+        self.set_current_action_lift_screen("screen_up_inside_manual")
         
         """checking if there is not already a task runnig on this arduino"""
     def get_lift_busy(self):
@@ -428,6 +460,18 @@ class current_state(object):
                 answer = self.com_arduino.screen_down_inside() 
             elif name == "screen_up_inside": 
                 answer = self.com_arduino.screen_up_inside() 
+            elif name == "lift_down_manual": 
+                answer = self.com_arduino.lift_down_manual() 
+            elif name == "lift_up_manual": 
+                answer = self.com_arduino.lift_up_manual()  
+            elif name == "screen_down_outside_manual": 
+                answer = self.com_arduino.screen_down_outside_manual() 
+            elif name == "screen_up_outside_manual": 
+                answer = self.com_arduino.screen_up_outside_manual()
+            elif name == "screen_down_inside_manual": 
+                answer = self.com_arduino.screen_down_inside_manual() 
+            elif name == "screen_up_inside_manual": 
+                answer = self.com_arduino.screen_up_inside_manual() 
                 
         """value in _current_action_lift_screen is set to Tru by arduino_lift_thread"""
             

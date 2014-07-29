@@ -210,7 +210,7 @@ class com_arduino(object):
         
             #return False
      
-    """Order to liftDown and liftUp, screenDown and screenUp"""
+    """Automatic Order to liftDown and liftUp, screenDown and screenUp"""
     def lift_down(self):
         """answer : True if order send to the arduino, false otherwise"""
         answer = False
@@ -288,6 +288,84 @@ class com_arduino(object):
         
         return answer
     
+    """Manual Order to liftDown and liftUp, screenDown and screenUp"""
+    def lift_down_manual(self):
+        """answer : True if order send to the arduino, false otherwise"""
+        answer = False
+        if not self.test : 
+            if "arduino_lift" in self.the_arduino : 
+                """send the order to liftdown manually the lift"""
+                answer = self.the_arduino["arduino_lift"].lift_down_manual()
+            else : 
+                print ("arduino_lift not declared/connected")   
+        
+        print("LiftDown Manual asked")
+            
+        return answer
+
+    def lift_up_manual(self):
+        """answer : True if order send to the arduino, false otherwise"""
+        answer = False
+        if not self.test : 
+            if "arduino_lift" in self.the_arduino :
+                """send the order to liftUp manually the lift"""
+                answer = self.the_arduino["arduino_lift"].lift_up_manual()
+            else : 
+                print ("arduino_lift not declared/connected")      
+        print("LiftUp Manual asked")
+        
+        return answer
+
+    def screen_down_outside_manual(self):
+        """answer : True if order send to the arduino, false otherwise"""
+        answer = False
+        if not self.test : 
+            if "arduino_lift" in self.the_arduino :
+                """send the order to screenDown manually"""
+                answer = self.the_arduino["arduino_lift"].screen_down_outside_manual()
+            else : 
+                print ("arduino_lift not declared/connected")
+        print("screenDown Manual asked")
+        return answer 
+
+    def screen_up_outside_manual(self):
+        """answer : True if order send to the arduino, false otherwise"""
+        answer = False
+        if not self.test : 
+            if "arduino_lift" in self.the_arduino :
+                """send the order to screenDown manually"""
+                answer = self.the_arduino["arduino_lift"].screen_up_outside_manual()
+            else : 
+                print ("arduino_lift not declared/connected")  
+        print("screenUp Manual asked")
+        
+        return answer
+    
+    def screen_down_inside_manual(self):
+        """answer : True if order send to the arduino, false otherwise"""
+        answer = False
+        if not self.test : 
+            if "arduino_lift" in self.the_arduino :
+                """send the order to screenDown manually"""
+                answer = self.the_arduino["arduino_lift"].screen_down_inside_manual()
+            else : 
+                print ("arduino_lift not declared/connected")
+        print("screenDown Manual asked")
+        return answer 
+
+    def screen_up_inside_manual(self):
+        """answer : True if order send to the arduino, false otherwise"""
+        answer = False
+        if not self.test : 
+            if "arduino_lift" in self.the_arduino :
+                """send the order to screenDown manually"""
+                answer = self.the_arduino["arduino_lift"].screen_up_inside_manual()
+            else : 
+                print ("arduino_lift not declared/connected")  
+        print("screenUp Manual asked")
+        
+        return answer
+
     """send information about order to arduino_client, like pump, spectro"""
     def send_server_arduino_order(self, type, name, state) : 
         

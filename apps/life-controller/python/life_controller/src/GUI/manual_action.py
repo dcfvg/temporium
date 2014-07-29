@@ -36,7 +36,14 @@ class manual_action(Frame):
                                         "screen_up_outside" : [3],\
                                         "screen_down_inside" : [4],\
                                         "screen_up_inside" : [5],\
+                                        "lift_down_manual" : [6],\
+                                        "lift_up_manual" : [7],\
+                                        "screen_down_outside_manual" : [8],\
+                                        "screen_up_outside_manual" : [9],\
+                                        "screen_down_inside_manual" : [10],\
+                                        "screen_up_inside_manual" : [11],\
                                         }
+
         """current_spectro"""
         self.button_spectro = {"spectro" : [0]}
          
@@ -124,6 +131,14 @@ class manual_action(Frame):
             self.button_biological_actions[item][2].grid(sticky=E, row=self.button_biological_actions[item][0]+compt, column=1)
         compt = compt+internal_compt
         
+        """#Stockage du des items du dictionnaire button_action_lift_screen pour les stocker dans une liste
+                                items_of_button_action_lift_screen = []
+                                for item in self.button_action_lift_screen :
+                                    print(item)
+                                    items_of_button_action_lift_screen = items_of_button_action_lift_screen + [item]
+                                print(items_of_button_action_lift_screen)
+                                print(items_of_button_action_lift_screen[0:6])"""
+
         Label(self, text = "Ascenseur : ",fg = "white", bg = "black").grid(sticky = W,row=compt, columnspan = 2)
         compt = compt+1
         
@@ -134,39 +149,49 @@ class manual_action(Frame):
             self.button_action_lift_screen[item][2].grid(sticky=E, row=self.button_action_lift_screen[item][0]+compt, column=1)
         compt = compt+internal_compt
         
-        Label(self, text = "Spectro : ",fg = "white", bg = "black").grid(sticky = W,row=compt, columnspan = 2)
-        compt = compt+1
+        """Label(self, text = "Ascenseur Manuel : ",fg = "white", bg = "black").grid(sticky = W,row=compt, columnspan = 2)
+                                compt = compt+1"""
         
-        internal_compt = 0
-        for item in self.button_spectro :
-            internal_compt = internal_compt +1
-            self.button_spectro[item][1].grid(sticky=W, row= self.button_spectro[item][0]+compt, column=0)
-            self.button_spectro[item][2].grid(sticky=E, row=self.button_spectro[item][0]+compt, column=1)
-        compt = compt+internal_compt
-        
-        Label(self, text = "Light : ",fg = "white", bg = "black").grid(sticky = W,row=compt, columnspan = 2)
-        compt = compt+1
-        
-        internal_compt = 0
-        for item in self.button_light :
-            internal_compt = internal_compt +1
-            self.button_light[item][1].grid(sticky=W, row= self.button_light[item][0]+compt, column=0)
-            self.button_light[item][2].grid(sticky=E, row=self.button_light[item][0]+compt, column=1)
-        compt = compt+internal_compt
-        
-        Label(self, text = "Actions evoluees  /!\ BU pas pret /!\ : ",fg = "white", bg = "black").grid(sticky = W,row=compt, columnspan = 2)
-        compt = compt+1
-        
-        internal_compt = 0
-        for item in self.button_action_evolved :
-            internal_compt = internal_compt +1
-            self.button_action_evolved[item][1].grid(sticky=W, row= self.button_action_evolved[item][0]+compt, column=0)
-            self.button_action_evolved[item][2].grid(sticky=E, row=self.button_action_evolved[item][0]+compt, column=1)
-        compt = compt+internal_compt
+        """internal_compt = 0
+                                for item in items_of_button_action_lift_screen[6:12] :
+                                    internal_compt = internal_compt +1
+                                    self.button_action_lift_screen[item][1].grid(sticky=W, row= self.button_action_lift_screen[item][0]+compt, column=0)
+                                    self.button_action_lift_screen[item][2].grid(sticky=E, row=self.button_action_lift_screen[item][0]+compt, column=1)
+                                compt = compt+internal_compt"""
         
         """RIGHT SIDE"""
         """compting where we are in the grid"""
         compt_right = 0
+
+        Label(self, text = "Spectro : ",fg = "white", bg = "black").grid(sticky = W,row=compt_right, column = 2, columnspan = 2)
+        compt_right = compt_right+1
+        
+        internal_compt = 0
+        for item in self.button_spectro :
+            internal_compt = internal_compt +1
+            self.button_spectro[item][1].grid(sticky=W, row= self.button_spectro[item][0]+compt_right, column=2)
+            self.button_spectro[item][2].grid(sticky=E, row=self.button_spectro[item][0]+compt_right, column=3)
+        compt_right = compt_right+internal_compt
+        
+        Label(self, text = "Light : ",fg = "white", bg = "black").grid(sticky = W,row=compt_right, column = 2, columnspan = 2)
+        compt_right = compt_right+1
+        
+        internal_compt = 0
+        for item in self.button_light :
+            internal_compt = internal_compt +1
+            self.button_light[item][1].grid(sticky=W, row= self.button_light[item][0]+compt_right, column=2)
+            self.button_light[item][2].grid(sticky=E, row=self.button_light[item][0]+compt_right, column=3)
+        compt_right = compt_right+internal_compt
+
+        Label(self, text = "Actions evoluees  /!\ BU pas pret /!\ : ",fg = "white", bg = "black").grid(sticky = W,row=compt_right, column = 2, columnspan = 2)
+        compt_right = compt_right+1
+        
+        internal_compt = 0
+        for item in self.button_action_evolved :
+            internal_compt = internal_compt +1
+            self.button_action_evolved[item][1].grid(sticky=W, row= self.button_action_evolved[item][0]+compt_right, column=2)
+            self.button_action_evolved[item][2].grid(sticky=E, row=self.button_action_evolved[item][0]+compt_right, column=3)
+        compt_right = compt_right+internal_compt
         
         Label(self, text = "Information asked : ",fg = "white", bg = "black").grid(sticky = W,row=compt_right, column = 2, columnspan = 2)
         compt_right = compt_right+1
@@ -233,7 +258,19 @@ class manual_action(Frame):
                 self.button_action_lift_screen[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_action_lift_screen("screen_down_inside")))
             elif item =="screen_up_inside" : 
                 self.button_action_lift_screen[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_action_lift_screen("screen_up_inside")))
-    
+            elif item =="lift_down_manual" : 
+                self.button_action_lift_screen[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_action_lift_screen("lift_down_manual"))) 
+            elif item =="lift_up_manual" : 
+                self.button_action_lift_screen[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_action_lift_screen("lift_up_manual")))
+            elif item =="screen_down_outside_manual" : 
+                self.button_action_lift_screen[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_action_lift_screen("screen_down_outside_manual")))
+            elif item =="screen_up_outside_manual" : 
+                self.button_action_lift_screen[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_action_lift_screen("screen_up_outside_manual")))
+            elif item =="screen_down_inside_manual" : 
+                self.button_action_lift_screen[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_action_lift_screen("screen_down_inside_manual")))
+            elif item =="screen_up_inside_manual" : 
+                self.button_action_lift_screen[item].append(tkinter.Button(self,  text =item , command = lambda : self.current_state_order.button_action_lift_screen("screen_up_inside_manual")))
+
     def _build_button_spectro(self):
         for item in self.button_spectro : 
             if item == "spectro" : 

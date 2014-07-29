@@ -47,7 +47,8 @@ class arduino_lift(object):
         
         print("end output")
         return answer
-
+    
+    """"Automatic action on lift/screen"""
     def lift_down(self):
        
         """if busy"""
@@ -147,11 +148,111 @@ class arduino_lift(object):
             
         return answer
     
+    """Manual Action with lift/screen"""
+    def lift_down_manual(self):
+       
+        """if busy"""
+        if self.get_busy_state() : 
+            print ("Arduino lift busy")
+            answer = False
+            """if free"""
+        else : 
+            
+            self.lock.acquire()
+            
+            self.__sendData('6')
+            
+            self.lock.release()
+            self.start_busy("lift_down_manual")
+            answer = True
+            
+        return answer
+
+    def lift_up_manual(self):
+        """if busy"""
+        if self.get_busy_state() : 
+            print ("Arduino lift busy")
+            answer = False
+            """if free"""
+        else : 
+            
+            self.lock.acquire()
+            self.__sendData('7')
+            self.lock.release()
+            self.start_busy("lift_up_manual")
+            answer = True
+            
+        return answer
+    
+    def screen_down_outside_manual(self):
+        """if busy"""
+        if self.get_busy_state() : 
+            print ("Arduino lift busy")
+            answer = False
+            """if free"""
+        else : 
+            
+            self.lock.acquire()
+            self.__sendData('8')
+            self.lock.release()
+            self.start_busy("screen_down_outside_manual")
+            answer = True
+            
+        return answer
+
+    def screen_up_outside_manual(self):
+        """if busy"""
+        if self.get_busy_state() : 
+            print ("Arduino lift busy")
+            answer = False
+            """if free"""
+        else : 
+            
+            self.lock.acquire()
+            self.__sendData('9')
+            self.lock.release()
+            self.start_busy("screen_up_outside_manual")
+            answer = True
+            
+        return answer
+    
+    def screen_down_inside_manual(self):
+        """if busy"""
+        if self.get_busy_state() : 
+            print ("Arduino lift busy")
+            answer = False
+            """if free"""
+        else : 
+            
+            self.lock.acquire()
+            self.__sendData('10')
+            self.lock.release()
+            self.start_busy("screen_down_inside_manual")
+            answer = True
+            
+        return answer
+
+    def screen_up_inside_manual(self):
+        """if busy"""
+        if self.get_busy_state() : 
+            print ("Arduino lift busy")
+            answer = False
+            """if free"""
+        else : 
+            
+            self.lock.acquire()
+            self.__sendData('11')
+            self.lock.release()
+            self.start_busy("screen_up_inside_manual")
+            answer = True
+            
+        return answer
+
     """check if the arduino is occupied, do not use this function
     will stay in this function until the arduin is free again"""
     def _is_occupied(self):
         self.lock.acquire()
-        self.__sendData('6')
+        self.__sendData('12')
         self.lock.release()
         return True
 
