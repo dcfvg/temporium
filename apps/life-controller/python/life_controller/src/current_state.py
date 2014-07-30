@@ -117,12 +117,14 @@ class current_state(object):
         """list of server in charge of the communication"""
         self._client_connected = {"server_formation_rate" : [threading.Lock(), None, False,"formation_rate"],\
                                  "server_level" : [threading.Lock(), None, False,"level"],\
+                                 "server_level_AQ" : [threading.Lock(), None, False,"level_AQ"],\
                                  "server_concentration" : [threading.Lock(), None, False,"concentration"],\
                                  "server_arduino_order" : [threading.Lock(), None, False,"arduino"]}
         
         """list of information asked : name : [lock, state, name_server] """
         self._information_asked = {"formation_rate" : [threading.Lock(), False,"server_formation_rate" ],\
                                    "level" : [threading.Lock(), False, "server_level"],\
+                                   "level_AQ" : [threading.Lock(), False, "server_level_AQ"],\
                                    "concentration" : [threading.Lock(), False,"server_concentration"]}
       
         

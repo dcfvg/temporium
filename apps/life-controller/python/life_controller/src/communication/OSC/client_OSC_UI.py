@@ -8,7 +8,8 @@ from pythonosc import udp_client
 
 class client_OSC_UI(object):
     '''
-    a client OSC that enable to send informationabout the system
+    a client OSC that enable to send information and order to the system
+    OSC is used for further evolution here
     '''
 
 

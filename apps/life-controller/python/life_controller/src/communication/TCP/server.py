@@ -10,6 +10,8 @@ from communication.TCP.server_level import *
 from communication.TCP.server_arduino_order import *
 from communication.TCP.server_concentration import *
 from communication.TCP.server_formation_rate import *
+from communication.TCP.server_level_AQ import *
+
 
 class server(threading.Thread) : 
     
@@ -98,6 +100,21 @@ class server(threading.Thread) :
                             self.current_state.set_client_connected_state("server_level", True)
                             self.number +=1
                             print("server_level accepted")
+                            
+                            """ if the server is ok, no new connection possible"""
+                        else : 
+                            self._send(client_socket,"NO")
+                            print("server_level refused")
+                        
+                    elif first_contact_data =="client_level_AQ":
+                        """if there is not already one connected""" 
+                        if not self.current_state.get_client_connected_state("server_level_AQ") : 
+                            self._send(client_socket,"OK")
+                            the_server_level_AQ = server_level_AQ(client_socket, self)
+                            self.current_state.set_client_connected("server_level_AQ", the_server_level_AQ)
+                            self.current_state.set_client_connected_state("server_level_AQ", True)
+                            self.number +=1
+                            print("server_level_AQ accepted")
                             
                             """ if the server is ok, no new connection possible"""
                         else : 

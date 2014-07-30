@@ -23,8 +23,9 @@ class client_connected_frame(Frame):
         """list of server in charge of the communication"""
         self.label_client_connected = {"server_formation_rate" : [0],\
                                        "server_level" : [1],\
-                                       "server_concentration" : [2],\
-                                       "server_arduino_order" : [3]}
+                                       "server_level_AQ" : [2],\
+                                       "server_concentration" : [3],\
+                                       "server_arduino_order" : [4]}
         
         
         

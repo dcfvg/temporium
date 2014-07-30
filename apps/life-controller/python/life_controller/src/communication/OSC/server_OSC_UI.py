@@ -16,14 +16,14 @@ class server_OSC_UI(threading.Thread):
     '''
     
 
-    def __init__(self, un_seance_controller, ip, port):
+    def __init__(self, current_state_order, ip, port):
         '''
         init the dispatcher : what to do dpending on the pattern 
         '''
         
         threading.Thread.__init__(self)
         
-        self.seance_controller = un_seance_controller
+        self.current_state_order = current_state_order
         
         self.ip = ip 
         self.port= port

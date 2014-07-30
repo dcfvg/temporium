@@ -255,7 +255,7 @@ class formation_rate(threading.Thread):
             print(e)
             
         self.lock.release()
-        value = value*2
+        value = value*3
         print("value " + url + " : " + str(value))
         return value
     
