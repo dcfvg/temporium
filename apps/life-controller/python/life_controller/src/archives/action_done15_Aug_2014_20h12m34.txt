@@ -1,4 +1,0 @@
-15_Aug_2014_20:25:18 : Begin seance
-15_Aug_2014_20:25:18 : screen_down_outside asked
-15_Aug_2014_20:25:22 : Begin film
-15_Aug_2014_20:25:24 : LiftUp asked

@@ -1,3 +1,0 @@
-11_Aug_2014_00:42:32 : Begin seance
-11_Aug_2014_00:42:32 : screen_down_outside asked
-11_Aug_2014_00:42:36 : Begin film

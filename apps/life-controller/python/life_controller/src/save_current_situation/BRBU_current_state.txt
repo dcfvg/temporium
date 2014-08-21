@@ -12,14 +12,14 @@ comments : 72-143 : BU2 USE , BU3 WAIT
 comments : if BU1 and BU3 used :  
 comments : 0-71 : BU1 WAIT , BU3 USE 
 comments : 72-143 : BU1 USE , BU3 WAIT 
-comments : BU_used : indicates wich colomn for alguae production is used like 'BU_used : BU1 : True' 
-BU_used : BU1 : True
+comments : BU_used : indicates if Bux is used like 'BU_used : BU1 : True' 
 BU_used : BU3 : True
+BU_used : BU1 : True
 BU_used : BU2 : True
 auto_start : False 
-time_save : Sat, 09 Aug 2014 17:13:09 +0000
+time_save : Thu, 21 Aug 2014 13:00:42 +0000
 time_cycle_hour : 0 
-time_cycle : 0h0m1 
+time_cycle : 0h0m4 
 BU1 : READY : False 
 BU2 : READY : False 
 BU3 : READY : False 

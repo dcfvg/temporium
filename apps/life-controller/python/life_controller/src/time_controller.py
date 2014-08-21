@@ -28,8 +28,8 @@ class time_controller(threading.Thread):
         #print("begin in 30 seconds")
         time.sleep(30)
         while True :
-            self._load_value_config()
             
+            self._load_value_config()
             
             if self.expo_open() :
                 """do action of BRBU_controller if there are action to do"""
@@ -38,7 +38,7 @@ class time_controller(threading.Thread):
             if self.current_state.get_current_time_controller_state("AQ_cycle_heavy") :
                 
                 if  self.AQ_cycle_heavy_state() and self.expo_open() :
-                        
+                    
                         print("start cycle heavy for this day")
                         
                         self.current_state.set_current_action_aquarium_evolved("aquarium_cycle_heavy", True)
@@ -47,7 +47,7 @@ class time_controller(threading.Thread):
                             time.sleep(5) 
                         print("renew cycle heavy done for this day")
                         """set this action to done"""
-                        self.current_state.set_daily_action_day("AQ_cycle_heavy",int(time.strftime("%d",time. localtime())) )
+                        self.current_state.set_daily_action_day("AQ_cycle_heavy",int(time.strftime("%d",time. localtime())))
                         self.current_state.set_daily_action_state("AQ_cycle_heavy",True )
                         
                 
@@ -58,27 +58,20 @@ class time_controller(threading.Thread):
             if self.current_state.get_current_time_controller_state("exposition") : 
                  
                 if self.expo_open() :
-                    """start the day with  renew heavy""" 
+                    
+                    print("start cycle light for the film")
+                    self.current_state.set_current_action_aquarium_evolved("aquarium_cycle_light", True)
+                    time.sleep(5)
+                    while self.current_state.get_current_action_aquarium_evolved("aquarium_cycle_light") : 
+                        time.sleep(5)
+                    print("end cycle light for the film")
                     
                     print("Start film")
                     self.current_state.set_current_film_state("film", True)
                     time.sleep(5)
                     while self.current_state.get_current_film_state("film") : 
                         time.sleep(5)
-                    
                     print("End film")
-                    
-                    print("start cycle light for this day")
-                    self.current_state.set_current_action_aquarium_evolved("aquarium_cycle_light", True)
-                    time.sleep(5)
-                    while self.current_state.get_current_action_aquarium_evolved("aquarium_cycle_light") : 
-                        time.sleep(5) 
-                    print("renew cycle light done for this day")
-            
-            
-                    
-                
-                
                 
             time.sleep(60)
                 

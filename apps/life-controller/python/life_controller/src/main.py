@@ -38,10 +38,20 @@ if __name__ == "__main__":
     for i in sys.argv : 
         if i.strip() == "test" : 
             test = True
-        elif i.strip() =="exposition" : 
-            exposition_bool = True
-        elif i.strip() == "AQ_cycle_heavy" : 
-            AQ_cycle_heavy_bool = True
+            
+    
+    config_start_file = open("config/config_start.txt", "r")
+    # read the ligne one by one
+    for ligne in config_start_file:
+        #Take out the end symbols (\n)
+        ligne = ligne.strip()
+        #split on  ":" 
+        list = ligne.split(":")
+        
+        if list[0].strip() == "exposition" :
+            exposition_bool = list[1].strip() == "True"
+        elif list[0].strip() == "AQ_cycle_heavy" : 
+            AQ_cycle_heavy_bool = list[1].strip() == "True"
     
     co_ard = com_arduino(test)
     cu_state = current_state(co_ard)

@@ -1240,10 +1240,10 @@ class current_state(object):
     """ Set the states to the right values according to the log_start.txt file """
     def __setState__(self):
             # Open the file
-        start_file = open("config/config_start.txt", "r")
+        config_EL_file = open("config/config_EL.txt", "r")
      
         # read the ligne one by one
-        for ligne in start_file:
+        for ligne in config_EL_file:
             #Take out the end symbols (\n)
             ligne = ligne.strip()
             #split on  ":" 
@@ -1257,19 +1257,6 @@ class current_state(object):
             elif list[0].strip() == "print" :
                 print (list[1].strip())
             
-            elif list[0].strip() == "time_cycle" : 
-                """set cycle's time { C1 : [Lock, 75] , C2 : ...} """
-                self.time_cycle[list[1].strip()] = [threading.Lock(), float(list[2].strip())]
-                print ("cycle "+ list[1].strip() +" set at " + list[2].strip())
-                
-                
-            elif list[0].strip() =="occupied_volume" :
-                """set the occupied volume { M1 : [Lock, 0.75] , C2 : ...} """
-                self._occupied_volume[list[1].strip()] = [threading.Lock(), float(list[2].strip())]
-                
-            elif list[0].strip() =="number_usage" :
-                """set the number_usage { BU1 : 0 , BU2 : 23, ...} """
-                self.number_usage[list[1].strip()] = int(list[2].strip())
             
             elif list[0].strip() =="EL" :
                     
@@ -1285,7 +1272,7 @@ class current_state(object):
                     else: 
                         self._state_EL[name_container][name_EL] = [threading.Lock(),self.com_arduino.EL_read(name_container, name_EL),float(level_ref) ]
     
-        start_file.close()
+        config_EL_file.close()
         
         last_state_file = open("save_current_situation/last_state.txt", "r")
         

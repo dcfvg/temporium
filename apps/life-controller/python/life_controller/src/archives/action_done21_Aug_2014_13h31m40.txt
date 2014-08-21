@@ -1,0 +1,7 @@
+21_Aug_2014_13:32:10 : End aquarium_cycle_light 
+21_Aug_2014_13:32:15 : Begin seance
+21_Aug_2014_13:32:15 : screen_down_outside asked
+21_Aug_2014_13:32:15 : Begin film
+21_Aug_2014_13:32:19 : End film
+21_Aug_2014_13:32:19 : screen_up_outside asked
+21_Aug_2014_13:32:19 : End seance
