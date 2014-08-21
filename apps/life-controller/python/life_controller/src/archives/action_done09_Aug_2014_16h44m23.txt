@@ -1,0 +1,12 @@
+09_Aug_2014_16:44:48 : Begin seance
+09_Aug_2014_16:44:48 : screen_down_outside asked
+09_Aug_2014_16:44:50 : Begin film
+09_Aug_2014_16:45:38 : P_FI_S HIGH
+09_Aug_2014_16:45:43 : P_FI_S LOW
+09_Aug_2014_16:46:07 : P_BR3_BU3 HIGH
+09_Aug_2014_16:46:07 : P_BR3_BU3 LOW
+09_Aug_2014_16:50:53 :  begin fill BU1 until 0.66
+09_Aug_2014_16:52:55 : P_FI_S HIGH
+09_Aug_2014_16:52:58 : P_FI_S LOW
+09_Aug_2014_16:52:59 : P_FI_S HIGH
+09_Aug_2014_16:53:00 : P_FI_S LOW

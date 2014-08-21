@@ -1,0 +1,7 @@
+20_Jul_2014_15:01:04 :  begin fill BU1 until 0.66
+20_Jul_2014_15:02:04 :  end fill BU1 until 0.66
+20_Jul_2014_15:02:04 :  begin fill BU1 until 0.95
+20_Jul_2014_15:03:04 : P_M2_BU1 HIGH
+20_Jul_2014_17:05:28 : P_M2_BU1 LOW
+20_Jul_2014_17:05:28 : P_M2_BU1 HIGH
+21_Jul_2014_02:14:03 : P_M2_BU1 LOW

@@ -1,0 +1,6 @@
+14_Aug_2014_02:44:48 : Begin seance
+14_Aug_2014_02:44:48 : screen_down_outside asked
+14_Aug_2014_02:44:52 : Begin film
+14_Aug_2014_02:54:04 : End film
+14_Aug_2014_02:54:04 : screen_up_outside asked
+14_Aug_2014_02:54:08 : End seance

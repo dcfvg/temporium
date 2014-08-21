@@ -1,0 +1,7 @@
+10_Aug_2014_15:00:21 : P_AQ_S HIGH
+10_Aug_2014_15:00:49 : Begin seance
+10_Aug_2014_15:00:49 : screen_down_outside asked
+10_Aug_2014_15:00:49 : Begin film
+10_Aug_2014_15:01:25 : P_AQ_S LOW
+10_Aug_2014_15:02:04 : P_AQ_S HIGH
+10_Aug_2014_15:02:05 : P_AQ_S LOW

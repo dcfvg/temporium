@@ -630,7 +630,7 @@ class BRBU_controller (threading.Thread):
         save_file.write("comments : if BU1 and BU3 used : "+ " \n")
         save_file.write("comments : 0-71 : BU1 WAIT , BU3 USE"+ " \n")
         save_file.write("comments : 72-143 : BU1 USE , BU3 WAIT"+ " \n")
-        save_file.write("comments : BU_used : indicates if Bux is used like 'BU_used : BU1 : True'"+ " \n")
+        save_file.write("comments : BU_used : indicates wich colomn for alguae production is used like 'BU_used : BU1 : True'"+ " \n")
         for item in self.current_state._BU_used : 
             save_file.write("BU_used : " + item +  " : "+ str(self.current_state.get_BU_used(item))  +"\n")
         save_file.write("auto_start : "+ str(auto_start_state) + " \n")

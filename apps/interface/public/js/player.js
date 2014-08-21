@@ -6,6 +6,8 @@ function init() {
   var socket = io.connect("http://localhost:8080"),
       $d = $(document)
       ;
+  //temps d'attente en seconde avant de lancer le film aprrès FlasherExposer
+  var delay = 700;
 
   var $movie            = $("#movie"),                  // container
       movieUrl          = "/video/immersion.mov",
@@ -31,8 +33,7 @@ function init() {
       ;
 
   var image_formation = 20,
-      formationStartLevel = 20,
-      compileDelay = 120,
+      compileDelay = 90,
       decideDelay = 2,
       canPlay = false;
 
@@ -108,17 +109,24 @@ function init() {
 
   // seance == top vivant
   function onSeanceStart(){
-    console.log("# seance seance_start !");
-    $d.trigger("projectionStart");
-
+    console.log("# seance seance_start !");    
     socket.emit('captureInit',true);
+    
+    setTimeout(function(){
+
+      socket.emit('fullScreen',true);    
+      $d.trigger("projectionStart"); 
+
+    },delay*1000);
+    
   };
   // projection == film
   function onProjectionStart(){
     
     console.log("# projection !");
- 
+    
     $pop_movie.play(0);
+
     $d.trigger("showMovie");
 
     movieGoesOn = true;
@@ -134,9 +142,6 @@ function init() {
     image_formation = parseInt(obj);
     console.log('image_formation updt',image_formation);
 
-    if(!movieGoesOn && parseInt(obj) > formationStartLevel){
-      $d.trigger("projectionStart");
-    };
   };
   function onReloadLife(){
     // add reload argument to avoid cache
@@ -159,14 +164,18 @@ function init() {
 
     console.log("Movie !!!");
   };
+  
   function onShowLife(){
-    $pop_life.play(0);
-    
-    $life.removeClass("off");
     $movie.addClass("off");
+    $life.removeClass("off");
+
+    setTimeout(function(){
+      $pop_life.play(0);
+    },1000);    
     
     console.log("Life !!!");    
   };
+
   function onBlackScreen(){
     $life.addClass("off");
     $movie.addClass("off");
@@ -207,8 +216,9 @@ function init() {
   };
   function onMovieEnded(){
 
+    console.log("movie end");
+    socket.emit('fullScreen',true);
     socket.emit('message', "seance_end" , true);
-    socket.emit('oscMessage', ["seance_end", "1"]);
 
     reset();
   };
@@ -235,7 +245,7 @@ function init() {
 
     //$pop_life.pause().currentTime(0);
   };
-  function getJump(step){
+  function getJumpIn(step){
     var jump_max = step.jump_max;
     var movieProgress  = Math.round((getCurrentTime()/movieDuration)*100);
     var lifeProgress = image_formation; //Math.round((image_formation/255)*100);
@@ -244,6 +254,28 @@ function init() {
     if(jump > jump_max) {
       jump = jump_max - 0,01;
     }; // to FIX 
+
+    if(jump < 0) {
+      jump = 0,01;
+    };
+
+    console.log(step.type,'jump = ',jump,'/',jump_max,' (film :',movieProgress,'% ',' life :',lifeProgress,'%)');
+    return jump;
+  };
+
+  function getJumpOut(step){
+    var jump_max = step.jump_max;
+    var movieProgress  = Math.round((getCurrentTime()/movieDuration)*100);
+    var lifeProgress = image_formation; //Math.round((image_formation/255)*100);
+    var jump = (jump_max/2)+(((lifeProgress - movieProgress)/100)*jump_max);
+
+    if(jump > jump_max) {
+      jump = jump_max - 0,01;
+    }; // to FIX 
+
+    if(jump < 0) {
+      jump = 0,01;
+    };
 
     console.log(step.type,'jump = ',jump,'/',jump_max,' (film :',movieProgress,'% ',' life :',lifeProgress,'%)');
     return jump;
@@ -277,7 +309,7 @@ function init() {
         console.log(at);
         console.log('~ decide !');
         
-        jump = getJump(step);
+        jump = getJumpIn(step);
       };
       // APPLY DECISION
       if(t > at){
@@ -299,7 +331,7 @@ function init() {
   };
   function onLifeEnded(){
     var step = score[movieCurentStep],
-        jump = getJump(step),
+        jump = getJumpOut(step),
         at   = getAt(step);
 
     console.log("~ cut",step.id,step.title,'(',step.type,')',"@", at);

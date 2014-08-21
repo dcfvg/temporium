@@ -1,0 +1,3 @@
+09_Aug_2014_16:28:54 : P_FI_S HIGH
+09_Aug_2014_16:29:01 : P_FI_S LOW
+09_Aug_2014_16:29:16 :  begin fill BU3 until 0.66

@@ -20,11 +20,3 @@ end tell
 EOF
 
 open -a /Applications/Safari.app http://localhost:8080/player
-
-osascript<<EOF	
-tell application "System Events"
-	tell process "Safari"
-   		keystroke "f" using {control down, command down}
-   	end tell
-end tell
-EOF

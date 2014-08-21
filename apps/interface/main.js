@@ -32,6 +32,21 @@ module.exports = function(app, io, oscServer){
       console.log('child process exited with code ' + code);
     });
   };
+
+  function onFullScreen(){
+    fullScreen = spawn('bash',['bin/safariFullScreen.sh']);
+
+    fullScreen.stdout.on('data', function (data) {
+      console.log('stdout: ' + data);
+    });
+    fullScreen.stderr.on('data', function (data) {
+      console.log('stderr: ' + data);
+    });
+    fullScreen.on('exit', function (code) {
+      console.log('child process exited with code ' + code);
+    });
+  };
+
   function loadScore(){
 
     // le "score" contiens les moments clefs du montage et les actions associés 
@@ -66,17 +81,21 @@ module.exports = function(app, io, oscServer){
         ratio  = mov_w/mov_h,
         crop_w = Math.round(mov_w*zoom),
         crop_h = Math.round(crop_w/ratio),
-        crop_x = Math.round((crop_w - mov_w)/2),
-        crop_y = Math.round((crop_h - mov_h)/2),
+        //crop_x = Math.round((crop_w - mov_w)/2),
+        //crop_y = Math.round((crop_h - mov_h)/2),
+        crop_x = crop_w - mov_w, //nbpixels*crop_w
+        crop_y = 0, //nbpixels*crop_h
+        speedTransfo = 1+(speed - 1)/7,
 
         proc = new ffmpeg({ source: 'public/exposure/%04d.jpg' })
 
         .withFps(25)
+        //crf valeur à modifier si l'on veut que la vidéo se compile plus rapidement. On agit ici sur la compression et la qualité de la vidéo.
         .addOptions(['-pix_fmt yuv420p','-c:v libx264', '-preset ultrafast', '-crf 22'])
         .addOptions(['-r 25'])
         .withVideoFilter('scale='+crop_w+':-1')
         .withVideoFilter('crop='+mov_w+':'+mov_h+':'+crop_x+':'+crop_y+'')
-        .withVideoFilter('setpts=(1/'+speed+')*PTS')
+        .withVideoFilter('setpts=(1*'+speedTransfo+')*PTS')
         .on('end', onRefreshTimelapsEnd)
         .on('error', function(err) { console.log('an error happened: ' + err.message);})
         .saveToFile('public/video/live.mp4');
@@ -135,6 +154,7 @@ module.exports = function(app, io, oscServer){
       //function to stop the film :
       case "/seance_stop":
         onCaptureStop();
+      break;
       case "/capture_stop":
         onCaptureStop();
       break;
@@ -146,5 +166,6 @@ module.exports = function(app, io, oscServer){
     socket.on("refreshTimelaps", onRefreshTimelaps);
     socket.on("captureStop", onCaptureStop);
     socket.on("captureInit", onCaptureInit);
+    socket.on("fullScreen", onFullScreen);
   });
 };

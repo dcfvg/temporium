@@ -76,8 +76,8 @@ _raccourcits clavier_
 - `m` montrer le film
 - `l` montrer l’image live 
 - `k` afficher le timecode courant dans la console
-- `j` avancer le film de 10 s
-- `h` avancer le film de 30 s
+- `h` avancer le film de 10 s
+- `j` avancer le film de 30 s
 
 ### exposure
 

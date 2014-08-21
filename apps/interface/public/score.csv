@@ -1,13 +1,11 @@
 id,title,type,at_heu,at_sec,jump_max,life_speed,life_zoom
-2,danse digue,in,1,944,32,1,3
-3,port de nuit,out,1,1004,22,1,3,1
-4,reflet mer nuit,in,1,1067,34,1,6,2.6
-5,danse main,out,1,1141,33,2,1
-6,rocher et mer,in,1,1204,25,2,3,2.2
-7,danse port,out,1,1243,7,2,6,1
-8,danse nu,in,1,1459,105,3,1.8
-9,petit dej,out,1,1607,36,3,3,1
-10,fin petit dej,in,1,1649,6,3,6,1.4
-11,mer defile,out,1,1672,10,4,1
-12,mer defile proche,in,1,1725,17,4,3,1
-13,plongeon,out,1,1763,13,4,6,1
+2,danse digue,in,1,944,32,8,5
+3,port de nuit,out,1,1004,22,8,5
+4,reflet mer nuit,in,1,1067,34,8,4
+5,danse main,out,1,1141,33,8,4
+6,rocher et mer,in,1,1204,25,6,3
+7,danse port,out,1,1243,7,6,3
+8,danse nu,in,1,1459,105,4,2
+9,petit dej,out,1,1607,36,4,2
+10,mer defile proche,in,1,1725,17,1,1
+11,plongeon,out,1,1763,13,1,1

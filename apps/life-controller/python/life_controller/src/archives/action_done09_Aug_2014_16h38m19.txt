@@ -1,0 +1,2 @@
+09_Aug_2014_16:38:27 : Begin seance
+09_Aug_2014_16:38:49 :  begin fill BU3 until 0.66

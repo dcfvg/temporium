@@ -3,6 +3,9 @@ function init() {
   var socket = io.connect("http://localhost:8080"),
       $nega = $("#nega");
 
+  //Délai de sécurité en ms
+  var delayExposure = 250;
+
   //sockets
   socket.on('connect', onSocketConnect);
       
@@ -11,7 +14,9 @@ function init() {
     $nega.attr("src","/images/nega.png?reload="+Math.round((new Date()).getTime() / 1000)).load();
   }
   function expose(){
-    $nega.removeClass("off");
+    setTimeout(function(){
+      $nega.removeClass("off");
+    },delayExposure);
   }
   function flash(){
     $nega.addClass("off");
@@ -21,11 +26,18 @@ function init() {
     socket.emit('newUser', {name: $('#name').val()});
   };
   function onSeanceEnd(){
-    flash();
+    setTimeout(function(){
+          
+       $nega.addClass("off");
+
+      },5000);
+    
   };
   // OSC
   socket.on('oscMessage', function(obj){
+    console.log(obj[0]);
     switch (obj[0]){
+      
       case "/EF": // check patern
         console.log(obj[1]);
 
@@ -44,7 +56,7 @@ function init() {
       case "/seance_end":
         onSeanceEnd();
       break;
-      case "/capture_stop":
+      case "/seance_stop":
         onSeanceEnd();
       break;
     }
