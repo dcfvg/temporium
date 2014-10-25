@@ -7,7 +7,7 @@ function init() {
       $d = $(document)
       ;
   //temps d'attente en seconde avant de lancer le film aprrès FlasherExposer
-  var delay = 700;
+  var delay = 500;
 
   var $movie            = $("#movie"),                  // container
       movieUrl          = "/video/immersion.mov",
@@ -31,6 +31,8 @@ function init() {
       lifeUrl           = "/video/live.mp4",
       $pop_life         = Popcorn("#life")
       ;
+
+  var $timer        = $("#timer");
 
   var image_formation = 20,
       compileDelay = 90,
@@ -58,6 +60,7 @@ function init() {
     .on( "showMovie"        , onShowMovie)
     .on( "showLife"         , onShowLife)
     .on( "projectionStart"  , onProjectionStart)
+    .on( "timerWait"        , onTimerWait)
   ;
   
   $pop_life.on("ended",onLifeEnded);
@@ -111,10 +114,12 @@ function init() {
   function onSeanceStart(){
     console.log("# seance seance_start !");    
     socket.emit('captureInit',true);
+    socket.emit('fullScreen',true);
+    $timer.removeClass("off");
+    $d.trigger("timerWait");
     
     setTimeout(function(){
-
-      socket.emit('fullScreen',true);    
+   
       $d.trigger("projectionStart"); 
 
     },delay*1000);
@@ -124,6 +129,8 @@ function init() {
   function onProjectionStart(){
     
     console.log("# projection !");
+
+    $timer.addClass("off");
     
     $pop_movie.play(0);
 
@@ -177,6 +184,7 @@ function init() {
   };
 
   function onBlackScreen(){
+    $timer.addClass("off");
     $life.addClass("off");
     $movie.addClass("off");
   };
@@ -367,6 +375,28 @@ function init() {
         break;
       };
     };
+  };
+
+  function onTimerWait(){
+    var start = new Date().getTime();
+    var diff, min, sec;
+    var interval = setInterval(function(){
+
+    diff = Math.round((delay*1000 - (new Date().getTime() - start))/1000);
+      if(diff < 0){
+        clearInterval(interval);
+      } else{
+        min = Math.floor(diff/60);
+        if(min < 10){
+          min = "0" + min;
+        };
+        sec = diff%60;
+        if(sec < 10){
+          sec = "0" + sec;
+        };
+        document.getElementById('timer').innerHTML = 'Immersion dans<br \>00:' + min + ':' + sec;
+      };
+    }, 800);
   };
 
   reset();

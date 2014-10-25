@@ -11,8 +11,8 @@ BRBU_controller : FILLING_BR_BU : 0.66
 comments : time_out in minutes when the film starts
 film : TIME_OUT : 60
 comments : time of the beginning of the exposure/time of the end of the exposure (format : 0-23h0-59)
-time_controller : START_DAY : 00h00
-time_controller : END_DAY : 00h10
+time_controller : START_DAY : 00h30
+time_controller : END_DAY : 23h50
 comments : AQ management
 AQ : FULL : 0.9
 AQ : EMPTY : 0.1

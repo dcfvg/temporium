@@ -12,7 +12,6 @@ case "$ACTION" in
         ;;
     start)
         echo "$self: START"
-        python bin/osc/sender.py 127.0.0.1 3333 /EF flash
         ;;
     download)
         python bin/osc/sender.py 127.0.0.1 3333 /EF expose

@@ -94,7 +94,7 @@ class time_controller(threading.Thread):
         time_end_day_minute  = self.time_end_day[0]*60 + self.time_end_day[1]
         
         state = False 
-        current_time_minute  = int(time.strftime("%H",time. localtime())) * 60 + int(time.strftime("%M",time. localtime()))
+        current_time_minute  = int(time.strftime("%H",time. localtime())) * 2 + int(time.strftime("%M",time. localtime()))
         if  current_time_minute > time_start_day_minute and \
             current_time_minute < time_end_day_minute :
             

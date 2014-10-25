@@ -62,6 +62,10 @@ do
 
 	echo $photoName
 
+    python bin/osc/sender.py 127.0.0.1 3333 /EF flash
+
+    sleep 0.3
+
 	gphoto2 \
  	--capture-image-and-download \
   	--hook-script $nodebin/camera_hook.sh \
