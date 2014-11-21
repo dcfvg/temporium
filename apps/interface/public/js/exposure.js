@@ -23,7 +23,7 @@ function init() {
   }
   function onSocketConnect() {
     console.log('Connected');
-    socket.emit('newUser', {name: $('#name').val()});
+    //socket.emit('newUser', {name: $('#name').val()});
   };
   function onSeanceEnd(){
     setTimeout(function(){
@@ -33,6 +33,9 @@ function init() {
       },5000);
     
   };
+
+  socket.on('expose_stop', onSeanceEnd);
+
   // OSC
   socket.on('oscMessage', function(obj){
     console.log(obj[0]);

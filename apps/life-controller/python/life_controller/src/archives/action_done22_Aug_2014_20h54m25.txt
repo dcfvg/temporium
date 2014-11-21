@@ -1,0 +1,6 @@
+22_Aug_2014_20:54:32 : screen_up_outside asked
+22_Aug_2014_20:54:37 : screen_down_outside asked
+22_Aug_2014_20:55:35 : P_BU3_FI HIGH
+22_Aug_2014_20:55:35 : P_FI_AQ_1 HIGH
+22_Aug_2014_20:55:36 : P_BU3_FI LOW
+22_Aug_2014_20:55:36 : P_FI_AQ_1 LOW

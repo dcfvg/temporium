@@ -8,6 +8,7 @@ function init() {
       ;
   //temps d'attente en seconde avant de lancer le film aprrès FlasherExposer
   var delay = 500;
+  var delayAqua = 500;
 
   var $movie            = $("#movie"),                  // container
       movieUrl          = "/video/immersion.mov",
@@ -61,6 +62,8 @@ function init() {
     .on( "showLife"         , onShowLife)
     .on( "projectionStart"  , onProjectionStart)
     .on( "timerWait"        , onTimerWait)
+    .on( "timerAqua"        , onTimerAqua)
+    .on( "last_sequence"    , onLastSequence)
   ;
   
   $pop_life.on("ended",onLifeEnded);
@@ -229,6 +232,7 @@ function init() {
     socket.emit('message', "seance_end" , true);
 
     reset();
+    $d.trigger('timerAqua');
   };
 
   //////////////////////////////
@@ -354,9 +358,15 @@ function init() {
     }else{
       movieCurentStep++;
       setNextStep();
-      $d.trigger("last_sequence");
     }
   };
+
+  function onLastSequence(){
+    socket.emit('message', "last_sequence" , true);
+    socket.emit('captureStop', true);
+    socket.emit('last_sequence', true);
+  };
+
   function emulateImageFormation(freq) {
     //image_formation emulator 
     setInterval(function(){
@@ -397,6 +407,30 @@ function init() {
         document.getElementById('timer').innerHTML = 'Immersion dans<br \>00:' + min + ':' + sec;
       };
     }, 800);
+  };
+
+  function onTimerAqua(){
+    $timerAqua.removeClass("off");
+    var start = new Date().getTime();
+    var diff, min, sec;
+    var interval = setInterval(function(){
+
+    diff = Math.round((delayAqua*1000 - (new Date().getTime() - start))/1000);
+      if(diff < 0){
+        clearInterval(interval);
+      } else{
+        min = Math.floor(diff/60);
+        if(min < 10){
+          min = "0" + min;
+        };
+        sec = diff%60;
+        if(sec < 10){
+          sec = "0" + sec;
+        };
+        document.getElementById('timerAqua').innerHTML = 'Immersion dans<br \>00:' + min + ':' + sec;
+      };
+    }, 800);
+    $timerAqua.addClass("off");
   };
 
   reset();

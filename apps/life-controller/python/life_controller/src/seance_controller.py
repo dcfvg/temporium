@@ -62,6 +62,7 @@ class seance_controller(threading.Thread):
             self._start_lock.acquire()
             self.film_begin()
             self.current_state._set_current_film_state("film",False)
+            self.current_state._set_current_film_state("last_sequence",False)
         
     def film_begin(self):
         self._time_out = self.current_state.config_manager.get_film("TIME_OUT")
@@ -87,9 +88,19 @@ class seance_controller(threading.Thread):
        
         
         start_time = time.time()
-        while  (time.time()-start_time) < (self._time_out*60) and self.current_state.get_current_film_state("film"):
+
+        while  (time.time()-start_time) < (self._time_out*60) and self.current_state.get_current_film_state("last_sequence"):
+            time.sleep(2) 
+
+        print("screen outside up begin")
+        self.current_state.set_current_action_lift_screen("screen_up_outside")
+        while self.current_state.get_current_action_lift_screen("screen_up_outside") : 
             time.sleep(2)
-            
+        print("screen outside up finish")
+
+
+        while  (time.time()-start_time) < (self._time_out*60) and self.current_state.get_current_film_state("film"):
+            time.sleep(2)            
         
         
         """stop ask information formation """
@@ -98,14 +109,7 @@ class seance_controller(threading.Thread):
         
         self.client_seance.sent_seance_stop()
         print("film time end") 
-        self.current_state.saving_state_thread.write_action("End film")   
-        
-        print("screen outside up begin")
-        self.current_state.set_current_action_lift_screen("screen_up_outside")
-        while self.current_state.get_current_action_lift_screen("screen_up_outside") : 
-            time.sleep(2)
-        print("screen outside up finish")
-        
+        self.current_state.saving_state_thread.write_action("End film")         
         
         self.current_state.saving_state_thread.write_action("End seance")
     def _create_client(self, ip, port):

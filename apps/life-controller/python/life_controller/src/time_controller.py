@@ -68,12 +68,13 @@ class time_controller(threading.Thread):
                     
                     print("Start film")
                     self.current_state.set_current_film_state("film", True)
+                    self.current_state.set_current_film_state("last_sequence", True)
                     time.sleep(5)
                     while self.current_state.get_current_film_state("film") : 
                         time.sleep(5)
                     print("End film")
                 
-            time.sleep(60)
+            #time.sleep(60)
                 
     
     def AQ_cycle_heavy_state(self):

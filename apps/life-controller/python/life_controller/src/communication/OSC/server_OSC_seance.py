@@ -32,6 +32,7 @@ class server_OSC_seance(threading.Thread):
         
         
         self.dispatcher.map("/seance_end", self._seance_end)
+        self.dispatcher.map("/last_sequence", self._last_sequence)
         self.dispatcher.map("/action", self._action)
         
         """not used"""
@@ -41,7 +42,11 @@ class server_OSC_seance(threading.Thread):
         
         self.start()
         
-        
+    def _last_sequence(self, msg):
+
+        self.seance_controller.current_state.set_current_film_state("last_sequence",False)
+        print(msg)
+
     
     def _seance_end(self, msg):
         """what to do when finished"""

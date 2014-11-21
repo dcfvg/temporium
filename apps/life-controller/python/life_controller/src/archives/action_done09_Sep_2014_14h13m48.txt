@@ -1,0 +1,6 @@
+09_Sep_2014_14:14:58 : screen_down_outside asked
+09_Sep_2014_14:15:02 : screen_up_outside asked
+09_Sep_2014_14:15:14 : screen_down_inside asked
+09_Sep_2014_14:15:19 : screen_down_outside asked
+09_Sep_2014_14:15:40 : screen_up_outside asked
+09_Sep_2014_14:15:47 : screen_down_outside asked

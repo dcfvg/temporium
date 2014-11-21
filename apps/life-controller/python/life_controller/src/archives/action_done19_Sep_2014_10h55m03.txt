@@ -1,0 +1,6 @@
+19_Sep_2014_11:01:13 : P_M1_BR1 HIGH
+19_Sep_2014_11:01:13 : P_M1_BR1 LOW
+19_Sep_2014_11:08:03 : screen_up_outside asked
+19_Sep_2014_11:08:12 : screen_down_outside asked
+19_Sep_2014_11:08:27 : screen_down_outside asked
+19_Sep_2014_11:08:44 : screen_down_outside asked

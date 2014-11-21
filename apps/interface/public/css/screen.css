@@ -42,3 +42,9 @@ video::-webkit-media-controls-enclosure {
   color: white;
   font-size: 42px;
 }
+#timerAqua {
+  text-align: center;
+  margin-top: 420px;
+  color: white;
+  font-size: 42px;
+}

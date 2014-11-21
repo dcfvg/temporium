@@ -97,7 +97,7 @@ class current_state(object):
                                          }
         
         """film_state"""
-        self._current_film_state = {"film" :[threading.Lock(), False]}
+        self._current_film_state = {"film" :[threading.Lock(), False], "last_sequence" :[threading.Lock(), True]}
         
         
         

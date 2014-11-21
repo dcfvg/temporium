@@ -139,6 +139,9 @@ module.exports = function(app, io, oscServer){
     oscClient.send("/"+ msg, "1");
 
   };
+  function onLastSequence(){
+    io.sockets.emit("expose_stop", true);
+  };
 
   //////////////////////////////
   //  communication 
@@ -167,5 +170,6 @@ module.exports = function(app, io, oscServer){
     socket.on("captureStop", onCaptureStop);
     socket.on("captureInit", onCaptureInit);
     socket.on("fullScreen", onFullScreen);
+    socket.on("last_sequence", onLastSequence);
   });
 };
