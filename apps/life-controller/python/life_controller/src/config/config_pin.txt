@@ -36,9 +36,8 @@ EL : BU1 : MAX : 25 : 28
 EL : BU2 : MAX : 26 : 28
 EL : BU3 : MAX : 29 : 28
 EL : AQ : MAX : 47 : 52
-
 EL : AQ : HIGH : 45 : 52
 EL : AQ : MIDDLE : 43 : 52
 EL : AQ : MIN : 41 : 52
 arduino : arduino_lift : /dev/cu.usbmodem1d11121
-pin_array_output : 2, 3, 4 , 5, 10, 12
+pin_array_output : 99, 99, 99 , 99, 99, 99
