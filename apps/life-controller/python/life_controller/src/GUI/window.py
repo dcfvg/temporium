@@ -63,7 +63,7 @@ class window(Tk):
     def refresh_after(self):
 
         self._redraw()
-        self.after( 100,self.refresh_after)
+        self.after(200,self.refresh_after)
         
         #time.sleep(0.1)     
         #self.after_idle(self.refresh_test)
