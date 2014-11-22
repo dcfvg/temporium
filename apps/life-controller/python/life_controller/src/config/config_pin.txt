@@ -40,4 +40,4 @@ EL : AQ : HIGH : 45 : 52
 EL : AQ : MIDDLE : 43 : 52
 EL : AQ : MIN : 41 : 52
 arduino : arduino_lift : /dev/cu.usbmodem1d11121
-pin_array_output : 99, 99, 99 , 99, 99, 99
+pin_array_output : 99, 99, 99 , 99, 99, 99, 99, 99, 99 , 99, 99, 99
