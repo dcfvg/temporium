@@ -74,7 +74,7 @@ class time_controller(threading.Thread):
                         time.sleep(5)
                     print("End film")
                 
-            #time.sleep(60)
+            time.sleep(5)
                 
     
     def AQ_cycle_heavy_state(self):
